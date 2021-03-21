@@ -1,17 +1,358 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Vanilla JavaScript App</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>PROTOTYPE 2 - AMIS | Conclusion Technology Radar</title>
+    <link rel="shortcut icon" href="https://res.conclusion.nl/inc/img/favicon.gif">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+    <style>
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 90%;
+            height: 90%;
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #f8f1f1;
+            opacity: 0.9;
+            margin: 15% auto;
+            /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .column {
+            float: left;
+            width: 80%;
+        }
+
+        .column2 {
+            float: left;
+            width: 20%;
+        }
+
+        .column1_2 {
+            float: left;
+            width: 50%;
+        }
+
+        .column1_3 {
+            float: left;
+            width: 33%;
+            height: 800px;
+        }
+
+        .outlinedImage {
+            filter: drop-shadow(0px 0px 1px red);
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .selected {
+            stroke: red;
+            stroke-width: 7;
+            stroke-dasharray: 6 2;
+        }
+
+        /* used for selecting sectors and rings */
+        .draggable,
+        .draggable-group {
+            /* used for draggable elements such as ring and sector knobs */
+
+            cursor: move;
+        }
+
+        .clickableProperty {
+            cursor: pointer;
+        }
+
+        .templates-select {
+            padding: 9px 0;
+            width: 70%;
+            border: none;
+            border-bottom: 1px solid #ccc
+        }
+
+
+        div.tooltip {
+            position: absolute;
+            text-align: center;
+            width: 130px;
+            padding: 10px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        div.blipWindow {
+            position: absolute;
+            text-align: center;
+            width: 1030px;
+            padding: 10px;
+            font: 12px sans-serif;
+            background: rgb(237, 240, 243);
+            border: 0;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+
+        .button {
+            background-color: #49694a;
+            border: none;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            margin: 4px 2px;
+        }
+
+        .button1 {
+            border-radius: 8px;
+        }
+    </style>
+
 </head>
 
 <body>
-  <main>
-    <h1>Vanilla JavaScript App</h1>
-  </main>
-</body>
 
-</html>
+
+    <!-- The Modal -->
+    <div id="modalBlipEditor" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="blipEditorTitle">Editing Blip</h3>
+            <label for="blipLabel">Technoloy</label>
+            <input id="blipLabel" type="text"></input>
+            <label for="blipCategorySelect">Category</label>
+            <select name="blipCategory" id="blipCategorySelect"></select>
+            <label for="blipHomepage">Homepage</label>
+            <input id="blipHomepage" type="text"></input>
+            <label for="blipImageURL">Logo/Image URL</label>
+            <input id="blipImageURL" type="text"></input>
+            <textarea id="pasteArea" placeholder="Paste Image Here"></textarea>
+            <img id="blipImage" width="150px" style="float:right" />
+            <br />
+            <hr />
+            <label for="blipAmbitionSelect">Ambition</label>
+            <select name="blipAmbition" id="blipAmbitionSelect"></select>
+            <label for="blipMagnitudeSelect">Magnitude</label>
+            <select name="blipMagnitude" id="blipMagnitudeSelect"></select>
+            <label for="blipMaturitySelect">Maturity</label>
+            <select name="blipMaturity" id="blipMaturitySelect"></select>
+            <br />
+            <hr />
+            <label for="blipScope">Scope</label>
+            <input id="blipScope"
+                title="to which individual, team, department, company, industry does this rating apply"
+                type="text"></input>
+            <label for="blipAuthor">Author</label>
+            <input id="blipAuthor" type="text"></input>
+            <br />
+            <hr />
+            <label for="blipRemark">Comment</label>
+            <textarea name="blipRemark" id="blipRemark" rows="2" cols="100"></textarea>
+
+            <div id="blipEditorButtonBar" style="position: absolute; bottom: 25;right: 100;">
+                <input id="saveBlipEdits" type="button" value="Save Changes"></input>
+            </div>
+
+        </div>
+        <script>
+            var modal = document.getElementById("modalBlipEditor");
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        </script>
+    </div>
+
+    <div class="row">
+
+        <div class="column">
+            <svg id="radarSVGContainer">
+            </svg>
+        </div>
+
+        <div class="column2">
+            <div id="displayStyle">
+                <p>Compose Display Style</p>
+                <div>
+                    <input type="checkbox" id="showImages" name="displayStyle" value="images" checked>
+                    <label for=" showImages">Show Images</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="showShapes" name="displayStyle" value="shapes">
+                    <label for="showShapes">Show Shapes</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="showLabels" name="displayStyle" value="labels">
+                    <label for="showLabels">Show Labels</label>
+                </div>
+            </div>
+            <hr />
+            <div id="sizeLegend">
+                <h3 id="sizesLegendTitle">Sizes</h3>
+                <div>
+                    <!--
+                    <input type="checkbox" id="applySizes" name="displayStyle" value="applySizes" checked>
+                    <label for="applySizes">Apply Sizes</label>
+                -->
+                </div>
+                <svg id="sizesLegend">
+
+                </svg>
+            </div>
+            <hr />
+            <div id="shapeLegend">
+                <h3 id="shapesLegendTitle">Shapes</h3>
+                <div>
+                    <!--
+                    <input type="checkbox" id="applyShapes" name="displayStyle" value="applyShapes" checked>
+                    <label for="applyShapes">Apply Shapes</label>
+                -->
+                </div>
+                <svg id="shapesLegend">
+
+                </svg>
+            </div>
+            <hr />
+            <div id="colorLegend">
+                <h3 id="colorLegendTitle">Colors</h3>
+                <div>
+                    <!--
+                    <input type="checkbox" id="applyColors" name="displayStyle" value="applyColors" checked>
+                    <label for="applyColors">Apply Colors</label>
+                -->
+                </div>
+                <svg id="colorsLegend">
+
+                </svg>
+            </div>
+
+            <br />
+            <hr />
+            <div id="dataManagement">
+                <h3 id="dataManagementTitle">Radar Data Management</h3>
+                <div>
+                    <input type="button" id="download" name="download" value="Download">
+                    <input type="button" id="upload" name="upload" value="Upload">
+                    <input type="file" id="fileElem" multiple accept="application/json,text/*" style="display:none">
+                </div>
+                <br />
+                <hr />
+                <div>
+                    <input type="button" id="save" name="save" value="Save to Local Storage">
+                    <input type="button" id="load" name="load" value="Load (from local storage)">
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <script type="module">
+        import { drawRadar, subscribeToRadarEvents } from './modules/radar.js';
+        import { drawRadarBlips } from './modules/radarBlips.js';
+        import { getConfiguration, getViewpoint, createBlip, getState, subscribeToRadarRefresh } from './modules/data.js';
+        import { makeDraggable } from './modules/blipDrag.js'
+        import { handleBlipDrag, populateBlipEditor } from './modules/blipEditing.js'
+
+        const viewpoint = getConfiguration()
+        viewpoint.editMode = false
+        drawRadar(getViewpoint())
+        drawRadarBlips(getViewpoint())
+
+        const svg = d3.select(`svg#${viewpoint.svg_id}`)
+        makeDraggable(svg.node(), (dragEvent) => { handleBlipDrag(dragEvent, getViewpoint()) })
+
+        subscribeToRadarRefresh(() => {
+            console.log(`refresh`)
+            const viewpoint = getConfiguration()
+            viewpoint.editMode = false
+            drawRadar(getViewpoint())
+            drawRadarBlips(getViewpoint())
+        })
+        subscribeToRadarEvents((event) => {
+            if (event.type == "blipCreation") {
+                console.log(`radar event ${JSON.stringify(event)}`)
+                const blip = createBlip()
+                populateBlipEditor(blip, getViewpoint(), drawRadarBlips)
+            }
+        })
+
+    </script>
+
+
+
+    <div style="display:none">
+        <div>
+            <h3>Template management</h3>
+
+            <div>
+                <input type="button" id="newTemplate" name="newTemplate" value="Create New Template">
+                <input type="button" id="cloneTemplate" name="clone" value="Clone Template">
+                <input type="button" id="resetTemplate" name="reset" value="Reset Current Template">
+            </div>
+            <div>
+                <select id="templateSelector" class="templates-select" name="option">
+                    <option value="" disabled selected>Select Radar Template</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</body>
