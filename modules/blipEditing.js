@@ -25,14 +25,16 @@ const populateSelect = (selectElementId, data, defaultValue = null) => { // data
 
     }
 }
+
+let blipEdited
+let drawRadarBlipsToCall
+let viewpointToReuse
 const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
     var modal = document.getElementById("modalBlipEditor");
     modal.style.display = "block";
 
     const blipEditorTitle = document.getElementById("blipEditorTitle")
     blipEditorTitle.innerText = `Editing ${blip.rating.object.label} `
-
-    console.log(`pop blip editor for ${JSON.stringify(blip)}`)
 
     populateSelect("blipAmbitionSelect", [{ data: "assess", label: "Assess" }, { data: "hold", label: "Hold" }, { data: "trial", label: "Trial" }, { data: "adopt", label: "Adopt" }, { data: "spotted", label: "Spotted" }], blip.rating.ambition)
     populateSelect("blipCategorySelect", [{ data: "database", label: "Database & Data Platform" }, { data: "language", label: "Languages & Frameworks" }, { data: "infrastructure", label: "Infrastructure" }, { data: "concepts", label: "Concepts & Methodology" }], blip.rating.object.category)
@@ -42,7 +44,13 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
     document.getElementById("blipImageURL").value = blip.rating.object.image
     document.getElementById("blipImageURL").addEventListener("change", (e) => { document.getElementById("blipImage").src = e.target.value })
     document.getElementById("blipImage").src = blip.rating.object.image
-    
+    let blipTags
+    if (blip.rating.object.tags?.length >0) {
+        blipTags= blip.rating.object.tags.slice(1).reduce((tags, tag) => `${tags}, ${tag}`,blip.rating.object.tags[0])
+      }
+     
+    document.getElementById("blipTags").value = blipTags
+    document.getElementById("blipDescription").value = blip.rating.object.description
     document.getElementById("blipRemark").value = blip.rating.comment
     document.getElementById("blipAuthor").value = blip.rating.author
     document.getElementById("blipScope").value = blip.rating.scope
@@ -53,43 +61,57 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
     initializeImagePaster((imageURL) => {
         document.getElementById("blipImageURL").value = imageURL
         document.getElementById("blipImage").src = imageURL
-    })
-
-
-
-    document.getElementById("saveBlipEdits").addEventListener("click", () => {
-
-        blip.rating.object.label = document.getElementById("blipLabel").value
-        blip.rating.object.homepage = document.getElementById("blipHomepage").value
-        blip.rating.object.image = document.getElementById("blipImageURL").value
-        blip.rating.comment = document.getElementById("blipRemark").value
-        blip.rating.scope = document.getElementById("blipScope").value
-        blip.rating.author = document.getElementById("blipAuthor").value
-
-        blip.rating.experience = document.getElementById("blipMaturitySelect").value
-        blip.rating.magnitude = document.getElementById("blipMagnitudeSelect").value
-        let resetXY = false
-        if (blip.rating.ambition != document.getElementById("blipAmbitionSelect").value) {
-            blip.rating.ambition = document.getElementById("blipAmbitionSelect").value
-            resetXY = true
-        }
-        if (blip.rating.object.category != document.getElementById("blipCategorySelect").value) {
-            blip.rating.object.category = document.getElementById("blipCategorySelect").value
-            resetXY = true
-        }
-
-        if (resetXY) {
-            blip.x = null
-            blip.y = null
-        }
-
-        // close modal editor
-        var modal = document.getElementById("modalBlipEditor");
-        modal.style.display = "none";
-        drawRadarBlips(viewpoint)
-    })
-
+    }) 
+    blipEdited = blip
+    drawRadarBlipsToCall = drawRadarBlips
+    viewpointToReuse = viewpoint
 }
+
+
+
+const saveBlipEdit = () => {
+    const blip = blipEdited
+    blip.rating.object.label = document.getElementById("blipLabel").value
+    blip.rating.object.homepage = document.getElementById("blipHomepage").value
+    blip.rating.object.image = document.getElementById("blipImageURL").value
+    const tagsString = document.getElementById("blipTags").value
+    const tags = tagsString.split(",")
+    blip.rating.object.tags = tags 
+    blip.rating.object.description = document.getElementById("blipDescription").value
+    blip.rating.comment = document.getElementById("blipRemark").value
+    blip.rating.scope = document.getElementById("blipScope").value
+    blip.rating.author = document.getElementById("blipAuthor").value
+
+    blip.rating.experience = document.getElementById("blipMaturitySelect").value
+    blip.rating.magnitude = document.getElementById("blipMagnitudeSelect").value
+    let resetXY = false
+    if (blip.rating.ambition != document.getElementById("blipAmbitionSelect").value) {
+        blip.rating.ambition = document.getElementById("blipAmbitionSelect").value
+        resetXY = true
+    }
+    if (blip.rating.object.category != document.getElementById("blipCategorySelect").value) {
+        blip.rating.object.category = document.getElementById("blipCategorySelect").value
+        resetXY = true
+    }
+
+    if (resetXY) {
+        blip.x = null
+        blip.y = null
+    }
+
+    // close modal editor
+    var modal = document.getElementById("modalBlipEditor");
+    modal.style.display = "none";
+    drawRadarBlipsToCall(viewpointToReuse)
+}
+
+    
+
+document.getElementById("saveBlipEdits").addEventListener("click", () => {
+    saveBlipEdit()
+})
+
+
 
 
 

@@ -6,6 +6,22 @@ const color_white = "#FFF"
 const radarCanvasElementId = "radarCanvas"
 const blipsLayerElementId = "blipsLayer"
 let currentViewpoint
+
+const filterBlip = (blip, viewpoint) => {
+    console.log(`filter blip ${blip.rating.object.label} with tagfilter ${viewpoint.blipDisplaySettings.tagFilter}`)
+    // determine all tags in the tag filter  - for now as individual strings, no + or - support TODO
+    let blipOK = true
+    if (viewpoint.blipDisplaySettings.tagFilter.length>0) {
+        const filters = viewpoint.blipDisplaySettings.tagFilter.split(" ").map((filter) => filter.trim())
+        for (let i=0; i< filters.length;i++) {
+            blipOK =  filters[i].length == 0 || JSON.stringify(blip.rating.object.tags).indexOf(filters[i])>-1
+            if (!blipOK) break;
+        }
+    }
+    
+    return blipOK
+}
+
 const drawRadarBlips = function (viewpoint) {
     currentViewpoint = viewpoint
     document.getElementById('showImages').checked = currentViewpoint.blipDisplaySettings.showImages
@@ -13,6 +29,12 @@ const drawRadarBlips = function (viewpoint) {
     document.getElementById('showLabels').checked = currentViewpoint.blipDisplaySettings.showLabels
 
     document.getElementById('showShapes').checked = currentViewpoint.blipDisplaySettings.showShapes
+
+    document.getElementById('tagFilter').value = currentViewpoint.blipDisplaySettings.tagFilter
+
+    document.getElementById('applyShapes').checked = currentViewpoint.blipDisplaySettings.applyShapes
+    document.getElementById('applySizes').checked = currentViewpoint.blipDisplaySettings.applySizes
+    document.getElementById('applyColors').checked = currentViewpoint.blipDisplaySettings.applyColors
     let blipsLayer
     blipsLayer = d3.select(`#${blipsLayerElementId}`)
     if (blipsLayer.empty()) {
@@ -24,7 +46,7 @@ const drawRadarBlips = function (viewpoint) {
         blipsLayer.selectAll("*").remove();
     }
     const blipElements = blipsLayer.selectAll(".blip")
-        .data(viewpoint.blips)
+        .data(viewpoint.blips.filter ((blip) => filterBlip(blip, viewpoint)))
         .enter()
         .append("g")
         .attr("class", "blip")
@@ -58,7 +80,7 @@ const sectorRingToPosition = (sector, ring, config) => { // return randomized X,
     if (ring && ring > -1)
         r = config.maxRingRadius * (1 - priorRingsWidthPercentageSum(ring, config) - (0.1 + Math.random() * 0.8) * config.ringConfiguration.rings[ring].width) // 0.1 to not position the on the outer edge of the segment
     else
-        r = config.maxRingRadius * 1.1
+        r = config.maxRingRadius *   (1.01 + Math.random() * 0.33)  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
     return cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
 }
 
@@ -74,16 +96,25 @@ const drawRadarBlip = (blip, d, viewpoint) => {
     const blipRing = viewpoint.propertyVisualMaps.ringMap[d.rating.ambition]
     const blipShapeId = viewpoint.propertyVisualMaps.shapeMap[d.rating.object?.offering]
         ?? viewpoint.propertyVisualMaps.shapeMap["other"]
-    const blipShape = viewpoint.template.shapesConfiguration.shapes[blipShapeId].shape
+    let blipShape = viewpoint.template.shapesConfiguration.shapes[blipShapeId].shape
 
     const blipColorId = viewpoint.propertyVisualMaps.colorMap[d.rating?.experience]
         ?? viewpoint.propertyVisualMaps.colorMap["other"]
-    const blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
+    let blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
 
     const blipSizeId = viewpoint.propertyVisualMaps.sizeMap[d.rating.magnitude]
         ?? viewpoint.propertyVisualMaps.sizeMap["other"]
-    const blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
+    let blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
 
+        if (!viewpoint.blipDisplaySettings.applyShapes) {
+        blipShape = "circle" // TODO replace with configurable default shape
+    }
+    if (!viewpoint.blipDisplaySettings.applyColors) {
+        blipColor = "blue" // TODO replace with configurable default color
+    }
+    if (!viewpoint.blipDisplaySettings.applySizes) {
+        blipSize = 1  // TODO replace with configurable default size
+    }
     let xy
 
     if (d.x != null && d.y != null && blipInSegment(d, viewpoint, { sector: blipSector, ring: blipRing }) != null) { // TODO and x,y is located within ring/.sector segment
@@ -93,8 +124,12 @@ const drawRadarBlip = (blip, d, viewpoint) => {
     }
     blip.attr("transform", `translate(${xy.x},${xy.y}) scale(${blipSize})`)
         .attr("id", `blip-${d.id}`)
-    blip
+        if (!viewpoint.blipDisplaySettings.showLabels
+            || (!viewpoint.blipDisplaySettings.showImages && d.rating.object.image)
+            ){ // any content for the tooltip
+    blip 
         .on("mouseover", (e, d) => {
+
             addTooltip(
                 (d) => {
                     let content = `<div>     
@@ -110,7 +145,8 @@ const drawRadarBlip = (blip, d, viewpoint) => {
         .on("mouseout", () => {
             removeTooltip();
         })
-        .on("dblclick", (e, d) => {
+    }
+        blip.on("dblclick", (e, d) => {
             blipWindow(d, viewpoint)
 
         })
@@ -119,10 +155,23 @@ const drawRadarBlip = (blip, d, viewpoint) => {
     // the user determines which elements should be displayed for a blip 
     // perhaps the user can also indicate whether colors, shapes and sizes should be visualized (or set to default values instead)
     // and if text font size should decrease/increase with size?
+    // TODO: label consisting of two lines 
     if (viewpoint.blipDisplaySettings.showLabels || (viewpoint.blipDisplaySettings.showImages && d.rating.object.image == null)) {
         const label = d.rating.object.label
+        if (label.length > 10 ) { // if long label, show first part above second part of label
         blip.append("text")
             .text(label.length > 10 ? label.split(" ")[0] : label)
+            .attr("x", 0) // if on left side, then move to the left, if on the right side then move to the right
+            .attr("y", -45) // if on upper side, then move up, if on the down side then move down
+            .attr("text-anchor", "middle")
+            .attr("alignment-baseline", "before-edge")
+            .style("fill", "#000")
+            .style("font-family", "Arial, Helvetica")
+            .style("font-stretch", "extra-condensed")
+            .style("font-size", function (d) { return label.length > 2 ? `${14}px` : "17px"; })
+        }
+            blip.append("text")
+            .text(label.length > 10 ? label.split(" ")[1] : label) // if a long label, show second part
             .attr("x", 0) // if on left side, then move to the left, if on the right side then move to the right
             .attr("y", -30) // if on upper side, then move up, if on the down side then move down
             .attr("text-anchor", "middle")
@@ -136,7 +185,7 @@ const drawRadarBlip = (blip, d, viewpoint) => {
     if (viewpoint.blipDisplaySettings.showShapes) {
         let shape
 
-        if (blipShape == "circle") {
+        if ( blipShape == "circle") {
             shape = blip.append("circle")
                 .attr("r", 15)
         }
@@ -186,6 +235,29 @@ const handleShowLabelsChange = (event) => {
 }
 const handleShowShapesChange = (event) => {
     currentViewpoint.blipDisplaySettings.showShapes = event.target.checked
+    drawRadarBlips(currentViewpoint)
+}
+const handleTagFilterChange = (event) => {
+    currentViewpoint.blipDisplaySettings.tagFilter = event.target.value
+    console.log(`new tagfilter value${currentViewpoint.blipDisplaySettings.tagFilter}`)
+    drawRadarBlips(currentViewpoint)
+}
+
+const handleApplyColorsChange = (event) => {
+    currentViewpoint.blipDisplaySettings.applyColors = event.target.checked
+    document.getElementById("colorsLegend").setAttribute("style",`display:${event.target.checked?"block":"none"}`)
+    drawRadarBlips(currentViewpoint)
+}
+
+const handleApplySizesChange = (event) => {
+    currentViewpoint.blipDisplaySettings.applySizes = event.target.checked
+    document.getElementById("sizesLegend").setAttribute("style",`display:${event.target.checked?"block":"none"}`)
+    drawRadarBlips(currentViewpoint)
+}
+const handleApplyShapesChange = (event) => {
+    currentViewpoint.blipDisplaySettings.applyShapes = event.target.checked
+    document.getElementById("shapesLegend").setAttribute("style",`display:${event.target.checked?"block":"none"}`)
+
     drawRadarBlips(currentViewpoint)
 }
 
@@ -373,7 +445,7 @@ const addTooltip = (hoverTooltip, d, x, y) => { // hoverToolTip is a function th
     div
         .html(hoverTooltip(d))
         .style("left", `${x + 10}px`)
-        .style("top", `${y - 78}px`);
+        .style("top", `${y - 58}px`);
 };
 
 const removeTooltip = () => {
@@ -394,6 +466,11 @@ const getKeyForValue = function (object, value) {
 document.getElementById('showImages').addEventListener("change", handleShowImagesChange);
 document.getElementById('showLabels').addEventListener("change", handleShowLabelsChange);
 document.getElementById('showShapes').addEventListener("change", handleShowShapesChange);
+document.getElementById('tagFilter').addEventListener("change", handleTagFilterChange);
+document.getElementById('applyColors').addEventListener("change", handleApplyColorsChange);
+document.getElementById('applySizes').addEventListener("change", handleApplySizesChange);
+document.getElementById('applyShapes').addEventListener("change", handleApplyShapesChange);
+
 
 const addProperty = (label, value, parent) => {
     if (value != null && value.length > 0) {
@@ -434,8 +511,9 @@ function blipWindow(blip, viewpoint) {
     }
 
     addProperty("Category", blip.rating.object.category, body)
-    addProperty("Tags", JSON.stringify(blip.rating.object.tags), body)
-
+    if (blip.rating.object.tags?.length >0) {
+      addProperty("Tags", blip.rating.object.tags.slice(1).reduce((tags, tag) => `${tags}, ${tag}` , blip.rating.object.tags[0]), body)
+    }
     addProperty("Type Offering", blip.rating.object.offering, body)
 
     if (blip.rating.object.homepage != null && blip.rating.object.homepage.length > 1) {
@@ -445,7 +523,7 @@ function blipWindow(blip, viewpoint) {
         homepageLink.node().target = "_new"
         homepageLink.node().addEventListener("click", (e) => { window.open(blip.rating.object.homepage); })
     }
-
+    addProperty("Description", blip.rating.object.description, body)
 
     const ratingDiv = body.append("div")
         .attr("id", "ratingDiv")

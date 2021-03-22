@@ -108,18 +108,18 @@ let radarIndex = { templates: [{ title: encodeURI(config.title.text), descriptio
 
 // TODO use default values for all properties as defined in the meta-model
 const createBlip = () => {
-    const object = {label: "NEW", category: "infrastructure"}
-    const rating = {
+    let newRating = {
         timestamp: Date.now()
         , scope: "Conclusion"
         , comment: "no comment yet"
-        , author: "system generated"
-        , object: object
+        , author: `system generated at ${Date.now()}`
+        , object: {label: `NEW${getViewpoint().blips.length} ${Date.now()}`, category: "infrastructure", homepage:null, image:null}
         , magnitude :"medium"
         , ambition :"trial"
     }
-    const blip = { id: `${getViewpoint().blips.length}`, rating: rating }
-    getViewpoint().blips.push(blip)
+    let blip = { id: `${getViewpoint().blips.length}`, rating: newRating }
+    let blipCount = getViewpoint().blips.push(blip)
+    console.log(`after creating the blip the count is now ${blipCount} == ${getViewpoint().blips.length}`)
     return blip
 
 }

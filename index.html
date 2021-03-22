@@ -168,6 +168,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h3 id="blipEditorTitle">Editing Blip</h3>
+            <img id="blipImage" width="150px" style="float:right" />
             <label for="blipLabel">Technoloy</label>
             <input id="blipLabel" type="text"></input>
             <label for="blipCategorySelect">Category</label>
@@ -177,7 +178,12 @@
             <label for="blipImageURL">Logo/Image URL</label>
             <input id="blipImageURL" type="text"></input>
             <textarea id="pasteArea" placeholder="Paste Image Here"></textarea>
-            <img id="blipImage" width="150px" style="float:right" />
+            <br />
+            <hr />
+            <label for="blipDescription">Description</label>
+            <textarea name="blipDescription" id="blipDescription" rows="2" cols="100"></textarea>
+            <label for="blipTags">Tags</label>
+            <textarea id="blipTags" type="text" rows="2" cols="40"></textarea>
             <br />
             <hr />
             <label for="blipAmbitionSelect">Ambition</label>
@@ -230,7 +236,7 @@
 
         <div class="column2">
             <div id="displayStyle">
-                <p>Compose Display Style</p>
+                <h3>Compose Display Style</h3>
                 <div>
                     <input type="checkbox" id="showImages" name="displayStyle" value="images" checked>
                     <label for=" showImages">Show Images</label>
@@ -243,15 +249,21 @@
                     <input type="checkbox" id="showLabels" name="displayStyle" value="labels">
                     <label for="showLabels">Show Labels</label>
                 </div>
+                <div id="filter">
+                    <label for="tagFilter">Filter on Tags</label>
+                    <br/>
+                    <textarea id="tagFilter" name="tagFilter" rows="2" cols="45"></textarea>
+
+                </div>
+
             </div>
             <hr />
             <div id="sizeLegend">
                 <h3 id="sizesLegendTitle">Sizes</h3>
                 <div>
-                    <!--
                     <input type="checkbox" id="applySizes" name="displayStyle" value="applySizes" checked>
                     <label for="applySizes">Apply Sizes</label>
-                -->
+                
                 </div>
                 <svg id="sizesLegend">
 
@@ -261,10 +273,10 @@
             <div id="shapeLegend">
                 <h3 id="shapesLegendTitle">Shapes</h3>
                 <div>
-                    <!--
+                    
                     <input type="checkbox" id="applyShapes" name="displayStyle" value="applyShapes" checked>
                     <label for="applyShapes">Apply Shapes</label>
-                -->
+                
                 </div>
                 <svg id="shapesLegend">
 
@@ -274,10 +286,10 @@
             <div id="colorLegend">
                 <h3 id="colorLegendTitle">Colors</h3>
                 <div>
-                    <!--
+                    
                     <input type="checkbox" id="applyColors" name="displayStyle" value="applyColors" checked>
                     <label for="applyColors">Apply Colors</label>
-                -->
+                
                 </div>
                 <svg id="colorsLegend">
 
