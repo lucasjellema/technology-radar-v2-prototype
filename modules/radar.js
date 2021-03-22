@@ -52,10 +52,12 @@ function drawRadar(viewpoint, elementDecorator = null) {
         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, config.title.text, `title`])
     styleText(titleElement, config.title, config)
 
+    if (!config.editMode) {
     // legend
     initializeSizesLegend(viewpoint)
     initializeShapesLegend(viewpoint)
     initializeColorsLegend(viewpoint)
+    }
 }
 
 function initializeRadar(config) {
@@ -226,7 +228,7 @@ const drawRingLabels = function (radar, config, elementDecorator) {
         const ringlabel = radar.append("text")
             .attr("id", `ringLabel${i}`)
             .text(ring.label)
-            .attr("y", -currentRadius + 62)
+            .attr("y", -currentRadius + 35) // 35 under the ring edge
             .attr("text-anchor", "middle")
 
             //            .style("pointer-events", "none")

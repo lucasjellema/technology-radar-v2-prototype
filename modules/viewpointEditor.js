@@ -1,7 +1,7 @@
 import { cartesianFromPolar, polarFromCartesian } from './drawingUtilities.js'
 import { makeDraggable } from './drag.js'
 import { subscribeToRadarEvents, drawRadar } from './radar.js'
-import { getConfiguration, subscribeToRadarRefresh, getState, publishRefreshRadar } from './data.js'
+import { getConfiguration, subscribeToRadarRefresh, getState, publishRefreshRadar, getViewpoint } from './data.js'
 import { getEditableDecorator } from './textEditing.js'
 import { isOperationBlackedOut } from './utils.js'
 
@@ -97,7 +97,7 @@ const switchboard = {
         const isSectorDrag = (element.id != null && element.id.startsWith("sectorKnob"))
         if (isSectorDrag) {
             const sectorId = element.id.substring(10) // 10 = length "sectorKnob"
-            const newPolarCoordinates = polarFromCartesion({ x: newCoordinates.x - config.width / 2, y: newCoordinates.y - config.height / 2 })
+            const newPolarCoordinates = polarFromCartesian({ x: newCoordinates.x - config.width / 2, y: newCoordinates.y - config.height / 2 })
             // phi is -PI  (angle% 0.5) to PI (also 50%)
             const dragAnglePercentage = newPolarCoordinates.phi < 0 ? - newPolarCoordinates.phi / (2 * Math.PI) : 1 - newPolarCoordinates.phi / (2 * Math.PI)
 
@@ -213,9 +213,10 @@ let config
 
 const viewpointEditor = function (configuration) {
     config = getConfiguration() // get configuration from module data
+    config.editMode = true
     config.selectedRing = getState().selectedRing
     config.selectedSector = getState().selectedSector
-    drawRadar(config, getEditableDecorator(handleInputChange))
+    drawRadar(getViewpoint(), getEditableDecorator(handleInputChange))
     const svg = d3.select(`svg#${config.svg_id}`)
 
     makeDraggable(svg.node(), switchboard.handleDragEvent)
@@ -286,7 +287,7 @@ const refreshRadar = () => {
     config.selectedRing = getState().selectedRing
     config.selectedSector = getState().selectedSector
 
-    drawRadar(config, getEditableDecorator(handleInputChange))
+    drawRadar(getViewpoint(), getEditableDecorator(handleInputChange))
     initializeColorsConfigurator()
     initializeSizesConfigurator()
     initializeShapesConfigurator()
