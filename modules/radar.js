@@ -1,4 +1,5 @@
 import { cartesianFromPolar, polarFromCartesian } from './drawingUtilities.js'
+import {getState, getConfiguration} from './data.js'
 export { drawRadar, subscribeToRadarEvents }
 
 const color_white = "#FFF"
@@ -24,7 +25,7 @@ const styleText = (textElement, configNode, config, alternativeFontSource = null
 }
 
 function drawRadar(viewpoint, elementDecorator = null) {
-    const config = viewpoint.template
+    const config =  getConfiguration()
     const radar = initializeRadar(config)
     const radarCanvas = radar.append("g")
         .attr("id", "radarCanvas")
@@ -41,7 +42,7 @@ function drawRadar(viewpoint, elementDecorator = null) {
     //rotation only on sectors - not on rings
     sectorCanvas.attr("transform", `rotate(${-360 * config.rotation})`) // clockwise rotation
     drawRingLabels(radar, config, elementDecorator)
-    const title = viewpoint.name ?? config.title.text
+    const title = config.title.text
     const titleElement = radar.append("text")
         .attr("transform", `translate(${config.title.x != null ? config.title.x : -500}, ${config.title.y != null ? config.title.y : -400})`)
         .text(title)
@@ -52,7 +53,7 @@ function drawRadar(viewpoint, elementDecorator = null) {
         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, config.title.text, `title`])
     styleText(titleElement, config.title, config)
 
-    if (!config.editMode) {
+    if (!getState().editMode) {
     // legend
     initializeSizesLegend(viewpoint)
     initializeShapesLegend(viewpoint)
@@ -116,9 +117,9 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                     .style("fill", sector.backgroundColor != null ? sector.backgroundColor : color_white)
                     .attr("opacity", sector.opacity != null ? sector.opacity : 0.6)
                     // define borders of sectors
-                    .style("stroke", ("sectors" == config.topLayer && config.selectedSector == i && config.editMode) ? "red" : config.sectorConfiguration?.stroke?.strokeColor ?? "#000")
-                    .style("stroke-width", ("sectors" == config.topLayer && config.selectedSector == i && config.editMode) ? 8 : config.sectorConfiguration?.stroke?.strokeWidth ?? 3)
-                    .style("stroke-dasharray", ("sectors" == config.topLayer && config.selectedSector == i && config.editMode) ? "" : config.sectorConfiguration?.stroke?.strokeArray ?? "#000")
+                    .style("stroke", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "red" : config.sectorConfiguration?.stroke?.strokeColor ?? "#000")
+                    .style("stroke-width", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? 8 : config.sectorConfiguration?.stroke?.strokeWidth ?? 3)
+                    .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "" : config.sectorConfiguration?.stroke?.strokeArray ?? "#000")
                     .on('click', () => { const sector = i; publishRadarEvent({ type: "sectorClick", sector: i }) })
                 // add color to the sector area outside the outer ring
                 const outerringArc = d3.arc()
@@ -148,7 +149,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
 
 
 
-            if (layer == 1 && "sectors" == config.topLayer && config.editMode) {
+            if (layer == 1 && "sectors" == config.topLayer && getState().editMode) {
                 // draw sector knob at the outer ring edge, on the sector boundaries
                 const sectorKnobPoint = cartesianFromPolar({ r: config.maxRingRadius, phi: currentAngle })
                 sectorCanvas.append("circle")
@@ -187,9 +188,9 @@ const drawRings = function (radar, config) {
             .style("fill", ring.backgroundColor != null ? ring.backgroundColor : color_white)
             .attr("opacity", ring.opacity != null ? ring.opacity : 0.6)
             // define borders of rings
-            .style("stroke", ("rings" == config.topLayer && config.selectedRing == i && config.editMode) ? "red" : config.ringConfiguration?.stroke?.strokeColor ?? "#000")
-            .style("stroke-width", ("rings" == config.topLayer && config.selectedRing == i && config.editMode) ? 6 : config.ringConfiguration?.stroke?.strokeWidth ?? 2)
-            .style("stroke-dasharray", ("rings" == config.topLayer && config.selectedRing == i && config.editMode) ? "" : config.ringConfiguration?.stroke?.strokeArray ?? "9 1")
+            .style("stroke", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "red" : config.ringConfiguration?.stroke?.strokeColor ?? "#000")
+            .style("stroke-width", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? 6 : config.ringConfiguration?.stroke?.strokeWidth ?? 2)
+            .style("stroke-dasharray", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "" : config.ringConfiguration?.stroke?.strokeArray ?? "9 1")
             .on('click', () => { const ring = i; publishRadarEvent({ type: "ringClick", ring: i }) })
         if (ring.backgroundImage && ring.backgroundImage.image) {
             ringCanvas.append('image')
@@ -199,7 +200,7 @@ const drawRings = function (radar, config) {
                 .attr("transform", "translate(100,100)")
                 .attr("class", "draggable")
         }
-        if (config.editMode && "rings" == config.topLayer) {
+        if (getState().editMode && "rings" == config.topLayer) {
             // draw ring knob at the out edge, horizontal axis
             ringCanvas.append("circle")
                 .attr("id", `ringKnob${i}`)

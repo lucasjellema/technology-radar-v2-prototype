@@ -325,7 +325,8 @@
         import { handleBlipDrag, populateBlipEditor } from './modules/blipEditing.js'
 
         const viewpoint = getConfiguration()
-        viewpoint.editMode = false
+       // viewpoint.editMode = false
+        getState().editMode = false
         drawRadar(getViewpoint())
         drawRadarBlips(getViewpoint())
 
@@ -333,7 +334,7 @@
         makeDraggable(svg.node(), (dragEvent) => { handleBlipDrag(dragEvent, getViewpoint()) })
 
         subscribeToRadarRefresh(() => {
-            console.log(`refresh`)
+            //console.log(`refresh`)
             const viewpoint = getConfiguration()
             viewpoint.editMode = false
             drawRadar(getViewpoint())
@@ -341,7 +342,7 @@
         })
         subscribeToRadarEvents((event) => {
             if (event.type == "blipCreation") {
-                console.log(`radar event ${JSON.stringify(event)}`)
+                //console.log(`radar event ${JSON.stringify(event)}`)
                 const blip = createBlip()
                 populateBlipEditor(blip, getViewpoint(), drawRadarBlips)
             }

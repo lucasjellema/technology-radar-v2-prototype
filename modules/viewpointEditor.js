@@ -214,9 +214,10 @@ let config
 const viewpointEditor = function (configuration) {
     config = getConfiguration() // get configuration from module data
     config.editMode = true
+    getState().editMode=true
     config.selectedRing = getState().selectedRing
     config.selectedSector = getState().selectedSector
-    drawRadar(getViewpoint(), getEditableDecorator(handleInputChange))
+    drawRadar(getConfiguration(), getEditableDecorator(handleInputChange))
     const svg = d3.select(`svg#${config.svg_id}`)
 
     makeDraggable(svg.node(), switchboard.handleDragEvent)

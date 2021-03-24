@@ -45,30 +45,49 @@ const genericRatingProperties = [{ name: "scope", description: "The scope or con
 
 const model =
 {
-    objectTypes: [
-        { name: "technology", properties: [] },
-        { name: "consultant" },
-        { name: "workitem" }
-    ]
-    , ratingType: [
-        {
-            name: "technologyAdoption", objectType: "technology", properties: [
-                {
-                    name: "ambition", description: "The current outlook or intent regarding this technology", defaultValue: "identified"
-                    , values: [{ value: "identified", label: "Identified" }, { value: "hold", label: "Hold" }, { value: "assess", label: "Assess" }, { value: "adopt", label: "Adopt" }]
-                },
-                {
-                    name: "magnitude", description: "The relative size of the technology (in terms of investment, people involved, percentage of revenue)", defaultValue: "medium"
-                    , values: [{ value: "tiny", label: "Tiny or Niche" }, { value: "medium", label: "Medium" }, { value: "large", label: "Large" }]
+    objectTypes:
+    {
+        technology: {
+            properties:
+            {
+                "category": {
+                    label: "Category",
+                    type: "string", allowableValues: [{ value: "database", label: "Data Platform" }
+                        , { value: "language", label: "Languages & Frameworks" }, { value: "infrastructure", label: "Infrastructure" }, { value: "concepts", label: "Concepts & Methodology" }
+                    ] //
                 }
+            }
+        },
+        "consultant": {},
+        "workitem": {}
 
-            ]
-        }
-        , { name: "cvRating", objectType: "technology", properties: [] }
-        , { name: "allocationPipeline", objectType: "consultant", properties: [] }
-        , { name: "progressStatus", objectType: "workitem", properties: [] }
-    ]
+    }
 }
+model.ratingTypes =
+{
+    technologyAdoption: {
+        objectType: model.objectTypes.technology, properties:
+        {
+            ambition: {
+                description: "The current outlook or intent regarding this technology", defaultValue: "identified"
+                , allowableValues: [{ value: "identified", label: "Identified" }, { value: "hold", label: "Hold" }, { value: "assess", label: "Assess" }, { value: "adopt", label: "Adopt" }]
+            },
+            magnitude: {
+                description: "The relative size of the technology (in terms of investment, people involved, percentage of revenue)", defaultValue: "medium"
+                , allowableValues: [{ value: "tiny", label: "Tiny or Niche" }, { value: "medium", label: "Medium" }, { value: "large", label: "Large" }]
+            },
+            experience: {
+                description: "The relative time this technology has been around (for us)", defaultValue: "medium"
+                , allowableValues: [{ value: "short", label: "Fresh" }, { value: "medium", label: "Intermediate" }, { value: "long", label: "Very Mature" }]
+            }
+
+        }
+    }
+    , cvRating: { objectType: "technology", properties: [] }
+    , allocationPipeline: { objectType: "consultant", properties: [] }
+    , progressStatus: { objectType: "workitem", properties: [] }
+}
+
 
 // generate a viewpoint: select radar template, select rating type (and indirect object type), define filter - to restrict objects & ratings)
 //                       select viewpoint template - which defines mapping of properties to visual characteristics (sector, ring, shape, color, size, ..)
@@ -78,7 +97,7 @@ const viewpoints = [
     {
         name: "My Technology Radar - Integration"
         , template: null
-        , ratingTypes: []  // which rating type(s) - for which objectTypes - are displayed
+        , ratingTypes: [model.ratingTypes.technologyAdoption]  // which rating type(s) - for which objectTypes - are displayed
         , propertyVisualMaps: { // mapping between property values in rating and object on the one hand and the corresponding visual elements on the other sectors, rings, shapes, colors, sizes ;
             // which property value maps to which of visual elements (indicated by their sequence number in th template) 
             // note: the order of elements in these maps drives the order in which color/size/shape elements are shown in legend and context menu
@@ -112,6 +131,8 @@ const generateBlips = () => {
         const rating = {
             // ambition: Math.random() < 0.3 ? "spotted" : (Math.random() < 0.5 ? "assess" : "adopt")
             magnitude: Math.random() < 0.3 ? "medium" : (Math.random() < 0.5 ? "tiny" : "large")
+            //             magnitude: viewpoints[0].model.ratingType.properties.magnitude.allowableValues[Math.round(Math.random()* viewpoints[0].model.ratingType.properties.magnitude.allowableValues.length)].value
+
             , experience: Math.random() < 0.3 ? "short" : (Math.random() < 0.5 ? "long" : "medium")
             , timestamp: Date.now()
             , scope: "Conclusion"
@@ -141,9 +162,10 @@ snapshot = viewpoint frozen in time
 
 
 const sample = {
+    "model": model,
     "viewpoints": [
         {
-            "name": "Conclusion Technology Radar",
+            "name": "Conclusion Technology Radar 2021",
             "template": {
                 "svg_id": "radarSVGContainer",
                 "width": 1450,
@@ -163,7 +185,7 @@ const sample = {
                     "fontWeight": "bold"
                 },
                 "title": {
-                    "text": "Conclusion Technology Radar",
+                    "text": "Conclusion Technology Radar Prototype",
                     "x": -700,
                     "y": -520,
                     "font": {
@@ -192,7 +214,7 @@ const sample = {
                     },
                     "rings": [
                         {
-                            "label": "Hold",
+                            "label": "Do not touch",
                             "width": 0.13
                         },
                         {
@@ -2132,3 +2154,6 @@ const sample = {
     ],
     "objects": []
 }
+
+sample.model = model
+sample.viewpoints[0].ratingType = model.ratingTypes.technologyAdoption

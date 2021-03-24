@@ -17,9 +17,9 @@ const populateSelect = (selectElementId, data, defaultValue = null) => { // data
     for (let i = 0; i < data.length; i++) {
         option = document.createElement('option');
         option.text = data[i].label;
-        option.value = data[i].data;
+        option.value = data[i].value;
         dropdown.add(option);
-        if (defaultValue != null && defaultValue == data[i].data) {
+        if (defaultValue != null && defaultValue == data[i].value) {
             dropdown.selectedIndex = i + 1 //option.inxdex 
         }
 
@@ -35,9 +35,16 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
 
     const blipEditorTitle = document.getElementById("blipEditorTitle")
     blipEditorTitle.innerText = `Editing ${blip.rating.object.label} `
+    // , sectorMap: { "database": 0, "language": 3, "infrastructure": 2, "concepts": 4, "libraries": 1 } // the object category property drives the sector; the values of category are mapped to values for sector
+    // , ringMap: { "hold": 1, "assess": 2, "adopt": 4, "spotted": 0, "trial": 3 } 
 
-    populateSelect("blipAmbitionSelect", [{ data: "assess", label: "Assess" }, { data: "hold", label: "Hold" }, { data: "trial", label: "Trial" }, { data: "adopt", label: "Adopt" }, { data: "spotted", label: "Spotted" }], blip.rating.ambition)
-    populateSelect("blipCategorySelect", [{ data: "database", label: "Database & Data Platform" }, { data: "language", label: "Languages & Frameworks" }, { data: "infrastructure", label: "Infrastructure" }, { data: "concepts", label: "Concepts & Methodology" }], blip.rating.object.category)
+    // turn map & array into selectOptions: data = key in map, label = label for array element indicated by value in map
+
+    console.log(`rating type ${JSON.stringify(viewpoint.ratingType.objectType.properties.category.allowableValues)}`)
+    
+    
+    populateSelect("blipCategorySelect", viewpoint.ratingType.objectType.properties.category.allowableValues, blip.rating.object.category)
+    populateSelect("blipAmbitionSelect", viewpoint.ratingType.properties.ambition.allowableValues, blip.rating.ambition)
 
     document.getElementById("blipLabel").value = blip.rating.object.label
     document.getElementById("blipHomepage").value = blip.rating.object.homepage
@@ -55,8 +62,9 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
     document.getElementById("blipAuthor").value = blip.rating.author
     document.getElementById("blipScope").value = blip.rating.scope
 
-    populateSelect("blipMagnitudeSelect", [{ data: "tiny", label: "Tiny" }, { data: "medium", label: "Medium" }, { data: "large", label: "Large" }], blip.rating.magnitude)
-    populateSelect("blipMaturitySelect", [{ data: "short", label: "Fresh" }, { data: "medium", label: "Intermediate" }, { data: "long", label: "Very Mature" }], blip.rating.experience)
+    populateSelect("blipMagnitudeSelect", viewpoint.ratingType.properties.magnitude.allowableValues, blip.rating.magnitude)
+    populateSelect("blipMaturitySelect", viewpoint.ratingType.properties.experience.allowableValues, blip.rating.experience)
+
 
     initializeImagePaster((imageURL) => {
         document.getElementById("blipImageURL").value = imageURL

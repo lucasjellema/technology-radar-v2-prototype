@@ -6,28 +6,35 @@ const RADAR_INDEX_KEY = "RADAR-INDEX"
 let data = {
     templates: []
     , objects: []
+    , viewpoints: []
 
 }
 
 // describes the current state for the radar application - not intrinsic qualities of the template
 let state = {
-    currentTemplate: 0,
+    currentTemplate: 0, 
+    currentViewpoint : 0,
     selectedRing: 1,
     selectedSector: 2,
     editMode: true,
+    editType: "viewpoint"  // template or viewpoint-configuration
 
 }
 
 const getConfiguration = () => {
-    return data.templates[state.currentTemplate]
+    return state.editType=="template"? data.templates[state.currentTemplate]:data.viewpoints[state.currentViewpoint].template
 }
 
 const getViewpoint = () => {
-    return data.viewpoints[0] //TODO dynamically select current viewpoint 
+    return data.viewpoints[state.currentViewpoint] 
 }
+
+
+
 const getState = () => {
     return state
 }
+
 // load index RADAR-INDEX from LocalStorage
 // in RADAR_INDEX are references to other documents
 // { viewpoints : [{title, description, lastupdate}, {title}] 
@@ -227,9 +234,18 @@ const resetCurrentTemplate = () => {
 }
 
 const handleTemplateSelection = (event) => {
-    console.log(`template selection ${event.target.value}  ${data.templates[event.target.value].title.text}`)
+    console.log(`template selection ${event.target.value} `)
+    // ${data.templates[event.target.value].title.text}`)
     //const selectedOption = document.getElementById('templateSelector').options[event.target.value]
-    state.currentTemplate = event.target.value
+    if (event.target.value < data.templates.length) {
+        state.currentTemplate = event.target.value
+        state.editType="template"
+    
+    } else {
+        state.currentViewpoint = event.target.value - data.templates.length
+        state.editType="viewpoint"
+    
+    }
     publishRefreshRadar()
 }
 
@@ -245,11 +261,22 @@ const populateTemplateSelector = () => {
         var option = document.createElement("option");
 
         option.value = i;
-        option.text = data.templates[i].title.text;
-        option.selected = i == state.currentTemplate
+        option.text = `Template: ${data.templates[i].title.text}`;
+        option.selected = i == state.currentTemplate && state.editType=="template"
+        selector.add(option, null);
+    }
+    // also add the viewpoints
+    for (var i = 0; i < data.viewpoints.length; i++) {
+        var option = document.createElement("option");
+
+        option.value = i + data.templates.length;
+        option.text = `Viewpoint: ${data.viewpoints[i].name}`;
+        option.selected = i == state.currentViewpoint && state.editType=="viewpoint"
         selector.add(option, null);
     }
 }
+
+
 
 document.getElementById('save').addEventListener("click", saveDataToLocalStorage);
 document.getElementById('load').addEventListener("click", loadDataFromLocalStore);

@@ -135,7 +135,7 @@ const drawRadarBlip = (blip, d, viewpoint) => {
                         let content = `<div>     
                     ${viewpoint.blipDisplaySettings.showLabels ? "" : d.rating.object.label}
                     `
-                        if (!viewpoint.blipDisplaySettings.showImages) {
+                        if (!viewpoint.blipDisplaySettings.showImages && d.rating.object.image != null) {
                             content = `${content}<img src="${d.rating.object.image}" width="100px"></img>`
                         }
                         return `${content}</div>`
@@ -516,8 +516,8 @@ function blipWindow(blip, viewpoint) {
             .attr("src", blip.rating.object.image)
             .attr("style", "width: 350px;float:right;padding:15px")
     }
-
-    addProperty("Category", blip.rating.object.category, body)
+    const categoryLabel = getLabelForAllowableValue(blip.rating.object.category, viewpoint.ratingType.objectType.properties.category.allowableValues)
+    addProperty("Category", categoryLabel, body)
     if (blip.rating.object.tags?.length > 0) {
         addProperty("Tags", blip.rating.object.tags.slice(1).reduce((tags, tag) => `${tags}, ${tag}`, blip.rating.object.tags[0]), body)
     }
@@ -534,9 +534,12 @@ function blipWindow(blip, viewpoint) {
 
     const ratingDiv = body.append("div")
         .attr("id", "ratingDiv")
-    addProperty("Ambition", blip.rating.ambition, ratingDiv)
-    addProperty("Magnitude", blip.rating.magnitude, ratingDiv)
-    addProperty("Maturity", blip.rating.experience, ratingDiv)
+    const ambitionLabel = getLabelForAllowableValue(blip.rating.ambition, viewpoint.ratingType.properties.ambition.allowableValues)
+    addProperty("Ambition", ambitionLabel, ratingDiv)
+    const magnitudeLabel = getLabelForAllowableValue(blip.rating.magnitude, viewpoint.ratingType.properties.magnitude.allowableValues)
+    addProperty("Magnitude", magnitudeLabel, ratingDiv)
+    const experienceLabel = getLabelForAllowableValue(blip.rating.experience, viewpoint.ratingType.properties.experience.allowableValues)
+    addProperty("Maturity", experienceLabel, ratingDiv)
 
     addProperty("Comment", blip.rating.comment, ratingDiv)
     addProperty("Scope", blip.rating.scope, ratingDiv)
@@ -566,4 +569,13 @@ function blipWindow(blip, viewpoint) {
 
         }).html("Close")
         ;
+}
+
+
+const getLabelForAllowableValue = (value, allowableValues) => {
+  let label=""
+    for(let i = 0;i<allowableValues.length; i++) {
+        if (allowableValues[i].value == value) { label = allowableValues[i].label; break }
+    }
+return label
 }
