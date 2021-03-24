@@ -1,0 +1,199 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>PROTOTYPE 2 - AMIS | Conclusion Technology Radar</title>
+    <link rel="shortcut icon" href="https://res.conclusion.nl/inc/img/favicon.gif">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+    <style>
+        .column {
+            float: left;
+            width: 70%;
+        }
+
+        .column2 {
+            float: left;
+            width: 30%;
+        }
+
+        .column1_2 {
+            float: left;
+            width: 50%;
+        }
+
+        .column1_3 {
+            float: left;
+            width: 33%;
+            height: 800px;
+        }
+
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .selected {
+            stroke: red;
+            stroke-width: 7;
+            stroke-dasharray: 6 2;
+        }
+
+        /* used for selecting sectors and rings */
+        .draggable,
+        .draggable-group {
+            /* used for draggable elements such as ring and sector knobs */
+
+            cursor: move;
+        }
+
+        .clickableProperty {
+            cursor: pointer;
+        }
+
+        .templates-select {
+            padding: 9px 0;
+            width: 70%;
+            border: none;
+            border-bottom: 1px solid #ccc
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="row">
+        <div class="column">
+            <svg id="radarSVGContainer">
+            </svg>
+        </div>
+
+        <div class="column2">
+            <p id="value"></p>
+            <div id="rotationSlider">
+                <p>Rotation</p>
+            </div>
+            <div id="layering">
+                <p>Select top layer</p>
+                <div>
+                    <input type="radio" id="sectors" name="layering" value="sectors" checked>
+                    <label for=" sectors">Sectors</label>
+                </div>
+                <div>
+                    <input type="radio" id="rings" name="layering" value="rings">
+                    <label for="rings">Rings</label>
+                </div>
+            </div>
+            <hr />
+            <h3 id="selectedRingSector">Selected Sector/Ring </h3>
+            <div>
+                <p>Background Image</p>
+                <label for="backgroundImageURL">URL for Image</label>
+                <input id="backgroundImageURL" style="width: 250px;"
+                    title="Specify the URL for the background image"></input>
+                <textarea id="pasteArea" placeholder="Paste Image Here"></textarea>
+                <label for="imageScaleFactor">Scale Factor</label>
+                <input id="imageScaleFactor" style="width: 50px;"
+                    title="Specify the image scalefactor - between 0 and 100"></input>
+                <img id="pastedImage" width="200px"></img>
+            </div>
+            <div>
+                <div class="column1_2">
+                    <h4>Background Color (inside rings)</h4>
+                    <div id="insideRingsColorPicker"></div>
+                </div>
+                <div class="column1_2">
+                    <h4>Background Color (outside rings)</h4>
+                    <div id="outerRingBackgroundColorPicker"></div>
+                </div>
+            </div>
+            <div id="opacitySlider">
+                <p>Opacity</p>
+            </div>
+            <div>
+                <a href="#" id="newRingOrSector">New</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#" id="removeRingOrSector">Remove</a>
+                <br />
+                <a href="#" id="decreaseRingOrSector">&lt;</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#" id="increaseRingOrSector">&gt;</a>
+            </div>
+            <hr />
+            <div id="layering">
+                <p>Extended Sector Boundaries?</p>
+                <div>
+                    <input type="radio" id="extendedSectorBoundaries" name="sectorBoundaries"
+                        value="extendedSectorBoundaries" checked>
+                    <label for=" sectors">Extended</label>
+                </div>
+
+                <div>
+                    <input type="radio" id="noExtendedSectorBoundaries" name="sectorBoundaries"
+                        value="noExtendedSectorBoundaries">
+                    <label for="rings">Not Extended</label>
+                </div>
+            </div>
+            <hr />
+            <div>
+                <h3>Template management</h3>
+                <div>
+                    <input type="button" id="save" name="save" value="Save to Local Storage">
+                    <input type="button" id="load" name="load" value="Load (from local storage)">
+                </div>
+                <div>
+                    <input type="button" id="download" name="download" value="Download">
+                    <input type="button" id="upload" name="upload" value="Upload">
+                    <input type="file" id="fileElem" multiple accept="application/json,text/*" style="display:none">
+                </div>
+                <div>
+                    <input type="button" id="newTemplate" name="newTemplate" value="Create New Template">
+                    <input type="button" id="cloneTemplate" name="clone" value="Clone Template">
+                    <input type="button" id="resetTemplate" name="reset" value="Reset Current Template">
+                </div>
+                <div>
+                    <select id="templateSelector" class="templates-select" name="option">
+                        <option value="" disabled selected>Select Radar Template</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <hr />
+    <div id="sizes" class="column1_3">
+        <h3>Define Sizes in Template</h3>
+        <svg id="sizesBox">
+
+        </svg>
+
+    </div>
+
+    <div id="colors" class="column1_3">
+        <h3>Define Colors in Template</h3>
+        <svg id="colorsBox">
+
+        </svg>
+        <div id="colorsBoxColorPicker"></div>
+
+    </div>
+    <div id="shapes" class="column1_3">
+        <h3>Define Shapes in Template</h3>
+        <svg id="shapesBox">
+
+        </svg>
+    </div>
+
+    <script type="module">
+        import { viewpointEditor } from './modules/viewpointEditor.js';
+        import { getConfiguration } from './modules/data.js';
+        viewpointEditor(getConfiguration())
+
+    </script>
+
+</body>
