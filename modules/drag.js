@@ -2,7 +2,7 @@ export { makeDraggable }
 
 // https://www.telerik.com/blogs/debouncing-and-throttling-in-javascript
 var timerId;
-var throttleFunction = function (func, delay=150) {
+var throttleFunction = function (func, delay = 150) {
     // If setTimeout is already scheduled, no need to do anything
     if (timerId) {
         return
@@ -17,7 +17,7 @@ var throttleFunction = function (func, delay=150) {
         timerId = undefined;
     }, delay)
 }
-function makeDraggable(svg, handleDragEvent, throttleDelay=150) {
+function makeDraggable(svg, handleDragEvent, throttleDelay = 150) {
     svg.addEventListener('mousedown', startDrag);
     svg.addEventListener('mousemove', drag);
     svg.addEventListener('mouseup', endDrag);
@@ -72,7 +72,9 @@ function makeDraggable(svg, handleDragEvent, throttleDelay=150) {
             throttleFunction(
                 () => {
                     const newCoord = handleDragEvent("drag", selectedElement, { deltaX: coord.x - offset.x, deltaY: coord.y - offset.y, x: coord.x, y: coord.y, offset: offset })
-                    transform.setTranslate(newCoord.deltaX, newCoord.deltaY);
+                    if (newCoord != null && newCoord.deltaX != null && newCoord.deltay != null) {
+                        transform.setTranslate(newCoord.deltaX, newCoord.deltaY);
+                    }
                 }, throttleDelay)             // Do not execute this function more ofthen than one per this number of miliseconds 
 
         }
