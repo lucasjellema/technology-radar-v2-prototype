@@ -150,7 +150,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                         .attr("class", "draggable")
 
                 }
-                if (config.sectorConfiguration.showRegularSectorLabels == null || config.sectorConfiguration.showRegularSectorLabels) {
+                if (config.sectorConfiguration.showRegularSectorLabels != null && config.sectorConfiguration.showRegularSectorLabels) {
                     // print horizontal sector label in the sector
                     const labelCoordinates = cartesianFromPolar({ phi: 2 * (1 - (currentAnglePercentage-0.05)) * Math.PI , r: config.maxRingRadius * 1.2 })
                     const sectorLabel = sectorCanvas.append("text")
