@@ -64,6 +64,7 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
 
     populateSelect("blipMagnitudeSelect", viewpoint.ratingType.properties.magnitude.allowableValues, blip.rating.magnitude)
     populateSelect("blipMaturitySelect", viewpoint.ratingType.properties.experience.allowableValues, blip.rating.experience)
+    populateSelect("blipOffering", viewpoint.ratingType.objectType.properties.offering.allowableValues, blip.rating.object.offering)
 
 
     initializeImagePaster((imageURL) => {
@@ -89,6 +90,7 @@ const saveBlipEdit = () => {
     blip.rating.comment = document.getElementById("blipRemark").value
     blip.rating.scope = document.getElementById("blipScope").value
     blip.rating.author = document.getElementById("blipAuthor").value
+    blip.rating.object.offering = document.getElementById("blipOffering").value
 
     blip.rating.experience = document.getElementById("blipMaturitySelect").value
     blip.rating.magnitude = document.getElementById("blipMagnitudeSelect").value

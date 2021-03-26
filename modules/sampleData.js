@@ -50,11 +50,29 @@ const model =
         technology: {
             properties:
             {
+                "label": {
+                    label: "Label",
+                    type: "string"
+                    , defaultValue: "Some Technology"
+                }, "homepage": {
+                    label: "Homepage",
+                    type: "string"
+                }, "vendor": {
+                    label: "Vendor",
+                    type: "string"                    
+                }, "offering": {
+                    label: "Offering",
+                    type: "string", allowableValues: [{ value: "oss", label: "Open Source Software" }
+                        , { value: "commercial", label: "Commercial Software" }, { value: "other", label: "Other type of offering" }
+                    ]
+                    , defaultValue: "oss"
+                },
                 "category": {
                     label: "Category",
                     type: "string", allowableValues: [{ value: "database", label: "Data Platform" }
                         , { value: "language", label: "Languages & Frameworks" }, { value: "infrastructure", label: "Infrastructure" }, { value: "concepts", label: "Concepts & Methodology" }
                     ] //
+                    , defaultValue: "infrastructure"
                 }
             }
         },
@@ -71,6 +89,7 @@ model.ratingTypes =
             ambition: {
                 description: "The current outlook or intent regarding this technology", defaultValue: "identified"
                 , allowableValues: [{ value: "identified", label: "Identified" }, { value: "hold", label: "Hold" }, { value: "assess", label: "Assess" }, { value: "adopt", label: "Adopt" }]
+                , defaultValue: "identified"
             },
             magnitude: {
                 description: "The relative size of the technology (in terms of investment, people involved, percentage of revenue)", defaultValue: "medium"
@@ -2155,5 +2174,5 @@ const sample = {
     "objects": []
 }
 
-sample.model = model
+//sample.model = model
 sample.viewpoints[0].ratingType = model.ratingTypes.technologyAdoption

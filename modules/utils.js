@@ -1,4 +1,4 @@
-export {isOperationBlackedOut}
+export {isOperationBlackedOut, uuidv4}
 
 
 // to prevent an operation from being executed too often, we record a timestamp in the near future until when 
@@ -15,3 +15,10 @@ const isOperationBlackedOut = ( blackoutKey, blackoutPeriod = blackoutPeriodDefa
       blackoutMap[blackoutKey] = now + blackoutPeriod // set fresh blackout if currently not blacked out 
    return isBlackedout
 }
+
+
+const  uuidv4= ()=>  {
+   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+   );
+ }

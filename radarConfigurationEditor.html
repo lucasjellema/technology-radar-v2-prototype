@@ -97,10 +97,11 @@
                 <input id="backgroundImageURL" style="width: 250px;"
                     title="Specify the URL for the background image"></input>
                 <textarea id="pasteArea" placeholder="Paste Image Here"></textarea>
+                <br/>
                 <label for="imageScaleFactor">Scale Factor</label>
                 <input id="imageScaleFactor" style="width: 50px;"
                     title="Specify the image scalefactor - between 0 and 100"></input>
-                <img id="pastedImage" width="200px"></img>
+                <img id="pastedImage" width="120px"></img>
             </div>
             <div>
                 <div class="column1_2">
@@ -126,11 +127,22 @@
             </div>
             <hr />
             <div id="layering">
+                <p>Sectorlabels</p>
+                <div>
+                    <input type="checkbox" id="sectorLabelsOnSectorEdge" name="sectorLabelsOnSectorEdge"
+                         checked>
+                    <label for="sectorLabelsOnSectorEdge">Display Curved Sector Labels on the sector edge</label>
+                    <br />
+                    <input type="checkbox" id="regularSectorLabels" name="regularSectorLabels"
+                         >
+                    <label for="regularSectorLabels">Display Horizontal Sector Labels</label>
+                </div>
+
                 <p>Extended Sector Boundaries?</p>
                 <div>
                     <input type="radio" id="extendedSectorBoundaries" name="sectorBoundaries"
                         value="extendedSectorBoundaries" checked>
-                    <label for=" sectors">Extended</label>
+                    <label for="sectors">Extended</label>
                 </div>
 
                 <div>
@@ -157,6 +169,10 @@
                     <input type="button" id="resetTemplate" name="reset" value="Reset Current Template">
                 </div>
                 <div>
+                    <input type="button" id="cloneViewpoint" name="cloneViewpoint" value="Clone Viewpoint">
+                   <input type="button" id="createViewpoint" name="createViewpoint" value="Create Viewpoint from Template">
+                   
+                </div>                <div>
                     <select id="templateSelector" class="templates-select" name="option">
                         <option value="" disabled selected>Select Radar Template</option>
                     </select>
@@ -188,7 +204,50 @@
 
         </svg>
     </div>
+    <br />
+    <hr />
+    <br />
+    <hr />
+    <h2>Advanced! Take Care!</h2>
+    <div id="propertyVisualMapsContainer" class="column1_3">
+        <h3>Property Visual Maps</h3>
+        <textarea id="propertyVisualMaps" rows="20" cols="75" title="These objects map the values of properties to the sequence number of visual elements such as rings, sectors, colors and shapes. And sizes."></textarea>
 
+    </div>
+
+    <div id="ringConfigurationContainer" class="column1_3">
+        <h3>Ring Configuration</h3>
+            <textarea id="ringConfiguration" rows="20" cols="75" title="These objects define the rings and the configuration of the ring labels"></textarea>
+    </div>
+    <div id="sectorConfigurationContainer" class="column1_3">
+        <h3>Sector Configuration</h3>
+            <textarea id="sectorConfiguration" rows="20" cols="75" title="These objects define the sectors and the configuration of the sector labels"></textarea>
+    </div>
+    <div id="mainConfigContainer" class="column1_3">
+        <h3>Configuration Details</h3>
+        <textarea id="mainConfig" rows="20" cols="75" title="Properties for the configuration."></textarea>
+
+    </div>
+    <div id="modelContainer" class="column1_3">
+        <h3>Viewpoint Data Model</h3>
+        <textarea id="vpModel" rows="20" cols="75" title="Properties for the viewpoint datamodel."></textarea>
+
+    </div>
+    <div id="X" class="column1_3">
+        <h3>TBD</h3>
+
+    </div>
+
+    <input type="button" id="saveJSONToConfig" name="saveJSON" value="Save JSON definition"/>
+    <br />
+    <hr />
+    <div id="vpObjectsContainer" class="column1_3">
+        <h3>Viewpoint Objects</h3>
+        <textarea id="vpObjects" rows="20" cols="75" title="Objects to add to the radar viewpoint (generate blips for each object)"></textarea>
+        <input type="button" id="generateBlips" name="generateBlips" value="Process Objects - create blips in Viewpoint"/>
+
+    </div>
+    
     <script type="module">
         import { viewpointEditor } from './modules/viewpointEditor.js';
         import { getConfiguration } from './modules/data.js';

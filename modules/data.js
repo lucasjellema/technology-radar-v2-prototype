@@ -12,8 +12,8 @@ let data = {
 
 // describes the current state for the radar application - not intrinsic qualities of the template
 let state = {
-    currentTemplate: 0, 
-    currentViewpoint : 0,
+    currentTemplate: 0,
+    currentViewpoint: 0,
     selectedRing: 1,
     selectedSector: 2,
     editMode: true,
@@ -22,11 +22,11 @@ let state = {
 }
 
 const getConfiguration = () => {
-    return state.editType=="template"? data.templates[state.currentTemplate]:data.viewpoints[state.currentViewpoint].template
+    return state.editType == "template" ? data.templates[state.currentTemplate] : data.viewpoints[state.currentViewpoint].template
 }
 
 const getViewpoint = () => {
-    return data.viewpoints[state.currentViewpoint] 
+    return data.viewpoints[state.currentViewpoint]
 }
 
 
@@ -120,9 +120,9 @@ const createBlip = () => {
         , scope: "Conclusion"
         , comment: "no comment yet"
         , author: `system generated at ${Date.now()}`
-        , object: {label: `NEW${getViewpoint().blips.length} ${Date.now()}`, category: "infrastructure", homepage:null, image:null}
-        , magnitude :"medium"
-        , ambition :"trial"
+        , object: { label: `NEW${getViewpoint().blips.length} ${Date.now()}`, category: "infrastructure", homepage: null, image: null }
+        , magnitude: "medium"
+        , ambition: "trial"
     }
     let blip = { id: `${getViewpoint().blips.length}`, rating: newRating }
     let blipCount = getViewpoint().blips.push(blip)
@@ -202,11 +202,65 @@ const createNewTemplate = () => {
 }
 
 const cloneTemplate = () => {
-    const clone = JSON.parse(JSON.stringify(getConfiguration()))
-    clone.title.text = `CLONE of ${clone.title.text}`
-    data.templates.push(clone)
-    state.currentTemplate = data.templates.length - 1
-    publishRefreshRadar()
+    if (getState().editType == "template") {
+        const clone = JSON.parse(JSON.stringify(getConfiguration()))
+        clone.title.text = `CLONE of ${clone.title.text}`
+        data.templates.push(clone)
+        state.currentTemplate = data.templates.length - 1
+        publishRefreshRadar()
+    }
+}
+
+const createViewpointFromTemplate = () => {
+    if (getState().editType == "template") {
+
+        const newViewpoint = {}
+        newViewpoint.template = JSON.parse(JSON.stringify(getConfiguration()))
+        newViewpoint.name = `Created from of ${getConfiguration().title.text}`
+        newViewpoint.blips = []
+        newViewpoint.ratingType = {
+            objectType: {
+                properties:
+                {
+                    "category": {
+                        label: "Category",
+                        type: "string", allowableValues: [{ value: "database", label: "Data Platform" }
+                            , { value: "language", label: "Languages & Frameworks" }, { value: "infrastructure", label: "Infrastructure" }, { value: "concepts", label: "Concepts & Methodology" }
+                        ] //
+                        , defaultValue: "infrastructure"
+                    }
+                }
+            }, properties:
+            {
+                ambition: {
+                    description: "The current outlook or intent regarding this technology", defaultValue: "identified"
+                    , allowableValues: [{ value: "identified", label: "Identified" }, { value: "hold", label: "Hold" }, { value: "assess", label: "Assess" }, { value: "adopt", label: "Adopt" }]
+                }
+            }
+        }
+        // define propertyViewMaps
+        newViewpoint.propertyVisualMaps = {
+            sizeMap: { "tiny": 0, "medium": 1, "large": 2 } // the rating magnitude property drives the size; the values of magnitude are mapped to values for size
+            , sectorMap: { "database": 0, "language": 3, "infrastructure": 2, "concepts": 4, "libraries": 1 } // the object category property drives the sector; the values of category are mapped to values for sector
+            , ringMap: { "hold": 1, "assess": 2, "adopt": 4, "spotted": 0, "trial": 3 } // the rating ambition property drives the ring; the values of ambition are mapped to values for ring
+            , shapeMap: { "oss": 1, "commercial": 0, "other": 3 }
+            , colorMap: { "short": 0, "long": 1, "intermediate": 3, "other": 2 }
+        }
+
+        data.viewpoints.push(newViewpoint)
+        state.currentViewpoint = data.viewpoints.length - 1
+        publishRefreshRadar()
+    }
+}
+
+const cloneViewpoint = () => {
+    if (getState().editType == "template") {
+        const clone = JSON.parse(JSON.stringify(getConfiguration()))
+        clone.title.text = `CLONE of ${clone.title.text}`
+        data.templates.push(clone)
+        state.currentTemplate = data.templates.length - 1
+        publishRefreshRadar()
+    }
 }
 
 const resetTemplate = (template) => {
@@ -239,12 +293,12 @@ const handleTemplateSelection = (event) => {
     //const selectedOption = document.getElementById('templateSelector').options[event.target.value]
     if (event.target.value < data.templates.length) {
         state.currentTemplate = event.target.value
-        state.editType="template"
-    
+        state.editType = "template"
+
     } else {
         state.currentViewpoint = event.target.value - data.templates.length
-        state.editType="viewpoint"
-    
+        state.editType = "viewpoint"
+
     }
     publishRefreshRadar()
 }
@@ -255,27 +309,26 @@ const populateTemplateSelector = () => {
     for (var i = 0; i < selector.options.length + 3; i++) {
         selector.remove(1)
     }
+    if (getState().editType == "template") {
+        // add options based on data.templates[].title.text
+        for (var i = 0; i < data.templates.length; i++) {
+            var option = document.createElement("option");
 
-    // add options based on data.templates[].title.text
-    for (var i = 0; i < data.templates.length; i++) {
-        var option = document.createElement("option");
-
-        option.value = i;
-        option.text = `Template: ${data.templates[i].title.text}`;
-        option.selected = i == state.currentTemplate && state.editType=="template"
-        selector.add(option, null);
+            option.value = i;
+            option.text = `Template: ${data.templates[i].title.text}`;
+            option.selected = i == state.currentTemplate && state.editType == "template"
+            selector.add(option, null);
+        }
     }
-    // also add the viewpoints
     for (var i = 0; i < data.viewpoints.length; i++) {
         var option = document.createElement("option");
 
         option.value = i + data.templates.length;
         option.text = `Viewpoint: ${data.viewpoints[i].name}`;
-        option.selected = i == state.currentViewpoint && state.editType=="viewpoint"
+        option.selected = i == state.currentViewpoint && state.editType == "viewpoint"
         selector.add(option, null);
     }
 }
-
 
 
 document.getElementById('save').addEventListener("click", saveDataToLocalStorage);
@@ -286,6 +339,8 @@ document.getElementById('newTemplate').addEventListener("click", createNewTempla
 document.getElementById('cloneTemplate').addEventListener("click", cloneTemplate);
 document.getElementById('resetTemplate').addEventListener("click", resetCurrentTemplate);
 document.getElementById('templateSelector').addEventListener("change", handleTemplateSelection);
+document.getElementById('cloneViewpoint').addEventListener("click", cloneViewpoint);
+document.getElementById('createViewpoint').addEventListener("click", createViewpointFromTemplate);
 
 // mini event bus for the Refresh Radar Event
 const subscribers = []

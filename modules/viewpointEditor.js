@@ -66,10 +66,20 @@ const switchboard = {
     handleDragEvent: (eventType, element, dragCoordinates) => {
         if (element == null || element.id == null) return
         let newCoordinates = dragCoordinates
-        //    console.log(`dragged element:${element.id} ${element.id}`)
+      //  console.log(`dragged element:${element.id} ${element.id}`)
+        if (element.id.startsWith("sectorLabel")) {
+            handleDragSectorLabel(element.id.substring(11), newCoordinates)
+        }
         if (element.id.startsWith("sectorBackgroundImage")) {
             handleDragSectorBackgroundImage(element.id.substring(21), newCoordinates)
         }
+        if (element.id.startsWith("title")) {
+            handleDragTitle(element.id, newCoordinates)
+        }
+        if (element.id.startsWith("ringLabel")) {
+            handleDragRingLabel(element.id.substring(9), newCoordinates)
+        }
+
         const isRingDrag = (element.id != null && element.id.startsWith("ringKnob"))
         if (isRingDrag) {
             newCoordinates.deltaY = 0
@@ -186,9 +196,9 @@ const switchboard = {
                 config.sectorConfiguration.sectors.push({ label: "NEW!!", angle: 1 })
                 getState().selectedSector() = 0
             } else {
-                getState().selectedSector = getState().selectedSector?? 0
+                getState().selectedSector = getState().selectedSector ?? 0
                 const halfAngle = config.sectorConfiguration.sectors[getState().selectedSector].angle != null ? config.sectorConfiguration.sectors[getState().selectedSector].angle / 2 : 0.3
-                if ( config.sectorConfiguration.sectors[getState().selectedSector] != null) config.sectorConfiguration.sectors[getState().selectedSector].angle = halfAngle
+                if (config.sectorConfiguration.sectors[getState().selectedSector] != null) config.sectorConfiguration.sectors[getState().selectedSector].angle = halfAngle
                 config.sectorConfiguration.sectors.splice(getState().selectedSector, 0, { label: "NEW!!", angle: halfAngle })
             }
         }
@@ -205,8 +215,23 @@ const switchboard = {
 
 }
 
+const handleRegularSectorLabelsChange = (e) => {
+    config.sectorConfiguration.showRegularSectorLabels = e.currentTarget.checked
+    publishRefreshRadar()
+}
+
+const handleSectorLabelsOnSectorEdgeChange = (e) => {
+    config.sectorConfiguration.showEdgeSectorLabels = e.currentTarget.checked
+    publishRefreshRadar()
+}
 
 
+const initializeSectorConfiguration = () => {
+    document.getElementById('sectorLabelsOnSectorEdge').checked = config.sectorConfiguration.showEdgeSectorLabels
+    document.getElementById('regularSectorLabels').checked = config.sectorConfiguration.showRegularSectorLabels
+    document.getElementById('extendedSectorBoundaries').checked = config.sectorBoundariesExtended
+    document.getElementById('noExtendedSectorBoundaries').checked = !config.sectorBoundariesExtended
+}
 
 let config
 
@@ -214,7 +239,7 @@ let config
 const viewpointEditor = function (configuration) {
     config = getConfiguration() // get configuration from module data
     config.editMode = true
-    getState().editMode=true
+    getState().editMode = true
     config.selectedRing = getState().selectedRing
     config.selectedSector = getState().selectedSector
     drawRadar(getConfiguration(), getEditableDecorator(handleInputChange))
@@ -233,6 +258,8 @@ const viewpointEditor = function (configuration) {
     initializeColorsConfigurator()
     initializeSizesConfigurator()
     initializeShapesConfigurator()
+    initializeSectorConfiguration()
+    initializeConfigurationJSONContainers()
     subscribeToRadarRefresh(refreshRadar)
     subscribeToRadarEvents(handleRadarEvent)
     synchronizeControlsWithCurrentRingOrSector()
@@ -292,13 +319,18 @@ const refreshRadar = () => {
     initializeColorsConfigurator()
     initializeSizesConfigurator()
     initializeShapesConfigurator()
+    initializeSectorConfiguration()
+    initializeConfigurationJSONContainers()
     synchronizeControlsWithCurrentRingOrSector()
-    // TODO synchronize top layer, selected ring/selected sector, 
+
 }
 
 const initializeEditListeners = () => {
     document.getElementById('sectors').addEventListener("change", switchboard.handleLayersChange);
     document.getElementById('rings').addEventListener("change", switchboard.handleLayersChange);
+    document.getElementById('sectorLabelsOnSectorEdge').addEventListener("change", handleSectorLabelsOnSectorEdgeChange);
+    document.getElementById('regularSectorLabels').addEventListener("change", handleRegularSectorLabelsChange);
+
     document.getElementById('extendedSectorBoundaries').addEventListener("change", switchboard.handleSectorBoundariesChange);
     document.getElementById('noExtendedSectorBoundaries').addEventListener("change", switchboard.handleSectorBoundariesChange);
     document.getElementById('increaseRingOrSector').addEventListener("click", switchboard.handleIncreaseRingOrSector);
@@ -307,8 +339,93 @@ const initializeEditListeners = () => {
     document.getElementById('newRingOrSector').addEventListener("click", switchboard.handleAddRingOrSector);
     document.getElementById('imageScaleFactor').addEventListener("change", switchboard.handleImageScaleFactor);
     document.getElementById('backgroundImageURL').addEventListener("change", switchboard.handleBackgroundImageURL);
+    document.getElementById('saveJSONToConfig').addEventListener("click", handleSaveJSON);
+    document.getElementById('generateBlips').addEventListener("click", processObjectsIntoBlips);
 
 
+}
+
+const processObjectsIntoBlips = () => {
+    console.log(`process objects`)
+    if (getState().editType == "viewpoint") {
+        try {
+            const objects = d3.csvParse(document.getElementById('vpObjects').value)
+            const vp = getViewpoint()
+            const ratingType = getViewpoint().ratingType
+            const objectType = ratingType.objectType
+            // process objects
+            const originalBlipCount = getViewpoint().blips.length
+            for (let i = 0; i < objects.length; i++) {
+                // for each: check if label already occurs for one of the existing blips.rating.object.label; if so - ignore
+                // set default values on object properties that do not already have a value
+                // create a rating set default values on properties ; reference the object
+                objects[i].tags = []
+                objects[i].category = objects[i].category != null && objects[i].category.length > 0 ? objects[i].category : objectType.properties.category?.defaultValue
+                console.log(`category ${objects[i].category}  default ${objectType.properties.category?.defaultValue}`)
+                // create a blip - reference rating
+                const rating = {
+                    ambition: ratingType.properties.ambition?.defaultValue
+                    , experience: ratingType.properties.experience?.defaultValue
+                    , magnitude: ratingType.properties.magnitude?.defaultValue
+                    , timestamp: Date.now()
+                    , object: objects[i]
+                }
+                const blip = { id: `${i + 1 + originalBlipCount}`, rating: rating, }
+                getViewpoint().blips.push(blip)
+
+            }
+            console.log(`objects received ${JSON.stringify(objects, null, 2)}`)
+        } catch (e) { console.log(`parsing of csv content failed ${JSON.stringify(e)}`) }
+    }
+}
+
+
+const initializeConfigurationJSONContainers = () => {
+    if (getState().editType == "viewpoint") {
+        document.getElementById('propertyVisualMaps').value = JSON.stringify(getViewpoint().propertyVisualMaps, null, 2)
+        document.getElementById('vpModel').value = JSON.stringify(getViewpoint().ratingType, null, 2)
+        // TODO extract objects from blips document.getElementById('vpData').value = JSON.stringify(getViewpoint().ratingType, null, 2)
+    }
+    document.getElementById('ringConfiguration').value = JSON.stringify(getConfiguration().ringConfiguration, null, 2)
+    document.getElementById('sectorConfiguration').value = JSON.stringify(getConfiguration().sectorConfiguration, null, 2)
+
+    const mainProperties = { defaultFont: getConfiguration().defaultFont, title: getConfiguration().title, colors: getConfiguration().colors }
+    document.getElementById('mainConfig').value = JSON.stringify(mainProperties, null, 2)
+
+    document.getElementById('vpObjects').value = "label,category,homepage,offering,vendor\n"
+
+
+}
+
+const handleSaveJSON = () => {
+    if (getState().editType == "viewpoint") {
+        try {
+            getViewpoint().propertyVisualMaps = JSON.parse(document.getElementById('propertyVisualMaps').value)
+            getViewpoint().ratingType = JSON.parse(document.getElementById('vpModel').value)
+        } catch (e) {
+            console.log(`propertyVisualMaps or vpModel does not contain valid JSON`)
+        }
+    } try {
+        getConfiguration().ringConfiguration = JSON.parse(document.getElementById('ringConfiguration').value)
+    } catch (e) {
+        console.log(`ringConfiguration does not contain valid JSON`)
+    }
+    try {
+        getConfiguration().sectorConfiguration = JSON.parse(document.getElementById('sectorConfiguration').value)
+    } catch (e) {
+        console.log(`sectorConfiguration does not contain valid JSON`)
+    }
+    try {
+        const mainConfig = JSON.parse(document.getElementById('mainConfig').value)
+        getConfiguration().title = mainConfig.title
+        getConfiguration().defaultFont = mainConfig.defaultFont
+        getConfiguration().colors = mainConfig.colors
+    }
+    catch (e) {
+        console.log(`mainConfig does not contain valid JSON`)
+    }
+
+    publishRefreshRadar()
 }
 
 const synchronizeControlsWithCurrentRingOrSector = () => {
@@ -445,6 +562,25 @@ const handleDragSectorBackgroundImage = function (sectorId, newCoordinates) {
     selectedObject.backgroundImage.y = newCoordinates.y - config.height / 2
     //  console.log(`image for ${JSON.stringify(selectedObject)}`)
 }
+
+const handleDragSectorLabel = function (sectorId, newCoordinates) {
+    const selectedObject = config.sectorConfiguration.sectors[sectorId]
+    selectedObject.x = newCoordinates.x - config.width / 2
+    selectedObject.y = newCoordinates.y - config.height / 2
+}
+
+
+const handleDragTitle = function (titleId, newCoordinates) {
+    config.title.x = newCoordinates.x - config.width / 2
+    config.title.y = newCoordinates.y - config.height / 2
+}
+
+const handleDragRingLabel = function (ringId, newCoordinates) {
+    config.ringConfiguration.rings[ringId].x = newCoordinates.x - config.width / 2
+    config.ringConfiguration.rings[ringId].y = newCoordinates.y - config.height / 2
+}
+
+
 let currentColorsBoxColor
 let colorsBoxColorPicker
 const initializeColorsConfigurator = () => {

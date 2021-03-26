@@ -175,6 +175,8 @@
             <select name="blipCategory" id="blipCategorySelect"></select>
             <label for="blipHomepage">Homepage</label>
             <input id="blipHomepage" type="text"></input>
+            <label for="blipOffering">Offering Type</label>
+            <select  id="blipOffering" type="text"></select>
             <label for="blipImageURL">Logo/Image URL</label>
             <input id="blipImageURL" type="text"></input>
             <textarea id="pasteArea" placeholder="Paste Image Here"></textarea>
@@ -194,11 +196,19 @@
             <select name="blipMaturity" id="blipMaturitySelect"></select>
             <br />
             <hr />
+           
             <label for="blipScope">Scope</label>
-            <input id="blipScope"
+            <input list="scopeList" id="blipScope"
                 title="to which individual, team, department, company, industry does this rating apply"
-                type="text"></input>
-            <label for="blipAuthor">Author</label>
+                ></input>
+                <datalist id="scopeList">
+                  <option value="Conclusion">
+                  <option value="AMIS">
+                  <option value="John Doe">
+                  <option value="Community">
+                </datalist>
+
+                <label for="blipAuthor">Author</label>
             <input id="blipAuthor" type="text"></input>
             <br />
             <hr />
@@ -312,6 +322,14 @@
                     <input type="button" id="load" name="load" value="Load (from local storage)">
                 </div>
             </div>
+            <br />
+            <hr />
+            <div>
+                <h3 id="viewpointSelectorTitle">Select Viewpoint</h3>
+                <select id="templateSelector" class="templates-select" name="option">
+                    <option value="" disabled selected>Select Radar Viewpoint</option>
+                </select>
+            </div>
         </div>
 
 
@@ -360,12 +378,11 @@
                 <input type="button" id="newTemplate" name="newTemplate" value="Create New Template">
                 <input type="button" id="cloneTemplate" name="clone" value="Clone Template">
                 <input type="button" id="resetTemplate" name="reset" value="Reset Current Template">
+                <input type="button" id="cloneViewpoint" name="cloneViewpoint" value="Clone Viewpoint">
+                   <input type="button" id="createViewpoint" name="createViewpoint" value="Create Viewpoint from Template">
+
             </div>
-            <div>
-                <select id="templateSelector" class="templates-select" name="option">
-                    <option value="" disabled selected>Select Radar Template</option>
-                </select>
-            </div>
+  
         </div>
     </div>
 </body>

@@ -1,5 +1,5 @@
 import { cartesianFromPolar, polarFromCartesian } from './drawingUtilities.js'
-import {getState, getConfiguration} from './data.js'
+import { getState, getConfiguration } from './data.js'
 export { drawRadar, subscribeToRadarEvents }
 
 const color_white = "#FFF"
@@ -25,7 +25,7 @@ const styleText = (textElement, configNode, config, alternativeFontSource = null
 }
 
 function drawRadar(viewpoint, elementDecorator = null) {
-    const config =  getConfiguration()
+    const config = getConfiguration()
     const radar = initializeRadar(config)
     const radarCanvas = radar.append("g")
         .attr("id", "radarCanvas")
@@ -44,9 +44,10 @@ function drawRadar(viewpoint, elementDecorator = null) {
     drawRingLabels(radar, config, elementDecorator)
     const title = config.title.text
     const titleElement = radar.append("text")
+        .attr("id", "title")
         .attr("transform", `translate(${config.title.x != null ? config.title.x : -500}, ${config.title.y != null ? config.title.y : -400})`)
         .text(title)
-        // .attr("class", "draggable")
+        .attr("class", getState().editMode ? "draggable" : "")
         .on('contextmenu', (e, d) => {
             createRadarContextMenu(e, d, this, viewpoint);
         })
@@ -54,10 +55,10 @@ function drawRadar(viewpoint, elementDecorator = null) {
     styleText(titleElement, config.title, config)
 
     if (!getState().editMode) {
-    // legend
-    initializeSizesLegend(viewpoint)
-    initializeShapesLegend(viewpoint)
-    initializeColorsLegend(viewpoint)
+        // legend
+        initializeSizesLegend(viewpoint)
+        initializeShapesLegend(viewpoint)
+        initializeColorsLegend(viewpoint)
     }
 }
 
@@ -85,7 +86,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
         .attr("x2", config.sectorBoundariesExtended ? 2000 : config.maxRingRadius)
         .attr("y2", 0)
         .style("stroke", config.colors.grid)
-        .style("stroke-width", 3);
+        .style("stroke-width", 1);
 
     for (let layer = 0; layer < 2; layer++) { // TODO if not edit mode then only one layer
         let currentAnglePercentage = 0
@@ -132,36 +133,54 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                     .attr("d", outerringArc)
                     .style("fill", sector?.outerringBackgroundColor ?? "white")
 
-                // print sector label along the edge of the arc
-                displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sectorCanvas, i, sector, config, elementDecorator)
-
+                if (config.sectorConfiguration.showEdgeSectorLabels == null || config.sectorConfiguration.showEdgeSectorLabels) {
+                    // print sector label along the edge of the arc
+                    displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sectorCanvas, i, sector, config, elementDecorator)
+                }
             }
+
             // TODO make sure that background images are printed after and therefore on top of all sectors    
-            if (layer == 1 && sector?.backgroundImage?.image != null) {
-                sectorCanvas.append('image')
-                    .attr("id", `sectorBackgroundImage${i}`)
-                    .attr('xlink:href', sector.backgroundImage.image)
-                    .attr('width', 100)
-                    .attr("transform", `translate(${sector.backgroundImage.x ?? 100},${sector.backgroundImage.y ?? 100}) scale(${sector.backgroundImage?.scaleFactor ?? 1}) `)
-                    .attr("class", "draggable")
+            if (layer == 1) {
+                if (sector?.backgroundImage?.image != null) {
+                    sectorCanvas.append('image')
+                        .attr("id", `sectorBackgroundImage${i}`)
+                        .attr('xlink:href', sector.backgroundImage.image)
+                        .attr('width', 100)
+                        .attr("transform", `translate(${sector.backgroundImage.x ?? 100},${sector.backgroundImage.y ?? 100}) scale(${sector.backgroundImage?.scaleFactor ?? 1}) `)
+                        .attr("class", "draggable")
 
-            }
+                }
+                if (config.sectorConfiguration.showRegularSectorLabels == null || config.sectorConfiguration.showRegularSectorLabels) {
+                    // print horizontal sector label in the sector
+                    const labelCoordinates = cartesianFromPolar({ phi: 2 * (1 - (currentAnglePercentage-0.05)) * Math.PI , r: config.maxRingRadius * 1.2 })
+                    const sectorLabel = sectorCanvas.append("text")
+                        .attr("id", `sectorLabel${i}`)
+                        .text(sector.label)
+                        .attr("y", sector.y != null ? sector.y : labelCoordinates.y)
+                        .attr("x", sector.x != null ? sector.x : labelCoordinates.x)
+                        .attr("text-anchor", "middle")
+                        .style("user-select", "none")
+                        .attr("class", getState().editMode ? "draggable" : "")
+                        .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, sector.label, `sectorLabel${i}`]);
+                    styleText(sectorLabel, sector, config, config.sectorConfiguration)
+                }
 
 
 
-            if (layer == 1 && "sectors" == config.topLayer && getState().editMode) {
-                // draw sector knob at the outer ring edge, on the sector boundaries
-                const sectorKnobPoint = cartesianFromPolar({ r: config.maxRingRadius, phi: currentAngle })
-                sectorCanvas.append("circle")
-                    .attr("id", `sectorKnob${i}`)
-                    .attr("cx", sectorKnobPoint.x)
-                    .attr("cy", -sectorKnobPoint.y)
-                    .attr("r", 15)
-                    .style("fill", "red")
-                    .attr("opacity", 1)
-                    .style("stroke", "#000")
-                    .style("stroke-width", 7)
-                    .attr("class", "draggable")
+                if ("sectors" == config.topLayer && getState().editMode) {
+                    // draw sector knob at the outer ring edge, on the sector boundaries
+                    const sectorKnobPoint = cartesianFromPolar({ r: config.maxRingRadius, phi: currentAngle })
+                    sectorCanvas.append("circle")
+                        .attr("id", `sectorKnob${i}`)
+                        .attr("cx", sectorKnobPoint.x)
+                        .attr("cy", -sectorKnobPoint.y)
+                        .attr("r", 15)
+                        .style("fill", "red")
+                        .attr("opacity", 1)
+                        .style("stroke", "#000")
+                        .style("stroke-width", 7)
+                        .attr("class", "draggable")
+                }
             }
         }
     }//layers
@@ -229,11 +248,11 @@ const drawRingLabels = function (radar, config, elementDecorator) {
         const ringlabel = radar.append("text")
             .attr("id", `ringLabel${i}`)
             .text(ring.label)
-            .attr("y", -currentRadius + 35) // 35 under the ring edge
+            .attr("y", ring.y != null ? ring.y : -currentRadius + 35) // 35 under the ring edge
+            .attr("x", ring.x != null ? ring.x : 0) // 35 under the ring edge
             .attr("text-anchor", "middle")
-
-            //            .style("pointer-events", "none")
             .style("user-select", "none")
+            .attr("class", getState().editMode ? "draggable" : "")
             .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, ring.label, `ringLabel${i}`]);
         styleText(ringlabel, ring, config, config.ringConfiguration)
 
@@ -464,9 +483,9 @@ const radarMenu = (x, y, d, blip, viewpoint) => {
             console.log(`Create Blip was clicked`)
             d3.select('.radar-context-menu').remove();
             // create blip
-            publishRadarEvent({ type: "blipCreation"})
+            publishRadarEvent({ type: "blipCreation" })
             // enage blip editing ?? via event ? 
-            
+
 
         })
 }

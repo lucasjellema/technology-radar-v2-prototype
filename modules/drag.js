@@ -68,11 +68,11 @@ function makeDraggable(svg, handleDragEvent, throttleDelay = 150) {
         if (selectedElement) {
             evt.preventDefault();
             var coord = getMousePosition(evt);
-            //  console.log(`x move ${coord.x - offset.x}, y move ${coord.y - offset.y}, coord x: ${coord.x}, offset.x ${offset.x}`)
+            // console.log(`x move ${coord.x - offset.x}, y move ${coord.y - offset.y}, coord x: ${coord.x}, offset.x ${offset.x}`)
             throttleFunction(
                 () => {
                     const newCoord = handleDragEvent("drag", selectedElement, { deltaX: coord.x - offset.x, deltaY: coord.y - offset.y, x: coord.x, y: coord.y, offset: offset })
-                    if (newCoord != null && newCoord.deltaX != null && newCoord.deltay != null) {
+                    if (newCoord != null && newCoord.deltaX != null && newCoord.deltaY != null) {
                         transform.setTranslate(newCoord.deltaX, newCoord.deltaY);
                     }
                 }, throttleDelay)             // Do not execute this function more ofthen than one per this number of miliseconds 
