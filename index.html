@@ -160,11 +160,14 @@
             padding: 4px;
             margin: 4px
         }
+
         .must {
             background-color: #2a9e2e;
         }
+
         .plus {
-            background-color: #70fa75;color:#000
+            background-color: #70fa75;
+            color: #000
         }
 
         /* Green */
@@ -326,7 +329,7 @@
         <div class="column2">
             <div id="displayStyle">
 
-                <h3>Compose Display Style</h3>
+                <h3>Display Settings</h3>
                 <div>
                     <input type="checkbox" id="showImages" name="displayStyle" value="images" checked>
                     <label for=" showImages">Show Images</label>
@@ -342,14 +345,13 @@
                 <div id="filter">
                     <label for="tagFilter">Filter on Tags</label>
                     <br />
-                    <div id="filteringTagsContainer">
-                        
+                    <div id="filteringTagsContainer" >
                     </div>
-                   
                     <br />
+                    <div>
                     <input list="tagsList" id="filterTagSelector"></input>
-                    <input type="button" id="addTagToFilter" name="addTag" value="Add Tag to Filter">
-                    <datalist id="tagsList" />
+                    <input type="button" id="addTagToFilter" name="addTag" value="Add Tag to Filter" />
+                    </div>
                 </div>
 
             </div>
@@ -423,6 +425,9 @@
 
 
     </div>
+    <datalist id="tagsList"> <!-- a list of all tags assigned to any of the blips' objects -->
+        <option value="X"></option>
+    </datalist>
     <script type="module">
         import { drawRadar, subscribeToRadarEvents } from './modules/radar.js';
         import { drawRadarBlips } from './modules/radarBlips.js';
