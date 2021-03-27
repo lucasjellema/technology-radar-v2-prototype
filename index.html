@@ -345,87 +345,89 @@
                 <div id="filter">
                     <label for="tagFilter">Filter on Tags</label>
                     <br />
-                    <div id="filteringTagsContainer" >
-                    </div>
+                    <div id="filteringTagsContainer"></div>
                     <br />
                     <div>
-                    <input list="tagsList" id="filterTagSelector"></input>
-                    <input type="button" id="addTagToFilter" name="addTag" value="Add Tag to Filter" />
+                        <input list="tagsList" id="filterTagSelector"></input>
+                        <input type="button" id="addTagToFilter" name="addTag" value="Add Tag to Filter" />
                     </div>
                 </div>
 
             </div>
 
-        </div>
-        <hr />
-        <div id="sizeLegend">
-            <h3 id="sizesLegendTitle">Sizes</h3>
-            <div>
-                <input type="checkbox" id="applySizes" name="displayStyle" value="applySizes" checked>
-                <label for="applySizes">Apply Sizes</label>
+            <hr />
+            <div id="sizeLegend">
+                <h3 id="sizesLegendTitle">Sizes</h3>
+                <div>
+                    <input type="checkbox" id="applySizes" name="displayStyle" value="applySizes" checked />
+                    <label for="applySizes">Apply Sizes</label>
 
+                </div>
+                <svg id="sizesLegend">
+
+                </svg>
             </div>
-            <svg id="sizesLegend">
+            <hr>
+            </hr>
+            <div id="shapeLegend">
+                <h3 id="shapesLegendTitle">Shapes</h3>
+                <div>
 
-            </svg>
-        </div>
-        <hr />
-        <div id="shapeLegend">
-            <h3 id="shapesLegendTitle">Shapes</h3>
-            <div>
+                    <input type="checkbox" id="applyShapes" name="displayStyle" value="applyShapes" />
+                    <label for="applyShapes">Apply Shapes</label>
 
-                <input type="checkbox" id="applyShapes" name="displayStyle" value="applyShapes" checked>
-                <label for="applyShapes">Apply Shapes</label>
+                </div>
+                <svg id="shapesLegend">
 
+                </svg>
             </div>
-            <svg id="shapesLegend">
+            <hr>
+            </hr>
+            <div id="colorLegend">
+                <h3 id="colorLegendTitle">Colors</h3>
+                <div>
 
-            </svg>
-        </div>
-        <hr />
-        <div id="colorLegend">
-            <h3 id="colorLegendTitle">Colors</h3>
-            <div>
+                    <input type="checkbox" id="applyColors" name="displayStyle" value="applyColors" checked />
+                    <label for="applyColors">Apply Colors</label>
 
-                <input type="checkbox" id="applyColors" name="displayStyle" value="applyColors" checked>
-                <label for="applyColors">Apply Colors</label>
+                </div>
+                <svg id="colorsLegend">
 
+                </svg>
             </div>
-            <svg id="colorsLegend">
 
-            </svg>
-        </div>
-
-        <br />
-        <hr />
-        <div id="dataManagement">
-            <h3 id="dataManagementTitle">Radar Data Management</h3>
-            <div>
-                <input type="button" id="download" name="download" value="Download">
-                <input type="button" id="upload" name="upload" value="Upload">
-                <input type="file" id="fileElem" multiple accept="application/json,text/*" style="display:none">
+            <br />
+            <hr />
+            <div id="dataManagement">
+                <h3 id="dataManagementTitle">Radar Data Management</h3>
+                <div>
+                    <input type="button" id="download" name="download" value="Download">
+                    <input type="button" id="upload" name="upload" value="Upload">
+                    <input type="file" id="fileElem" multiple accept="application/json,text/*" style="display:none">
+                </div>
+                <br></br>
+                <hr>
+                </hr>
+                <div>
+                    <input type="button" id="save" name="save" value="Save to Local Storage">
+                    <input type="button" id="load" name="load" value="Load (from local storage)">
+                </div>
             </div>
             <br />
             <hr />
             <div>
-                <input type="button" id="save" name="save" value="Save to Local Storage">
-                <input type="button" id="load" name="load" value="Load (from local storage)">
+                <h3 id="viewpointSelectorTitle">Select Viewpoint</h3>
+                <select id="templateSelector" class="templates-select" name="option">
+                    <option value="" disabled selected>Select Radar Viewpoint</option>
+                </select>
             </div>
         </div>
-        <br />
-        <hr />
-        <div>
-            <h3 id="viewpointSelectorTitle">Select Viewpoint</h3>
-            <select id="templateSelector" class="templates-select" name="option">
-                <option value="" disabled selected>Select Radar Viewpoint</option>
-            </select>
-        </div>
-    </div>
 
 
 
     </div>
-    <datalist id="tagsList"> <!-- a list of all tags assigned to any of the blips' objects -->
+    <datalist id="tagsList">
+        <!-- a list of all tags assigned to any of the blips' objects -->
         <option value="X"></option>
     </datalist>
     <script type="module">
