@@ -29,6 +29,27 @@ const populateSelect = (selectElementId, data, defaultValue = null) => { // data
 let blipEdited
 let drawRadarBlipsToCall
 let viewpointToReuse
+
+
+const initializeTagsField = (blip) => {
+    const tagsContainer = document.getElementById('blipTagsContainer')
+    tagsContainer.innerHTML = null
+
+    for (let i = 0; i < blip.rating.object.tags.length; i++) {
+        const innerHTML = `<div class="dropup">
+     <span id="tag0" class="extra tagfilter dropbtn">${blip.rating.object.tags[i]}</span>
+     <div class="dropup-content">
+         <a href="#" id="removeBlipTag${i}">Remove</a>
+     </div>`
+        const div = document.createElement('div');
+        div.className = "dropup"
+        div.innerHTML = innerHTML
+        tagsContainer.appendChild(div)
+        document.getElementById(`removeBlipTag${i}`).addEventListener("click", () => { blip.rating.object.tags.splice(i, 1); initializeTagsField(blip)})
+    }
+
+}
+
 const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
     var modal = document.getElementById("modalBlipEditor");
     modal.style.display = "block";
@@ -51,12 +72,16 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
     document.getElementById("blipImageURL").value = blip.rating.object.image
     document.getElementById("blipImageURL").addEventListener("change", (e) => { document.getElementById("blipImage").src = e.target.value })
     document.getElementById("blipImage").src = blip.rating.object.image
-    let blipTags
-    if (blip.rating.object.tags?.length >0) {
-        blipTags= blip.rating.object.tags.slice(1).reduce((tags, tag) => `${tags}, ${tag}`,blip.rating.object.tags[0])
-      }
+    initializeTagsField(blip)
+    document.getElementById("addTagToBlip").addEventListener("click",
+     (event) => {
+        const filterTagValue = document.getElementById("blipTagSelector").value
+        blip.rating.object.tags.push(filterTagValue)
+        initializeTagsField(blip)
+    })
+
      
-    document.getElementById("blipTags").value = blipTags
+    // document.getElementById("blipTags").value = blipTags
     document.getElementById("blipDescription").value = blip.rating.object.description
     document.getElementById("blipRemark").value = blip.rating.comment
     document.getElementById("blipAuthor").value = blip.rating.author
@@ -83,9 +108,6 @@ const saveBlipEdit = () => {
     blip.rating.object.label = document.getElementById("blipLabel").value
     blip.rating.object.homepage = document.getElementById("blipHomepage").value
     blip.rating.object.image = document.getElementById("blipImageURL").value
-    const tagsString = document.getElementById("blipTags").value
-    const tags = tagsString.split(",")
-    blip.rating.object.tags = tags 
     blip.rating.object.description = document.getElementById("blipDescription").value
     blip.rating.comment = document.getElementById("blipRemark").value
     blip.rating.scope = document.getElementById("blipScope").value

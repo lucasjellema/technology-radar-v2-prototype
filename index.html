@@ -170,7 +170,6 @@
             color: #000
         }
 
-        /* Green */
         .extra {
             background-color: #2196F3;
         }
@@ -265,10 +264,16 @@
             <textarea id="pasteArea" placeholder="Paste Image Here"></textarea>
             <br />
             <hr />
+            <label for="blipTagsContainer">Tags</label>
+            <div id="blipTagsContainer"></div>
+            <br />
+            <div>
+                <input list="tagsList" id="blipTagSelector"></input>
+                <input type="button" id="addTagToBlip" name="addTag" value="Add Tag" />
+            </div>
             <label for="blipDescription">Description</label>
             <textarea name="blipDescription" id="blipDescription" rows="2" cols="100"></textarea>
-            <label for="blipTags">Tags</label>
-            <textarea id="blipTags" type="text" rows="2" cols="40"></textarea>
+
             <br />
             <hr />
             <label for="blipAmbitionSelect">Ambition</label>
