@@ -163,13 +163,13 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
 
     // TODO: determine from meta data which blip property has to be updated from the new sector
     // update the category - mapped to sector - to the value mapped to the newly selected sector 
-    blip.rating.object.category = getKeyForValue(viewpoint.propertyVisualMaps.sectorMap, dropSegment.sector) // "find category value mapped to the sector value of dropSector" 
+    blip.rating.object.category = getKeyForValue(viewpoint.propertyVisualMaps.sector.valueMap, dropSegment.sector) // "find category value mapped to the sector value of dropSector" 
 
     // TODO: determine from meta data which blip property has to be updated from the new ring
 
     // update the ambition - mapped to ring  - to the value mapped to the newly selected ring 
     //  = "find ambition value mapped to the ring value of dropRing" 
-    blip["rating"]["ambition"] = getKeyForValue(viewpoint.propertyVisualMaps.ringMap, dropSegment.ring)
+    blip["rating"]["ambition"] = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring)
 }
 
 const getKeyForValue = function (object, value) {

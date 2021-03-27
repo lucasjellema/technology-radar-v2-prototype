@@ -48,6 +48,7 @@ const model =
     objectTypes:
     {
         technology: {
+            name: "technology",
             properties:
             {
                 "label": {
@@ -59,7 +60,8 @@ const model =
                     type: "string"
                 }, "vendor": {
                     label: "Vendor",
-                    type: "string"                    
+                    type: "string",
+                    discrete: true
                 }, "offering": {
                     label: "Offering",
                     type: "string", allowableValues: [{ value: "oss", label: "Open Source Software" }
@@ -116,15 +118,23 @@ const viewpoints = [
     {
         name: "My Technology Radar - Integration"
         , template: null
-        , ratingTypes: [model.ratingTypes.technologyAdoption]  // which rating type(s) - for which objectTypes - are displayed
+        , ratingType: "technologyAdoption"  // which rating type(s) - for which objectTypes - are displayed        
         , propertyVisualMaps: { // mapping between property values in rating and object on the one hand and the corresponding visual elements on the other sectors, rings, shapes, colors, sizes ;
             // which property value maps to which of visual elements (indicated by their sequence number in th template) 
             // note: the order of elements in these maps drives the order in which color/size/shape elements are shown in legend and context menu
-            sizeMap: { "tiny": 0, "medium": 1, "large": 2 } // the rating magnitude property drives the size; the values of magnitude are mapped to values for size
-            , sectorMap: { "database": 0, "language": 3, "infrastructure": 2, "concepts": 4, "libraries": 1 } // the object category property drives the sector; the values of category are mapped to values for sector
-            , ringMap: { "hold": 1, "assess": 2, "adopt": 4, "spotted": 0, "trial": 3 } // the rating ambition property drives the ring; the values of ambition are mapped to values for ring
-            , shapeMap: { "oss": 1, "commercial": 0, "other": 3 }
-            , colorMap: { "short": 0, "long": 1, "intermediate": 3, "other": 2 }
+            size: {
+                property: "size", valueMap: { "tiny": 0, "medium": 1, "large": 2 } // the rating magnitude property drives the size; the values of magnitude are mapped to values for size
+            }
+            , sector: {
+                property: "object.category", valueMap: { "database": 0, "language": 3, "infrastructure": 2, "concepts": 4, "libraries": 1 } // the object category property drives the sector; the values of category are mapped to values for sector
+            }
+            , ring: {
+                property: "ambition", valueMap: { "hold": 1, "assess": 2, "adopt": 4, "spotted": 0, "trial": 3 } // the rating ambition property drives the ring; the values of ambition are mapped to values for ring
+            }
+            , shape: {
+                property: "object.offering", valueMap: { "oss": 1, "commercial": 0, "other": 3 }
+            }
+            , color: { property: "experience", valueMap: { "short": 0, "long": 1, "intermediate": 3, "other": 2 } }
         },
         blipDisplaySettings: {
             showImages: false, showShapes: true, showLabels: true
@@ -396,37 +406,22 @@ const sample = {
                     ]
                 }
             },
-            "ratingTypes": [],
+            "ratingType": "technologyAdaption",
             "propertyVisualMaps": {
-                "sizeMap": {
-                    "tiny": 0,
-                    "medium": 1,
-                    "large": 2
-                },
-                "sectorMap": {
-                    "database": 0,
-                    "language": 3,
-                    "infrastructure": 2,
-                    "concepts": 4,
-                    "libraries": 1
-                },
-                "ringMap": {
-                    "hold": 0,
-                    "assess": 1,
-                    "adopt": 3,
-                    "trial": 2
-                },
-                "shapeMap": {
-                    "oss": 1,
-                    "commercial": 0,
-                    "other": 3
-                },
-                "colorMap": {
-                    "short": 0,
-                    "long": 1,
-                    "intermediate": 3,
-                    "other": 2
+                size: {
+                    property: "size", valueMap: { "tiny": 0, "medium": 1, "large": 2 } // the rating magnitude property drives the size; the values of magnitude are mapped to values for size
                 }
+                , sector: {
+                    property: "object.category", valueMap: { "database": 0, "language": 3, "infrastructure": 2, "concepts": 4, "libraries": 1 } // the object category property drives the sector; the values of category are mapped to values for sector
+                }
+
+                ,ring: {
+                    property: "ambition", valueMap: { "hold": 1, "assess": 2, "adopt": 4, "spotted": 0, "trial": 3 } // the rating ambition property drives the ring; the values of ambition are mapped to values for ring
+                }
+                , shape: {
+                    property: "object.offering", valueMap: { "oss": 1, "commercial": 0, "other": 3 }
+                }
+                , color: { property: "experience", valueMap: { "short": 0, "long": 1, "intermediate": 3, "other": 2 } }
             },
             "blipDisplaySettings": {
                 "showImages": true,
@@ -435,7 +430,7 @@ const sample = {
                 "applyShapes": false,
                 "applySizes": true,
                 "applyColors": false,
-                "tagFilter": "data"
+                "tagFilter": [{type:"plus", tag:"data"},{type:"plus", tag:"sql"},{type:"minus", tag:"nosql"}]
             },
             "blips": [
                 {

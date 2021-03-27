@@ -302,16 +302,16 @@ const initializeSizesLegend = (viewpoint) => {
     const sizesBox = d3.select("svg#sizesLegend")
         .style("background-color", "silver")
         .attr("width", "80%")
-        .attr("height", Object.keys(viewpoint.propertyVisualMaps.sizeMap).length * 55 + 20)
+        .attr("height", Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length * 55 + 20)
     sizesBox.selectAll("*").remove(); // clean content (if there is any)
 
     sizesBox.append('g').attr('class', 'sizesBox')
     const circleIndent = 10
     const labelIndent = 70
-    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.sizeMap).length; i++) {
-        const key = Object.keys(viewpoint.propertyVisualMaps.sizeMap)[i]
-        const scaleFactor = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.sizeMap[key]].size
-        const label = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.sizeMap[key]].label
+    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length; i++) {
+        const key = Object.keys(viewpoint.propertyVisualMaps.size.valueMap)[i]
+        const scaleFactor = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].size
+        const label = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].label
 
         const sizeEntry = sizesBox.append('g')
             .attr("transform", `translate(${circleIndent + 20}, ${30 + i * 55})`)
@@ -345,16 +345,16 @@ const initializeShapesLegend = (viewpoint) => {
     const shapesBox = d3.select("svg#shapesLegend")
         .style("background-color", "#FEE")
         .attr("width", "80%")
-        .attr("height", Object.keys(viewpoint.propertyVisualMaps.shapeMap).length * 45 + 20)
+        .attr("height", Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length * 45 + 20)
     shapesBox.selectAll("*").remove(); // clean content (if there is any)
 
     shapesBox.append('g').attr('class', 'shapesBox')
     const circleIndent = 5
     const labelIndent = 50
-    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shapeMap).length; i++) {
-        const key = Object.keys(viewpoint.propertyVisualMaps.shapeMap)[i]
-        const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shapeMap[key]].shape
-        const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shapeMap[key]].label
+    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
+        const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
+        const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
+        const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
 
         shapesBox.append("text")
             .attr("id", `shapeLabel${i}`)
@@ -403,16 +403,16 @@ const initializeColorsLegend = (viewpoint) => {
     const colorsBox = d3.select("svg#colorsLegend")
         .style("background-color", "#EFF")
         .attr("width", "80%")
-        .attr("height", Object.keys(viewpoint.propertyVisualMaps.colorMap).length * 45 + 20)
+        .attr("height", Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length * 45 + 20)
     colorsBox.selectAll("*").remove(); // clean content (if there is any)
 
     colorsBox.append('g').attr('class', 'colorsBox')
     const circleIndent = 5
     const labelIndent = 50
-    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.colorMap).length; i++) {
-        const key = Object.keys(viewpoint.propertyVisualMaps.colorMap)[i]
-        const colorToShow = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.colorMap[key]].color
-        const label = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.colorMap[key]].label
+    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length; i++) {
+        const key = Object.keys(viewpoint.propertyVisualMaps.color.valueMap)[i]
+        const colorToShow = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].color
+        const label = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].label
 
         const colorEntry = colorsBox.append('g')
             .attr("transform", `translate(${circleIndent + 20}, ${30 + i * 45})`)

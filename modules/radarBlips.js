@@ -1,27 +1,70 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { populateBlipEditor } from './blipEditing.js'
+import { getViewpoint } from './data.js'
 export { drawRadarBlips }
 
-const color_white = "#FFF"
+
 const radarCanvasElementId = "radarCanvas"
 const blipsLayerElementId = "blipsLayer"
 let currentViewpoint
 
 const filterBlip = (blip, viewpoint) => {
-   // console.log(`filter blip ${blip.rating.object.label} with tagfilter ${viewpoint.blipDisplaySettings.tagFilter}`)
+    // console.log(`filter blip ${blip.rating.object.label} with tagfilter ${viewpoint.blipDisplaySettings.tagFilter}`)
     // determine all tags in the tag filter  - for now as individual strings, no + or - support TODO
-    let blipOK = true
+    let blipOK = viewpoint.blipDisplaySettings.tagFilter?.length == 0 // no filter - then blip is ok 
     if (viewpoint.blipDisplaySettings.tagFilter?.length ?? 0 > 0) {
-        const filters = viewpoint.blipDisplaySettings.tagFilter.split(" ").map((filter) => filter.trim())
-        for (let i = 0; i < filters.length; i++) {
+        try {
+        for (let i = 0; i < viewpoint.blipDisplaySettings.tagFilter.length; i++) {
+            const filter = viewpoint.blipDisplaySettings.tagFilter[i]
             try {
-            blipOK = filters[i].length == 0 || JSON.stringify(blip.rating.object.tags).indexOf(filters[i]) > -1
-            if (!blipOK) break;
+               const blipHasFilter = JSON.stringify(blip.rating.object.tags).indexOf(filter.tag) > -1
+               // minus filter: if tag is in rating.object.tags then blip is not ok  
+               if (blipHasFilter && filter.type=="minus") {
+                blipOK=false; break;  
+               }
+               // must filter: if the tag is not in rating.object.tags then the blip cannot be ok
+               if (!blipHasFilter && filter.type=="must") {
+                blipOK=false; break;  
+               }
+               if (blipHasFilter && filter.type=="plus") {
+                blipOK=true  
+               }
+
             } catch (e) {console.log(`${e} exception filter for ${JSON.stringify(blip)}`)}
         }
+    } catch (e){console.log(`exception in filter blip ${JSON.stringify(e)} ${e}`)}
     }
 
     return blipOK
+}
+
+const initializeTagsFilter = () => {
+    const filteringTagsContainer = document.getElementById('filteringTagsContainer')
+    filteringTagsContainer.innerHTML=null
+    // loop over existing filtering tags and for each add to container 
+
+    for (let i = 0; i < currentViewpoint.blipDisplaySettings.tagFilter.length; i++) {
+        const innerHTML = `<div class="dropup">
+     <span id="tag0" class="${currentViewpoint.blipDisplaySettings.tagFilter[i].type} tagfilter dropbtn">${currentViewpoint.blipDisplaySettings.tagFilter[i].tag}</span>
+     <div class="dropup-content">
+     <a href="#" id="mustTag${i}">Must</a>
+     <a href="#" id="plusTag${i}">Plus</a>
+     <a href="#" id="minusTag${i}">Minus</a>
+         <a href="#" id="removeTag${i}">Remove</a>
+     </div>`
+        const div = document.createElement('div');
+        div.className = "dropup"
+        div.innerHTML = innerHTML
+        filteringTagsContainer.appendChild(div)
+        document.getElementById(`mustTag${i}`).addEventListener("click", () => {currentViewpoint.blipDisplaySettings.tagFilter[i].type="must";drawRadarBlips(currentViewpoint)})
+        document.getElementById(`plusTag${i}`).addEventListener("click", () => {currentViewpoint.blipDisplaySettings.tagFilter[i].type="plus";drawRadarBlips(currentViewpoint)})
+        document.getElementById(`minusTag${i}`).addEventListener("click", () => {currentViewpoint.blipDisplaySettings.tagFilter[i].type="minus";drawRadarBlips(currentViewpoint)})
+        document.getElementById(`removeTag${i}`).addEventListener("click", () => {currentViewpoint.blipDisplaySettings.tagFilter.splice(i,1); drawRadarBlips(currentViewpoint)})
+    }
+
+    // populate datalist with all unique tag values in all blips
+    populateDatalistWithTags()
+
 }
 
 const drawRadarBlips = function (viewpoint) {
@@ -32,7 +75,7 @@ const drawRadarBlips = function (viewpoint) {
 
     document.getElementById('showShapes').checked = currentViewpoint.blipDisplaySettings.showShapes
 
-    document.getElementById('tagFilter').value = currentViewpoint.blipDisplaySettings.tagFilter
+    initializeTagsFilter()
 
     document.getElementById('applyShapes').checked = currentViewpoint.blipDisplaySettings.applyShapes
     document.getElementById('applySizes').checked = currentViewpoint.blipDisplaySettings.applySizes
@@ -94,18 +137,18 @@ const blipInSegment = (cartesian, viewpoint, segment) => {
 }
 
 const drawRadarBlip = (blip, d, viewpoint) => {
-    const blipSector = viewpoint.propertyVisualMaps.sectorMap[d.rating.object.category]
-    const blipRing = viewpoint.propertyVisualMaps.ringMap[d.rating.ambition]
-    const blipShapeId = viewpoint.propertyVisualMaps.shapeMap[d.rating.object?.offering]
-        ?? viewpoint.propertyVisualMaps.shapeMap["other"]
+    const blipSector = viewpoint.propertyVisualMaps.sector.valueMap[d.rating.object.category]
+    const blipRing = viewpoint.propertyVisualMaps.ring.valueMap[d.rating.ambition]
+    const blipShapeId = viewpoint.propertyVisualMaps.shape.valueMap[d.rating.object?.offering]
+        ?? viewpoint.propertyVisualMaps.shape.valueMap["other"]
     let blipShape = viewpoint.template.shapesConfiguration.shapes[blipShapeId].shape
 
-    const blipColorId = viewpoint.propertyVisualMaps.colorMap[d.rating?.experience]
-        ?? viewpoint.propertyVisualMaps.colorMap["other"]
+    const blipColorId = viewpoint.propertyVisualMaps.color.valueMap[d.rating?.experience]
+        ?? viewpoint.propertyVisualMaps.color.valueMap["other"]
     let blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
 
-    const blipSizeId = viewpoint.propertyVisualMaps.sizeMap[d.rating.magnitude]
-        ?? viewpoint.propertyVisualMaps.sizeMap["other"]
+    const blipSizeId = viewpoint.propertyVisualMaps.size.valueMap[d.rating.magnitude]
+        ?? viewpoint.propertyVisualMaps.size.valueMap["other"]
     let blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
 
     if (!viewpoint.blipDisplaySettings.applyShapes) {
@@ -247,8 +290,8 @@ const handleShowShapesChange = (event) => {
     drawRadarBlips(currentViewpoint)
 }
 const handleTagFilterChange = (event) => {
-    currentViewpoint.blipDisplaySettings.tagFilter = event.target.value
-    console.log(`new tagfilter value${currentViewpoint.blipDisplaySettings.tagFilter}`)
+    const filterTagValue = document.getElementById("filterTagSelector").value
+    currentViewpoint.blipDisplaySettings.tagFilter.push({type:"plus", tag:filterTagValue})
     drawRadarBlips(currentViewpoint)
 }
 
@@ -284,7 +327,7 @@ const menu = (x, y, d, blip, viewpoint) => {
         });
 
     const entryHeight = 42 // number vertical pixel per context menu entry
-    let height = 25 + Math.max(Object.keys(viewpoint.propertyVisualMaps.sizeMap).length, Object.keys(viewpoint.propertyVisualMaps.shapeMap).length, Object.keys(viewpoint.propertyVisualMaps.colorMap).length) * entryHeight // derive from maximum number of entries in each category
+    let height = 25 + Math.max(Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length, Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length, Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length) * entryHeight // derive from maximum number of entries in each category
     const circleRadius = 12
     const initialColumnIndent = 30
     const columnWidth = 70
@@ -322,10 +365,10 @@ const menu = (x, y, d, blip, viewpoint) => {
         .style("font-weight", "normal")
         .attr("transform", "scale(0.7,1)")
 
-    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.sizeMap).length; i++) {
-        const key = Object.keys(viewpoint.propertyVisualMaps.sizeMap)[i]
-        const scaleFactor = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.sizeMap[key]].size
-        const label = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.sizeMap[key]].label
+    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length; i++) {
+        const key = Object.keys(viewpoint.propertyVisualMaps.size.valueMap)[i]
+        const scaleFactor = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].size
+        const label = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].label
         const sizeEntry = sizesBox.append('g')
             .attr("transform", `translate(0, ${30 + i * entryHeight})`)
             .append('circle')
@@ -349,10 +392,10 @@ const menu = (x, y, d, blip, viewpoint) => {
         .attr("transform", "scale(0.7,1)")
 
 
-    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shapeMap).length; i++) {
-        const key = Object.keys(viewpoint.propertyVisualMaps.shapeMap)[i]
-        const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shapeMap[key]].shape
-        const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shapeMap[key]].label
+    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
+        const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
+        const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
+        const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
         const shapeEntry = shapesBox.append('g')
             .attr("transform", `translate(0, ${30 + i * entryHeight})`)
         let shape
@@ -387,10 +430,10 @@ const menu = (x, y, d, blip, viewpoint) => {
         .style("font-size", "12px")
         .style("font-weight", "normal")
         .attr("transform", "scale(0.7,1)")
-    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.colorMap).length; i++) {
-        const key = Object.keys(viewpoint.propertyVisualMaps.colorMap)[i]
-        const colorToFill = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.colorMap[key]].color
-        const label = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.colorMap[key]].label
+    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length; i++) {
+        const key = Object.keys(viewpoint.propertyVisualMaps.color.valueMap)[i]
+        const colorToFill = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].color
+        const label = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].label
         const colorEntry = colorsBox.append('g')
             .attr("transform", `translate(0, ${30 + i * entryHeight})`)
             .append('circle')
@@ -402,22 +445,42 @@ const menu = (x, y, d, blip, viewpoint) => {
     }
 }
 
+function populateDatalistWithTags() {
+    const listOfDistinctTagValues = new Set()
+    for (let i = 0; i < getViewpoint().blips.length; i++) {
+        const blip = getViewpoint().blips[i]
+        for (let j = 0; j < blip.rating.object?.tags.length; j++) {
+            listOfDistinctTagValues.add(blip.rating.object.tags[j].trim())
+        }
+    }
+    const tagsList = document.getElementById('tagsList')
+    //remove current contents
+    tagsList.length = 0
+    tagsList.innerHTML = null
+    let option
+    for (let tagvalue of listOfDistinctTagValues) {
+        option = document.createElement('option')
+        option.value = tagvalue
+        tagsList.appendChild(option)
+    }
+}
+
 function decorateContextMenuEntry(menuEntry, dimension, value, blip, viewpoint, label) { // dimension = shape, size, color
     menuEntry.attr("class", "clickableProperty")
         .on("click", () => {
             if (dimension == "size") {
                 // translate dimensionSequence 
-                blip["rating"]["magnitude"] = value // getKeyForValue(viewpoint.propertyVisualMaps.sizeMap, dimensionSequence)
+                blip["rating"]["magnitude"] = value // getKeyForValue(viewpoint.propertyVisualMaps.size.valueMap, dimensionSequence)
                 drawRadarBlips(viewpoint)
             }
             if (dimension == "shape") {
                 console.log(`clicked ${label}   for ${dimension} for blip: ${blip.rating.object.label}; new value = ${value}`);
-                blip["rating"]["object"]["offering"] = value // getKeyForValue(viewpoint.propertyVisualMaps.shapeMap, dimensionSequence)
+                blip["rating"]["object"]["offering"] = value // getKeyForValue(viewpoint.propertyVisualMaps.shape.valueMap, dimensionSequence)
                 drawRadarBlips(viewpoint)
             }
             if (dimension == "color") {
                 console.log(`clicked ${label}   for ${dimension} for blip: ${blip.rating.experience}; new value = ${value}`);
-                blip["rating"]["experience"] = value // getKeyForValue(viewpoint.propertyVisualMaps.shapeMap, dimensionSequence)
+                blip["rating"]["experience"] = value // getKeyForValue(viewpoint.propertyVisualMaps.shape.valueMap, dimensionSequence)
                 drawRadarBlips(viewpoint)
             }
         })
@@ -475,7 +538,8 @@ const getKeyForValue = function (object, value) {
 document.getElementById('showImages').addEventListener("change", handleShowImagesChange);
 document.getElementById('showLabels').addEventListener("change", handleShowLabelsChange);
 document.getElementById('showShapes').addEventListener("change", handleShowShapesChange);
-document.getElementById('tagFilter').addEventListener("change", handleTagFilterChange);
+document.getElementById('addTagToFilter').addEventListener("click", handleTagFilterChange);
+
 document.getElementById('applyColors').addEventListener("change", handleApplyColorsChange);
 document.getElementById('applySizes').addEventListener("change", handleApplySizesChange);
 document.getElementById('applyShapes').addEventListener("change", handleApplyShapesChange);
@@ -524,7 +588,7 @@ function blipWindow(blip, viewpoint) {
         addProperty("Tags", blip.rating.object.tags.slice(1).reduce((tags, tag) => `${tags}, ${tag}`, blip.rating.object.tags[0]), body)
     }
     const offeringLabel = getLabelForAllowableValue(blip.rating.object.offering, viewpoint.ratingType.objectType.properties.offering.allowableValues)
-    
+
     addProperty("Type Offering", offeringLabel, body)
 
     if (blip.rating.object.homepage != null && blip.rating.object.homepage.length > 1) {
@@ -577,9 +641,9 @@ function blipWindow(blip, viewpoint) {
 
 
 const getLabelForAllowableValue = (value, allowableValues) => {
-  let label=""
-    for(let i = 0;i<allowableValues.length; i++) {
+    let label = ""
+    for (let i = 0; i < allowableValues.length; i++) {
         if (allowableValues[i].value == value) { label = allowableValues[i].label; break }
     }
-return label
+    return label
 }

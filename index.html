@@ -154,6 +154,86 @@
         .button1 {
             border-radius: 8px;
         }
+
+        .tagfilter {
+            color: white;
+            padding: 4px;
+            margin: 4px
+        }
+        .must {
+            background-color: #2a9e2e;
+        }
+        .plus {
+            background-color: #70fa75;color:#000
+        }
+
+        /* Green */
+        .extra {
+            background-color: #2196F3;
+        }
+
+        /* Blue */
+        .warning {
+            background-color: #ff9800;
+        }
+
+        /* Orange */
+        .minus {
+            background-color: #f44336;
+        }
+
+        /* Red */
+        .other {
+            background-color: #e7e7e7;
+            color: black;
+        }
+
+        /* Gray */
+
+        /* Dropup Button */
+        .dropbtn {}
+
+        /* The container <div> - needed to position the dropup content */
+        .dropup {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropup content (Hidden by Default) */
+        .dropup-content {
+            display: none;
+            position: absolute;
+            bottom: -50px;
+            margin: 30 20;
+            opacity: 0.8;
+            background-color: #f1f1f1;
+            min-width: 80px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        /* Links inside the dropup */
+        .dropup-content a {
+            color: black;
+            padding: 6px 8px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change color of dropup links on hover */
+        .dropup-content a:hover {
+            background-color: #ddd
+        }
+
+        /* Show the dropup menu on hover */
+        .dropup:hover .dropup-content {
+            display: block;
+        }
+
+        /* Change the background color of the dropup button when the dropup content is shown */
+        .dropup:hover .dropbtn {
+            background-color: #2980B9;
+        }
     </style>
 
 </head>
@@ -176,7 +256,7 @@
             <label for="blipHomepage">Homepage</label>
             <input id="blipHomepage" type="text"></input>
             <label for="blipOffering">Offering Type</label>
-            <select  id="blipOffering" type="text"></select>
+            <select id="blipOffering" type="text"></select>
             <label for="blipImageURL">Logo/Image URL</label>
             <input id="blipImageURL" type="text"></input>
             <textarea id="pasteArea" placeholder="Paste Image Here"></textarea>
@@ -196,19 +276,18 @@
             <select name="blipMaturity" id="blipMaturitySelect"></select>
             <br />
             <hr />
-           
+
             <label for="blipScope">Scope</label>
             <input list="scopeList" id="blipScope"
-                title="to which individual, team, department, company, industry does this rating apply"
-                ></input>
-                <datalist id="scopeList">
-                  <option value="Conclusion">
-                  <option value="AMIS">
-                  <option value="John Doe">
-                  <option value="Community">
-                </datalist>
+                title="to which individual, team, department, company, industry does this rating apply"></input>
+            <datalist id="scopeList">
+                <option value="Conclusion">
+                <option value="AMIS">
+                <option value="John Doe">
+                <option value="Community">
+            </datalist>
 
-                <label for="blipAuthor">Author</label>
+            <label for="blipAuthor">Author</label>
             <input id="blipAuthor" type="text"></input>
             <br />
             <hr />
@@ -246,6 +325,7 @@
 
         <div class="column2">
             <div id="displayStyle">
+
                 <h3>Compose Display Style</h3>
                 <div>
                     <input type="checkbox" id="showImages" name="displayStyle" value="images" checked>
@@ -261,76 +341,84 @@
                 </div>
                 <div id="filter">
                     <label for="tagFilter">Filter on Tags</label>
-                    <br/>
-                    <textarea id="tagFilter" name="tagFilter" rows="2" cols="45"></textarea>
-
+                    <br />
+                    <div id="filteringTagsContainer">
+                        
+                    </div>
+                   
+                    <br />
+                    <input list="tagsList" id="filterTagSelector"></input>
+                    <input type="button" id="addTagToFilter" name="addTag" value="Add Tag to Filter">
+                    <datalist id="tagsList" />
                 </div>
 
             </div>
-            <hr />
-            <div id="sizeLegend">
-                <h3 id="sizesLegendTitle">Sizes</h3>
-                <div>
-                    <input type="checkbox" id="applySizes" name="displayStyle" value="applySizes" checked>
-                    <label for="applySizes">Apply Sizes</label>
-                
-                </div>
-                <svg id="sizesLegend">
 
-                </svg>
+        </div>
+        <hr />
+        <div id="sizeLegend">
+            <h3 id="sizesLegendTitle">Sizes</h3>
+            <div>
+                <input type="checkbox" id="applySizes" name="displayStyle" value="applySizes" checked>
+                <label for="applySizes">Apply Sizes</label>
+
             </div>
-            <hr />
-            <div id="shapeLegend">
-                <h3 id="shapesLegendTitle">Shapes</h3>
-                <div>
-                    
-                    <input type="checkbox" id="applyShapes" name="displayStyle" value="applyShapes" checked>
-                    <label for="applyShapes">Apply Shapes</label>
-                
-                </div>
-                <svg id="shapesLegend">
+            <svg id="sizesLegend">
 
-                </svg>
+            </svg>
+        </div>
+        <hr />
+        <div id="shapeLegend">
+            <h3 id="shapesLegendTitle">Shapes</h3>
+            <div>
+
+                <input type="checkbox" id="applyShapes" name="displayStyle" value="applyShapes" checked>
+                <label for="applyShapes">Apply Shapes</label>
+
             </div>
-            <hr />
-            <div id="colorLegend">
-                <h3 id="colorLegendTitle">Colors</h3>
-                <div>
-                    
-                    <input type="checkbox" id="applyColors" name="displayStyle" value="applyColors" checked>
-                    <label for="applyColors">Apply Colors</label>
-                
-                </div>
-                <svg id="colorsLegend">
+            <svg id="shapesLegend">
 
-                </svg>
+            </svg>
+        </div>
+        <hr />
+        <div id="colorLegend">
+            <h3 id="colorLegendTitle">Colors</h3>
+            <div>
+
+                <input type="checkbox" id="applyColors" name="displayStyle" value="applyColors" checked>
+                <label for="applyColors">Apply Colors</label>
+
             </div>
+            <svg id="colorsLegend">
 
-            <br />
-            <hr />
-            <div id="dataManagement">
-                <h3 id="dataManagementTitle">Radar Data Management</h3>
-                <div>
-                    <input type="button" id="download" name="download" value="Download">
-                    <input type="button" id="upload" name="upload" value="Upload">
-                    <input type="file" id="fileElem" multiple accept="application/json,text/*" style="display:none">
-                </div>
-                <br />
-                <hr />
-                <div>
-                    <input type="button" id="save" name="save" value="Save to Local Storage">
-                    <input type="button" id="load" name="load" value="Load (from local storage)">
-                </div>
+            </svg>
+        </div>
+
+        <br />
+        <hr />
+        <div id="dataManagement">
+            <h3 id="dataManagementTitle">Radar Data Management</h3>
+            <div>
+                <input type="button" id="download" name="download" value="Download">
+                <input type="button" id="upload" name="upload" value="Upload">
+                <input type="file" id="fileElem" multiple accept="application/json,text/*" style="display:none">
             </div>
             <br />
             <hr />
             <div>
-                <h3 id="viewpointSelectorTitle">Select Viewpoint</h3>
-                <select id="templateSelector" class="templates-select" name="option">
-                    <option value="" disabled selected>Select Radar Viewpoint</option>
-                </select>
+                <input type="button" id="save" name="save" value="Save to Local Storage">
+                <input type="button" id="load" name="load" value="Load (from local storage)">
             </div>
         </div>
+        <br />
+        <hr />
+        <div>
+            <h3 id="viewpointSelectorTitle">Select Viewpoint</h3>
+            <select id="templateSelector" class="templates-select" name="option">
+                <option value="" disabled selected>Select Radar Viewpoint</option>
+            </select>
+        </div>
+    </div>
 
 
 
@@ -343,7 +431,7 @@
         import { handleBlipDrag, populateBlipEditor } from './modules/blipEditing.js'
 
         const viewpoint = getConfiguration()
-       // viewpoint.editMode = false
+        // viewpoint.editMode = false
         getState().editMode = false
         drawRadar(getViewpoint())
         drawRadarBlips(getViewpoint())
@@ -379,10 +467,10 @@
                 <input type="button" id="cloneTemplate" name="clone" value="Clone Template">
                 <input type="button" id="resetTemplate" name="reset" value="Reset Current Template">
                 <input type="button" id="cloneViewpoint" name="cloneViewpoint" value="Clone Viewpoint">
-                   <input type="button" id="createViewpoint" name="createViewpoint" value="Create Viewpoint from Template">
+                <input type="button" id="createViewpoint" name="createViewpoint" value="Create Viewpoint from Template">
 
             </div>
-  
+
         </div>
     </div>
 </body>
