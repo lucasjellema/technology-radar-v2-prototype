@@ -1,5 +1,6 @@
 
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
+import {setNestedPropertyValueFromObject} from './utils.js'
 export { handleBlipDrag, populateBlipEditor }
 
 const populateSelect = (selectElementId, data, defaultValue = null) => { // data is array objects with two properties : label and value
@@ -172,28 +173,30 @@ const initializeImagePaster = (handleImagePaste) => {
 }
 
 
+
 const handleBlipDrag = function (blipDragEvent, viewpoint) {
     // TODO not all elements are supported for dragging (yet) 
-    // console.log(`dragged element ${blipDragEvent.blipId}`)
+    console.log(`dragged element ${blipDragEvent.blipId}`)
 
     const dropSegment = segmentFromCartesian({ x: blipDragEvent.newX, y: blipDragEvent.newY }, viewpoint)
+    console.log(`dropsegment ${JSON.stringify(dropSegment) }`)
 
     const blip = viewpoint.blips[parseInt(blipDragEvent.blipId.substring(5))]
-    console.log(`blip ${JSON.stringify(blip)}`)
+//    console.log(`blip ${JSON.stringify(blip)}`)
     blip.x = blipDragEvent.newX
     blip.y = blipDragEvent.newY
 
-    // TODO: determine from meta data which blip property has to be updated from the new sector
-    // update the category - mapped to sector - to the value mapped to the newly selected sector 
-    blip.rating.object.category = getKeyForValue(viewpoint.propertyVisualMaps.sector.valueMap, dropSegment.sector) // "find category value mapped to the sector value of dropSector" 
+    const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
+    const propertyValueDerivedFromSector = getKeyForValue(viewpoint.propertyVisualMaps.sector.valueMap, dropSegment.sector) // "find category value mapped to the sector value of dropSector" 
+    setNestedPropertyValueFromObject(blip.rating, propertyMappedToSector ,propertyValueDerivedFromSector)
+        
+    const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
+    const propertyValueDerivedFromRing = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring) // "find category value mapped to the sector value of dropSector" 
+    setNestedPropertyValueFromObject(blip.rating, propertyMappedToRing ,propertyValueDerivedFromRing)
 
-    // TODO: determine from meta data which blip property has to be updated from the new ring
-
-    // update the ambition - mapped to ring  - to the value mapped to the newly selected ring 
-    //  = "find ambition value mapped to the ring value of dropRing" 
-    blip["rating"]["ambition"] = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring)
 }
 
+// find in an object the (first) key or property name for a given value 
 const getKeyForValue = function (object, value) {
     return Object.keys(object).find(key => object[key] === value);
 }

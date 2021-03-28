@@ -387,8 +387,33 @@ const initializeShapesLegend = (viewpoint) => {
             const square = d3.symbol().type(d3.symbolSquare).size(500);
             shape = shapeEntry.append('path').attr("d", square)
         }
+        if (shapeToDraw == "star") {
+            const star = d3.symbol().type(d3.symbolStar).size(420);
+            shape = shapeEntry.append('path').attr("d", star)
+        }
+        if (shapeToDraw == "plus") {
+            const plus = d3.symbol().type(d3.symbolCross).size(420);
+            shape = shapeEntry.append('path').attr("d", plus)
+        }
+        if (shapeToDraw == "triangle") {
+            const triangle = d3.symbol().type(d3.symbolTriangle).size(420);
+            shape = shapeEntry.append('path').attr("d", triangle)
+        }
 
+        if (shapeToDraw == "rectangleHorizontal") {
+            shape = shapeEntry.append('rect').attr('width', 38)
+                .attr('height', 10)
+                .attr('x', -20)
+                .attr('y', -4)
+        }
+        if (shapeToDraw == "rectangleVertical") {
+            shape = shapeEntry.append('rect')
+            .attr('width', 10)
+            .attr('height', 38)
+            .attr('x', -5)
+            .attr('y', -15)
 
+        }
 
         shape.attr("fill", "#000");
         shape.attr("opacity", "0.9");

@@ -1,4 +1,4 @@
-export {isOperationBlackedOut, uuidv4}
+export {isOperationBlackedOut, uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueFromObject}
 
 
 // to prevent an operation from being executed too often, we record a timestamp in the near future until when 
@@ -22,3 +22,23 @@ const  uuidv4= ()=>  {
      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
    );
  }
+
+ // also see: https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arrays-by-string-path
+ const getNestedPropertyValueFromObject = (object, propertyPath) => {
+   const propertyPathSegments = propertyPath.split('.')
+   let value = object
+   for (let i=0;i<propertyPathSegments.length;i++) {
+       value = value[propertyPathSegments[i]]
+   }
+   return value
+}
+
+const setNestedPropertyValueFromObject = (object, propertyPath , value) => {    
+   const propertyPathSegments = propertyPath.split('.')
+   let elementToSet = object
+   for (let i=0;i<propertyPathSegments.length-1;i++) {
+       elementToSet = elementToSet[propertyPathSegments[i]]
+   }
+   elementToSet[propertyPathSegments[propertyPathSegments.length-1]] = value
+   return object
+}

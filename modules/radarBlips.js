@@ -1,6 +1,7 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { populateBlipEditor } from './blipEditing.js'
 import { getViewpoint } from './data.js'
+import { getNestedPropertyValueFromObject } from './utils.js'
 export { drawRadarBlips }
 
 
@@ -137,17 +138,24 @@ const blipInSegment = (cartesian, viewpoint, segment) => {
 }
 
 const drawRadarBlip = (blip, d, viewpoint) => {
-    const blipSector = viewpoint.propertyVisualMaps.sector.valueMap[d.rating.object.category]
-    const blipRing = viewpoint.propertyVisualMaps.ring.valueMap[d.rating.ambition]
-    const blipShapeId = viewpoint.propertyVisualMaps.shape.valueMap[d.rating.object?.offering]
+    const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
+    const blipSector = viewpoint.propertyVisualMaps.sector.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSector)]
+
+    const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
+    const blipRing = viewpoint.propertyVisualMaps.ring.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToRing)]
+
+    const propertyMappedToShape = viewpoint.propertyVisualMaps.shape.property
+    const blipShapeId = viewpoint.propertyVisualMaps.shape.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToShape)]
         ?? viewpoint.propertyVisualMaps.shape.valueMap["other"]
     let blipShape = viewpoint.template.shapesConfiguration.shapes[blipShapeId].shape
 
-    const blipColorId = viewpoint.propertyVisualMaps.color.valueMap[d.rating?.experience]
+    const propertyMappedToColor = viewpoint.propertyVisualMaps.color.property
+    const blipColorId = viewpoint.propertyVisualMaps.color.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToColor)]
         ?? viewpoint.propertyVisualMaps.color.valueMap["other"]
     let blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
 
-    const blipSizeId = viewpoint.propertyVisualMaps.size.valueMap[d.rating.magnitude]
+    const propertyMappedToSize = viewpoint.propertyVisualMaps.size.property
+    const blipSizeId = viewpoint.propertyVisualMaps.size.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSize)]
         ?? viewpoint.propertyVisualMaps.size.valueMap["other"]
     let blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
 
@@ -250,8 +258,31 @@ const drawRadarBlip = (blip, d, viewpoint) => {
             shape = blip.append('path').attr("d", square)
         }
 
-
-
+        if (blipShape == "star") {
+            const star = d3.symbol().type(d3.symbolStar).size(720);
+            shape = blip.append('path').attr("d", star)
+        }
+        if (blipShape == "plus") {
+            const plus = d3.symbol().type(d3.symbolCross).size(720);
+            shape = blip.append('path').attr("d", plus)
+        }
+        if (blipShape == "triangle") {
+            const triangle = d3.symbol().type(d3.symbolTriangle).size(720);
+            shape = blip.append('path').attr("d", triangle)
+        }
+        if (blipShape == "rectangleHorizontal") {
+            shape = blip.append('rect').attr('width', 38)
+                .attr('height', 10)
+                .attr('x', -20)
+                .attr('y', -4)
+        }
+        if (blipShape == "rectangleVertical") {
+            shape = blip.append('rect')
+            .attr('width', 10)
+            .attr('height', 38)
+            .attr('x', -5)
+            .attr('y', -15)
+        }
         shape.attr("fill", blipColor);
         shape.attr("opacity", "0.4");
     }
@@ -412,6 +443,33 @@ const menu = (x, y, d, blip, viewpoint) => {
             const square = d3.symbol().type(d3.symbolSquare).size(420);
             shape = shapeEntry.append('path').attr("d", square)
         }
+        if (shapeToDraw == "star") {
+            const star = d3.symbol().type(d3.symbolStar).size(420);
+            shape = shapeEntry.append('path').attr("d", star)
+        }
+        if (shapeToDraw == "plus") {
+            const plus = d3.symbol().type(d3.symbolCross).size(420);
+            shape = shapeEntry.append('path').attr("d", plus)
+        }
+        if (shapeToDraw == "triangle") {
+            const triangle = d3.symbol().type(d3.symbolTriangle).size(420);
+            shape = shapeEntry.append('path').attr("d", triangle)
+        }
+        if (shapeToDraw == "rectangleHorizontal") {
+            shape = shapeEntry.append('rect').attr('width', 38)
+                .attr('height', 10)
+                .attr('x', -20)
+                .attr('y', -4)
+        }
+
+        if (shapeToDraw == "rectangleVertical") {
+            shape = shapeEntry.append('rect')
+            .attr('width', 10)
+            .attr('height', 38)
+            .attr('x', -5)
+            .attr('y', -15)
+        }
+
         shape
             .attr("id", `templateSizes${i}`)
             .attr("fill", "black")
@@ -513,11 +571,11 @@ const addTooltip = (hoverTooltip, d, x, y) => { // hoverToolTip is a function th
     div
         .transition()
         .duration(200)
-        .style("opacity", 0.9);
+        .style("opacity", 0.8);
     div
         .html(hoverTooltip(d))
-        .style("left", `${x + 10}px`)
-        .style("top", `${y - 58}px`);
+        .style("left", `${x + 5}px`)
+        .style("top", `${y - 28}px`);
 };
 
 const removeTooltip = () => {
@@ -552,6 +610,15 @@ const addProperty = (label, value, parent) => {
     }
 }
 
+const addTags = (label, tags, parent) => {
+    let innerHTML = `<b>${label}</b> `
+    for (let i = 0; i < tags.length; i++) {
+        innerHTML = innerHTML + `<span class="extra tagfilter">${tags[i]}</span>`
+    }
+    parent.append("div").html(innerHTML)
+}
+
+
 // copied from http://bl.ocks.org/GerHobbelt/2653660
 function blipWindow(blip, viewpoint) {
 
@@ -577,42 +644,47 @@ function blipWindow(blip, viewpoint) {
 
     body.append("h2").text(`Properties for ${blip.rating.object.label}`)
 
-    if (blip.rating.object.image != null && blip.rating.object.image.length > 0) {
-        let img = body.append("img")
-            .attr("src", blip.rating.object.image)
-            .attr("style", "width: 350px;float:right;padding:15px")
-    }
-    const categoryLabel = getLabelForAllowableValue(blip.rating.object.category, viewpoint.ratingType.objectType.properties.category.allowableValues)
-    addProperty("Category", categoryLabel, body)
-    if (blip.rating.object.tags?.length > 0) {
-        addProperty("Tags", blip.rating.object.tags.slice(1).reduce((tags, tag) => `${tags}, ${tag}`, blip.rating.object.tags[0]), body)
-    }
-    const offeringLabel = getLabelForAllowableValue(blip.rating.object.offering, viewpoint.ratingType.objectType.properties.offering.allowableValues)
+    const ratingType = viewpoint.ratingType
+    for (let propertyName in ratingType.objectType.properties) {
+        const property = ratingType.objectType.properties[propertyName]
+        let value = blip.rating.object[propertyName]
+        if (property.allowableValues != null && property.allowableValues.length > 0) {
+            value = getLabelForAllowableValue(value, property.allowableValues)
+        }
+        if (property.type == "url" && value != null && value.length > 1) {
+            let newLink = body.append("xlink:a")
+                .attr("src", value)
+                .text(`${property.label}: ${value}`)
+            newLink.node().target = "_new"
+            newLink.node().addEventListener("click", (e) => { window.open(value); })
+        } else if (property.type == "image" && value != null && value.length > 0) {
+            let img = body.append("img")
+                .attr("src", value)
+                .attr("style", "width: 350px;float:right;padding:15px")
+        } else if (property.type == "tags" && value.length > 0) {
+            addTags("Tags", value, body)
+        }
 
-    addProperty("Type Offering", offeringLabel, body)
-
-    if (blip.rating.object.homepage != null && blip.rating.object.homepage.length > 1) {
-        let homepageLink = body.append("xlink:a")
-            .attr("src", blip.rating.object.homepage)
-            .text(`Homepage: ${blip.rating.object.homepage}`)
-        homepageLink.node().target = "_new"
-        homepageLink.node().addEventListener("click", (e) => { window.open(blip.rating.object.homepage); })
+        else {
+            addProperty(property.label, value, body)
+        }
     }
-    addProperty("Description", blip.rating.object.description, body)
+
 
     const ratingDiv = body.append("div")
         .attr("id", "ratingDiv")
-    const ambitionLabel = getLabelForAllowableValue(blip.rating.ambition, viewpoint.ratingType.properties.ambition.allowableValues)
-    addProperty("Ambition", ambitionLabel, ratingDiv)
-    const magnitudeLabel = getLabelForAllowableValue(blip.rating.magnitude, viewpoint.ratingType.properties.magnitude.allowableValues)
-    addProperty("Magnitude", magnitudeLabel, ratingDiv)
-    const experienceLabel = getLabelForAllowableValue(blip.rating.experience, viewpoint.ratingType.properties.experience.allowableValues)
-    addProperty("Maturity", experienceLabel, ratingDiv)
 
-    addProperty("Comment", blip.rating.comment, ratingDiv)
-    addProperty("Scope", blip.rating.scope, ratingDiv)
-    addProperty("Author", blip.rating.author, ratingDiv)
-    addProperty("Timestamp", blip.rating.timestamp, ratingDiv)
+
+
+    for (let propertyName in ratingType.properties) {
+        const property = ratingType.properties[propertyName]
+        let value = blip.rating[propertyName]
+        if (property.allowableValues != null && property.allowableValues.length > 0) {
+            value = getLabelForAllowableValue(value, property.allowableValues)
+        }
+        addProperty(property.label, value, ratingDiv)
+    }
+
 
 
 
