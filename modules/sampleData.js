@@ -104,7 +104,7 @@ model.ratingTypes =
                     ambition: {
                         label: "Ambition",
                         description: "The current outlook or intent regarding this technology", defaultValue: "identified"
-                        , allowableValues: [{ value: "identified", label: "Identified" }, { value: "hold", label: "Hold" }, { value: "assess", label: "Assess" }, { value: "adopt", label: "Adopt" }]
+                        , allowableValues: [{ value: "identified", label: "Identified" }, { value: "hold", label: "Hold" }, { value: "assess", label: "Assess" }, { value: "trial", label: "Try Out/PoC" }, { value: "adopt", label: "Adopt" }]
                         , defaultValue: "identified"
                     },
                     magnitude: {

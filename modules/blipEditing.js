@@ -36,20 +36,20 @@ let viewpointToReuse
 const initializeTagsField = (blip) => {
     const tagsContainer = document.getElementById('blipTagsContainer')
     tagsContainer.innerHTML = null
-
-    for (let i = 0; i < blip.rating.object.tags.length; i++) {
-        const innerHTML = `<div class="dropup">
+    if (blip.rating.object.tags != null && blip.rating.object.tags.length > 0) {
+        for (let i = 0; i < blip.rating.object.tags.length; i++) {
+            const innerHTML = `<div class="dropup">
      <span id="tag0" class="extra tagfilter dropbtn">${blip.rating.object.tags[i]}</span>
      <div class="dropup-content">
          <a href="#" id="removeBlipTag${i}">Remove</a>
      </div>`
-        const div = document.createElement('div');
-        div.className = "dropup"
-        div.innerHTML = innerHTML
-        tagsContainer.appendChild(div)
-        document.getElementById(`removeBlipTag${i}`).addEventListener("click", () => { blip.rating.object.tags.splice(i, 1); initializeTagsField(blip) })
+            const div = document.createElement('div');
+            div.className = "dropup"
+            div.innerHTML = innerHTML
+            tagsContainer.appendChild(div)
+            document.getElementById(`removeBlipTag${i}`).addEventListener("click", () => { blip.rating.object.tags.splice(i, 1); initializeTagsField(blip) })
+        }
     }
-
 }
 
 const createAndPopulateDataList = (listId, propertyPath, blips) => {
@@ -84,7 +84,7 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
     // remove current content
     tbl.innerHTML = null
     let ratingType = viewpoint.ratingType
-    if (typeof(ratingType)=="string") {
+    if (typeof (ratingType) == "string") {
         ratingType = getData().model?.ratingTypes[ratingType]
     }
 
@@ -93,7 +93,7 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
     // TODO cater for tags
     let blipProperties = getBlipProperties(ratingType)
 
-    let html =''
+    let html = ''
     for (let i = 0; i < blipProperties.length; i++) {
         const blipProperty = blipProperties[i]
         let value = getNestedPropertyValueFromObject(blip.rating, blipProperty.propertyPath)
@@ -109,14 +109,14 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
         else {
             inputElement = `<input id="${inputElementId}" type="text" value="${value}"></input>`
         }
-        if (blipProperty.property.type =="image" ) {    
+        if (blipProperty.property.type == "image") {
             inputElement = `${inputElement}<img id="${inputElementId}Image" style="padding:6px" src="${value}" width="70px"></img>
             <textarea id="${inputElementId}ImagePasteArea" placeholder="Paste Image" title="Paste Image for ${blipProperty.property.label} here" rows="1" cols="15"></textarea>`
 
-        }    
+        }
 
-        html = `${html}${i % 2 == 0?"<tr>":""}<td class="propertyLabel"><label for="${inputElementId}">${blipProperty.property.label}</label></td>
-                     <td>${inputElement}</td>${i % 2 == 1?"</tr>":""}`
+        html = `${html}${i % 2 == 0 ? "<tr>" : ""}<td class="propertyLabel"><label for="${inputElementId}">${blipProperty.property.label}</label></td>
+                     <td>${inputElement}</td>${i % 2 == 1 ? "</tr>" : ""}`
 
     }
     tbl.innerHTML = `${tbl.innerHTML}${html}`
@@ -129,7 +129,7 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
             let value = getNestedPropertyValueFromObject(blip.rating, blipProperty.propertyPath)
             populateSelect(inputElementId, blipProperty.property.allowableValues, value)
         }
-        if (blipProperty.property.type =="image" ) {
+        if (blipProperty.property.type == "image") {
             initializeImagePaster((imageURL) => {
                 document.getElementById(inputElementId).value = imageURL
                 document.getElementById(`${inputElementId}Image`).src = imageURL
@@ -147,6 +147,7 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
     document.getElementById("addTagToBlip").addEventListener("click",
         (event) => {
             const filterTagValue = document.getElementById("blipTagSelector").value
+            if (blip.rating.object.tags==null) {blip.rating.object.tags=[]}
             blip.rating.object.tags.push(filterTagValue)
             initializeTagsField(blip)
         })
@@ -186,9 +187,9 @@ const saveBlipEdit = () => {
         const blipProperty = blipProperties[i]
         if (blipProperty.property.type == "tags") { } // TODO handle tags
         else {
-        const inputElementId = `blip${blipProperty.propertyPath}`
-        let value = document.getElementById(inputElementId).value
-        setNestedPropertyValueFromObject(blip.rating, blipProperty.propertyPath, value)
+            const inputElementId = `blip${blipProperty.propertyPath}`
+            let value = document.getElementById(inputElementId).value
+            setNestedPropertyValueFromObject(blip.rating, blipProperty.propertyPath, value)
         }
     }
 
