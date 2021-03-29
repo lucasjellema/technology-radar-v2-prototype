@@ -268,14 +268,10 @@ td.propertyLabel {
         <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h3 id="blipEditorTitle">Editing Blip</h3>
             <img id="blipImage" width="150px" style="float:right" />
+            <h3 id="blipEditorTitle">Editing Blip</h3>
             <table id="blipEditorTable">
             </table>
-            <label for="blipImageURL">Logo/Image URL</label>
-            <input id="blipImageURL" type="text"></input>
-            <textarea id="pasteArea" placeholder="Paste Image Here"></textarea>
-            <br />
             <hr />
             <label for="blipTagsContainer">Tags</label>
             <div id="blipTagsContainer"></div>
@@ -283,8 +279,7 @@ td.propertyLabel {
             <div>
                 <input list="tagsList" id="blipTagSelector"></input>
                 <input type="button" id="addTagToBlip" name="addTag" value="Add Tag" />
-            </div>
-           
+            </div>           
 
             <div id="blipEditorButtonBar" style="position: absolute; bottom: 25;right: 100;">
                 <input id="saveBlipEdits" type="button" value="Save Changes"></input>
