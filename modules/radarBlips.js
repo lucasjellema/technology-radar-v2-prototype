@@ -604,7 +604,7 @@ document.getElementById('applyShapes').addEventListener("change", handleApplySha
 
 
 const addProperty = (label, value, parent) => {
-    if (value != null && value.length > 0) {
+    if (value != null && value.length > 0 && value != "undefined") {
         let p = parent.append("p")
             .html(`<b>${label}</b> ${value}`)
     }
@@ -651,13 +651,13 @@ function blipWindow(blip, viewpoint) {
         if (property.allowableValues != null && property.allowableValues.length > 0) {
             value = getLabelForAllowableValue(value, property.allowableValues)
         }
-        if (property.type == "url" && value != null && value.length > 1) {
+        if (property.type == "url" && value != null && value.length > 1 && value != "undefined") {
             let newLink = body.append("xlink:a")
                 .attr("src", value)
                 .text(`${property.label}: ${value}`)
             newLink.node().target = "_new"
             newLink.node().addEventListener("click", (e) => { window.open(value); })
-        } else if (property.type == "image" && value != null && value.length > 0) {
+        } else if (property.type == "image" && value != null && value.length > 0 && value != "undefined") {
             let img = body.append("img")
                 .attr("src", value)
                 .attr("style", "width: 350px;float:right;padding:15px")

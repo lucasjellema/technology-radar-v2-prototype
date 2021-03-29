@@ -33,8 +33,8 @@
         .modal-content {
             background-color: #f8f1f1;
             opacity: 0.9;
-            margin: 15% auto;
-            /* 15% from the top and centered */
+            margin: 5% auto;
+            /* 5% from the top and centered */
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
@@ -236,6 +236,19 @@
         .dropup:hover .dropbtn {
             background-color: #2980B9;
         }
+
+        /* table */
+        table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
     </style>
 
 </head>
@@ -251,14 +264,8 @@
             <span class="close">&times;</span>
             <h3 id="blipEditorTitle">Editing Blip</h3>
             <img id="blipImage" width="150px" style="float:right" />
-            <label for="blipLabel">Technoloy</label>
-            <input id="blipLabel" type="text"></input>
-            <label for="blipCategorySelect">Category</label>
-            <select name="blipCategory" id="blipCategorySelect"></select>
-            <label for="blipHomepage">Homepage</label>
-            <input id="blipHomepage" type="text"></input>
-            <label for="blipOffering">Offering Type</label>
-            <select id="blipOffering" type="text"></select>
+            <table id="blipEditorTable">
+            </table>
             <label for="blipImageURL">Logo/Image URL</label>
             <input id="blipImageURL" type="text"></input>
             <textarea id="pasteArea" placeholder="Paste Image Here"></textarea>
@@ -271,36 +278,7 @@
                 <input list="tagsList" id="blipTagSelector"></input>
                 <input type="button" id="addTagToBlip" name="addTag" value="Add Tag" />
             </div>
-            <label for="blipDescription">Description</label>
-            <textarea name="blipDescription" id="blipDescription" rows="2" cols="100"></textarea>
-
-            <br />
-            <hr />
-            <label for="blipAmbitionSelect">Ambition</label>
-            <select name="blipAmbition" id="blipAmbitionSelect"></select>
-            <label for="blipMagnitudeSelect">Magnitude</label>
-            <select name="blipMagnitude" id="blipMagnitudeSelect"></select>
-            <label for="blipMaturitySelect">Maturity</label>
-            <select name="blipMaturity" id="blipMaturitySelect"></select>
-            <br />
-            <hr />
-
-            <label for="blipScope">Scope</label>
-            <input list="scopeList" id="blipScope"
-                title="to which individual, team, department, company, industry does this rating apply"></input>
-            <datalist id="scopeList">
-                <option value="Conclusion">
-                <option value="AMIS">
-                <option value="John Doe">
-                <option value="Community">
-            </datalist>
-
-            <label for="blipAuthor">Author</label>
-            <input id="blipAuthor" type="text"></input>
-            <br />
-            <hr />
-            <label for="blipRemark">Comment</label>
-            <textarea name="blipRemark" id="blipRemark" rows="2" cols="100"></textarea>
+           
 
             <div id="blipEditorButtonBar" style="position: absolute; bottom: 25;right: 100;">
                 <input id="saveBlipEdits" type="button" value="Save Changes"></input>
