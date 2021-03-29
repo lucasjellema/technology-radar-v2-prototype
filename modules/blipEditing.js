@@ -1,6 +1,7 @@
 
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { getNestedPropertyValueFromObject, setNestedPropertyValueFromObject } from './utils.js'
+import { getViewpoint, getData } from './data.js'
 export { handleBlipDrag, populateBlipEditor }
 
 const populateSelect = (selectElementId, data, defaultValue = null) => { // data is array objects with two properties : label and value
@@ -82,7 +83,11 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
     const tbl = document.getElementById("blipEditorTable")
     // remove current content
     tbl.innerHTML = null
-    const ratingType = viewpoint.ratingType
+    let ratingType = viewpoint.ratingType
+    if (typeof(ratingType)=="string") {
+        ratingType = getData().model?.ratingTypes[ratingType]
+    }
+
 
     // TODO cater for IMAGE
     // TODO cater for tags
@@ -101,28 +106,43 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
             createAndPopulateDataList(`${inputElementId}List`, `${blipProperty.propertyPath}`, viewpoint.blips)
             inputElement = `<input id="${inputElementId}" list="${inputElementId}List" value="${value}"></input>`
         }
-        else
+        else {
             inputElement = `<input id="${inputElementId}" type="text" value="${value}"></input>`
+        }
+        if (blipProperty.property.type =="image" ) {    
+            inputElement = `${inputElement}<img id="${inputElementId}Image" style="padding:6px" src="${value}" width="70px"></img>
+            <textarea id="${inputElementId}ImagePasteArea" placeholder="Paste Image" title="Paste Image for ${blipProperty.property.label} here" rows="1" cols="15"></textarea>`
 
-        html = `${html}${i % 2 == 0?"<tr>":""}<td><label for="${inputElementId}">${blipProperty.property.label}</label></td>
+        }    
+
+        html = `${html}${i % 2 == 0?"<tr>":""}<td class="propertyLabel"><label for="${inputElementId}">${blipProperty.property.label}</label></td>
                      <td>${inputElement}</td>${i % 2 == 1?"</tr>":""}`
 
     }
     tbl.innerHTML = `${tbl.innerHTML}${html}`
     //  populate SELECTs after all HTML has been created
+    //  add change handlers
     for (let i = 0; i < blipProperties.length; i++) {
         const blipProperty = blipProperties[i]
+        const inputElementId = `blip${blipProperty.propertyPath}`
         if (blipProperty.property.allowableValues != null && blipProperty.property.allowableValues.length > 0) {
             let value = getNestedPropertyValueFromObject(blip.rating, blipProperty.propertyPath)
-            const inputElementId = `blip${blipProperty.propertyPath}`
             populateSelect(inputElementId, blipProperty.property.allowableValues, value)
         }
+        if (blipProperty.property.type =="image" ) {
+            initializeImagePaster((imageURL) => {
+                document.getElementById(inputElementId).value = imageURL
+                document.getElementById(`${inputElementId}Image`).src = imageURL
+                if (blipProperty.propertyPath == viewpoint.propertyVisualMaps.blip.image) {
+                    document.getElementById("blipImage").src = imageURL
+                }
+            }, `${inputElementId}ImagePasteArea`)
+        }
     }
+    blipEditorTitle.innerText = `Editing ${getNestedPropertyValueFromObject(blip.rating, viewpoint.propertyVisualMaps.blip.label)}`
 
-    blipEditorTitle.innerText = `Editing ${blip.rating.object.label} `
-    document.getElementById("blipImageURL").value = blip.rating.object.image
-    document.getElementById("blipImageURL").addEventListener("change", (e) => { document.getElementById("blipImage").src = e.target.value })
-    document.getElementById("blipImage").src = blip.rating.object.image
+    // set main image for blip 
+    document.getElementById("blipImage").src = getNestedPropertyValueFromObject(blip.rating, viewpoint.propertyVisualMaps.blip.image)
     initializeTagsField(blip)
     document.getElementById("addTagToBlip").addEventListener("click",
         (event) => {
@@ -131,12 +151,6 @@ const populateBlipEditor = (blip, viewpoint, drawRadarBlips) => {
             initializeTagsField(blip)
         })
 
-
-
-    initializeImagePaster((imageURL) => {
-        document.getElementById("blipImageURL").value = imageURL
-        document.getElementById("blipImage").src = imageURL
-    })
     blipEdited = blip
     drawRadarBlipsToCall = drawRadarBlips
     viewpointToReuse = viewpoint
@@ -195,8 +209,8 @@ document.getElementById("saveBlipEdits").addEventListener("click", () => {
 
 
 
-const initializeImagePaster = (handleImagePaste) => {
-    document.getElementById('pasteArea').onpaste = function (event) {
+const initializeImagePaster = (handleImagePaste, pasteAreaElementId) => {
+    document.getElementById(pasteAreaElementId).onpaste = function (event) {
         // use event.originalEvent.clipboard for newer chrome versions
         const items = (event.clipboardData || event.originalEvent.clipboardData).items;
         //  console.log(JSON.stringify(items)); // will give you the mime types

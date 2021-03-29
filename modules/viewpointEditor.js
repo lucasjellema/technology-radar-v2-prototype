@@ -1,9 +1,10 @@
 import { cartesianFromPolar, polarFromCartesian } from './drawingUtilities.js'
 import { makeDraggable } from './drag.js'
 import { subscribeToRadarEvents, drawRadar } from './radar.js'
-import { getConfiguration, subscribeToRadarRefresh, getState, publishRefreshRadar, getViewpoint } from './data.js'
+import { getConfiguration, subscribeToRadarRefresh, getState, publishRefreshRadar, getViewpoint, getData } from './data.js'
 import { getEditableDecorator } from './textEditing.js'
 import { isOperationBlackedOut } from './utils.js'
+import { initializeTree } from './tree.js';
 
 export { viewpointEditor, switchboard }
 
@@ -263,6 +264,8 @@ const viewpointEditor = function (configuration) {
     subscribeToRadarRefresh(refreshRadar)
     subscribeToRadarEvents(handleRadarEvent)
     synchronizeControlsWithCurrentRingOrSector()
+    
+    initializeTree("datamodelTree", getData(),"download")
 }
 
 const getSelectedObject = () => {
@@ -321,6 +324,8 @@ const refreshRadar = () => {
     initializeShapesConfigurator()
     initializeSectorConfiguration()
     initializeConfigurationJSONContainers()
+    initializeTree("datamodelTree", getData(),"download")
+
     synchronizeControlsWithCurrentRingOrSector()
 
 }

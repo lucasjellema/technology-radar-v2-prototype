@@ -62,6 +62,83 @@
             border: none;
             border-bottom: 1px solid #ccc
         }
+
+        /* TREE */
+
+        details details {
+            margin-left: 10pt;
+        }
+
+        .treeview {
+            padding: 5pt;
+            border: inset 2px lightGray;
+            width: 240pt;
+            font: 10pt Arial;
+            display: inline-block;
+        }
+
+        summary[selected="true"] {
+            background-color: yellow;
+        }
+
+
+        summary {
+            cursor: pointer;
+        }
+
+        summary:hover {
+            background-color: #C0e0ff;
+        }
+
+        /* Default for folders */
+        /*summary::-webkit-details-marker {
+  background-image:url('http://files.softicons.com/download/folder-icons/plastic-folders-icons-by-sirubico/png/16x16/Folder-Generic.png');
+  width:16px;
+  height:16px;
+  color:transparent;
+}*/
+
+        /* Default for leafs */
+        /*summary:only-child::-webkit-details-marker {
+  color:transparent;
+  background-color:green;
+  background-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/620300/report3_16x16.gif);
+  width:16px;
+  height:16px;
+}*/
+        summary .icon {
+            width: 16px;
+            height: 16px;
+        }
+
+
+
+        summary:only-child::-webkit-details-marker {
+            color: transparent;
+        }
+
+        details details {
+            margin-left: 10pt;
+            display: block;
+        }
+
+        #display {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        #display {
+            font-family: Arial;
+        }
+
+        .label {
+            font-size: 14pt;
+            font-weight: bold;
+        }
+
+        .descr {
+            font-size: 10pt
+        }
     </style>
 
 </head>
@@ -97,7 +174,7 @@
                 <input id="backgroundImageURL" style="width: 250px;"
                     title="Specify the URL for the background image"></input>
                 <textarea id="pasteArea" placeholder="Paste Image Here"></textarea>
-                <br/>
+                <br />
                 <label for="imageScaleFactor">Scale Factor</label>
                 <input id="imageScaleFactor" style="width: 50px;"
                     title="Specify the image scalefactor - between 0 and 100"></input>
@@ -129,12 +206,10 @@
             <div id="layering">
                 <p>Sectorlabels</p>
                 <div>
-                    <input type="checkbox" id="sectorLabelsOnSectorEdge" name="sectorLabelsOnSectorEdge"
-                         checked>
+                    <input type="checkbox" id="sectorLabelsOnSectorEdge" name="sectorLabelsOnSectorEdge" checked>
                     <label for="sectorLabelsOnSectorEdge">Display Curved Sector Labels on the sector edge</label>
                     <br />
-                    <input type="checkbox" id="regularSectorLabels" name="regularSectorLabels"
-                         >
+                    <input type="checkbox" id="regularSectorLabels" name="regularSectorLabels">
                     <label for="regularSectorLabels">Display Horizontal Sector Labels</label>
                 </div>
 
@@ -155,27 +230,57 @@
             <div>
                 <h3>Template management</h3>
                 <div>
-                    <input type="button" id="save" name="save" value="Save to Local Storage">
-                    <input type="button" id="load" name="load" value="Load (from local storage)">
-                </div>
-                <div>
-                    <input type="button" id="download" name="download" value="Download">
-                    <input type="button" id="upload" name="upload" value="Upload">
-                    <input type="file" id="fileElem" multiple accept="application/json,text/*" style="display:none">
-                </div>
-                <div>
                     <input type="button" id="newTemplate" name="newTemplate" value="Create New Template">
                     <input type="button" id="cloneTemplate" name="clone" value="Clone Template">
                     <input type="button" id="resetTemplate" name="reset" value="Reset Current Template">
                 </div>
                 <div>
-                    <input type="button" id="cloneViewpoint" name="cloneViewpoint" value="Clone Viewpoint">
-                   <input type="button" id="createViewpoint" name="createViewpoint" value="Create Viewpoint from Template">
-                   
-                </div>                <div>
+                    <input type="button" id="cloneViewpoint" name="cloneViewpoint" value="Clone currently selected Viewpoint">
+                    <input type="button" id="createViewpoint" name="createViewpoint"
+                        value="Create Viewpoint from currently selected Template">
+
+                </div>
+                <div>
+                    <br />
+                    <h3>Radar Template Selector</h3>
                     <select id="templateSelector" class="templates-select" name="option">
                         <option value="" disabled selected>Select Radar Template</option>
                     </select>
+                </div>
+
+                <div>
+                    <input type="button" id="save" name="save" value="Save to Local Storage">
+                    <input type="button" id="load" name="load" value="Load (from local storage)">
+                </div>
+                <div>
+                    <input type="button" id="download" name="download" value="Download" style="display:none"></input>
+
+                    <input type="file" id="fileElem" multiple accept="application/json,text/*" style="display:none">
+                    <div id="datamodelTreeContainer">
+                        <div>
+                            <h1>Radar Data Viewer</h1>
+                            <section>
+                                <div id="datamodelTree">
+
+                                </div>
+                                <div id="display"></div>
+                            </section>
+                        </div>
+                        <br />
+                    </div>
+                    <br/>
+                </div>
+                <div id="filemodelTreeContainer">
+                    <div>
+                        <h1>File Data Viewer</h1>
+                        <input type="button" id="upload" name="upload" value="Upload">
+                                                <section>
+                            <div id="filemodelTree">
+            
+                            </div>
+                        </section>
+                    </div>
+                    <br />
                 </div>
             </div>
         </div>
@@ -211,17 +316,20 @@
     <h2>Advanced! Take Care!</h2>
     <div id="propertyVisualMapsContainer" class="column1_3">
         <h3>Property Visual Maps</h3>
-        <textarea id="propertyVisualMaps" rows="20" cols="75" title="These objects map the values of properties to the sequence number of visual elements such as rings, sectors, colors and shapes. And sizes."></textarea>
+        <textarea id="propertyVisualMaps" rows="20" cols="75"
+            title="These objects map the values of properties to the sequence number of visual elements such as rings, sectors, colors and shapes. And sizes."></textarea>
 
     </div>
 
     <div id="ringConfigurationContainer" class="column1_3">
         <h3>Ring Configuration</h3>
-            <textarea id="ringConfiguration" rows="20" cols="75" title="These objects define the rings and the configuration of the ring labels"></textarea>
+        <textarea id="ringConfiguration" rows="20" cols="75"
+            title="These objects define the rings and the configuration of the ring labels"></textarea>
     </div>
     <div id="sectorConfigurationContainer" class="column1_3">
         <h3>Sector Configuration</h3>
-            <textarea id="sectorConfiguration" rows="20" cols="75" title="These objects define the sectors and the configuration of the sector labels"></textarea>
+        <textarea id="sectorConfiguration" rows="20" cols="75"
+            title="These objects define the sectors and the configuration of the sector labels"></textarea>
     </div>
     <div id="mainConfigContainer" class="column1_3">
         <h3>Configuration Details</h3>
@@ -238,16 +346,22 @@
 
     </div>
 
-    <input type="button" id="saveJSONToConfig" name="saveJSON" value="Save JSON definition"/>
+    <input type="button" id="saveJSONToConfig" name="saveJSON" value="Save JSON definition" />
     <br />
     <hr />
     <div id="vpObjectsContainer" class="column1_3">
         <h3>Viewpoint Objects</h3>
-        <textarea id="vpObjects" rows="20" cols="75" title="Objects to add to the radar viewpoint (generate blips for each object)"></textarea>
-        <input type="button" id="generateBlips" name="generateBlips" value="Process Objects - create blips in Viewpoint"/>
+        <textarea id="vpObjects" rows="20" cols="50"
+            title="Objects to add to the radar viewpoint (generate blips for each object)"></textarea>
+        <br />
+        <input type="button" id="generateBlips" name="generateBlips"
+            value="Process Objects - create blips in Viewpoint" />
 
     </div>
-    
+
+
+
+ 
     <script type="module">
         import { viewpointEditor } from './modules/viewpointEditor.js';
         import { getConfiguration } from './modules/data.js';
