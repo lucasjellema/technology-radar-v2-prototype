@@ -108,7 +108,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
 
                 const sectorArc = d3.arc()
                     .outerRadius(config.maxRingRadius)
-                    .innerRadius(15)
+                    .innerRadius(3) // bull's eye - how big should it be?
                     // startAngle and endAngle are measured clockwise from the 12 o’clock in radians; the minus takes care of anti-clockwise and the +0.5 is for starting at the horizontal axis pointing east
                     .startAngle(startAngle)
                     .endAngle(endAngle)

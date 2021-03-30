@@ -338,10 +338,9 @@ const getDataFromSelectedTreeElementsInRadarData = (treeElementId, radarData) =>
 // }
 
 const initializeTree = (treeElementId, radarData, treeDataProcessingType = null, uploadedDataProcessorFunction=null) => {
+    try {
     var treeview = new Treeview(treeElementId, "https://s3-us-west-2.amazonaws.com/s.cdpn.io/620300/");
-   
-
-    treeview.replaceData(mapRadarDataToTreeModel(radarData));
+       treeview.replaceData(mapRadarDataToTreeModel(radarData));
 
     if (treeDataProcessingType == "download") {
         // button for downloading parts of the current data model
@@ -375,7 +374,9 @@ const initializeTree = (treeElementId, radarData, treeDataProcessingType = null,
         console.log(`${event.target} ${JSON.stringify(data)}`)
     });
 
-
+    } catch (e) {
+        console.log(`initializeTree failed with ${e}`)
+    }
 }
 
 

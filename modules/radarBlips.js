@@ -25,11 +25,11 @@ const filterBlip = (blip, viewpoint) => {
                 try {
                     let blipHasFilter = JSON.stringify(blip.rating.object.tags).toLowerCase().trim().indexOf(filter.tag) > -1
                     // if not yet found, check discrete properties
-                    const discretePropertyPaths = ["object.category","object.offering","object.vendor","scope","ambition","author"]
-                    for (let j=0;!blipHasFilter && j<discretePropertyPaths.length ;j++ ) {
-                       blipHasFilter = getNestedPropertyValueFromObject(blip.rating, discretePropertyPaths[j])?.toLowerCase().trim() == filter.tag
+                    const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
+                    for (let j = 0; !blipHasFilter && j < discretePropertyPaths.length; j++) {
+                        blipHasFilter = getNestedPropertyValueFromObject(blip.rating, discretePropertyPaths[j])?.toLowerCase().trim() == filter.tag
                     }
-                                      
+
                     // minus filter: if tag is in rating.object.tags then blip is not ok  
                     if (blipHasFilter && filter.type == "minus") {
                         blipOK = false; break;
@@ -131,7 +131,7 @@ const drawRadarBlips = function (viewpoint) {
     blipElements.each(function (d) {
         const blip = d3.select(this);
         try {
-        drawRadarBlip(blip, d, viewpoint);
+            drawRadarBlip(blip, d, viewpoint);
         } catch (e) {
             console.log(`failed to draw blip ${blip.rating.object.label} because of ${e}`)
         }
@@ -148,15 +148,15 @@ const priorRingsWidthPercentageSum = (ringId, config) => config.ringConfiguratio
 
 const sectorRingToPosition = (sector, ring, config) => { // return randomized X,Y coordinates in segment corresponding to the sector and ring 
     try {
-    const phi = priorSectorsAnglePercentageSum(sector, config) + (0.1 + Math.random() * 0.8) * config.sectorConfiguration.sectors[sector].angle
-    // ring can be undefined (== the so called -1 ring, outside the real rings)
-    let r
-    if (ring && ring > -1)
-        r = config.maxRingRadius * (1 - priorRingsWidthPercentageSum(ring, config) - (0.1 + Math.random() * 0.8) * config.ringConfiguration.rings[ring].width) // 0.1 to not position the on the outer edge of the segment
-    else
-        r = config.maxRingRadius * (1.01 + Math.random() * 0.33)  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
+        const phi = priorSectorsAnglePercentageSum(sector, config) + (0.1 + Math.random() * 0.8) * config.sectorConfiguration.sectors[sector].angle
+        // ring can be undefined (== the so called -1 ring, outside the real rings)
+        let r
+        if (ring && ring > -1)
+            r = config.maxRingRadius * (1 - priorRingsWidthPercentageSum(ring, config) - (0.1 + Math.random() * 0.8) * config.ringConfiguration.rings[ring].width) // 0.1 to not position the on the outer edge of the segment
+        else
+            r = config.maxRingRadius * (1.01 + Math.random() * 0.33)  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
         return cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
-    } catch(e) {
+    } catch (e) {
         console.log(`radarblips,.sectorRingToPosition ${e} ${sector}${ring}`)
     }
 
@@ -174,7 +174,7 @@ const drawRadarBlip = (blip, d, viewpoint) => {
 
     const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
     const blipSector = viewpoint.propertyVisualMaps.sector.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSector)]
-    if (blipSector==null) {
+    if (blipSector == null) {
         // TODO get sector designated as default / other OR do NOT draw blip at all
     }
 
@@ -554,10 +554,10 @@ function populateDatalistWithTags(includeDiscreteProperties = false) {
     let distinctValues = listOfDistinctTagValues
 
     // TODO replace hardcoded property paths with meta model driven derivation
-    const discretePropertyPaths = ["object.category","object.offering","object.vendor","scope","ambition","author"]
+    const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
     if (includeDiscreteProperties) {
-        for (let i=0;i< discretePropertyPaths.length;i++) {
-            distinctValues =addValuesForProperty(discretePropertyPaths[i], getViewpoint().blips, distinctValues)
+        for (let i = 0; i < discretePropertyPaths.length; i++) {
+            distinctValues = addValuesForProperty(discretePropertyPaths[i], getViewpoint().blips, distinctValues)
         }
     }
 
@@ -707,76 +707,82 @@ function blipWindow(blip, viewpoint) {
         .attr("style", "background-color:#fff4b8; padding:6px; opacity:0.9")
 
     body.append("h2").text(`Properties for ${getNestedPropertyValueFromObject(blip.rating, viewpoint.propertyVisualMaps.blip.label)}`)
+    // let model = getData().model
+    // let XXratingType = model?.ratingTypes[viewpoint.ratingType]
+    // let XXratingTypes  = model?.ratingTypes
+    // let key = viewpoint.ratingType
+    // let rt = XXratingTypes[key]
+    // let rt2 = XXratingTypes["technologyAdaption"]
 
-    let ratingType = viewpoint.ratingType
-    if (typeof (ratingType) == "string") {
-        ratingType = getData().model?.ratingTypes[ratingType]
+    let ratingType = (typeof (viewpoint.ratingType) == "string") ? getData().model?.ratingTypes[viewpoint.ratingType] : viewpoint.ratingType
 
-    }
-    for (let propertyName in ratingType.objectType.properties) {
-        const property = ratingType.objectType.properties[propertyName]
-        let value = blip.rating.object[propertyName]
-        if (property.allowableValues != null && property.allowableValues.length > 0) {
-            value = getLabelForAllowableValue(value, property.allowableValues)
+
+    try {
+        for (let propertyName in ratingType.objectType.properties) {
+            const property = ratingType.objectType.properties[propertyName]
+            let value = blip.rating.object[propertyName]
+            if (property.allowableValues != null && property.allowableValues.length > 0) {
+                value = getLabelForAllowableValue(value, property.allowableValues)
+            }
+            if (property.type == "url" && value != null && value.length > 1 && value != "undefined") {
+                let newLink = body.append("xlink:a")
+                    .attr("src", value)
+                    .text(`${property.label}: ${value}`)
+                newLink.node().target = "_new"
+                newLink.node().addEventListener("click", (e) => { window.open(value); })
+            } else if (property.type == "image" && value != null && value.length > 0 && value != "undefined") {
+                let img = body.append("img")
+                    .attr("src", value)
+                    .attr("style", "width: 350px;float:right;padding:15px")
+            } else if (property.type == "tags" && value != null && value.length > 0) {
+                addTags("Tags", value, body)
+            }
+
+            else {
+                addProperty(property.label, value, body)
+            }
         }
-        if (property.type == "url" && value != null && value.length > 1 && value != "undefined") {
-            let newLink = body.append("xlink:a")
-                .attr("src", value)
-                .text(`${property.label}: ${value}`)
-            newLink.node().target = "_new"
-            newLink.node().addEventListener("click", (e) => { window.open(value); })
-        } else if (property.type == "image" && value != null && value.length > 0 && value != "undefined") {
-            let img = body.append("img")
-                .attr("src", value)
-                .attr("style", "width: 350px;float:right;padding:15px")
-        } else if (property.type == "tags" && value != null && value.length > 0) {
-            addTags("Tags", value, body)
+
+
+        const ratingDiv = body.append("div")
+            .attr("id", "ratingDiv")
+
+
+
+        for (let propertyName in ratingType.properties) {
+            const property = ratingType.properties[propertyName]
+            let value = blip.rating[propertyName]
+            if (property.allowableValues != null && property.allowableValues.length > 0) {
+                value = getLabelForAllowableValue(value, property.allowableValues)
+            }
+            addProperty(property.label, value, ratingDiv)
         }
 
-        else {
-            addProperty(property.label, value, body)
-        }
-    }
-
-
-    const ratingDiv = body.append("div")
-        .attr("id", "ratingDiv")
 
 
 
-    for (let propertyName in ratingType.properties) {
-        const property = ratingType.properties[propertyName]
-        let value = blip.rating[propertyName]
-        if (property.allowableValues != null && property.allowableValues.length > 0) {
-            value = getLabelForAllowableValue(value, property.allowableValues)
-        }
-        addProperty(property.label, value, ratingDiv)
-    }
+        let buttonDiv = body.append("div")
+            .attr("id", "buttonDiv")
+            .attr("style", "position: absolute; bottom: 30;left: 30;")
+        buttonDiv.append("button")
+            .attr("style", "float:left;padding:15px")
+            .on("click", () => {
+                svg.select("foreignObject").remove();
+
+                // TODO invoke function that popupates the blip editor
+                populateBlipEditor(blip, viewpoint, drawRadarBlips)
+            })
+            .html("Edit Blip")
+            buttonDiv.append("button")
+            .attr("style", "float:right;padding:15px")
+            .on("click", () => {
+                svg.select("foreignObject").remove();
+    
+            }).html("Close")
+            ;
+            } catch (e) { console.log(`blip window exception ${e}`) }
 
 
-
-
-    let buttonDiv = body.append("div")
-        .attr("id", "buttonDiv")
-        .attr("style", "position: absolute; bottom: 30;left: 30;")
-    buttonDiv.append("button")
-        .attr("style", "float:left;padding:15px")
-        .on("click", () => {
-            svg.select("foreignObject").remove();
-
-            // TODO invoke function that popupates the blip editor
-            populateBlipEditor(blip, viewpoint, drawRadarBlips)
-        })
-        .html("Edit Blip")
-
-
-    buttonDiv.append("button")
-        .attr("style", "float:right;padding:15px")
-        .on("click", () => {
-            svg.select("foreignObject").remove();
-
-        }).html("Close")
-        ;
 }
 
 
