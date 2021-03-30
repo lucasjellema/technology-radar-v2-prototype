@@ -241,9 +241,16 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
     console.log(`dragged element ${blipDragEvent.blipId}`)
 
     const dropSegment = segmentFromCartesian({ x: blipDragEvent.newX, y: blipDragEvent.newY }, viewpoint)
-    console.log(`dropsegment ${JSON.stringify(dropSegment)}`)
-
-    const blip = viewpoint.blips[parseInt(blipDragEvent.blipId.substring(5))]
+    //console.log(`dropsegment ${JSON.stringify(dropSegment)}`)
+    const blipId = blipDragEvent.blipId.substring(5)
+    // we may be lucky and find the blip at this point in the array
+    let blip
+    if (viewpoint.blips[parseInt(blipId)]!=null && viewpoint.blips[parseInt(blipId)].id == blipId )
+       blip = viewpoint.blips[parseInt(blipId)]
+    else {
+        // find blip with proper id
+        blip = viewpoint.blips.filter((blip) => blip.id == blipId?blip:null)[0]
+    }   
     //    console.log(`blip ${JSON.stringify(blip)}`)
     blip.x = blipDragEvent.newX
     blip.y = blipDragEvent.newY

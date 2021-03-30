@@ -385,7 +385,7 @@ const processObjectsIntoBlips = () => {
                     , scope: ratingType.properties.scope?.defaultValue
                     , author: ratingType.properties.author?.defaultValue
                 }
-                const blip = { id: `${i + 1 + originalBlipCount}`, rating: rating, }
+                const blip = { id: `${i +  originalBlipCount}`, rating: rating, }
                 getViewpoint().blips.push(blip)
 
             }

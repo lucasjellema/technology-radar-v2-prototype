@@ -130,7 +130,11 @@ const drawRadarBlips = function (viewpoint) {
     // configure each blip
     blipElements.each(function (d) {
         const blip = d3.select(this);
+        try {
         drawRadarBlip(blip, d, viewpoint);
+        } catch (e) {
+            console.log(`failed to draw blip ${blip.rating.object.label} because of ${e}`)
+        }
 
     });
     return viewpoint.blips
@@ -143,6 +147,7 @@ const priorRingsWidthPercentageSum = (ringId, config) => config.ringConfiguratio
     .reduce((sum, ring) => sum + ring.width, 0)
 
 const sectorRingToPosition = (sector, ring, config) => { // return randomized X,Y coordinates in segment corresponding to the sector and ring 
+    try {
     const phi = priorSectorsAnglePercentageSum(sector, config) + (0.1 + Math.random() * 0.8) * config.sectorConfiguration.sectors[sector].angle
     // ring can be undefined (== the so called -1 ring, outside the real rings)
     let r
@@ -150,7 +155,11 @@ const sectorRingToPosition = (sector, ring, config) => { // return randomized X,
         r = config.maxRingRadius * (1 - priorRingsWidthPercentageSum(ring, config) - (0.1 + Math.random() * 0.8) * config.ringConfiguration.rings[ring].width) // 0.1 to not position the on the outer edge of the segment
     else
         r = config.maxRingRadius * (1.01 + Math.random() * 0.33)  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
-    return cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
+        return cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
+    } catch(e) {
+        console.log(`radarblips,.sectorRingToPosition ${e} ${sector}${ring}`)
+    }
+
 }
 
 const blipInSegment = (cartesian, viewpoint, segment) => {
@@ -165,6 +174,9 @@ const drawRadarBlip = (blip, d, viewpoint) => {
 
     const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
     const blipSector = viewpoint.propertyVisualMaps.sector.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSector)]
+    if (blipSector==null) {
+        // TODO get sector designated as default / other OR do NOT draw blip at all
+    }
 
     const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
     const blipRing = viewpoint.propertyVisualMaps.ring.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToRing)]
