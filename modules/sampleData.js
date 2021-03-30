@@ -213,6 +213,7 @@ const sample = {
     "viewpoints": [
         {
             "name": "Emerging Technologies and Trends Impact Radar",
+            "id": "emerging-tech-trends", 
             "ratingType":"technologyAdoption",
             "template": {
                 "svg_id": "radarSVGContainer",
@@ -907,6 +908,7 @@ const sample = {
         },
         {
             "name": "Conclusion Technology Radar 2021",
+            "id": "amis-tech-radar-2021", 
             "template": {
                 "svg_id": "radarSVGContainer",
                 "width": 1450,

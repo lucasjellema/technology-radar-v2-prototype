@@ -24,7 +24,7 @@ const filterBlip = (blip, viewpoint) => {
                 const filter = viewpoint.blipDisplaySettings.tagFilter[i]
                 try {
                     let blipHasFilter = JSON.stringify(blip.rating.object.tags).toLowerCase().trim().indexOf(filter.tag) > -1
-                    // if not yet found, check discrete properties
+                    // TODO if not yet found, check discrete properties
                     const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
                     for (let j = 0; !blipHasFilter && j < discretePropertyPaths.length; j++) {
                         blipHasFilter = getNestedPropertyValueFromObject(blip.rating, discretePropertyPaths[j])?.toLowerCase().trim() == filter.tag

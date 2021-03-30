@@ -1,4 +1,4 @@
-export { getConfiguration, getViewpoint, getData, createBlip, subscribeToRadarRefresh, getState, publishRefreshRadar }
+export { initializeViewpointFromURL, initializeFiltersTagsFromURL, getConfiguration, getViewpoint, getData, createBlip, subscribeToRadarRefresh, getState, publishRefreshRadar }
 import { initializeTree } from './tree.js'
 import { getSampleData } from './sampleData.js'
 
@@ -35,7 +35,44 @@ const getViewpoint = () => {
     return data.viewpoints[state.currentViewpoint]
 }
 
+const initializeViewpointFromURL = () => {
+    const params = new URLSearchParams(window.location.search)
+    const viewpointId = params.get('viewpoint')
+    if (viewpointId != null) {
+        // find viewpoint with id and when found - set currentViewpoint and edittype
+        for (let i = 0; i < data.viewpoints.length; i++) {
+            if (data.viewpoints[i].id == viewpointId) {
+                state.currentViewpoint = i
+                state.editType = "viewpoint"
+            }
+        }
+    }
+}
 
+const initializeFiltersTagsFromURL = () => {
+    const params = new URLSearchParams(window.location.search)
+    const tagParam = params.get('tags')
+    console.log(`tags ${tagParam}`)
+    // default type = plus; if last character == ~ then type is minus, if *  then must
+    if (tagParam != null && tagParam.length > 0) {
+        if (getViewpoint().blipDisplaySettings.tagFilter==null  || getViewpoint().blipDisplaySettings.tagFilter.length==0) {getViewpoint().blipDisplaySettings.tagFilter=[]}
+        const tags = tagParam.split(',')
+        for (let i = 0; i < tags.length; i++) {
+            let tag = tags[i]
+            let type = "plus"
+            if (tag.endsWith("~")) {
+                tag = tag.slice(0, tag.length - 1)
+                type = "minus"
+            }
+            if (tag.endsWith("*")) {
+                tag = tag.slice(0, tag.length - 1)
+                type = "must"
+            }
+            getViewpoint().blipDisplaySettings.tagFilter.push({ type: type, tag: tag })
+        }
+    }
+
+}
 
 const getState = () => {
     return state
@@ -246,7 +283,7 @@ const createViewpointFromTemplate = () => {
                         label: "Label",
                         type: "string"
                         , defaultValue: "Some Technology"
-                        , displayLabel : true // this property should be used to derive the label for this objectType
+                        , displayLabel: true // this property should be used to derive the label for this objectType
                     }, description: {
                         label: "Description",
                         type: "string"
@@ -277,28 +314,30 @@ const createViewpointFromTemplate = () => {
                         ] //
                         , defaultValue: "infrastructure"
                     }
-                }}, properties:
-                {
-                    ambition: {
-                        label: "Ambition",
-                        description: "The current outlook or intent regarding this technology", defaultValue: "identified"
-                        , allowableValues: [{ value: "identified", label: "Identified" }, { value: "hold", label: "Hold" }, { value: "assess", label: "Assess" }, { value: "trial", label: "Try Out/PoC" }, { value: "adopt", label: "Adopt" }]
-                        , defaultValue: "identified"
-                    },
-                    magnitude: {
-                        label: "Magnitude/Relevance",
-                        description: "The relative size of the technology (in terms of investment, people involved, percentage of revenue)", defaultValue: "medium"
-                        , allowableValues: [{ value: "tiny", label: "Tiny or Niche" }, { value: "medium", label: "Medium" }, { value: "large", label: "Large" }]
-                    },
-                    experience: {
-                        label: "Experience/Maturity",
-                        description: "The relative time this technology has been around (for us)", defaultValue: "medium"
-                        , allowableValues: [{ value: "short", label: "Fresh" }, { value: "medium", label: "Intermediate" }, { value: "long", label: "Very Mature" }]
-                    }
+                }
+            }, properties:
+            {
+                ambition: {
+                    label: "Ambition",
+                    description: "The current outlook or intent regarding this technology", defaultValue: "identified"
+                    , allowableValues: [{ value: "identified", label: "Identified" }, { value: "hold", label: "Hold" }, { value: "assess", label: "Assess" }, { value: "trial", label: "Try Out/PoC" }, { value: "adopt", label: "Adopt" }]
+                    , defaultValue: "identified"
+                },
+                magnitude: {
+                    label: "Magnitude/Relevance",
+                    description: "The relative size of the technology (in terms of investment, people involved, percentage of revenue)", defaultValue: "medium"
+                    , allowableValues: [{ value: "tiny", label: "Tiny or Niche" }, { value: "medium", label: "Medium" }, { value: "large", label: "Large" }]
+                },
+                experience: {
+                    label: "Experience/Maturity",
+                    description: "The relative time this technology has been around (for us)", defaultValue: "medium"
+                    , allowableValues: [{ value: "short", label: "Fresh" }, { value: "medium", label: "Intermediate" }, { value: "long", label: "Very Mature" }]
+                }
 
-                }        }
+            }
+        }
         // define propertyViewMaps
-        newViewpoint.propertyVisualMaps ={
+        newViewpoint.propertyVisualMaps = {
             blip: { label: "object.label", image: "object.image" },
             size: {
                 property: "magnitude", valueMap: { "tiny": 0, "medium": 1, "large": 2 } // the rating magnitude property drives the size; the values of magnitude are mapped to values for size

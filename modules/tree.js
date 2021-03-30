@@ -34,11 +34,15 @@ class Treeview {
     replaceData(data, targetId) {
         if (targetId != null) {
             var target = document.getElementById(targetId);
-            target.outerHTML = this.walkData(data)
+            if (target!=null) {
+                target.outerHTML = this.walkData(data)
+            }
         }
         else {
-            var target = document.querySelector(`#${this.treeviewId}`);
-            target.innerHTML = this.walkData(data);
+            const target = document.querySelector(`#${this.treeviewId}`);
+            if (target!=null) {
+              target.innerHTML = this.walkData(data);
+            }
         }
     };
     walkData(data) {

@@ -419,11 +419,15 @@ td.propertyLabel {
     <script type="module">
         import { drawRadar, subscribeToRadarEvents } from './modules/radar.js';
         import { drawRadarBlips } from './modules/radarBlips.js';
-        import { getConfiguration, getViewpoint, createBlip, getState, subscribeToRadarRefresh } from './modules/data.js';
+        import { initializeViewpointFromURL,initializeFiltersTagsFromURL, getConfiguration, getViewpoint, createBlip, getState, subscribeToRadarRefresh } from './modules/data.js';
         import { makeDraggable } from './modules/blipDrag.js'
         import { handleBlipDrag, populateBlipEditor } from './modules/blipEditing.js'
 
+        initializeViewpointFromURL()
+        initializeFiltersTagsFromURL()
         const viewpoint = getConfiguration()
+
+        
         // viewpoint.editMode = false
         getState().editMode = false
         drawRadar(getViewpoint())
