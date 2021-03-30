@@ -361,11 +361,19 @@ const processObjectsIntoBlips = () => {
             // process objects
             const originalBlipCount = getViewpoint().blips.length
             for (let i = 0; i < objects.length; i++) {
+                // TODO: check on allowable values; if a propertyvalue does not occur in allowable values, then do not process AND report 
+
                 // for each: check if label already occurs for one of the existing blips.rating.object.label; if so - ignore
                 // set default values on object properties that do not already have a value
                 // create a rating set default values on properties ; reference the object
                 objects[i].tags = []
                 objects[i].category = objects[i].category != null && objects[i].category.length > 0 ? objects[i].category : objectType.properties.category?.defaultValue
+                objects[i].vendor = objects[i].vendor != null && objects[i].vendor.length > 0 ? objects[i].vendor : objectType.properties.vendor?.defaultValue
+                objects[i].homepage = objects[i].homepage != null && objects[i].homepage.length > 0 ? objects[i].homepage : objectType.properties.homepage?.defaultValue
+                objects[i].offering = objects[i].offering != null && objects[i].offering.length > 0 ? objects[i].offering : objectType.properties.offering?.defaultValue
+                objects[i].description = objects[i].description != null && objects[i].description.length > 0 ? objects[i].description : objectType.properties.description?.defaultValue
+                objects[i].image = objects[i].image != null && objects[i].image.length > 0 ? objects[i].image : objectType.properties.image?.defaultValue
+                
                 console.log(`category ${objects[i].category}  default ${objectType.properties.category?.defaultValue}`)
                 // create a blip - reference rating
                 const rating = {
@@ -374,6 +382,8 @@ const processObjectsIntoBlips = () => {
                     , magnitude: ratingType.properties.magnitude?.defaultValue
                     , timestamp: Date.now()
                     , object: objects[i]
+                    , scope: ratingType.properties.scope?.defaultValue
+                    , author: ratingType.properties.author?.defaultValue
                 }
                 const blip = { id: `${i + 1 + originalBlipCount}`, rating: rating, }
                 getViewpoint().blips.push(blip)
@@ -396,8 +406,8 @@ const initializeConfigurationJSONContainers = () => {
 
     const mainProperties = { defaultFont: getConfiguration().defaultFont, title: getConfiguration().title, colors: getConfiguration().colors }
     document.getElementById('mainConfig').value = JSON.stringify(mainProperties, null, 2)
-
-    document.getElementById('vpObjects').value = "label,category,homepage,offering,vendor\n"
+    // TODO dynamically derive the object properties to list from objectType
+    document.getElementById('vpObjects').value = "label,category,homepage,offering,vendor,description\n"
 
 
 }

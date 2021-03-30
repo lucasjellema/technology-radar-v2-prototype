@@ -7,20 +7,21 @@ class Treeview {
         this.selected = null;
         this.imageBase = imageBaseUrl;
     };
-    on(eventName, fn) {
+    on(eventName, eventHandler) {
         var me = this;
         switch (eventName) {
             case "select": {
-                document.querySelector(`#${this.treeviewId}`).addEventListener("click", (event) => {
+                const tree = document.getElementById(this.treeviewId)
+                tree.addEventListener("click", (event) => {
                     if (event.target.nodeName == 'SUMMARY') {
                         if (me.selected != null) {
                             document.getElementById(me.selected).removeAttribute("selected");
                         }
                         document.getElementById(event.target.id).setAttribute("selected", "true");
-                        console.log(event.target.id);
+                        //console.log(event.target.id);
                         me.selected = event.target.id;
                         event.target.setAttribute("open", !event.target.parentNode.hasAttribute("open"));
-                        fn(event)
+                        eventHandler(event)
                     }
                 });
                 break;
@@ -336,14 +337,9 @@ const getDataFromSelectedTreeElementsInRadarData = (treeElementId, radarData) =>
 //     console.log(`data`)
 // }
 
-const initializeTree = (treeElementId, radarData, treeDataProcessingType = null, dataProcessorFunction=null) => {
+const initializeTree = (treeElementId, radarData, treeDataProcessingType = null, uploadedDataProcessorFunction=null) => {
     var treeview = new Treeview(treeElementId, "https://s3-us-west-2.amazonaws.com/s.cdpn.io/620300/");
-    treeview.on("select", (event) => {
-        var node = event.target;
-        var data = node.dataset
-        display.innerHTML = `<div class="label">${data.label}</div>${data.description ? `<div class="descr">${data.description}</div>` : ''}`;
-        console.log(`${event.target} ${JSON.stringify(data)}`)
-    });
+   
 
     treeview.replaceData(mapRadarDataToTreeModel(radarData));
 
@@ -369,8 +365,15 @@ const initializeTree = (treeElementId, radarData, treeDataProcessingType = null,
         container.innerHTML = `${container.innerHTML}<input type="button" id="processSelectedUploadedData" name="processUploaded"
     value="Process Selected Elements from Uploaded Data"></input>`
         processUploadedDataButton = document.getElementById("processSelectedUploadedData")
-        processUploadedDataButton.addEventListener("click", (e) => { dataProcessorFunction(getDataFromSelectedTreeElementsInRadarData(treeElementId, radarData)) })
+        processUploadedDataButton.addEventListener("click", (e) => { uploadedDataProcessorFunction(getDataFromSelectedTreeElementsInRadarData(treeElementId, radarData)) })
     }
+    treeview.on("select", (event) => {
+        var node = event.target;
+        var data = node.dataset
+
+   // display.innerHTML = `<div class="label">${data.label}</div>${data.description ? `<div class="descr">${data.description}</div>` : ''}`;
+        console.log(`${event.target} ${JSON.stringify(data)}`)
+    });
 
 
 }

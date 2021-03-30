@@ -41,12 +41,7 @@ const getState = () => {
     return state
 }
 
-// load index RADAR-INDEX from LocalStorage
-// in RADAR_INDEX are references to other documents
-// { viewpoints : [{title, description, lastupdate}, {title}] 
-// , objects : [ "technologies", "AMIS Staff"]
-// }
-// if it does not exist, create a new radar index
+
 const freshTemplate =
 {
     svg_id: "radarSVGContainer",
@@ -185,7 +180,7 @@ function initializeUpload() {
 }
 
 let uploadedData
-//TODO support multiple filers, support add/merge instead of replace of files
+//TODO support multiple filers
 async function handleUploadedFiles() {
     if (!this.files.length) {
         console.log(`no files selected`)
@@ -209,7 +204,7 @@ async function handleUploadedFiles() {
             }
 
             publishRefreshRadar()
-        })
+        }, data.model)
         publishRefreshRadar()
 
     }
@@ -243,8 +238,38 @@ const createViewpointFromTemplate = () => {
         newViewpoint.blips = []
         newViewpoint.ratingType = {
             objectType: {
+                name: "technology",
+                label: "Technology",
                 properties:
                 {
+                    label: {
+                        label: "Label",
+                        type: "string"
+                        , defaultValue: "Some Technology"
+                        , displayLabel : true // this property should be used to derive the label for this objectType
+                    }, description: {
+                        label: "Description",
+                        type: "string"
+                    }, homepage: {
+                        label: "Homepage",
+                        type: "url"
+                    }, image: {
+                        label: "Logo",
+                        type: "image"
+                    }, vendor: {
+                        label: "Vendor",
+                        type: "string",
+                        discrete: true
+                    }, tags: {
+                        label: "Tags",
+                        type: "tags",
+                    }, offering: {
+                        label: "Offering",
+                        type: "string", allowableValues: [{ value: "oss", label: "Open Source Software" }
+                            , { value: "commercial", label: "Commercial Software" }, { value: "other", label: "Other type of offering" }
+                        ]
+                        , defaultValue: "oss"
+                    },
                     "category": {
                         label: "Category",
                         type: "string", allowableValues: [{ value: "database", label: "Data Platform" }
@@ -252,22 +277,43 @@ const createViewpointFromTemplate = () => {
                         ] //
                         , defaultValue: "infrastructure"
                     }
-                }
-            }, properties:
-            {
-                ambition: {
-                    description: "The current outlook or intent regarding this technology", defaultValue: "identified"
-                    , allowableValues: [{ value: "identified", label: "Identified" }, { value: "hold", label: "Hold" }, { value: "assess", label: "Assess" }, { value: "adopt", label: "Adopt" }]
-                }
-            }
-        }
+                }}, properties:
+                {
+                    ambition: {
+                        label: "Ambition",
+                        description: "The current outlook or intent regarding this technology", defaultValue: "identified"
+                        , allowableValues: [{ value: "identified", label: "Identified" }, { value: "hold", label: "Hold" }, { value: "assess", label: "Assess" }, { value: "trial", label: "Try Out/PoC" }, { value: "adopt", label: "Adopt" }]
+                        , defaultValue: "identified"
+                    },
+                    magnitude: {
+                        label: "Magnitude/Relevance",
+                        description: "The relative size of the technology (in terms of investment, people involved, percentage of revenue)", defaultValue: "medium"
+                        , allowableValues: [{ value: "tiny", label: "Tiny or Niche" }, { value: "medium", label: "Medium" }, { value: "large", label: "Large" }]
+                    },
+                    experience: {
+                        label: "Experience/Maturity",
+                        description: "The relative time this technology has been around (for us)", defaultValue: "medium"
+                        , allowableValues: [{ value: "short", label: "Fresh" }, { value: "medium", label: "Intermediate" }, { value: "long", label: "Very Mature" }]
+                    }
+
+                }        }
         // define propertyViewMaps
-        newViewpoint.propertyVisualMaps = {
-            sizeMap: { "tiny": 0, "medium": 1, "large": 2 } // the rating magnitude property drives the size; the values of magnitude are mapped to values for size
-            , sectorMap: { "database": 0, "language": 3, "infrastructure": 2, "concepts": 4, "libraries": 1 } // the object category property drives the sector; the values of category are mapped to values for sector
-            , ringMap: { "hold": 1, "assess": 2, "adopt": 4, "spotted": 0, "trial": 3 } // the rating ambition property drives the ring; the values of ambition are mapped to values for ring
-            , shapeMap: { "oss": 1, "commercial": 0, "other": 3 }
-            , colorMap: { "short": 0, "long": 1, "intermediate": 3, "other": 2 }
+        newViewpoint.propertyVisualMaps ={
+            blip: { label: "object.label", image: "object.image" },
+            size: {
+                property: "magnitude", valueMap: { "tiny": 0, "medium": 1, "large": 2 } // the rating magnitude property drives the size; the values of magnitude are mapped to values for size
+            }
+            , sector: {
+                property: "object.category", valueMap: { "database": 0, "language": 3, "infrastructure": 2, "concepts": 4, "libraries": 1 } // the object category property drives the sector; the values of category are mapped to values for sector
+            }
+
+            , ring: {
+                property: "ambition", valueMap: { "hold": 0, "assess": 1, "adopt": 3, "trial": 2 } // the rating ambition property drives the ring; the values of ambition are mapped to values for ring
+            }
+            , shape: {
+                property: "object.offering", valueMap: { "oss": 4, "commercial": 6, "other": 5 }
+            }
+            , color: { property: "experience", valueMap: { "short": 0, "long": 1, "intermediate": 3, "other": 2 } }
         }
 
         data.viewpoints.push(newViewpoint)

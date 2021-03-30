@@ -14,15 +14,27 @@ const filterBlip = (blip, viewpoint) => {
     // determine all tags in the tag filter  - for now as individual strings, no + or - support TODO
     let blipOK = viewpoint.blipDisplaySettings.tagFilter?.length == 0 // no filter - then blip is ok 
     if (viewpoint.blipDisplaySettings.tagFilter?.length ?? 0 > 0) {
+        //if all tags are minus filter, then are starting assmption is that the blip is ok
+        const minusFiltercount = viewpoint.blipDisplaySettings.tagFilter.reduce(
+            (sum, tagFilter) => sum + (tagFilter.type == 'minus' ? 1 : 0)
+            , 0)
+        blipOK = viewpoint.blipDisplaySettings.tagFilter?.length == minusFiltercount
         try {
             for (let i = 0; i < viewpoint.blipDisplaySettings.tagFilter.length; i++) {
                 const filter = viewpoint.blipDisplaySettings.tagFilter[i]
                 try {
-                    const blipHasFilter = JSON.stringify(blip.rating.object.tags).indexOf(filter.tag) > -1
+                    let blipHasFilter = JSON.stringify(blip.rating.object.tags).toLowerCase().trim().indexOf(filter.tag) > -1
+                    // if not yet found, check discrete properties
+                    const discretePropertyPaths = ["object.category","object.offering","object.vendor","scope","ambition","author"]
+                    for (let j=0;!blipHasFilter && j<discretePropertyPaths.length ;j++ ) {
+                       blipHasFilter = getNestedPropertyValueFromObject(blip.rating, discretePropertyPaths[j])?.toLowerCase().trim() == filter.tag
+                    }
+                                      
                     // minus filter: if tag is in rating.object.tags then blip is not ok  
                     if (blipHasFilter && filter.type == "minus") {
                         blipOK = false; break;
                     }
+
                     // must filter: if the tag is not in rating.object.tags then the blip cannot be ok
                     if (!blipHasFilter && filter.type == "must") {
                         blipOK = false; break;
@@ -63,8 +75,19 @@ const initializeTagsFilter = () => {
         document.getElementById(`removeTag${i}`).addEventListener("click", () => { currentViewpoint.blipDisplaySettings.tagFilter.splice(i, 1); drawRadarBlips(currentViewpoint) })
     }
 
+    let resetFilterButton = document.getElementById("resetFilterButton")
+    if (resetFilterButton) {
+        resetFilterButton.remove()
+    }
+
+    if (currentViewpoint.blipDisplaySettings.tagFilter.length > 0) {
+        const container = document.getElementById("resetTagsFilterControlContainer")
+        container.innerHTML = `<input type="button" id="resetFilterButton" name="resetFilter" style="margin-top:10px" title="Remove All Tags" value="Reset Filter"></input>`
+        resetFilterButton = document.getElementById("resetFilterButton")
+        resetFilterButton.addEventListener("click", (e) => { currentViewpoint.blipDisplaySettings.tagFilter = []; drawRadarBlips(currentViewpoint) })
+    }
     // populate datalist with all unique tag values in all blips
-    populateDatalistWithTags()
+    populateDatalistWithTags(true)
 
 }
 
@@ -505,28 +528,50 @@ const menu = (x, y, d, blip, viewpoint) => {
     }
 }
 
-function populateDatalistWithTags() {
-    const tagsList = document.getElementById('tagsList')
-    //remove current contents
-    tagsList.length = 0
-    tagsList.innerHTML = null
-
+function populateDatalistWithTags(includeDiscreteProperties = false) {
 
     const listOfDistinctTagValues = new Set()
     for (let i = 0; i < getViewpoint().blips.length; i++) {
         const blip = getViewpoint().blips[i]
         if (blip.rating.object?.tags != null && blip.rating.object?.tags.length > 0) {
             for (let j = 0; j < blip.rating.object?.tags.length; j++) {
-                listOfDistinctTagValues.add(blip.rating.object.tags[j].trim())
+                listOfDistinctTagValues.add(blip.rating.object.tags[j].toLowerCase().trim())
             }
         }
     }
+    let distinctValues = listOfDistinctTagValues
+
+    // TODO replace hardcoded property paths with meta model driven derivation
+    const discretePropertyPaths = ["object.category","object.offering","object.vendor","scope","ambition","author"]
+    if (includeDiscreteProperties) {
+        for (let i=0;i< discretePropertyPaths.length;i++) {
+            distinctValues =addValuesForProperty(discretePropertyPaths[i], getViewpoint().blips, distinctValues)
+        }
+    }
+
+    const tagsList = document.getElementById('tagsList')
+    //remove current contents
+    tagsList.length = 0
+    tagsList.innerHTML = null
+
     let option
-    for (let tagvalue of listOfDistinctTagValues) {
+    for (let tagvalue of distinctValues) {
         option = document.createElement('option')
         option.value = tagvalue
         tagsList.appendChild(option)
     }
+
+
+    function addValuesForProperty(propertyPath, blips, distinctValues) {
+        const listOfDistinctPropertyValues = new Set()
+        for (let i = 0; i < blips.length; i++) {
+            const blip = blips[i]
+            listOfDistinctPropertyValues.add(getNestedPropertyValueFromObject(blip.rating, propertyPath)?.toLowerCase().trim())
+        }
+        distinctValues = new Set([...distinctValues, ...listOfDistinctPropertyValues])
+        return distinctValues
+    }
+
 
 }
 
@@ -652,7 +697,7 @@ function blipWindow(blip, viewpoint) {
     body.append("h2").text(`Properties for ${getNestedPropertyValueFromObject(blip.rating, viewpoint.propertyVisualMaps.blip.label)}`)
 
     let ratingType = viewpoint.ratingType
-    if (typeof(ratingType)=="string") {
+    if (typeof (ratingType) == "string") {
         ratingType = getData().model?.ratingTypes[ratingType]
 
     }
@@ -672,7 +717,7 @@ function blipWindow(blip, viewpoint) {
             let img = body.append("img")
                 .attr("src", value)
                 .attr("style", "width: 350px;float:right;padding:15px")
-        } else if (property.type == "tags" && value!=null && value.length > 0) {
+        } else if (property.type == "tags" && value != null && value.length > 0) {
             addTags("Tags", value, body)
         }
 

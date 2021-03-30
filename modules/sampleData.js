@@ -37,8 +37,8 @@ const technologies = [
 
 // these genericRatingProperties are applied to every ratingType
 const genericRatingProperties = {
-    scope: { label: "Scope", description: "The scope or context to which the rating applies" }
-    , author: { label: "Author/Evaluator", description: "The name of the person who made the judgement" }
+    scope: { label: "Scope", description: "The scope or context to which the rating applies" , defaultValue:"Conclusion"}
+    , author: { label: "Author/Evaluator", description: "The name of the person who made the judgement" , defaultValue:"System Generated"}
     , timestamp: { label: "Time of Evaluation", description: "When was this rating defined" }
     , comment: { label: "Comment/Rationale", description: "Additional remark regarding this rating" }
 }
@@ -443,13 +443,13 @@ const sample = {
                 , color: { property: "experience", valueMap: { "short": 0, "long": 1, "intermediate": 3, "other": 2 } }
             },
             "blipDisplaySettings": {
-                "showImages": true,
-                "showShapes": false,
-                "showLabels": false,
+                "showImages": false,
+                "showShapes": true,
+                "showLabels": true,
                 "applyShapes": false,
-                "applySizes": true,
+                "applySizes": false,
                 "applyColors": false,
-                "tagFilter": [{ type: "plus", tag: "data" }, { type: "plus", tag: "sql" }, { type: "minus", tag: "nosql" }]
+                "tagFilter": []
             },
             "blips": [
                 {
