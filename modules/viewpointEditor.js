@@ -3,7 +3,7 @@ import { makeDraggable } from './drag.js'
 import { subscribeToRadarEvents, drawRadar } from './radar.js'
 import { getConfiguration, subscribeToRadarRefresh, getState, publishRefreshRadar, getViewpoint, getData } from './data.js'
 import { getEditableDecorator } from './textEditing.js'
-import { isOperationBlackedOut } from './utils.js'
+import { uuidv4 } from './utils.js'
 import { initializeTree } from './tree.js';
 
 export { viewpointEditor, switchboard }
@@ -67,7 +67,7 @@ const switchboard = {
     handleDragEvent: (eventType, element, dragCoordinates) => {
         if (element == null || element.id == null) return
         let newCoordinates = dragCoordinates
-      //  console.log(`dragged element:${element.id} ${element.id}`)
+        //  console.log(`dragged element:${element.id} ${element.id}`)
         if (element.id.startsWith("sectorLabel")) {
             handleDragSectorLabel(element.id.substring(11), newCoordinates)
         }
@@ -264,8 +264,8 @@ const viewpointEditor = function (configuration) {
     subscribeToRadarRefresh(refreshRadar)
     subscribeToRadarEvents(handleRadarEvent)
     synchronizeControlsWithCurrentRingOrSector()
-    
-    initializeTree("datamodelTree", getData(),"download")
+
+    initializeTree("datamodelTree", getData(), "download")
 }
 
 const getSelectedObject = () => {
@@ -324,7 +324,7 @@ const refreshRadar = () => {
     initializeShapesConfigurator()
     initializeSectorConfiguration()
     initializeConfigurationJSONContainers()
-    initializeTree("datamodelTree", getData(),"download")
+    initializeTree("datamodelTree", getData(), "download")
 
     synchronizeControlsWithCurrentRingOrSector()
 
@@ -356,7 +356,10 @@ const processObjectsIntoBlips = () => {
         try {
             const objects = d3.csvParse(document.getElementById('vpObjects').value)
             const vp = getViewpoint()
-            const ratingType = getViewpoint().ratingType
+            let ratingType = getViewpoint().ratingType
+            if(typeof (ratingType) == "string") {
+                ratingType = getData().model?.ratingTypes[ratingType]
+            }
             const objectType = ratingType.objectType
             // process objects
             const originalBlipCount = getViewpoint().blips.length
@@ -366,26 +369,48 @@ const processObjectsIntoBlips = () => {
                 // for each: check if label already occurs for one of the existing blips.rating.object.label; if so - ignore
                 // set default values on object properties that do not already have a value
                 // create a rating set default values on properties ; reference the object
+                objects[i].id = uuidv4()
                 objects[i].tags = []
-                objects[i].category = objects[i].category != null && objects[i].category.length > 0 ? objects[i].category : objectType.properties.category?.defaultValue
-                objects[i].vendor = objects[i].vendor != null && objects[i].vendor.length > 0 ? objects[i].vendor : objectType.properties.vendor?.defaultValue
-                objects[i].homepage = objects[i].homepage != null && objects[i].homepage.length > 0 ? objects[i].homepage : objectType.properties.homepage?.defaultValue
-                objects[i].offering = objects[i].offering != null && objects[i].offering.length > 0 ? objects[i].offering : objectType.properties.offering?.defaultValue
-                objects[i].description = objects[i].description != null && objects[i].description.length > 0 ? objects[i].description : objectType.properties.description?.defaultValue
-                objects[i].image = objects[i].image != null && objects[i].image.length > 0 ? objects[i].image : objectType.properties.image?.defaultValue
-                
-                console.log(`category ${objects[i].category}  default ${objectType.properties.category?.defaultValue}`)
+                const propertyNames = ["category", "vendor", "homepage", "offering", "description", "image"]
+                for (let j = 0; j < propertyNames.length; j++) {
+                    const propertyName = propertyNames[j]
+                    const stateDefault = getState()?.defaultSettings?.rating?.object[propertyName]
+
+                    objects[i][propertyName] = objects[i][propertyName] != null && objects[i][propertyName].length > 0
+                        ? objects[i][propertyName]
+                        : ((stateDefault != null && stateDefault.length > 0) ? stateDefault : objectType.properties[propertyName]?.defaultValue)
+                }
+
+                // objects[i].category = objects[i].category != null && objects[i].category.length > 0 ? objects[i].category : objectType.properties.category?.defaultValue
+                // objects[i].vendor = objects[i].vendor != null && objects[i].vendor.length > 0 ? objects[i].vendor : objectType.properties.vendor?.defaultValue
+                // objects[i].homepage = objects[i].homepage != null && objects[i].homepage.length > 0 ? objects[i].homepage : objectType.properties.homepage?.defaultValue
+                // objects[i].offering = objects[i].offering != null && objects[i].offering.length > 0 ? objects[i].offering : objectType.properties.offering?.defaultValue
+                // objects[i].description = objects[i].description != null && objects[i].description.length > 0 ? objects[i].description : objectType.properties.description?.defaultValue
+                // objects[i].image = objects[i].image != null && objects[i].image.length > 0 ? objects[i].image : objectType.properties.image?.defaultValue
+
+                // console.log(`category ${objects[i].category}  default ${objectType.properties.category?.defaultValue}`)
                 // create a blip - reference rating
                 const rating = {
-                    ambition: ratingType.properties.ambition?.defaultValue
-                    , experience: ratingType.properties.experience?.defaultValue
-                    , magnitude: ratingType.properties.magnitude?.defaultValue
+                    id: uuidv4()
+                    // ambition: ratingType.properties.ambition?.defaultValue
+                    // , experience: ratingType.properties.experience?.defaultValue
+                    // , magnitude: ratingType.properties.magnitude?.defaultValue
                     , timestamp: Date.now()
                     , object: objects[i]
-                    , scope: ratingType.properties.scope?.defaultValue
-                    , author: ratingType.properties.author?.defaultValue
+                    // , scope: ratingType.properties.scope?.defaultValue
+                    // , author: ratingType.properties.author?.defaultValue
                 }
-                const blip = { id: `${i +  originalBlipCount}`, rating: rating, }
+                let ratingPropertyNames = ["ambition", "experience", "magnitude", "scope", "author", "comment"]
+                for (let j = 0; j < ratingPropertyNames.length; j++) {
+                    const propertyName = ratingPropertyNames[j]
+                    const stateDefault = getState()?.defaultSettings?.rating[propertyName]
+
+                    rating[propertyName] = rating[propertyName] != null && rating[propertyName].length > 0
+                        ? rating[propertyName]
+                        : ((stateDefault != null && stateDefault.length > 0) ? stateDefault : ratingType.properties[propertyName]?.defaultValue)
+                }
+
+                const blip = { id: `${i + originalBlipCount}`, rating: rating, }
                 getViewpoint().blips.push(blip)
 
             }

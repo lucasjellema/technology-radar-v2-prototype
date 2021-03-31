@@ -1,6 +1,11 @@
-export { initializeViewpointFromURL, initializeFiltersTagsFromURL, getConfiguration, getViewpoint, getData, createBlip, subscribeToRadarRefresh, getState, publishRefreshRadar }
+export { initializeViewpointFromURL, initializeFiltersTagsFromURL, getDefaultSettingsBlip,setDefaultSettingsBlip,shuffleBlips , getConfiguration, getViewpoint, getData, createBlip, subscribeToRadarRefresh, getState, publishRefreshRadar }
 import { initializeTree } from './tree.js'
 import { getSampleData } from './sampleData.js'
+import { getDataSet as getEmergingDataSource} from './emerging-technologies-dataset.js'
+import { getDataSet as getTechnologyRadarDataSource} from './technology-radar-dataset.js'
+import { getDataSet as getCABTechnologyRadarDataSource} from './cab-technology-radar-dataset.js'
+import { uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject,getRatingTypeProperties } from './utils.js'
+
 
 const RADAR_INDEX_KEY = "RADAR-INDEX"
 
@@ -22,6 +27,17 @@ let state = {
     editType: "viewpoint"  // template or viewpoint-configuration
 
 }
+
+const getDefaultSettingsBlip = () => {
+   if (state.defaultSettings == null) {
+    state.defaultSettings= { rating:{object:{label:"Default"}}}
+   }
+   return state.defaultSettings
+}
+const setDefaultSettingsBlip = (defaultBlip) => {
+    state.defaultSettings = defaultBlip
+ }
+ 
 
 const getData = () => {
     return data
@@ -71,8 +87,9 @@ const initializeFiltersTagsFromURL = () => {
             getViewpoint().blipDisplaySettings.tagFilter.push({ type: type, tag: tag })
         }
     }
-
 }
+
+
 
 const getState = () => {
     return state
@@ -147,27 +164,57 @@ const getFreshTemplate = () => {
     return freshTemplate
 }
 
-data = getSampleData()
 //data.templates.push(freshTemplate)
-let config = data.templates[0]
-let radarIndex = { templates: [{ title: encodeURI(config.title.text), description: "", lastupdate: "20210310T192400" }], objects: [] }
+//let config = data.templates[0]
+
+const initializeDatasetFromURL = () => {
+    const params = new URLSearchParams(window.location.search)
+    const source = params.get('source')
+    console.log(`source ${source}`)
+    if (source != null && source.length > 0) {
+        if (source=="emerging") { data = getEmergingDataSource()}
+        if (source=="techradar") { data = getTechnologyRadarDataSource()}
+        if (source=="cab") { data = getCABTechnologyRadarDataSource()}
+        
+        
+    } else {
+        data = getSampleData()       
+    }
+    // add uuid to objects and ratings - just to be sure
+    data.viewpoints.forEach((viewpoint) => addUUIDtoBlips(viewpoint.blips))    
+}
+initializeDatasetFromURL()
+//let radarIndex = { templates: [{ title: encodeURI(config.title.text), description: "", lastupdate: "20210310T192400" }], objects: [] }
 
 // TODO use default values for all properties as defined in the meta-model
+// create blip from meta-data and from default blip
 const createBlip = () => {
     let newRating = {
-        timestamp: Date.now()
-        , scope: "Conclusion"
-        , comment: "no comment yet"
-        , author: `system generated at ${Date.now()}`
-        , object: { label: `NEW${getViewpoint().blips.length} ${Date.now()}`, category: "infrastructure", homepage: null, image: null }
-        , magnitude: "medium"
-        , ambition: "trial"
+        id: uuidv4(),
+        timestamp: Date.now()        
+        , object: { id: uuidv4()}        
     }
+    let properties = getRatingTypeProperties(getViewpoint().ratingType,getData().model)
+
+    for (let i = 0; i < properties.length; i++) {
+        const property = properties[i]
+        let value = getNestedPropertyValueFromObject(getState().defaultSettings?.rating, property.propertyPath)
+        if (value==null) value=""
+        setNestedPropertyValueOnObject(newRating, property.propertyPath, value)
+    }
+    newRating.timestamp= Date.now()
+    newRating.object.label = "NEW"
     let blip = { id: `${getViewpoint().blips.length}`, rating: newRating }
     let blipCount = getViewpoint().blips.push(blip)
     console.log(`after creating the blip the count is now ${blipCount} == ${getViewpoint().blips.length}`)
     return blip
+}
 
+
+const shuffleBlips = () => {
+    console.log(`shuffleblips`)
+    getViewpoint().blips.forEach((blip) => {blip.x = null; blip.y=null})
+    publishRefreshRadar()
 }
 
 const saveDataToLocalStorage = () => {
@@ -232,11 +279,18 @@ async function handleUploadedFiles() {
             data.model = Object.assign(data.model, uploadedData.model)
             data.templates = data.templates.concat(uploadedData.templates)
             data.viewpoints = data.viewpoints.concat(uploadedData.viewpoints)
+            // set id values on all ratings and objects that currently do not have them
+            // probably temporary function until all data sets have id values
+                // add uuid to objects and ratings - just to be sure
+    data.viewpoints.forEach((viewpoint) => addUUIDtoBlips(viewpoint.blips))    
             if (uploadedData.objects != null && uploadedData.objects.length > 0) {
                 // merge the arrays of uploaded objects in with the existing objects per object type
                 for (let i = 0; i < Object.keys(uploadedData.objects).length; i++) {
                     data.objects[Object.keys(uploadedData.objects)[i]] =
-                        uploadedData.objects[Object.keys(uploadedData.objects)[i]].concat(data.objects[Object.keys(uploadedData.objects)[i]])
+                        uploadedData.objects[Object.keys(uploadedData.objects)[i]].
+                               concat(data.objects[Object.keys(uploadedData.objects)[i]])
+
+                     data.objects[Object.keys(uploadedData.objects)[i]].forEach((object) => {if (object.id == null) {object.id= uuidv4()}})           
                 }
             }
 
@@ -458,4 +512,11 @@ const publishRefreshRadar = () => { subscribers.forEach((subscriber) => { subscr
 initializeUpload()
 subscribeToRadarRefresh(populateTemplateSelector)
 populateTemplateSelector()
+
+function addUUIDtoBlips(blips) {
+    blips.forEach((blip) => {
+        if (blip.rating?.id == null) { blip.rating.id = uuidv4()} ;
+        if (blip.rating?.object.id == null) { blip.rating.object.id = uuidv4()} 
+    })
+}
 

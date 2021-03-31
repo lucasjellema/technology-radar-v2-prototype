@@ -473,7 +473,7 @@ const radarMenu = (x, y, d, blip, viewpoint) => {
     const contextMenu = d3.select(`svg#${config.svg_id}`)
         .append('g').attr('class', 'radar-context-menu')
         .attr('transform', `translate(${x},${y + 30})`)
-    const width = 100
+    const width = 170
     const height = 100
     contextMenu.append('rect')
         .attr('width', width)
@@ -509,8 +509,32 @@ const radarMenu = (x, y, d, blip, viewpoint) => {
             d3.select('.radar-context-menu').remove();
             // create blip
             publishRadarEvent({ type: "blipCreation" })
-            // enage blip editing ?? via event ? 
-
-
         })
-}
+        menuOptions.append("text")
+        .text(`Edit Default Settings`)
+        .attr("transform", `translate(0, ${25})`)
+        .style("fill", "blue")
+        .style("font-family", "Arial, Helvetica")
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
+        .on("click", (e) => {
+            console.log(`Edit Default Blip Settings was clicked`)
+            d3.select('.radar-context-menu').remove();
+            // create blip
+            publishRadarEvent({ type: "editBlipDefaults" })
+        })
+        menuOptions.append("text")
+        .text(`Shuffle Blips`)
+        .attr("transform", `translate(0, ${50})`)
+        .style("fill", "blue")
+        .style("font-family", "Arial, Helvetica")
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
+        .on("click", (e) => {
+            console.log(`Shuffle Blips`)
+            d3.select('.radar-context-menu').remove();
+            // create blip
+            publishRadarEvent({ type: "shuffleBlips" })
+        })
+
+    }

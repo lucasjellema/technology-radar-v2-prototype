@@ -1,4 +1,4 @@
-export {isOperationBlackedOut, uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueFromObject}
+export {isOperationBlackedOut, uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject,getRatingTypeProperties}
 
 
 // to prevent an operation from being executed too often, we record a timestamp in the near future until when 
@@ -28,12 +28,14 @@ const  uuidv4= ()=>  {
    const propertyPathSegments = propertyPath.split('.')
    let value = object
    for (let i=0;i<propertyPathSegments.length;i++) {
+      if (value==null) break
        value = value[propertyPathSegments[i]]
    }
+   if (typeof value == 'undefined') value=null
    return value
 }
 
-const setNestedPropertyValueFromObject = (object, propertyPath , value) => {    
+const setNestedPropertyValueOnObject = (object, propertyPath , value) => {    
    const propertyPathSegments = propertyPath.split('.')
    let elementToSet = object
    for (let i=0;i<propertyPathSegments.length-1;i++) {
@@ -41,4 +43,28 @@ const setNestedPropertyValueFromObject = (object, propertyPath , value) => {
    }
    elementToSet[propertyPathSegments[propertyPathSegments.length-1]] = value
    return object
+}
+
+function getRatingTypeProperties(ratingType, model) { // model = getData().model
+   let theRatingType = ratingType
+   if (typeof (theRatingType) == "string") {
+       theRatingType = model?.ratingTypes[ratingType]
+   }
+   return Object.keys(theRatingType.objectType.properties).map(
+       (propertyName) => {
+           return {
+               propertyPath: `object.${propertyName}`,
+               propertyScope: "object",
+               property: theRatingType.objectType.properties[propertyName]
+           };
+       }).concat(
+           Object.keys(theRatingType.properties).map(
+               (propertyName) => {
+                   return {
+                       propertyPath: `${propertyName}`,
+                       propertyScope: "rating",
+                       property: theRatingType.properties[propertyName]
+                   };
+               })
+       );
 }
