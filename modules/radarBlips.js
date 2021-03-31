@@ -1,7 +1,7 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { launchBlipEditor } from './blipEditing.js'
 import { getViewpoint, getData } from './data.js'
-import { getNestedPropertyValueFromObject } from './utils.js'
+import { getNestedPropertyValueFromObject, uuidv4 } from './utils.js'
 export { drawRadarBlips }
 
 
@@ -401,10 +401,11 @@ const menu = (x, y, d, blip, viewpoint) => {
     const initialColumnIndent = 30
     const columnWidth = 70
     let width = initialColumnIndent + 10 + 4 * columnWidth
-
+    const xShift = x > 500 ? -220 : 0
+    const yShift = y > 500 ? -250 : 0
     const contextMenu = d3.select(`svg#${config.svg_id}`)
         .append('g').attr('class', 'context-menu')
-        .attr('transform', `translate(${x},${y})`)
+        .attr('transform', `translate(${x + xShift},${y + yShift})`) // TODO if x and y are on the edge, then move context menu to the left and up
 
     contextMenu.append('rect')
         .attr('width', width)
@@ -414,9 +415,9 @@ const menu = (x, y, d, blip, viewpoint) => {
         .style("opacity", 0.8)
         .on("mouseout", (e) => {
             // check x and y - to see whether they are really outside context menu area (mouse out also fires when mouse is on elements inside context menu)
-            const deltaX = x - e.pageX
-            const deltaY = y - e.pageY
-            if (((deltaX > 0) || (deltaX <= - width) || (deltaY > 0) || (deltaY <= - height))
+            const deltaX = x - e.pageX + xShift
+            const deltaY = y - e.pageY + yShift
+            if (((deltaX > 0) || (deltaX <= - width + 20) || (deltaY > 0) || (deltaY <= - height))
             ) {
                 d3.select('.context-menu').remove();
             }
@@ -552,6 +553,7 @@ const menu = (x, y, d, blip, viewpoint) => {
         .style("font-weight", "normal")
         .attr("transform", "scale(0.7,1)")
 
+    // TODO: does clone blip mean clone rating (but for the same existing object?) it probably does; current implementation is full copy - object and rating
     iconsBox.append("text")
         .text("Clone Blip")
         .attr("x", 0)
@@ -560,6 +562,15 @@ const menu = (x, y, d, blip, viewpoint) => {
         .style("font-size", "12px")
         .style("font-weight", "bold")
         .attr("transform", `translate(0, ${30 + 0 * entryHeight})`)
+        .attr("class", "clickableProperty")
+        .on("click", () => {
+            const newBlip = JSON.parse(JSON.stringify(d))
+            viewpoint.blips.push(newBlip)
+            newBlip.x = newBlip.x != null ? newBlip.x + 15 : null
+            newBlip.y = newBlip.y != null ? newBlip.y + 15 : null
+            newBlip.id = uuidv4()
+            drawRadarBlips(viewpoint)
+        })
     iconsBox.append("text")
         .text("Delete Blip")
         .attr("x", 0)
@@ -570,11 +581,12 @@ const menu = (x, y, d, blip, viewpoint) => {
         .attr("transform", `translate(0, ${30 + 1 * entryHeight})`)
         .attr("class", "clickableProperty")
         .on("click", () => {
-                const blipIndex = viewpoint.blips.indexOf(d)
-                viewpoint.blips.splice(blipIndex,1)
-                drawRadarBlips(viewpoint)
-            })
-        
+            const blipIndex = viewpoint.blips.indexOf(d)
+            viewpoint.blips.splice(blipIndex, 1)
+            d3.select('.context-menu').remove();
+            drawRadarBlips(viewpoint)
+        })
+
 
 
 }
