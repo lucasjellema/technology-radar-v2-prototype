@@ -395,12 +395,12 @@ const menu = (x, y, d, blip, viewpoint) => {
             //  d3.select('.context-menu').remove();
         });
 
-    const entryHeight = 42 // number vertical pixel per context menu entry
-    let height = 25 + Math.max(Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length, Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length, Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length) * entryHeight // derive from maximum number of entries in each category
+    const entryHeight = 45 // number vertical pixel per context menu entry
+    let height = 30 + Math.max(Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length, Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length, Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length) * entryHeight // derive from maximum number of entries in each category
     const circleRadius = 12
     const initialColumnIndent = 30
     const columnWidth = 70
-    let width = initialColumnIndent + 10 + 3 * columnWidth
+    let width = initialColumnIndent + 10 + 4 * columnWidth
 
     const contextMenu = d3.select(`svg#${config.svg_id}`)
         .append('g').attr('class', 'context-menu')
@@ -539,6 +539,44 @@ const menu = (x, y, d, blip, viewpoint) => {
 
         decorateContextMenuEntry(colorEntry, "color", key, d, viewpoint, label)
     }
+    const iconsBox = contextMenu.append('g')
+        .attr('class', 'iconsBox')
+        .attr("transform", `translate(${initialColumnIndent + 3 * columnWidth - 25}, ${15})`)
+
+    // additional blip actions can be initiated    
+    iconsBox.append("text")
+        .text("Blip Actions")
+        .style("fill", "#000")
+        .style("font-family", "Arial, Helvetica")
+        .style("font-size", "12px")
+        .style("font-weight", "normal")
+        .attr("transform", "scale(0.7,1)")
+
+    iconsBox.append("text")
+        .text("Clone Blip")
+        .attr("x", 0)
+        .style("fill", "#000")
+        .style("font-family", "Arial, Helvetica")
+        .style("font-size", "12px")
+        .style("font-weight", "bold")
+        .attr("transform", `translate(0, ${30 + 0 * entryHeight})`)
+    iconsBox.append("text")
+        .text("Delete Blip")
+        .attr("x", 0)
+        .style("fill", "#000")
+        .style("font-family", "Arial, Helvetica")
+        .style("font-size", "12px")
+        .style("font-weight", "bold")
+        .attr("transform", `translate(0, ${30 + 1 * entryHeight})`)
+        .attr("class", "clickableProperty")
+        .on("click", () => {
+                const blipIndex = viewpoint.blips.indexOf(d)
+                viewpoint.blips.splice(blipIndex,1)
+                drawRadarBlips(viewpoint)
+            })
+        
+
+
 }
 
 function populateDatalistWithTags(includeDiscreteProperties = false) {
@@ -773,14 +811,14 @@ function blipWindow(blip, viewpoint) {
                 launchBlipEditor(blip, viewpoint, drawRadarBlips)
             })
             .html("Edit Blip")
-            buttonDiv.append("button")
+        buttonDiv.append("button")
             .attr("style", "float:right;padding:15px")
             .on("click", () => {
                 svg.select("foreignObject").remove();
-    
+
             }).html("Close")
             ;
-            } catch (e) { console.log(`blip window exception ${e}`) }
+    } catch (e) { console.log(`blip window exception ${e}`) }
 
 
 }
