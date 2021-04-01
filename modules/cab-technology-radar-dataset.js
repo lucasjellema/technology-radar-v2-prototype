@@ -4,7 +4,7 @@ const getDataSet = () => {
 }
 
 
-const dataset ={
+const dataset = {
     "model": {
         "objectTypes": {
             "technology": {
@@ -567,8 +567,8 @@ const dataset ={
                 "showImages": false,
                 "showShapes": true,
                 "showLabels": true,
-                "applyShapes": true,
-                "applySizes": true,
+                "applyShapes": false,
+                "applySizes": false,
                 "applyColors": true,
                 "tagFilter": []
             },
@@ -591,8 +591,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 519.6580810546875,
+                    "y": -145.91754913330078
                 },
                 {
                     "id": "1",
@@ -633,8 +633,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 281.6729431152344,
+                    "y": 419.35784912109375
                 },
                 {
                     "id": "3",
@@ -655,8 +655,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 621.3713073730469,
+                    "y": 221.15562438964844
                 },
                 {
                     "id": "4",
@@ -677,8 +677,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 391.71136474609375,
+                    "y": 399.3595275878906
                 },
                 {
                     "id": "5",
@@ -699,8 +699,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 541.377197265625,
+                    "y": 62.3155517578125
                 },
                 {
                     "id": "6",
@@ -722,8 +722,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 557.0096130371094,
+                    "y": 175.6744384765625
                 },
                 {
                     "id": "7",
@@ -744,29 +744,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
-                },
-                {
-                    "id": "8",
-                    "rating": {
-                        "id": "a20a4739-de0b-4057-9dcb-9219e68eab27",
-                        "timestamp": 1617188001694,
-                        "object": {
-                            "label": "",
-                            "category": "monitoring",
-                            "offering": "commercial",
-                            "id": "f4cee509-6ef5-4e86-8d1e-1c27d87a63c2",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": null,
-                    "y": null
+                    "x": 204.33551025390625,
+                    "y": 465.7921447753906
                 },
                 {
                     "id": "9",
@@ -786,8 +765,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 393.51885986328125,
+                    "y": 461.42449951171864
                 },
                 {
                     "id": "10",
@@ -807,8 +786,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 457.6703186035156,
+                    "y": 292.10741424560547
                 },
                 {
                     "id": "11",
@@ -828,8 +807,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 283.70703125,
+                    "y": 469.2892150878906
                 },
                 {
                     "id": "12",
@@ -891,8 +870,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 540.1412048339844,
+                    "y": 347.462158203125
                 },
                 {
                     "id": "15",
@@ -912,8 +891,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 486.0550231933594,
+                    "y": 397.5338134765625
                 },
                 {
                     "id": "16",
@@ -933,8 +912,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 530.2696838378906,
+                    "y": 269.58522033691406
                 },
                 {
                     "id": "17",
@@ -976,8 +955,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 482.096435546875,
+                    "y": -318.27154541015625
                 },
                 {
                     "id": "19",
@@ -998,8 +977,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 566.1680908203125,
+                    "y": -229.74562072753906
                 },
                 {
                     "id": "20",
@@ -1020,8 +999,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 352.0934143066406,
+                    "y": -368.6368713378906
                 },
                 {
                     "id": "21",
@@ -1086,8 +1065,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 655.8257141113281,
+                    "y": -344.5084533691406
                 },
                 {
                     "id": "24",
@@ -1129,8 +1108,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 243.58334350585938,
+                    "y": -488.9289245605469
                 },
                 {
                     "id": "26",
@@ -1151,8 +1130,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 568.0251770019531,
+                    "y": -372.21429443359375
                 },
                 {
                     "id": "27",
@@ -1172,8 +1151,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 483.6351623535156,
+                    "y": -38.49937438964844
                 },
                 {
                     "id": "28",
@@ -1194,8 +1173,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 490.9049987792969,
+                    "y": -258.9012145996094
                 },
                 {
                     "id": "29",
@@ -1215,8 +1194,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": 626.4782104492188,
+                    "y": -270.87294006347656
                 },
                 {
                     "id": "30",
@@ -1258,8 +1237,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": -544.4757080078125,
+                    "y": -84.1643676757812
                 },
                 {
                     "id": "32",
@@ -1280,8 +1259,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": -602.5260620117188,
+                    "y": -23.6331787109375
                 },
                 {
                     "id": "33",
@@ -1303,8 +1282,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": -602.4943237304688,
+                    "y": 59.17462921142578
                 },
                 {
                     "id": "34",
@@ -1326,8 +1305,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": -557.3302001953125,
+                    "y": 147.00973510742188
                 },
                 {
                     "id": "35",
@@ -1349,8 +1328,8 @@ const dataset ={
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": null,
-                    "y": null
+                    "x": -499.9582214355469,
+                    "y": 337.47674560546875
                 },
                 {
                     "id": "36",
@@ -1503,6 +1482,116 @@ const dataset ={
                     },
                     "x": -342.67932128906244,
                     "y": -343.5522155761719
+                },
+                {
+                    "id": "43",
+                    "rating": {
+                        "id": "c2ef0be3-a09a-450b-a848-929a4cb31a3e",
+                        "timestamp": 1617271424337,
+                        "object": {
+                            "label": "OpenShift",
+                            "category": "orchestration",
+                            "offering": "oss",
+                            "vendor": "RedHat",
+                            "id": "0593f5ff-d786-473e-8761-02a099e94fa8",
+                            "tags": []
+                        },
+                        "ambition": "identified",
+                        "experience": "medium",
+                        "magnitude": "medium",
+                        "scope": "Conclusion",
+                        "author": "System Generated"
+                    },
+                    "x": -421.97869873046875,
+                    "y": 259.1285705566406
+                },
+                {
+                    "id": "44",
+                    "rating": {
+                        "id": "dc874c40-6116-48ae-a6f3-70927d236500",
+                        "timestamp": 1617271424337,
+                        "object": {
+                            "label": "ARO",
+                            "category": "orchestration",
+                            "offering": "commercial",
+                            "vendor": "Microsoft",
+                            "id": "b8f8d314-7918-4591-aba5-705d5bcfccfb",
+                            "tags": []
+                        },
+                        "ambition": "identified",
+                        "experience": "medium",
+                        "magnitude": "medium",
+                        "scope": "Conclusion",
+                        "author": "System Generated"
+                    },
+                    "x": -562.1755981445312,
+                    "y": -150.37557983398432
+                },
+                {
+                    "id": "45",
+                    "rating": {
+                        "id": "470046da-fa5b-4abb-b712-4f2ddcc8ee37",
+                        "timestamp": 1617271424337,
+                        "object": {
+                            "label": "AWS EKS",
+                            "category": "orchestration",
+                            "offering": "commercial",
+                            "vendor": "AWS",
+                            "id": "6f5820f4-fce6-4f58-8dc2-06bd21cc56b7",
+                            "tags": []
+                        },
+                        "ambition": "identified",
+                        "experience": "medium",
+                        "magnitude": "medium",
+                        "scope": "Conclusion",
+                        "author": "System Generated"
+                    },
+                    "x": -478.2458801269531,
+                    "y": -139.22514343261713
+                },
+                {
+                    "id": "46",
+                    "rating": {
+                        "id": "01ca8db7-b54d-4290-a7dc-aa351c733291",
+                        "timestamp": 1617271424338,
+                        "object": {
+                            "label": "AWS ECS",
+                            "category": "orchestration",
+                            "offering": "commercial",
+                            "vendor": "AWS",
+                            "id": "432720a5-22be-4d36-9fe7-785f5a5ceb54",
+                            "tags": []
+                        },
+                        "ambition": "identified",
+                        "experience": "medium",
+                        "magnitude": "medium",
+                        "scope": "Conclusion",
+                        "author": "System Generated"
+                    },
+                    "x": -468.0396728515625,
+                    "y": 169.76931762695312
+                },
+                {
+                    "id": "47",
+                    "rating": {
+                        "id": "bbce1b73-625b-4a75-b53f-d4b180447cb5",
+                        "timestamp": 1617271424338,
+                        "object": {
+                            "label": "AWS Fargate",
+                            "category": "orchestration",
+                            "offering": "commercial",
+                            "vendor": "AWS",
+                            "id": "97204952-ecc4-43ea-92e2-1eb5b8257d2c",
+                            "tags": []
+                        },
+                        "ambition": "identified",
+                        "experience": "medium",
+                        "magnitude": "medium",
+                        "scope": "Conclusion",
+                        "author": "System Generated"
+                    },
+                    "x": -364.09326171875,
+                    "y": 341.8046875
                 }
             ]
         }
