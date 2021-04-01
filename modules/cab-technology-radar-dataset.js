@@ -4,7 +4,7 @@ const getDataSet = () => {
 }
 
 
-const dataset = {
+const dataset ={
     "model": {
         "objectTypes": {
             "technology": {
@@ -591,8 +591,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 500.33172607421875,
-                    "y": -62.857086181640625
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "1",
@@ -612,8 +612,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 618.3189697265625,
-                    "y": 196.93386840820312
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "2",
@@ -633,8 +633,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 566.15185546875,
-                    "y": 274.70684814453125
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "3",
@@ -654,7 +654,9 @@ const dataset = {
                         "magnitude": "medium",
                         "scope": "Conclusion",
                         "author": "System Generated"
-                    }
+                    },
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "4",
@@ -675,8 +677,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 383.8202819824219,
-                    "y": 390.9862976074219
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "5",
@@ -697,8 +699,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 456.2283020019531,
-                    "y": 439.7174987792969
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "6",
@@ -720,8 +722,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 490.82470703125,
-                    "y": 383.5303649902344
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "7",
@@ -742,8 +744,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 246.0997314453126,
-                    "y": 500.02854919433594
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "8",
@@ -762,7 +764,9 @@ const dataset = {
                         "magnitude": "medium",
                         "scope": "Conclusion",
                         "author": "System Generated"
-                    }
+                    },
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "9",
@@ -782,8 +786,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 522.1234741210938,
-                    "y": 218.57022094726562
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "10",
@@ -803,8 +807,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 580.2841186523438,
-                    "y": 355.3109130859375
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "11",
@@ -823,7 +827,9 @@ const dataset = {
                         "magnitude": "medium",
                         "scope": "Conclusion",
                         "author": "System Generated"
-                    }
+                    },
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "12",
@@ -843,8 +849,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 365.19635009765625,
-                    "y": 476.9654846191406
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "13",
@@ -864,8 +870,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 498.5953063964844,
-                    "y": 53.52691650390625
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "14",
@@ -884,7 +890,9 @@ const dataset = {
                         "magnitude": "medium",
                         "scope": "Conclusion",
                         "author": "System Generated"
-                    }
+                    },
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "15",
@@ -904,8 +912,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 279.1216125488281,
-                    "y": 434.6958312988281
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "16",
@@ -925,8 +933,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 629.833251953125,
-                    "y": 98.66219329833984
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "17",
@@ -945,7 +953,9 @@ const dataset = {
                         "magnitude": "medium",
                         "scope": "Conclusion",
                         "author": "System Generated"
-                    }
+                    },
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "18",
@@ -966,8 +976,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 590.9334106445312,
-                    "y": -229.23109436035156
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "19",
@@ -988,8 +998,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 475.7412109375,
-                    "y": -350.8392028808594
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "20",
@@ -1010,8 +1020,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 594.7444458007812,
-                    "y": -293.2040710449219
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "21",
@@ -1032,8 +1042,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 584.3789672851562,
-                    "y": -116.61302185058594
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "22",
@@ -1054,8 +1064,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 506.9815673828125,
-                    "y": -152.5936279296875
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "23",
@@ -1075,7 +1085,9 @@ const dataset = {
                         "magnitude": "medium",
                         "scope": "Conclusion",
                         "author": "System Generated"
-                    }
+                    },
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "24",
@@ -1096,8 +1108,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 439.4150390625,
-                    "y": -290.7364501953125
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "25",
@@ -1117,8 +1129,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 341.1435241699219,
-                    "y": -402.43701171875
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "26",
@@ -1139,8 +1151,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 582.5802612304688,
-                    "y": -350.4935607910156
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "27",
@@ -1160,8 +1172,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 240.50698852539074,
-                    "y": -426.86199951171875
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "28",
@@ -1182,8 +1194,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": 502.59613037109375,
-                    "y": -306.44921875
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "29",
@@ -1202,7 +1214,9 @@ const dataset = {
                         "magnitude": "medium",
                         "scope": "Conclusion",
                         "author": "System Generated"
-                    }
+                    },
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "30",
@@ -1222,8 +1236,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": -600.4811401367188,
-                    "y": 157.6446990966797
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "31",
@@ -1244,8 +1258,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": -513.1499633789062,
-                    "y": 153.8834228515625
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "32",
@@ -1266,8 +1280,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": -458.72741699218744,
-                    "y": 216.49435424804688
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "33",
@@ -1289,8 +1303,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": -572.6498413085938,
-                    "y": -29.411972045898438
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "34",
@@ -1312,8 +1326,8 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": -492.99224853515625,
-                    "y": -146.8046875
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "35",
@@ -1335,8 +1349,160 @@ const dataset = {
                         "scope": "Conclusion",
                         "author": "System Generated"
                     },
-                    "x": -608.6124572753906,
-                    "y": -152.3719482421875
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "36",
+                    "rating": {
+                        "id": "8b1ece8f-760b-49db-b821-32ad7e9219e8",
+                        "timestamp": 1617269993921,
+                        "object": {
+                            "label": "Terraform",
+                            "category": "deployment",
+                            "offering": "oss",
+                            "vendor": "Hashicorp",
+                            "id": "aeca0053-b079-40d7-8d45-8c0f7d56c8fa",
+                            "tags": []
+                        },
+                        "ambition": "identified",
+                        "experience": "medium",
+                        "magnitude": "medium",
+                        "scope": "Conclusion",
+                        "author": "System Generated"
+                    },
+                    "x": 109.7580795288086,
+                    "y": -465.0520935058594
+                },
+                {
+                    "id": "37",
+                    "rating": {
+                        "id": "eadadfce-7d9e-4ca2-a926-8d4b4a43a8ad",
+                        "timestamp": 1617269993921,
+                        "object": {
+                            "label": "Ansible",
+                            "category": "deployment",
+                            "offering": "oss",
+                            "vendor": "Hashicorp",
+                            "id": "e93ad69e-b16a-46d4-a9a0-9e7ed7a5341c",
+                            "tags": []
+                        },
+                        "ambition": "identified",
+                        "experience": "medium",
+                        "magnitude": "medium",
+                        "scope": "Conclusion",
+                        "author": "System Generated"
+                    },
+                    "x": -304.1287536621093,
+                    "y": -428.8214111328125
+                },
+                {
+                    "id": "38",
+                    "rating": {
+                        "id": "96b973f6-fb0d-4e16-ad24-2c8bf46db5b3",
+                        "timestamp": 1617269993922,
+                        "object": {
+                            "label": "Helm",
+                            "category": "deployment",
+                            "offering": "oss",
+                            "vendor": "CNCF",
+                            "id": "f212f301-da82-41aa-875e-2c6add8670f4",
+                            "tags": []
+                        },
+                        "ambition": "identified",
+                        "experience": "medium",
+                        "magnitude": "medium",
+                        "scope": "Conclusion",
+                        "author": "System Generated"
+                    },
+                    "x": -229.04103469848627,
+                    "y": -465.99957275390625
+                },
+                {
+                    "id": "39",
+                    "rating": {
+                        "id": "38ded420-f901-449d-9e5d-153f8ce7e2c1",
+                        "timestamp": 1617269993922,
+                        "object": {
+                            "label": "Puppet Bolt",
+                            "category": "deployment",
+                            "offering": "oss",
+                            "vendor": "PuppetLabs",
+                            "id": "11487c77-045a-4469-823f-4f0fa799d0b4",
+                            "tags": []
+                        },
+                        "ambition": "identified",
+                        "experience": "medium",
+                        "magnitude": "medium",
+                        "scope": "Conclusion",
+                        "author": "System Generated"
+                    },
+                    "x": -28.197738647460938,
+                    "y": -470.1956787109375
+                },
+                {
+                    "id": "40",
+                    "rating": {
+                        "id": "3ee8961f-b443-49ea-9297-dc12f6729b18",
+                        "timestamp": 1617269993922,
+                        "object": {
+                            "label": "Chef",
+                            "category": "deployment",
+                            "offering": "oss",
+                            "id": "b5f88ee6-ec7f-475a-92bf-ebe9d5cf81e0",
+                            "tags": []
+                        },
+                        "ambition": "identified",
+                        "experience": "medium",
+                        "magnitude": "medium",
+                        "scope": "Conclusion",
+                        "author": "System Generated"
+                    },
+                    "x": -275.56726074218744,
+                    "y": -382.76715087890625
+                },
+                {
+                    "id": "41",
+                    "rating": {
+                        "id": "7f6d842d-9b72-454b-86d9-48ca58ac8571",
+                        "timestamp": 1617269993922,
+                        "object": {
+                            "label": "Salt Stack",
+                            "category": "deployment",
+                            "offering": "oss",
+                            "id": "88cf3eb9-a7ca-415d-8040-2c7c19d60e96",
+                            "tags": []
+                        },
+                        "ambition": "identified",
+                        "experience": "medium",
+                        "magnitude": "medium",
+                        "scope": "Conclusion",
+                        "author": "System Generated"
+                    },
+                    "x": 47.33382797241211,
+                    "y": -462.8179626464844
+                },
+                {
+                    "id": "42",
+                    "rating": {
+                        "id": "1b537855-239b-4ccf-98ea-233f7a09791b",
+                        "timestamp": 1617269993922,
+                        "object": {
+                            "label": "Azure Resource Manager",
+                            "category": "deployment",
+                            "offering": "commercial",
+                            "vendor": "Microsoft",
+                            "id": "5e7e2eda-89e5-405e-bb38-f56e92ddf721",
+                            "tags": []
+                        },
+                        "ambition": "identified",
+                        "experience": "medium",
+                        "magnitude": "medium",
+                        "scope": "Conclusion",
+                        "author": "System Generated"
+                    },
+                    "x": -342.67932128906244,
+                    "y": -343.5522155761719
                 }
             ]
         }
