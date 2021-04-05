@@ -26,7 +26,8 @@ export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian}
     let angleSum = 0
     // iterate over sectors until sum of sector angles > anglePercentage    ; the last sector is the dropzone 
     for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
-        angleSum = angleSum + viewpoint.template.sectorConfiguration.sectors[i].angle
+        angleSum = angleSum + 
+        ((viewpoint.template.sectorConfiguration.sectors[i]?.visible != false) ?  viewpoint.template.sectorConfiguration.sectors[i].angle:0)
         if (angleSum > dropAnglePercentage) {
             dropSector = i
             break

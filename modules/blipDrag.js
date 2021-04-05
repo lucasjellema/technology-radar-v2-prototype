@@ -16,9 +16,11 @@ function makeDraggable(svg, handleEndDragEvent) {
     }
 
     var selectedElement, offset, transform;
+    var initialDragEvent 
 
 
     function initialiseDragging(evt) {
+        initialDragEvent  = evt
         offset = getMousePosition(evt);
 
         // Make sure the first transform on the element is a translate transform
@@ -69,10 +71,10 @@ function makeDraggable(svg, handleEndDragEvent) {
     }
 
     function endDrag(evt) {
-        if (selectedElement) {
+        if (selectedElement ) {  
             var coord = getMousePosition(evt);
             const blipId = selectedElement.getAttributeNS(null, "id")
-            if (handleEndDragEvent) {
+            if ( ( Math.abs(initialDragEvent.clientX - evt.clientX)>3 ||Math.abs(initialDragEvent.clientY - evt.clientY)>3 ) && handleEndDragEvent) {// only a real drag event if there is real movement
                 handleEndDragEvent({ blipId: blipId, newX: (coord.x - offset.x), newY: (coord.y - offset.y) })
             }
             hideTooltip()

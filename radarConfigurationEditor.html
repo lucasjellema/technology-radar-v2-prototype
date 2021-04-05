@@ -5,142 +5,11 @@
     <title>PROTOTYPE 2 - AMIS | Conclusion Technology Radar</title>
     <link rel="shortcut icon" href="https://res.conclusion.nl/inc/img/favicon.gif">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <link rel="stylesheet" href="./radar.css">
+        <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://unpkg.com/d3-simple-slider"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
-    <style>
-        .column {
-            float: left;
-            width: 70%;
-        }
-
-        .column2 {
-            float: left;
-            width: 30%;
-        }
-
-        .column1_2 {
-            float: left;
-            width: 50%;
-        }
-
-        .column1_3 {
-            float: left;
-            width: 33%;
-            height: 800px;
-        }
-
-
-        /* Clear floats after the columns */
-        .row:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
-        .selected {
-            stroke: red;
-            stroke-width: 7;
-            stroke-dasharray: 6 2;
-        }
-
-        /* used for selecting sectors and rings */
-        .draggable,
-        .draggable-group {
-            /* used for draggable elements such as ring and sector knobs */
-
-            cursor: move;
-        }
-
-        .clickableProperty {
-            cursor: pointer;
-        }
-
-        .templates-select {
-            padding: 9px 0;
-            width: 70%;
-            border: none;
-            border-bottom: 1px solid #ccc
-        }
-
-        /* TREE */
-
-        details details {
-            margin-left: 10pt;
-        }
-
-        .treeview {
-            padding: 5pt;
-            border: inset 2px lightGray;
-            width: 240pt;
-            font: 10pt Arial;
-            display: inline-block;
-        }
-
-        summary[selected="true"] {
-            background-color: yellow;
-        }
-
-
-        summary {
-            cursor: pointer;
-        }
-
-        summary:hover {
-            background-color: #C0e0ff;
-        }
-
-        /* Default for folders */
-        /*summary::-webkit-details-marker {
-  background-image:url('http://files.softicons.com/download/folder-icons/plastic-folders-icons-by-sirubico/png/16x16/Folder-Generic.png');
-  width:16px;
-  height:16px;
-  color:transparent;
-}*/
-
-        /* Default for leafs */
-        /*summary:only-child::-webkit-details-marker {
-  color:transparent;
-  background-color:green;
-  background-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/620300/report3_16x16.gif);
-  width:16px;
-  height:16px;
-}*/
-        summary .icon {
-            width: 16px;
-            height: 16px;
-        }
-
-
-
-        summary:only-child::-webkit-details-marker {
-            color: transparent;
-        }
-
-        details details {
-            margin-left: 10pt;
-            display: block;
-        }
-
-        #display {
-            display: inline-block;
-            vertical-align: top;
-        }
-
-        #display {
-            font-family: Arial;
-        }
-
-        .label {
-            font-size: 14pt;
-            font-weight: bold;
-        }
-
-        .descr {
-            font-size: 10pt
-        }
-    </style>
-
+    
 </head>
 
 <body>
@@ -182,12 +51,12 @@
             </div>
             <div>
                 <div class="column1_2">
-                    <h4>Background Color (inside rings)</h4>
-                    <div id="insideRingsColorPicker"></div>
+                    <h4>Background Color (inside rings)</h4>`
+                    <input id="backgroundColorSelector" type="color" title="background color (inside rings)" ></input>
                 </div>
                 <div class="column1_2">
                     <h4>Background Color (outside rings)</h4>
-                    <div id="outerRingBackgroundColorPicker"></div>
+                    <input id="backgroundColorOutsideRings" type="color" title="background color (outside the rings)" ></input>
                 </div>
             </div>
             <div id="opacitySlider">
@@ -300,7 +169,8 @@
         <svg id="colorsBox">
 
         </svg>
-        <div id="colorsBoxColorPicker"></div>
+        <br/>
+        <input id="colorsBoxColorSelector" type="color" ><input>
 
     </div>
     <div id="shapes" class="column1_3">

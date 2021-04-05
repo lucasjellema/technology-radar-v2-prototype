@@ -142,7 +142,8 @@ const drawRadarBlips = function (viewpoint) {
 }
 
 const priorSectorsAnglePercentageSum = (sectorId, config) => config.sectorConfiguration.sectors.filter((sector, index) => index < sectorId)
-    .reduce((sum, sector) => sum + sector.angle, 0)
+    .reduce((sum, sector) => 
+     sum + (sector?.visible !=false ? sector.angle:0), 0)
 
 const priorRingsWidthPercentageSum = (ringId, config) => config.ringConfiguration.rings.filter((ring, index) => index < ringId)
     .reduce((sum, ring) => sum + ring.width, 0)
@@ -171,12 +172,11 @@ const blipInSegment = (cartesian, viewpoint, segment) => {
 }
 
 const drawRadarBlip = (blip, d, viewpoint) => {
-
-
     const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
     const blipSector = viewpoint.propertyVisualMaps.sector.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSector)]
-    if (blipSector == null) {
+    if (blipSector == null || viewpoint.template.sectorConfiguration.sectors[blipSector]?.visible == false) {
         // TODO get sector designated as default / other OR do NOT draw blip at all
+        return
     }
 
     const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
@@ -542,7 +542,7 @@ const menu = (x, y, d, blip, viewpoint) => {
     }
     const iconsBox = contextMenu.append('g')
         .attr('class', 'iconsBox')
-        .attr("transform", `translate(${initialColumnIndent + 3 * columnWidth - 25}, ${15})`)
+        .attr("transform", `translate(${initialColumnIndent + 3 * columnWidth - 35}, ${15})`)
 
     // additional blip actions can be initiated    
     iconsBox.append("text")
@@ -553,6 +553,8 @@ const menu = (x, y, d, blip, viewpoint) => {
         .style("font-weight", "normal")
         .attr("transform", "scale(0.7,1)")
 
+
+    const menuItemHeight = 18 
     // TODO: does clone blip mean clone rating (but for the same existing object?) it probably does; current implementation is full copy - object and rating
     iconsBox.append("text")
         .text("Clone Blip")
@@ -561,7 +563,7 @@ const menu = (x, y, d, blip, viewpoint) => {
         .style("font-family", "Arial, Helvetica")
         .style("font-size", "12px")
         .style("font-weight", "bold")
-        .attr("transform", `translate(0, ${30 + 0 * entryHeight})`)
+        .attr("transform", `translate(0, ${20 + 0 * menuItemHeight})`)
         .attr("class", "clickableProperty")
         .on("click", () => {
             const newBlip = JSON.parse(JSON.stringify(d))
@@ -571,19 +573,38 @@ const menu = (x, y, d, blip, viewpoint) => {
             newBlip.id = uuidv4()
             drawRadarBlips(viewpoint)
         })
-    iconsBox.append("text")
+        iconsBox.append("text")
         .text("Delete Blip")
         .attr("x", 0)
         .style("fill", "#000")
         .style("font-family", "Arial, Helvetica")
         .style("font-size", "12px")
         .style("font-weight", "bold")
-        .attr("transform", `translate(0, ${30 + 1 * entryHeight})`)
+        .attr("transform", `translate(0, ${20 + 1 * menuItemHeight})`)
         .attr("class", "clickableProperty")
         .on("click", () => {
             const blipIndex = viewpoint.blips.indexOf(d)
             viewpoint.blips.splice(blipIndex, 1)
             d3.select('.context-menu').remove();
+            drawRadarBlips(viewpoint)
+        })
+
+        iconsBox.append("text")
+        .text("Show Similar Blips")
+        .attr("x", 0)
+        .style("fill", "#000")
+        .style("font-family", "Arial, Helvetica")
+        .style("font-size", "12px")
+        .style("font-weight", "bold")
+        .attr("transform", `translate(0, ${20 + 2 * menuItemHeight})`)
+        .attr("class", "clickableProperty")
+        .on("click", () => {
+            const blipIndex = viewpoint.blips.indexOf(d)
+            // create tag filters from tags on d
+            const tags = d.rating.object.tags
+            if (tags!= null && tags.length != null) {
+                tags.forEach((tag) => viewpoint.blipDisplaySettings.tagFilter.push({type:"plus", tag: tag}))
+            }
             drawRadarBlips(viewpoint)
         })
 

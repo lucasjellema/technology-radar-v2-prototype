@@ -35,18 +35,23 @@ const switchboard = {
         config.sectorBoundariesExtended = "extendedSectorBoundaries" == e.currentTarget.id
         publishRefreshRadar()
     },
-    handleInsideRingBackgroundColorSelection: (color) => {
+    handleInsideRingBackgroundColorSelection: (event) => {
+        const color = event.target.value;
         if ("sectors" == config.topLayer)
-            config.sectorConfiguration.sectors[getState().selectedSector].backgroundColor = color.hexString
+            config.sectorConfiguration.sectors[getState().selectedSector].backgroundColor = color
         if ("rings" == config.topLayer)
-            config.ringConfiguration.rings[getState().selectedRing].backgroundColor = color.hexString
+            config.ringConfiguration.rings[getState().selectedRing].backgroundColor = color
 
         publishRefreshRadar()
     },
-    handleOuterRingBackgroundColorSelection: (color) => {
+    handleOuterRingBackgroundColorSelection: (event) => {
+        const color = event.target.value;
+        console.log(`color ${color} selected sector ${getState().selectedSector}`)
+
         if ("sectors" == config.topLayer)
-            config.sectorConfiguration.sectors[getState().selectedSector].outerringBackgroundColor = color.hexString
+            config.sectorConfiguration.sectors[getState().selectedSector].outerringBackgroundColor = color
         publishRefreshRadar()
+        console.log(`outerring bg color ${config.sectorConfiguration.sectors[getState().selectedSector].outerringBackgroundColor}`)
     },
     handleOpacitySlider: (sliderValue) => {
         getSelectedObject().opacity = sliderValue
@@ -248,8 +253,8 @@ const viewpointEditor = function (configuration) {
 
     makeDraggable(svg.node(), switchboard.handleDragEvent)
 
-    initializeColorPicker('#insideRingsColorPicker', switchboard.handleInsideRingBackgroundColorSelection)
-    initializeColorPicker('#outerRingBackgroundColorPicker', switchboard.handleOuterRingBackgroundColorSelection)
+    initializeColorPicker('backgroundColorSelector', switchboard.handleInsideRingBackgroundColorSelection)
+    initializeColorPicker('backgroundColorOutsideRings', switchboard.handleOuterRingBackgroundColorSelection)
 
     initializeRotationSlider()
     initializeOpacitySlider()
@@ -357,7 +362,7 @@ const processObjectsIntoBlips = () => {
             const objects = d3.csvParse(document.getElementById('vpObjects').value)
             const vp = getViewpoint()
             let ratingType = getViewpoint().ratingType
-            if(typeof (ratingType) == "string") {
+            if (typeof (ratingType) == "string") {
                 ratingType = getData().model?.ratingTypes[ratingType]
             }
             const objectType = ratingType.objectType
@@ -380,16 +385,6 @@ const processObjectsIntoBlips = () => {
                         ? objects[i][propertyName]
                         : ((stateDefault != null && stateDefault.length > 0) ? stateDefault : objectType.properties[propertyName]?.defaultValue)
                 }
-
-                // objects[i].category = objects[i].category != null && objects[i].category.length > 0 ? objects[i].category : objectType.properties.category?.defaultValue
-                // objects[i].vendor = objects[i].vendor != null && objects[i].vendor.length > 0 ? objects[i].vendor : objectType.properties.vendor?.defaultValue
-                // objects[i].homepage = objects[i].homepage != null && objects[i].homepage.length > 0 ? objects[i].homepage : objectType.properties.homepage?.defaultValue
-                // objects[i].offering = objects[i].offering != null && objects[i].offering.length > 0 ? objects[i].offering : objectType.properties.offering?.defaultValue
-                // objects[i].description = objects[i].description != null && objects[i].description.length > 0 ? objects[i].description : objectType.properties.description?.defaultValue
-                // objects[i].image = objects[i].image != null && objects[i].image.length > 0 ? objects[i].image : objectType.properties.image?.defaultValue
-
-                // console.log(`category ${objects[i].category}  default ${objectType.properties.category?.defaultValue}`)
-                // create a blip - reference rating
                 const rating = {
                     id: uuidv4()
                     // ambition: ratingType.properties.ambition?.defaultValue
@@ -486,12 +481,18 @@ const synchronizeControlsWithCurrentRingOrSector = () => {
     const imageScaleFactorElement = document.getElementById("imageScaleFactor")
     imageScaleFactorElement.value = selectedObject?.backgroundImage?.scaleFactor ?? 1
 
+    const backgroundColorSelectorElement = document.getElementById("backgroundColorSelector")
+    backgroundColorSelectorElement.value = selectedObject?.backgroundColor ?? "#ffffff"
+    const outerringBackgroundColorElement = document.getElementById("backgroundColorOutsideRings")
+    outerringBackgroundColorElement.value = selectedObject?.outerringBackgroundColor ?? "#ffffff"
+
 }
 
-let colorPicker
+
 const initializeColorPicker = (elementId, handleColorSelect) => {
-    colorPicker = new iro.ColorPicker(elementId, { width: 140 });
-    colorPicker.on('color:change', handleColorSelect);
+    console.log(`initializeColorPicker`)
+    const colorPicker = document.getElementById(elementId)
+    colorPicker.addEventListener("change", handleColorSelect)
 }
 
 const handleRotationSlider = function (value) {
@@ -670,7 +671,7 @@ const initializeColorsConfigurator = () => {
         colorsBox.append('circle')
             .attr("id", `templateColors${i}`)
             .attr("r", 20)
-            .attr("fill", configuredColor ? configuredColor.color : "white")
+            .attr("fill",configuredColor ? configuredColor.color : "#ffffff")
             .attr("cx", circleIndent + 20)
             .attr("cy", 50 + i * 55)
             .attr("class", "clickableProperty")
@@ -678,25 +679,58 @@ const initializeColorsConfigurator = () => {
                 currentColorsBoxColor = i; // to be able to link the color picker to the right circle
             })
 
+
+        // const foreignObject = colorsBox.append("foreignObject");
+
+        // foreignObject
+        //     .attr("x", circleIndent -5) // use x and y coordinates from mouse event // TODO for use in size/color/shape - the location needs to be derived differently 
+        //     .attr("y", 35 + i * 55)
+
+        //     .attr("width", 55)
+        //     .attr("height", 35)
+
+        // const body = foreignObject.append("xhtml:body")
+        //     .attr("style", "background-color:#c0c0c0; padding:6px")
+        //     .append("xhtml:input")
+        //     .attr("type", "color")
+        //     .attr("value", configuredColor ? configuredColor.color : "#ffffff")
+        //     .on("change", (e) => {
+        //         console.log(`selected color ${e.target.value}`)
+        //         config.colorsConfiguration.colors[i] = e.target.value
+        //         // console.log(`selected color ${e.target.value} color set ${config.colorsConfiguration.colors[i]}`)
+        //         // initializeColorsConfigurator()
+        //     })
+
+
+
         colorsBox.append("text")
             .attr("id", `colorLabel${i}`)
             .text(configuredColor ? configuredColor.label : `COLOR LABEL ${i + 1}`)
-            .attr("x", labelIndent)
+            
+            .attr("x", labelIndent )
             .attr("y", 65 + i * 55)
             .style("fill", "#e5e5e5")
             .style("font-family", "Arial, Helvetica")
             .style("font-size", "32px")
             .style("font-weight", "bold")
-            .call(getEditableDecorator(handleInputChange), ["svg#colorsBox", configuredColor ? configuredColor.label : `COLOR LABEL ${i + 1}`, `colorLabel${i}`]);
+            .call(getEditableDecorator(handleInputChange), ["svg#colorsBox",  `COLOR LABEL ${i + 1}`, `colorLabel${i}`])
+
+
+
+
+
+
 
     }
     if (colorsBoxColorPicker == null) {
-        colorsBoxColorPicker = new iro.ColorPicker('#colorsBoxColorPicker');
-        colorsBoxColorPicker.on('color:change', (color) => {
-            if (currentColorsBoxColor != null && d3.select(`circle#templateColors${currentColorsBoxColor}`) != null) {
-                d3.select(`circle#templateColors${currentColorsBoxColor}`).attr('fill', color.hexString)
+        colorsBoxColorPicker = document.getElementById("colorsBoxColorSelector")
 
-                config.colorsConfiguration.colors[currentColorsBoxColor].color = color.hexString
+        colorsBoxColorPicker.addEventListener('change', (event) => {
+            const color = event.target.value
+            if (currentColorsBoxColor != null && d3.select(`circle#templateColors${currentColorsBoxColor}`) != null) {
+                d3.select(`circle#templateColors${currentColorsBoxColor}`).attr('fill', color)
+
+                config.colorsConfiguration.colors[currentColorsBoxColor].color = color
             }
         });
     }
