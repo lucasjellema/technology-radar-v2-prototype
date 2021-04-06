@@ -13,6 +13,7 @@ const datasetMap = {
     , cab: "./modules/cab-technology-radar-dataset.json"
     , sample: "./modules/sampleData.json"
     , verkenning: "./modules/cab-verkenningen-radar-dataset.json"
+    , amisdatamgt :"./modules/amis-data-management-technology-radar-dataset.json"
 }
 
 // INVOKED BEFORE DOWNLOAD (TODO: and before save to local storage)
@@ -44,7 +45,7 @@ const deserialize = (originalData) => {
     for (let i=0; i< Object.keys(deserializedData.ratings).length;i++) {
         const rating= deserializedData.ratings[Object.keys(deserializedData.ratings)[i]]
         if  (!deserializedData.objects.hasOwnProperty(rating.object.id)){  // save object in objects
-            deserializedData.objects[rating.object.id]= blip.object
+            deserializedData.objects[rating.object.id]= rating.object
         }
 
         rating.object = rating.object.id
