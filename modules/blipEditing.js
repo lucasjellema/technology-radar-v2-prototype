@@ -244,7 +244,6 @@ document.getElementById("saveBlipEdits").addEventListener("click", () => {
 
 const handleBlipDrag = function (blipDragEvent, viewpoint) {
     // TODO not all elements are supported for dragging (yet) 
-    console.log(`dragged element ${blipDragEvent.blipId}`)
 
     if (blipDragEvent.blipId.startsWith("sectorBackgroundImage")) { handleSectorBackgroundImageDrag(blipDragEvent, viewpoint) }
     else {
@@ -254,6 +253,9 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
         const blipId = blipDragEvent.blipId.substring(5)
         let blip
         blip = viewpoint.blips.filter((blip) => blip.id == blipId ? blip : null)[0]
+        console.log(`dragged element ${blipDragEvent.blipId}${blip.rating.object.label}`)
+
+
         blip.x = blipDragEvent.newX
         blip.y = blipDragEvent.newY
 

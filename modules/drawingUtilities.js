@@ -17,7 +17,7 @@ export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian}
     }
   }
 
-  const segmentFromCartesian = (cartesian, viewpoint) => {
+  const segmentFromCartesian = (cartesian, viewpoint, sectorExpansionFactor=1) => {
     const polar = polarFromCartesian({ x: cartesian.x, y: cartesian.y })
     const dropAnglePercentage = (polar.phi < 0) ? - polar.phi / (2 * Math.PI) : 1 - polar.phi / (2 * Math.PI)
     const dropRadialPercentage = polar.r / viewpoint.template.maxRingRadius
@@ -28,7 +28,7 @@ export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian}
     for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
         angleSum = angleSum + 
         ((viewpoint.template.sectorConfiguration.sectors[i]?.visible != false) ?  viewpoint.template.sectorConfiguration.sectors[i].angle:0)
-        if (angleSum > dropAnglePercentage) {
+        if (angleSum * sectorExpansionFactor > dropAnglePercentage) {
             dropSector = i
             break
         }

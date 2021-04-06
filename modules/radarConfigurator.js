@@ -2,7 +2,7 @@ export { launchMainEditor }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { launchSectorEditor } from './sectorEditing.js'
-import {capitalize, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { capitalize, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 
 
 const getPropertyValuesAndCounts = (propertyPath, ratings) => { // filter on rating type!
@@ -40,7 +40,7 @@ const launchMainEditor = (viewpoint, drawRadarBlips) => {
     html += `<input type="button" id="addSectorButton"  value="Add Sector"  style="padding:6px;margin:10px"/>`
 
     html += `<table id="sectors">`
-    html += `<tr><th>Sector Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th>Visible</th><th>Delete?</th><th>v ^</th></tr>`
+    html += `<tr><th>Sector Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll">Visible</span></th><th>Delete?</th><th>v ^</th></tr>`
     for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
         const sector = viewpoint.template.sectorConfiguration.sectors[i]
         // find all values mapped to the sectorToEdit
@@ -61,7 +61,7 @@ const launchMainEditor = (viewpoint, drawRadarBlips) => {
         }
         html += `</td>
         <td>${valueCount} </td>
-        <td><input id="showSector${i}" type="checkbox" ${sector?.visible == false?"":"checked"}></input></td> 
+        <td><input id="showSector${i}" type="checkbox" ${sector?.visible == false ? "" : "checked"}></input></td> 
         <td><span id="deleteSector${i}" class="clickableProperty">Delete</span></td> 
         <td><span id="downSector${i}" class="clickableProperty">${i < viewpoint.template.sectorConfiguration.sectors.length - 1 ? "v" : ""}</span>&nbsp;
         <span id="upSector${i}" class="clickableProperty">${i > 0 ? "^" : ""}</span></td> 
@@ -118,7 +118,16 @@ const launchMainEditor = (viewpoint, drawRadarBlips) => {
     document.getElementById(`mappedPropertySelector`).addEventListener("change", (e) => {
         reconfigureSectors(e.target.value, viewpoint)
     })
+    document.getElementById(`showAll`).addEventListener("click", (e) => {
+        viewpoint.template.sectorConfiguration.sectors.forEach((sector, i) => {
+            sector.visible = true;
+            document.getElementById(`showSector${i}`).checked = true
+        })
 
+        publishRadarEvent({ type: "shuffleBlips" })
+        publishRefreshRadar()
+
+    })
     document.getElementById(`distributeEvenly`).addEventListener("click", (e) => { distributeEvenly(viewpoint) })
     document.getElementById(`distributeValueOccurrenceBased`).addEventListener("click", (e) => { distributeValueOccurrenceBased(viewpoint) })
     document.getElementById(`addSectorButton`).addEventListener("click", (e) => {
@@ -235,10 +244,10 @@ const reconfigureSectors = (propertyPath, viewpoint) => {
     for (let i = 0; i < Object.keys(valueOccurrenceMap).length; i++) {
         const allowableLabel = getLabelForAllowableValue(Object.keys(valueOccurrenceMap)[i], viewpoint.propertyVisualMaps["sector"].property, viewpoint)
         const newSector = {
-            label: allowableLabel ?? capitalize( Object.keys(valueOccurrenceMap)[i]),
+            label: allowableLabel ?? capitalize(Object.keys(valueOccurrenceMap)[i]),
             angle: 1 / Object.keys(valueOccurrenceMap).length,
             labelSettings: { showCurved: true, showStraight: false, color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
-            edge: {color:"#000000", width: 1},
+            edge: { color: "#000000", width: 1 },
             backgroundImage: {},
             backgroundColor: "#FFFFFF",
             outerringBackgroundColor: "#FFFFFF"

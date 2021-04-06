@@ -76,6 +76,12 @@ function initializeRadar(config) {
 }
 
 
+const sectorExpansionFactor = (config) => {
+    // factor to multiply each angle with - derived from the sum of angles of all visible sectors , calibrated with the total available angle
+    const totalVisibleSectorsAngleSum = config.sectorConfiguration.sectors.reduce((sum, sector) => 
+    sum + (sector?.visible !=false ? sector.angle:0), 0)
+    return totalVisibleSectorsAngleSum==0 ? 1 : 1/totalVisibleSectorsAngleSum
+}
 
 const drawSectors = function (radar, config, elementDecorator = null) {
 
@@ -93,11 +99,11 @@ const drawSectors = function (radar, config, elementDecorator = null) {
         for (let i = 0; i < config.sectorConfiguration.sectors.length; i++) {
             let sector = config.sectorConfiguration.sectors[i]
             if (sector?.visible ==  false) continue;
-            currentAnglePercentage = currentAnglePercentage + sector.angle
+            currentAnglePercentage = currentAnglePercentage + sectorExpansionFactor(config) * sector.angle
             let currentAngle = 2 * Math.PI * currentAnglePercentage
             const sectorEndpoint = cartesianFromPolar({ r: config.sectorBoundariesExtended ? 2000 : config.maxRingRadius, phi: currentAngle })
 
-            let startAngle = (- 2 * (currentAnglePercentage - sector.angle) + 0.5) * Math.PI
+            let startAngle = (- 2 * (currentAnglePercentage -  sectorExpansionFactor(config) * sector.angle) + 0.5) * Math.PI
             let endAngle = (- 2 * currentAnglePercentage + 0.5) * Math.PI
             if (layer == 0) {
                 // using angle and maxring radius, determine x and y for endpoint of line, then draw line
@@ -126,7 +132,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                                                         )
                     .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "" : config.sectorConfiguration?.stroke?.strokeArray ?? "#000")
                     .on('click', () => { const sector = i; publishRadarEvent({ type: "sectorClick", sector: i }) })
-                    .on('dblclick', () => { console.log(`dbl click on sector`);const sector = i; publishRadarEvent({ type: "sectorDblClick", sector: i }) })
+                    .on('dblclick', () => { const sector = i; publishRadarEvent({ type: "sectorDblClick", sector: i }) })
                 // add color to the sector area outside the outer ring
                 const outerringArc = d3.arc()
                     .outerRadius(config.maxRingRadius * 4)
@@ -138,7 +144,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                     .attr("d", outerringArc)
                     .style("fill", sector?.outerringBackgroundColor ?? "white")
                     
-                    .on('dblclick', () => { console.log(`dbl click on sector`);const sector = i; publishRadarEvent({ type: "sectorDblClick", sector: i }) })
+                    .on('dblclick', () => { const sector = i; publishRadarEvent({ type: "sectorDblClick", sector: i }) })
 
                 if ( sector?.labelSettings?.showCurved ?? (config?.sectorConfiguration?.showEdgeSectorLabels)) {
                     // print sector label along the edge of the arc
@@ -168,7 +174,9 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                         .attr("text-anchor", "middle")
                         .style("user-select", "none")
                         .attr("class", getState().editMode ? "draggable" : "")
-                        .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, sector.label, `sectorLabel${i}`]);
+                        .on('dblclick', () => { console(`sector drilldown`); publishRadarEvent({ type: "sectorDrilldown", sector: i }) }) // facilitate drilldown on sector
+                        .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, sector.label, `sectorLabel${i}`])
+                        
                     styleText(sectorLabel, sector.labelSettings, config, config.sectorConfiguration)
                 }
 
@@ -306,6 +314,7 @@ function displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sector
         .style("text-anchor", "middle")
         .attr("xlink:href", `#pieText${sectorIndex}`)
         .text(`${sector.label}`)
+        .on('dblclick', () => { console.log(`sector drilldown on sector${sectorIndex}`); publishRadarEvent({ type: "sectorDrilldown", sector: sectorIndex }) }) // facilitate drilldown on sector
         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, sector.label, `sectorLabel${sectorIndex}`]);
 
 }
@@ -502,7 +511,6 @@ const radarMenu = (x, y, d, blip, viewpoint) => {
             // check x and y - to see whether they are really outside context menu area (mouse out also fires when mouse is on elements inside context menu)
             const deltaX = x - e.pageX
             const deltaY = y - e.pageY
-            console.log(`mouse out ${x}${deltaX}`)
             if (((deltaX > 0) || (deltaX <= - width) || (deltaY > 0) || (deltaY <= - height))
             ) {
                 d3.select('.radar-context-menu').remove();

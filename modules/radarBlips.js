@@ -141,16 +141,23 @@ const drawRadarBlips = function (viewpoint) {
     return viewpoint.blips
 }
 
+const sectorExpansionFactor = () => {
+    // factor to multiply each angle with - derived from the sum of angles of all visible sectors , calibrated with the total available angle
+    const totalVisibleSectorsAngleSum = currentViewpoint.template.sectorConfiguration.sectors.reduce((sum, sector) => 
+    sum + (sector?.visible !=false ? sector.angle:0), 0)
+    return totalVisibleSectorsAngleSum==0 ? 1 : 1/totalVisibleSectorsAngleSum
+}
+
 const priorSectorsAnglePercentageSum = (sectorId, config) => config.sectorConfiguration.sectors.filter((sector, index) => index < sectorId)
     .reduce((sum, sector) => 
-     sum + (sector?.visible !=false ? sector.angle:0), 0)
+     sum + (sector?.visible !=false ? sector.angle:0), 0) * sectorExpansionFactor()
 
 const priorRingsWidthPercentageSum = (ringId, config) => config.ringConfiguration.rings.filter((ring, index) => index < ringId)
     .reduce((sum, ring) => sum + ring.width, 0)
 
 const sectorRingToPosition = (sector, ring, config) => { // return randomized X,Y coordinates in segment corresponding to the sector and ring 
     try {
-        const phi = priorSectorsAnglePercentageSum(sector, config) + (0.1 + Math.random() * 0.8) * config.sectorConfiguration.sectors[sector].angle
+        const phi = priorSectorsAnglePercentageSum(sector, config) + (0.1 + Math.random() * 0.8) * config.sectorConfiguration.sectors[sector].angle * sectorExpansionFactor()
         // ring can be undefined (== the so called -1 ring, outside the real rings)
         let r
         if (ring && ring > -1)
@@ -165,10 +172,13 @@ const sectorRingToPosition = (sector, ring, config) => { // return randomized X,
 }
 
 const blipInSegment = (cartesian, viewpoint, segment) => {
-    const cartesianSegment = segmentFromCartesian(cartesian, viewpoint)
+    const cartesianSegment = segmentFromCartesian(cartesian, viewpoint, sectorExpansionFactor())
     //console.log(`REAL sector ${segment.sector} ring ${segment.ring};XY RING  ${cartesianSegment.ring} sector ${cartesianSegment.sector}`)
-    return cartesianSegment.sector == segment.sector
-        && ((cartesianSegment.ring ?? -1) == (segment.ring ?? -1))
+    const isBlipInSegment =
+         ( (cartesianSegment.sector??-1) == (segment.sector??-1))
+           && 
+           ( (cartesianSegment.ring ?? -1) == (segment.ring ?? -1))
+           return isBlipInSegment
 }
 
 const drawRadarBlip = (blip, d, viewpoint) => {
@@ -208,7 +218,9 @@ const drawRadarBlip = (blip, d, viewpoint) => {
     }
     let xy
 
-    if (d.x != null && d.y != null && blipInSegment(d, viewpoint, { sector: blipSector, ring: blipRing }) != null) { // TODO and x,y is located within ring/.sector segment
+    if (d.x != null && d.y != null 
+        && blipInSegment(d, viewpoint, { sector: blipSector, ring: blipRing }) 
+        ) { 
         xy = { x: d.x, y: d.y }
     } else {
         xy = sectorRingToPosition(blipSector, blipRing, viewpoint.template)

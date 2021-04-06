@@ -257,7 +257,7 @@
     <script type="module">
         import { drawRadar, subscribeToRadarEvents } from './modules/radar.js';
         import { drawRadarBlips } from './modules/radarBlips.js';
-        import { initializeViewpointFromURL, initializeFiltersTagsFromURL, getDefaultSettingsBlip, setDefaultSettingsBlip, shuffleBlips, getConfiguration, getViewpoint, getState, subscribeToRadarRefresh } from './modules/data.js';
+        import { initializeViewpointFromURL, publishRefreshRadar, initializeFiltersTagsFromURL, getDefaultSettingsBlip, setDefaultSettingsBlip, shuffleBlips, getConfiguration, getViewpoint, getState, subscribeToRadarRefresh } from './modules/data.js';
         import { makeDraggable } from './modules/blipDrag.js'
         import { handleBlipDrag, launchNewBlipWizard, launchBlipEditor } from './modules/blipEditing.js'
         import { launchSectorEditor } from './modules/sectorEditing.js'
@@ -298,6 +298,11 @@
             }
             if (event.type == "sectorDblClick") {
                 launchSectorEditor(event.sector, getViewpoint(), drawRadarBlips)
+            }
+            if (event.type == "sectorDrilldown") {
+                // set visible to false for all sectors except for sector event.sector; then redraw radar and blips
+                getViewpoint().template.sectorConfiguration.sectors.forEach((sector,i) => sector.visible = (i== event.sector) )
+                shuffleBlips()
             }
 
             if (event.type == "mainRadarConfigurator") {
