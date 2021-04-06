@@ -89,94 +89,7 @@
             "technologyAdoption": {
                 "name": "technologyAdoption",
                 "label": "Technology Adoption",
-                "objectType": {
-                    "name": "technology",
-                    "label": "Technology",
-                    "properties": {
-                        "label": {
-                            "label": "Label",
-                            "type": "string",
-                            "defaultValue": "Some Technology",
-                            "displayLabel": true,
-                            "key": "label"
-                        },
-                        "description": {
-                            "label": "Description",
-                            "type": "string"
-                        },
-                        "homepage": {
-                            "label": "Homepage",
-                            "type": "url"
-                        },
-                        "image": {
-                            "label": "Logo",
-                            "type": "image"
-                        },
-                        "vendor": {
-                            "label": "Vendor",
-                            "type": "string",
-                            "discrete": true
-                        },
-                        "tags": {
-                            "label": "Tags",
-                            "type": "tags"
-                        },
-                        "offering": {
-                            "label": "Offering",
-                            "type": "string",
-                            "allowableValues": [
-                                {
-                                    "value": "oss",
-                                    "label": "Open Source Software"
-                                },
-                                {
-                                    "value": "commercial",
-                                    "label": "Commercial Software"
-                                },
-                                {
-                                    "value": "concept",
-                                    "label": "Concept | Terminology"
-                                },
-                                {
-                                    "value": "other",
-                                    "label": "Other type of offering"
-                                }
-                            ],
-                            "defaultValue": "oss"
-                        },
-                        "category": {
-                            "label": "Category",
-                            "type": "string",
-                            "allowableValues": [
-                                {
-                                    "value": "opsmanagement",
-                                    "label": "Management"
-                                },
-                                {
-                                    "value": "deployment",
-                                    "label": "Deployment"
-                                },
-                                {
-                                    "value": "orchestration",
-                                    "label": "Orchestration"
-                                },
-                                {
-                                    "value": "migration",
-                                    "label": "Migration Services"
-                                },
-                                {
-                                    "value": "monitoring",
-                                    "label": "Monitoring"
-                                },
-                                {
-                                    "value": "notification",
-                                    "label": "Notification Services"
-                                }
-                            ],
-                            "defaultValue": "opsmanagement"
-                        }
-                    }
-                },
+                "objectType": "technology",
                 "properties": {
                     "ambition": {
                         "label": "Ambition",
@@ -648,1432 +561,399 @@
             "blips": [
                 {
                     "id": "0",
-                    "rating": {
-                        "id": "64fe65bd-3ed2-40e5-92e6-e0478728e1eb",
-                        "timestamp": 1617188001693,
-                        "object": {
-                            "label": "ServiceNow IT SM",
-                            "category": "opsmanagement",
-                            "offering": "commercial",
-                            "id": "3a25286f-506c-4fb8-81a9-8dec31a2bad5",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "long",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 519.6580810546875,
-                    "y": -145.91754913330078
+                    "rating": "64fe65bd-3ed2-40e5-92e6-e0478728e1eb",
+                    "x": 520,
+                    "y": -146
                 },
                 {
                     "id": "1",
-                    "rating": {
-                        "id": "2a02b181-e970-4184-80bc-3adca9f78b6f",
-                        "timestamp": 1617188001694,
-                        "object": {
-                            "label": "PagerDuty",
-                            "category": "monitoring",
-                            "offering": "commercial",
-                            "id": "0a353d94-f1a4-4b76-a33c-e00e77192764",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 670.6069641113281,
-                    "y": 57.66502380371094
+                    "rating": "2a02b181-e970-4184-80bc-3adca9f78b6f",
+                    "x": 671,
+                    "y": 58
                 },
                 {
                     "id": "2",
-                    "rating": {
-                        "id": "8ea50b5f-b6af-4c51-8e05-bd8ff9a20cc8",
-                        "timestamp": 1617188001694,
-                        "object": {
-                            "label": "Elastic Stack",
-                            "category": "monitoring",
-                            "offering": "commercial",
-                            "id": "aaf0a220-8243-4d31-9de1-fecbbd733c46",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 480.6729431152344,
-                    "y": 213.35784912109375
+                    "rating": "8ea50b5f-b6af-4c51-8e05-bd8ff9a20cc8",
+                    "x": 481,
+                    "y": 213
                 },
                 {
                     "id": "3",
-                    "rating": {
-                        "id": "a2bed0ab-8593-4d50-9ea3-6c4832ff9275",
-                        "timestamp": 1617188001694,
-                        "object": {
-                            "label": "log.io",
-                            "category": "monitoring",
-                            "homepage": "https://logz.io/",
-                            "offering": "commercial",
-                            "id": "5277eab2-6ff7-46d3-9044-ccffc46c277c",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 621.3713073730469,
-                    "y": 221.15562438964844
+                    "rating": "a2bed0ab-8593-4d50-9ea3-6c4832ff9275",
+                    "x": 621,
+                    "y": 221
                 },
                 {
                     "id": "4",
-                    "rating": {
-                        "id": "6e4eda63-fcdd-4da3-a49f-81f083dda512",
-                        "timestamp": 1617188001694,
-                        "object": {
-                            "label": "Cloudwatch",
-                            "category": "monitoring",
-                            "offering": "commercial",
-                            "vendor": "AWS",
-                            "id": "92dcee52-e12b-401d-9539-06f8f9717604",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 470.71136474609375,
-                    "y": 341.3595275878906
+                    "rating": "6e4eda63-fcdd-4da3-a49f-81f083dda512",
+                    "x": 471,
+                    "y": 341
                 },
                 {
                     "id": "5",
-                    "rating": {
-                        "id": "aaa31b33-0116-4f09-bff3-fa5d3e6a1090",
-                        "timestamp": 1617188001694,
-                        "object": {
-                            "label": "Dynatrace",
-                            "category": "monitoring",
-                            "offering": "commercial",
-                            "vendor": "https://www.dynatrace.com/",
-                            "id": "fcfb807a-9acd-4ebe-b3d5-2a72c5a377b4",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 541.377197265625,
-                    "y": 62.3155517578125
+                    "rating": "aaa31b33-0116-4f09-bff3-fa5d3e6a1090",
+                    "x": 541,
+                    "y": 62
                 },
                 {
                     "id": "6",
-                    "rating": {
-                        "id": "f824ddfa-b79f-4da5-a151-2293547565c9",
-                        "timestamp": 1617188001694,
-                        "object": {
-                            "label": "Azure Monitor",
-                            "category": "monitoring",
-                            "homepage": "https://azure.microsoft.com/en-us/services/monitor/",
-                            "offering": "commercial",
-                            "vendor": "Microsoft",
-                            "id": "c3b3a98e-d570-4d38-84bc-0a3e4cc0f833",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 557.0096130371094,
-                    "y": 175.6744384765625
+                    "rating": "f824ddfa-b79f-4da5-a151-2293547565c9",
+                    "x": 557,
+                    "y": 176
                 },
                 {
                     "id": "7",
-                    "rating": {
-                        "id": "c6dc81ef-ae5d-4ff4-97d7-32d82bf91d59",
-                        "timestamp": 1617188001694,
-                        "object": {
-                            "label": "DataDog",
-                            "category": "monitoring",
-                            "homepage": "https://www.datadoghq.com/",
-                            "offering": "commercial",
-                            "id": "6640a2d5-a329-4a26-85aa-c869039a5b2d",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 204.33551025390625,
-                    "y": 465.7921447753906
+                    "rating": "c6dc81ef-ae5d-4ff4-97d7-32d82bf91d59",
+                    "x": 204,
+                    "y": 466
                 },
                 {
                     "id": "9",
-                    "rating": {
-                        "id": "37738b35-ac6d-48c6-95ef-e6199892ec4a",
-                        "timestamp": 1617188001694,
-                        "object": {
-                            "label": "Prometheus",
-                            "category": "monitoring",
-                            "offering": "oss",
-                            "id": "ed39db1a-8f7f-4367-ade6-e9687e47a281",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "intermediate",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 393.51885986328125,
-                    "y": 461.42449951171864
+                    "rating": "37738b35-ac6d-48c6-95ef-e6199892ec4a",
+                    "x": 394,
+                    "y": 461
                 },
                 {
                     "id": "10",
-                    "rating": {
-                        "id": "20ccc539-715b-4bb5-ba8f-3ccc56f6cfe3",
-                        "timestamp": 1617188001695,
-                        "object": {
-                            "label": "OpenMetrics",
-                            "category": "monitoring",
-                            "offering": "oss",
-                            "id": "97accf99-bec6-430c-a6b0-13936a3f7bcc",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 457.6703186035156,
-                    "y": 292.10741424560547
+                    "rating": "20ccc539-715b-4bb5-ba8f-3ccc56f6cfe3",
+                    "x": 458,
+                    "y": 292
                 },
                 {
                     "id": "11",
-                    "rating": {
-                        "id": "b91a9a45-8545-4baf-9fb2-a373b00a2261",
-                        "timestamp": 1617188001695,
-                        "object": {
-                            "label": "Grafana",
-                            "category": "monitoring",
-                            "offering": "oss",
-                            "id": "92784819-09d6-4b5e-99e9-0535e8f849e3",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 283.70703125,
-                    "y": 469.2892150878906
+                    "rating": "b91a9a45-8545-4baf-9fb2-a373b00a2261",
+                    "x": 284,
+                    "y": 469
                 },
                 {
                     "id": "12",
-                    "rating": {
-                        "id": "3436c9d9-e03e-4a77-a82a-fa286c2d840d",
-                        "timestamp": 1617188001695,
-                        "object": {
-                            "label": "Jaeger",
-                            "category": "monitoring",
-                            "offering": "oss",
-                            "id": "47f91da7-56f6-4bcd-b6f5-016d567574ed",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 532.4923706054688,
-                    "y": 362.34613037109375
+                    "rating": "3436c9d9-e03e-4a77-a82a-fa286c2d840d",
+                    "x": 532,
+                    "y": 362
                 },
                 {
                     "id": "13",
-                    "rating": {
-                        "id": "3ef618c2-0f42-4eb0-af3a-395d0200510a",
-                        "timestamp": 1617188001695,
-                        "object": {
-                            "label": "Statsd",
-                            "category": "monitoring",
-                            "offering": "oss",
-                            "id": "55315d34-8ff5-4d4b-abb8-ce2e5a4ee885",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 467.46783447265625,
-                    "y": 125.02389526367188
+                    "rating": "3ef618c2-0f42-4eb0-af3a-395d0200510a",
+                    "x": 467,
+                    "y": 125
                 },
                 {
                     "id": "14",
-                    "rating": {
-                        "id": "3a36e2e1-9558-408e-a2d1-296e2303f17d",
-                        "timestamp": 1617188001695,
-                        "object": {
-                            "label": "Lightstep",
-                            "category": "monitoring",
-                            "offering": "oss",
-                            "id": "f65e5029-45f5-4296-97cd-55636b96908a",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 650.1412353515625,
-                    "y": 318.462158203125
+                    "rating": "3a36e2e1-9558-408e-a2d1-296e2303f17d",
+                    "x": 650,
+                    "y": 318
                 },
                 {
                     "id": "15",
-                    "rating": {
-                        "id": "54e0a7f6-c297-4656-95c5-35f5e364b239",
-                        "timestamp": 1617188001695,
-                        "object": {
-                            "label": "Splunk",
-                            "category": "monitoring",
-                            "offering": "commercial",
-                            "id": "def3dce4-d92e-48e7-8790-6a60b1d350fd",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "long",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 668.0550231933594,
-                    "y": 271.5338134765625
+                    "rating": "54e0a7f6-c297-4656-95c5-35f5e364b239",
+                    "x": 668,
+                    "y": 272
                 },
                 {
                     "id": "16",
-                    "rating": {
-                        "id": "89a00dd4-d860-449c-8f74-bd87d2f6d390",
-                        "timestamp": 1617188001695,
-                        "object": {
-                            "label": "Sentry",
-                            "category": "monitoring",
-                            "offering": "oss",
-                            "id": "fbd0cb3f-9422-4c15-9405-1854d84c93c8",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 530.2696838378906,
-                    "y": 269.58522033691406
+                    "rating": "89a00dd4-d860-449c-8f74-bd87d2f6d390",
+                    "x": 530,
+                    "y": 270
                 },
                 {
                     "id": "17",
-                    "rating": {
-                        "id": "02e8ca99-1ec4-43dc-828e-c977e014ab0d",
-                        "timestamp": 1617188001695,
-                        "object": {
-                            "label": "Kiali",
-                            "category": "monitoring",
-                            "offering": "oss",
-                            "id": "b97fb1bc-bb97-4770-a4ee-5517bfb3a112",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 665.8395385742188,
-                    "y": 142.27088165283203
+                    "rating": "02e8ca99-1ec4-43dc-828e-c977e014ab0d",
+                    "x": 666,
+                    "y": 142
                 },
                 {
                     "id": "18",
-                    "rating": {
-                        "id": "17590f44-5511-43f4-9069-793dcc6c3ee0",
-                        "timestamp": 1617188001695,
-                        "object": {
-                            "label": "Harness Cloud Cost Management",
-                            "category": "opsmanagement",
-                            "homepage": "https://harness.io/platform/continuous-efficiency/",
-                            "offering": "commercial",
-                            "id": "48eb3990-52bb-4de2-b676-ffd50ab77b6f",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 482.096435546875,
-                    "y": -318.27154541015625
+                    "rating": "17590f44-5511-43f4-9069-793dcc6c3ee0",
+                    "x": 482,
+                    "y": -318
                 },
                 {
                     "id": "19",
-                    "rating": {
-                        "id": "f95d2617-6b08-4569-b247-1f9efdd5b05c",
-                        "timestamp": 1617188001696,
-                        "object": {
-                            "label": "AWS Cost Explorer",
-                            "category": "opsmanagement",
-                            "offering": "commercial",
-                            "vendor": "AWS",
-                            "id": "f7169a29-6716-4551-b95f-8c972fd61f68",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 566.1680908203125,
-                    "y": -229.74562072753906
+                    "rating": "f95d2617-6b08-4569-b247-1f9efdd5b05c",
+                    "x": 566,
+                    "y": -230
                 },
                 {
                     "id": "20",
-                    "rating": {
-                        "id": "4e192735-d14e-4c2b-8775-3ff299d0ce21",
-                        "timestamp": 1617188001696,
-                        "object": {
-                            "label": "GCP Billing",
-                            "category": "opsmanagement",
-                            "offering": "commercial",
-                            "vendor": "Google",
-                            "id": "0073e707-7ffc-434e-8e73-bfd9003af793",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 281.0934143066406,
-                    "y": -406.6368713378906
+                    "rating": "4e192735-d14e-4c2b-8775-3ff299d0ce21",
+                    "x": 281,
+                    "y": -407
                 },
                 {
                     "id": "21",
-                    "rating": {
-                        "id": "84d9083c-d53c-43d4-ba46-e92249f9f1fb",
-                        "timestamp": 1617188001696,
-                        "object": {
-                            "label": "Azure Cost Management & Billing",
-                            "category": "opsmanagement",
-                            "offering": "commercial",
-                            "vendor": "Microsoft",
-                            "id": "aade1423-a2e2-452f-b89d-263440ddf1bf",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 380.3976135253906,
-                    "y": -455.84271240234375
+                    "rating": "84d9083c-d53c-43d4-ba46-e92249f9f1fb",
+                    "x": 380,
+                    "y": -456
                 },
                 {
                     "id": "22",
-                    "rating": {
-                        "id": "431d2ba5-e437-4c4a-8c4d-1850f9b89434",
-                        "timestamp": 1617188001696,
-                        "object": {
-                            "label": "Cloudability",
-                            "category": "opsmanagement",
-                            "offering": "commercial",
-                            "vendor": "Apptio",
-                            "id": "4bac883f-d4e7-4343-8ee0-c1e27ee33fbc",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 378.34246826171875,
-                    "y": -378.3424530029297
+                    "rating": "431d2ba5-e437-4c4a-8c4d-1850f9b89434",
+                    "x": 378,
+                    "y": -378
                 },
                 {
                     "id": "23",
-                    "rating": {
-                        "id": "fec2249c-a08b-4876-9692-7b40d569c810",
-                        "timestamp": 1617188001696,
-                        "object": {
-                            "label": "CloudHealth",
-                            "category": "opsmanagement",
-                            "offering": "commercial",
-                            "vendor": "VMWare",
-                            "id": "6a46b0a4-8c25-411a-867f-67411fd72ba8",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 655.8257141113281,
-                    "y": -344.5084533691406
+                    "rating": "fec2249c-a08b-4876-9692-7b40d569c810",
+                    "x": 656,
+                    "y": -345
                 },
                 {
                     "id": "24",
-                    "rating": {
-                        "id": "a093f85c-1807-4488-8bed-ee3581030784",
-                        "timestamp": 1617188001696,
-                        "object": {
-                            "label": "Spot",
-                            "category": "opsmanagement",
-                            "offering": "commercial",
-                            "vendor": "NetApp",
-                            "id": "56099865-7408-42e9-a24f-e9c610af7ce3",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 633.2213745117188,
-                    "y": -134.06195831298828
+                    "rating": "a093f85c-1807-4488-8bed-ee3581030784",
+                    "x": 633,
+                    "y": -134
                 },
                 {
                     "id": "25",
-                    "rating": {
-                        "id": "f377d1ea-310e-439a-8e08-fab56472b283",
-                        "timestamp": 1617188001696,
-                        "object": {
-                            "label": "kubecost",
-                            "category": "opsmanagement",
-                            "offering": "oss",
-                            "id": "d0989e0e-a43f-4f8d-b72d-943ffcd200ff",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 243.58334350585938,
-                    "y": -488.9289245605469
+                    "rating": "f377d1ea-310e-439a-8e08-fab56472b283",
+                    "x": 244,
+                    "y": -489
                 },
                 {
                     "id": "26",
-                    "rating": {
-                        "id": "f5b27bca-447f-4265-afe2-546a214692fb",
-                        "timestamp": 1617188001696,
-                        "object": {
-                            "label": "ParkMyCloud",
-                            "category": "opsmanagement",
-                            "offering": "commercial",
-                            "vendor": "Turbonomic",
-                            "id": "7c2e4bc5-6abd-4a7e-be6d-9dd4da6a7c75",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 568.0251770019531,
-                    "y": -372.21429443359375
+                    "rating": "f5b27bca-447f-4265-afe2-546a214692fb",
+                    "x": 568,
+                    "y": -372
                 },
                 {
                     "id": "27",
-                    "rating": {
-                        "id": "c5340bcc-e3a8-4ffe-99b4-32e24462d5b5",
-                        "timestamp": 1617188001696,
-                        "object": {
-                            "label": "Nutanix Beam",
-                            "category": "opsmanagement",
-                            "offering": "commercial",
-                            "id": "2f775113-b1f9-4853-bd19-d300ec2c4782",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 483.6351623535156,
-                    "y": -38.49937438964844
+                    "rating": "c5340bcc-e3a8-4ffe-99b4-32e24462d5b5",
+                    "x": 484,
+                    "y": -38
                 },
                 {
                     "id": "28",
-                    "rating": {
-                        "id": "7b45ef7d-09bd-4e4a-b98f-75b6df27db32",
-                        "timestamp": 1617188001697,
-                        "object": {
-                            "label": "Flexera One",
-                            "category": "opsmanagement",
-                            "offering": "commercial",
-                            "vendor": "Flexera",
-                            "id": "07ea9be7-9e6e-4bdf-ab51-75695f94afe6",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 490.9049987792969,
-                    "y": -258.9012145996094
+                    "rating": "7b45ef7d-09bd-4e4a-b98f-75b6df27db32",
+                    "x": 491,
+                    "y": -259
                 },
                 {
                     "id": "29",
-                    "rating": {
-                        "id": "891d86b0-b8fb-422b-b751-f33f91a9224f",
-                        "timestamp": 1617188001697,
-                        "object": {
-                            "label": "Densify",
-                            "category": "opsmanagement",
-                            "offering": "commercial",
-                            "id": "2b218d9a-68e7-4750-b85c-7291a6d2a1af",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 626.4782104492188,
-                    "y": -270.87294006347656
+                    "rating": "891d86b0-b8fb-422b-b751-f33f91a9224f",
+                    "x": 626,
+                    "y": -271
                 },
                 {
                     "id": "30",
-                    "rating": {
-                        "id": "e923bcfa-718f-4e60-8fea-7aed06a56256",
-                        "timestamp": 1617188699720,
-                        "object": {
-                            "label": "Kubernetes",
-                            "category": "orchestration",
-                            "offering": "oss",
-                            "id": "a55dd3c7-0251-4d0e-aed0-80c87070cb43",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "intermediate",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -566.3555908203125,
-                    "y": -204.6470947265625
+                    "rating": "e923bcfa-718f-4e60-8fea-7aed06a56256",
+                    "x": -566,
+                    "y": -205
                 },
                 {
                     "id": "31",
-                    "rating": {
-                        "id": "3532b139-992e-47b6-b460-fa5ad2834403",
-                        "timestamp": 1617188699720,
-                        "object": {
-                            "label": "AKS",
-                            "category": "orchestration",
-                            "offering": "commercial",
-                            "vendor": "Microsoft",
-                            "id": "01ff4042-95ef-4317-8e60-82c343185015",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "intermediate",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -584.4757080078125,
-                    "y": -41.16436767578125
+                    "rating": "3532b139-992e-47b6-b460-fa5ad2834403",
+                    "x": -584,
+                    "y": -41
                 },
                 {
                     "id": "32",
-                    "rating": {
-                        "id": "b33fddb3-c8a6-4538-8d45-d337055b97ba",
-                        "timestamp": 1617188699720,
-                        "object": {
-                            "label": "Azure Automation",
-                            "category": "orchestration",
-                            "offering": "commercial",
-                            "vendor": "Microsoft",
-                            "id": "51dbe9b5-1aae-4f03-80d8-c2a6a762fc74",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "intermediate",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -652.5260620117188,
-                    "y": -73.6331787109375
+                    "rating": "b33fddb3-c8a6-4538-8d45-d337055b97ba",
+                    "x": -653,
+                    "y": -74
                 },
                 {
                     "id": "33",
-                    "rating": {
-                        "id": "23db496b-0404-4448-a4a9-f31eb8626047",
-                        "timestamp": 1617188699720,
-                        "object": {
-                            "label": "Puppet Bolt",
-                            "category": "orchestration",
-                            "homepage": "orchestration",
-                            "offering": "oss",
-                            "vendor": "oss",
-                            "id": "0a300c83-75f1-4cd9-866e-3d72f8192d76",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -524.4943237304688,
-                    "y": -108.82537078857422
+                    "rating": "23db496b-0404-4448-a4a9-f31eb8626047",
+                    "x": -524,
+                    "y": -109
                 },
                 {
                     "id": "34",
-                    "rating": {
-                        "id": "f7cfa406-9a57-4f3b-972c-b6db8ffd3967",
-                        "timestamp": 1617188699720,
-                        "object": {
-                            "label": "BMC Multi Cloud Management",
-                            "category": "orchestration",
-                            "homepage": "orchestration",
-                            "offering": "oss",
-                            "vendor": "commercial",
-                            "id": "8cca901b-21f0-4a61-8beb-6b4a4b0461e3",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -617.3302001953125,
-                    "y": 230.00973510742188
+                    "rating": "f7cfa406-9a57-4f3b-972c-b6db8ffd3967",
+                    "x": -617,
+                    "y": 230
                 },
                 {
                     "id": "35",
-                    "rating": {
-                        "id": "1c061a28-1a80-430e-8caf-0c1913103e74",
-                        "timestamp": 1617188699720,
-                        "object": {
-                            "label": "Morpheus",
-                            "category": "orchestration",
-                            "homepage": "orchestration",
-                            "offering": "oss",
-                            "vendor": "oss",
-                            "id": "c43ab0b7-0b72-4110-91d6-7e905c932c04",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -499.9582214355469,
-                    "y": 337.47674560546875
+                    "rating": "1c061a28-1a80-430e-8caf-0c1913103e74",
+                    "x": -500,
+                    "y": 337
                 },
                 {
                     "id": "36",
-                    "rating": {
-                        "id": "8b1ece8f-760b-49db-b821-32ad7e9219e8",
-                        "timestamp": 1617269993921,
-                        "object": {
-                            "label": "Terraform",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "vendor": "Hashicorp",
-                            "id": "aeca0053-b079-40d7-8d45-8c0f7d56c8fa",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 142.75807189941406,
-                    "y": -452.0520935058594
+                    "rating": "8b1ece8f-760b-49db-b821-32ad7e9219e8",
+                    "x": 143,
+                    "y": -452
                 },
                 {
                     "id": "37",
-                    "rating": {
-                        "id": "eadadfce-7d9e-4ca2-a926-8d4b4a43a8ad",
-                        "timestamp": 1617269993921,
-                        "object": {
-                            "label": "Ansible",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "vendor": "Hashicorp",
-                            "id": "e93ad69e-b16a-46d4-a9a0-9e7ed7a5341c",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -404.1287536621093,
-                    "y": -365.8214111328125
+                    "rating": "eadadfce-7d9e-4ca2-a926-8d4b4a43a8ad",
+                    "x": -404,
+                    "y": -366
                 },
                 {
                     "id": "38",
-                    "rating": {
-                        "id": "96b973f6-fb0d-4e16-ad24-2c8bf46db5b3",
-                        "timestamp": 1617269993922,
-                        "object": {
-                            "label": "Helm",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "vendor": "CNCF",
-                            "id": "f212f301-da82-41aa-875e-2c6add8670f4",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -316.041030883789,
-                    "y": -433.99957275390625
+                    "rating": "96b973f6-fb0d-4e16-ad24-2c8bf46db5b3",
+                    "x": -316,
+                    "y": -434
                 },
                 {
                     "id": "39",
-                    "rating": {
-                        "id": "38ded420-f901-449d-9e5d-153f8ce7e2c1",
-                        "timestamp": 1617269993922,
-                        "object": {
-                            "label": "Puppet Bolt",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "vendor": "PuppetLabs",
-                            "id": "11487c77-045a-4469-823f-4f0fa799d0b4",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -28.197738647460938,
-                    "y": -470.1956787109375
+                    "rating": "38ded420-f901-449d-9e5d-153f8ce7e2c1",
+                    "x": -28,
+                    "y": -470
                 },
                 {
                     "id": "40",
-                    "rating": {
-                        "id": "3ee8961f-b443-49ea-9297-dc12f6729b18",
-                        "timestamp": 1617269993922,
-                        "object": {
-                            "label": "Chef",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "id": "b5f88ee6-ec7f-475a-92bf-ebe9d5cf81e0",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -275.56726074218744,
-                    "y": -382.76715087890625
+                    "rating": "3ee8961f-b443-49ea-9297-dc12f6729b18",
+                    "x": -276,
+                    "y": -383
                 },
                 {
                     "id": "41",
-                    "rating": {
-                        "id": "7f6d842d-9b72-454b-86d9-48ca58ac8571",
-                        "timestamp": 1617269993922,
-                        "object": {
-                            "label": "Salt Stack",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "id": "88cf3eb9-a7ca-415d-8040-2c7c19d60e96",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -143.66616821289062,
-                    "y": -483.8179626464844
+                    "rating": "7f6d842d-9b72-454b-86d9-48ca58ac8571",
+                    "x": -144,
+                    "y": -484
                 },
                 {
                     "id": "42",
-                    "rating": {
-                        "id": "1b537855-239b-4ccf-98ea-233f7a09791b",
-                        "timestamp": 1617269993922,
-                        "object": {
-                            "label": "Azure Resource Manager",
-                            "category": "deployment",
-                            "offering": "commercial",
-                            "vendor": "Microsoft",
-                            "id": "5e7e2eda-89e5-405e-bb38-f56e92ddf721",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -342.67932128906244,
-                    "y": -343.5522155761719
+                    "rating": "1b537855-239b-4ccf-98ea-233f7a09791b",
+                    "x": -343,
+                    "y": -344
                 },
                 {
                     "id": "43",
-                    "rating": {
-                        "id": "c2ef0be3-a09a-450b-a848-929a4cb31a3e",
-                        "timestamp": 1617271424337,
-                        "object": {
-                            "label": "OpenShift",
-                            "category": "orchestration",
-                            "offering": "oss",
-                            "vendor": "RedHat",
-                            "id": "0593f5ff-d786-473e-8761-02a099e94fa8",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -421.97869873046875,
-                    "y": 259.1285705566406
+                    "rating": "c2ef0be3-a09a-450b-a848-929a4cb31a3e",
+                    "x": -422,
+                    "y": 259
                 },
                 {
                     "id": "44",
-                    "rating": {
-                        "id": "dc874c40-6116-48ae-a6f3-70927d236500",
-                        "timestamp": 1617271424337,
-                        "object": {
-                            "label": "ARO",
-                            "category": "orchestration",
-                            "offering": "commercial",
-                            "vendor": "Microsoft",
-                            "id": "b8f8d314-7918-4591-aba5-705d5bcfccfb",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -653.1755981445312,
-                    "y": -172.37557983398438
+                    "rating": "dc874c40-6116-48ae-a6f3-70927d236500",
+                    "x": -653,
+                    "y": -172
                 },
                 {
                     "id": "45",
-                    "rating": {
-                        "id": "470046da-fa5b-4abb-b712-4f2ddcc8ee37",
-                        "timestamp": 1617271424337,
-                        "object": {
-                            "label": "AWS EKS",
-                            "category": "orchestration",
-                            "offering": "commercial",
-                            "vendor": "AWS",
-                            "id": "6f5820f4-fce6-4f58-8dc2-06bd21cc56b7",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -478.2458801269531,
-                    "y": -139.22514343261713
+                    "rating": "470046da-fa5b-4abb-b712-4f2ddcc8ee37",
+                    "x": -478,
+                    "y": -139
                 },
                 {
                     "id": "46",
-                    "rating": {
-                        "id": "01ca8db7-b54d-4290-a7dc-aa351c733291",
-                        "timestamp": 1617271424338,
-                        "object": {
-                            "label": "AWS ECS",
-                            "category": "orchestration",
-                            "offering": "commercial",
-                            "vendor": "AWS",
-                            "id": "432720a5-22be-4d36-9fe7-785f5a5ceb54",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -476.0396728515625,
-                    "y": 175.76931762695312
+                    "rating": "01ca8db7-b54d-4290-a7dc-aa351c733291",
+                    "x": -476,
+                    "y": 176
                 },
                 {
                     "id": "47",
-                    "rating": {
-                        "id": "bbce1b73-625b-4a75-b53f-d4b180447cb5",
-                        "timestamp": 1617271424338,
-                        "object": {
-                            "label": "AWS Fargate",
-                            "category": "orchestration",
-                            "offering": "commercial",
-                            "vendor": "AWS",
-                            "id": "97204952-ecc4-43ea-92e2-1eb5b8257d2c",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -364.09326171875,
-                    "y": 341.8046875
+                    "rating": "bbce1b73-625b-4a75-b53f-d4b180447cb5",
+                    "x": -364,
+                    "y": 342
                 },
                 {
                     "id": "47",
-                    "rating": {
-                        "id": "faed9fda-8789-4bc7-92dc-0380883135a5",
-                        "timestamp": 1617275623803,
-                        "object": {
-                            "label": "Vagrant",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "vendor": "Hashicorp",
-                            "id": "9e4f4a18-f42a-4db9-a632-75a0a7945a26",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -377.46936035156244,
-                    "y": -438.4175720214844
+                    "rating": "faed9fda-8789-4bc7-92dc-0380883135a5",
+                    "x": -377,
+                    "y": -438
                 },
                 {
                     "id": "48",
-                    "rating": {
-                        "id": "94e3ed03-70e1-41b5-98c6-d8cb6ef75f6c",
-                        "timestamp": 1617275623803,
-                        "object": {
-                            "label": "DockerHub",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "vendor": "Docker",
-                            "id": "ee5f1cbc-745e-4453-9f64-82e7fefa3147",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -228.49597167968744,
-                    "y": -419.8616943359375
+                    "rating": "94e3ed03-70e1-41b5-98c6-d8cb6ef75f6c",
+                    "x": -228,
+                    "y": -420
                 },
                 {
                     "id": "49",
-                    "rating": {
-                        "id": "9f233a46-d43a-4ffe-adea-02f8ec9d0e57",
-                        "timestamp": 1617275623803,
-                        "object": {
-                            "label": "Quay",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "vendor": "RedHat",
-                            "id": "f73c8401-b719-4ec7-a859-1262a5bd335d",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -263.8678131103515,
-                    "y": -470.1001892089844
+                    "rating": "9f233a46-d43a-4ffe-adea-02f8ec9d0e57",
+                    "x": -264,
+                    "y": -470
                 },
                 {
                     "id": "50",
-                    "rating": {
-                        "id": "3dc7bc8d-14ee-4091-b7a6-2b0237a0ce8c",
-                        "timestamp": 1617275623803,
-                        "object": {
-                            "label": "Artifactory",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "vendor": "JFrog",
-                            "id": "a3cf9c16-d08a-4d28-b150-bc1900337cda",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -410.53234863281244,
-                    "y": -413.4709777832031
+                    "rating": "3dc7bc8d-14ee-4091-b7a6-2b0237a0ce8c",
+                    "x": -411,
+                    "y": -413
                 },
                 {
                     "id": "51",
-                    "rating": {
-                        "id": "6a2b88ad-4aed-4c9e-9699-3df83b9be150",
-                        "timestamp": 1617275623804,
-                        "object": {
-                            "label": "Nexus",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "id": "700f3dd9-7009-4453-b282-45a4307bbaf3",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -337.2551078796386,
-                    "y": -488.5839538574219
+                    "rating": "6a2b88ad-4aed-4c9e-9699-3df83b9be150",
+                    "x": -337,
+                    "y": -489
                 },
                 {
                     "id": "52",
-                    "rating": {
-                        "id": "04222b97-7398-48c4-b085-f5c3ed9b4155",
-                        "timestamp": 1617275623804,
-                        "object": {
-                            "label": "Spinnaker",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "id": "0aa402eb-4650-4cbe-9562-0412247cd62a",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -456.24917602539057,
-                    "y": -397.62188720703125
+                    "rating": "04222b97-7398-48c4-b085-f5c3ed9b4155",
+                    "x": -456,
+                    "y": -398
                 },
                 {
                     "id": "53",
-                    "rating": {
-                        "id": "5187711a-e565-43cb-acba-72cf75c56b35",
-                        "timestamp": 1617275623804,
-                        "object": {
-                            "label": "Rundeck",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "id": "e02f6d27-5e30-4331-b427-6eee54369d16",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -434.5719833374023,
-                    "y": -478.2562255859375
+                    "rating": "5187711a-e565-43cb-acba-72cf75c56b35",
+                    "x": -435,
+                    "y": -478
                 },
                 {
                     "id": "54",
-                    "rating": {
-                        "id": "17e58a73-92fd-48cc-babe-89810a4ded42",
-                        "timestamp": 1617275623804,
-                        "object": {
-                            "label": "XL Deploy",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "id": "440e48ca-71b0-462d-8c3a-6040deb4fb72",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -218.13056945800776,
-                    "y": -488.93218994140625
+                    "rating": "17e58a73-92fd-48cc-babe-89810a4ded42",
+                    "x": -218,
+                    "y": -489
                 },
                 {
                     "id": "55",
-                    "rating": {
-                        "id": "a149f338-e21b-4966-8359-5f924d0a9c73",
-                        "timestamp": 1617275623804,
-                        "object": {
-                            "label": "Capistrano",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "id": "eb847eb2-b70f-48d4-8633-5b2cef40f01f",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": 59.109344482421875,
-                    "y": -477.664794921875
+                    "rating": "a149f338-e21b-4966-8359-5f924d0a9c73",
+                    "x": 59,
+                    "y": -478
                 },
                 {
                     "id": "56",
-                    "rating": {
-                        "id": "46cb5a0f-9488-4246-86ba-c7e7b159aebc",
-                        "timestamp": 1617275623804,
-                        "object": {
-                            "label": "Octopus Deploy",
-                            "category": "deployment",
-                            "offering": "oss",
-                            "id": "bd04ccdc-781e-4dac-9a6f-40ab53bae533",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -503.7043151855469,
-                    "y": -446.8526611328125
+                    "rating": "46cb5a0f-9488-4246-86ba-c7e7b159aebc",
+                    "x": -504,
+                    "y": -447
                 },
                 {
                     "id": "57",
-                    "rating": {
-                        "id": "c35fc882-2841-4378-b1f5-522f43f9aab5",
-                        "timestamp": 1617275623804,
-                        "object": {
-                            "label": "Nomad",
-                            "category": "orchestration",
-                            "offering": "oss",
-                            "vendor": "Hashicorp",
-                            "id": "d02867e9-0000-458e-8819-8e17e9b71d44",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -674.21875,
-                    "y": 135.62535858154297
+                    "rating": "c35fc882-2841-4378-b1f5-522f43f9aab5",
+                    "x": -674,
+                    "y": 136
                 },
                 {
                     "id": "58",
-                    "rating": {
-                        "id": "41dae670-8edd-48d0-be7b-3510b5426568",
-                        "timestamp": 1617275623804,
-                        "object": {
-                            "label": "Rancher",
-                            "category": "orchestration",
-                            "offering": "oss",
-                            "id": "6117f02c-1c97-4eeb-b6b7-4e38a0d04180",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -647.057373046875,
-                    "y": 18.931713104248047
+                    "rating": "41dae670-8edd-48d0-be7b-3510b5426568",
+                    "x": -647,
+                    "y": 19
                 },
                 {
                     "id": "59",
-                    "rating": {
-                        "id": "2f6a2d75-ba2c-4d73-b712-c5d528a15964",
-                        "timestamp": 1617275623804,
-                        "object": {
-                            "label": "Mesosphere",
-                            "category": "orchestration",
-                            "offering": "oss",
-                            "id": "86255607-d565-40e1-a575-132620ef986d",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -438.1843872070312,
-                    "y": -220.0780258178711
+                    "rating": "2f6a2d75-ba2c-4d73-b712-c5d528a15964",
+                    "x": -438,
+                    "y": -220
                 },
                 {
                     "id": "60",
-                    "rating": {
-                        "id": "7f4cda1d-a8eb-4724-8442-9b7355abc3ad",
-                        "timestamp": 1617275623805,
-                        "object": {
-                            "label": "Docker Swarm",
-                            "category": "orchestration",
-                            "offering": "oss",
-                            "vendor": "Docker",
-                            "id": "6481240b-f89e-4203-93ec-2d0177fc7bb0",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -625.2433471679688,
-                    "y": -268.2917938232422
+                    "rating": "7f4cda1d-a8eb-4724-8442-9b7355abc3ad",
+                    "x": -625,
+                    "y": -268
                 },
                 {
                     "id": "61",
-                    "rating": {
-                        "id": "53fd3037-80ff-42cc-8c7e-fa0cd951cd63",
-                        "timestamp": 1617275623805,
-                        "object": {
-                            "label": "Mesos",
-                            "category": "orchestration",
-                            "offering": "oss",
-                            "id": "1705c55e-5510-4053-992b-10511f6accb3",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -572.23388671875,
-                    "y": 66.10482406616211
+                    "rating": "53fd3037-80ff-42cc-8c7e-fa0cd951cd63",
+                    "x": -572,
+                    "y": 66
                 },
                 {
                     "id": "62",
-                    "rating": {
-                        "id": "63b672ee-ddfd-4919-951c-442a388a02b2",
-                        "timestamp": 1617275623805,
-                        "object": {
-                            "label": "ECR",
-                            "category": "orchestration",
-                            "offering": "commercial",
-                            "vendor": "AWS",
-                            "id": "67f2d855-a330-4bae-b92d-2e0091b7f7b4",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -584.0371704101562,
-                    "y": -141.32115173339844
+                    "rating": "63b672ee-ddfd-4919-951c-442a388a02b2",
+                    "x": -584,
+                    "y": -141
                 },
                 {
                     "id": "63",
-                    "rating": {
-                        "id": "22b9227e-a575-4338-921b-6def35855471",
-                        "timestamp": 1617275623805,
-                        "object": {
-                            "label": "Azure Container Registry",
-                            "category": "orchestration",
-                            "offering": "oss",
-                            "vendor": "Microsoft",
-                            "id": "814e13e4-7021-49a5-b06e-230b4c49195c",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -602.0706481933594,
-                    "y": -365.0558319091797
+                    "rating": "22b9227e-a575-4338-921b-6def35855471",
+                    "x": -602,
+                    "y": -365
                 },
                 {
                     "id": "64",
-                    "rating": {
-                        "id": "230007d6-34a3-42ad-8ea9-249bceaa04d1",
-                        "timestamp": 1617275623805,
-                        "object": {
-                            "label": "GCP Container Registry",
-                            "category": "orchestration",
-                            "offering": "oss",
-                            "vendor": "Google",
-                            "id": "b6a081aa-c26c-425d-9a46-851b15b1d257",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -572.4470520019531,
-                    "y": 163.7817153930664
+                    "rating": "230007d6-34a3-42ad-8ea9-249bceaa04d1",
+                    "x": -572,
+                    "y": 164
                 },
                 {
                     "id": "65",
-                    "rating": {
-                        "id": "afaadc78-362d-4876-872a-78e465142092",
-                        "timestamp": 1617275623805,
-                        "object": {
-                            "label": "GitHub Container Registry",
-                            "category": "orchestration",
-                            "offering": "oss",
-                            "vendor": "GitHub",
-                            "id": "73394b2d-b694-4e3a-8d55-390f3533ecf5",
-                            "tags": []
-                        },
-                        "ambition": "identified",
-                        "experience": "medium",
-                        "magnitude": "medium",
-                        "scope": "Conclusion",
-                        "author": "System Generated"
-                    },
-                    "x": -531.3252563476562,
-                    "y": -283.9287567138672
+                    "rating": "afaadc78-362d-4876-872a-78e465142092",
+                    "x": -531,
+                    "y": -284
                 }
             ]
         }
@@ -2802,13 +1682,7 @@
         "64fe65bd-3ed2-40e5-92e6-e0478728e1eb": {
             "id": "64fe65bd-3ed2-40e5-92e6-e0478728e1eb",
             "timestamp": 1617188001693,
-            "object": {
-                "label": "ServiceNow IT SM",
-                "category": "opsmanagement",
-                "offering": "commercial",
-                "id": "3a25286f-506c-4fb8-81a9-8dec31a2bad5",
-                "tags": []
-            },
+            "object": "3a25286f-506c-4fb8-81a9-8dec31a2bad5",
             "ambition": "identified",
             "experience": "long",
             "magnitude": "medium",
@@ -2818,13 +1692,7 @@
         "2a02b181-e970-4184-80bc-3adca9f78b6f": {
             "id": "2a02b181-e970-4184-80bc-3adca9f78b6f",
             "timestamp": 1617188001694,
-            "object": {
-                "label": "PagerDuty",
-                "category": "monitoring",
-                "offering": "commercial",
-                "id": "0a353d94-f1a4-4b76-a33c-e00e77192764",
-                "tags": []
-            },
+            "object": "0a353d94-f1a4-4b76-a33c-e00e77192764",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -2834,13 +1702,7 @@
         "8ea50b5f-b6af-4c51-8e05-bd8ff9a20cc8": {
             "id": "8ea50b5f-b6af-4c51-8e05-bd8ff9a20cc8",
             "timestamp": 1617188001694,
-            "object": {
-                "label": "Elastic Stack",
-                "category": "monitoring",
-                "offering": "commercial",
-                "id": "aaf0a220-8243-4d31-9de1-fecbbd733c46",
-                "tags": []
-            },
+            "object": "aaf0a220-8243-4d31-9de1-fecbbd733c46",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -2850,14 +1712,7 @@
         "a2bed0ab-8593-4d50-9ea3-6c4832ff9275": {
             "id": "a2bed0ab-8593-4d50-9ea3-6c4832ff9275",
             "timestamp": 1617188001694,
-            "object": {
-                "label": "log.io",
-                "category": "monitoring",
-                "homepage": "https://logz.io/",
-                "offering": "commercial",
-                "id": "5277eab2-6ff7-46d3-9044-ccffc46c277c",
-                "tags": []
-            },
+            "object": "5277eab2-6ff7-46d3-9044-ccffc46c277c",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -2867,14 +1722,7 @@
         "6e4eda63-fcdd-4da3-a49f-81f083dda512": {
             "id": "6e4eda63-fcdd-4da3-a49f-81f083dda512",
             "timestamp": 1617188001694,
-            "object": {
-                "label": "Cloudwatch",
-                "category": "monitoring",
-                "offering": "commercial",
-                "vendor": "AWS",
-                "id": "92dcee52-e12b-401d-9539-06f8f9717604",
-                "tags": []
-            },
+            "object": "92dcee52-e12b-401d-9539-06f8f9717604",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -2884,14 +1732,7 @@
         "aaa31b33-0116-4f09-bff3-fa5d3e6a1090": {
             "id": "aaa31b33-0116-4f09-bff3-fa5d3e6a1090",
             "timestamp": 1617188001694,
-            "object": {
-                "label": "Dynatrace",
-                "category": "monitoring",
-                "offering": "commercial",
-                "vendor": "https://www.dynatrace.com/",
-                "id": "fcfb807a-9acd-4ebe-b3d5-2a72c5a377b4",
-                "tags": []
-            },
+            "object": "fcfb807a-9acd-4ebe-b3d5-2a72c5a377b4",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -2901,15 +1742,7 @@
         "f824ddfa-b79f-4da5-a151-2293547565c9": {
             "id": "f824ddfa-b79f-4da5-a151-2293547565c9",
             "timestamp": 1617188001694,
-            "object": {
-                "label": "Azure Monitor",
-                "category": "monitoring",
-                "homepage": "https://azure.microsoft.com/en-us/services/monitor/",
-                "offering": "commercial",
-                "vendor": "Microsoft",
-                "id": "c3b3a98e-d570-4d38-84bc-0a3e4cc0f833",
-                "tags": []
-            },
+            "object": "c3b3a98e-d570-4d38-84bc-0a3e4cc0f833",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -2919,14 +1752,7 @@
         "c6dc81ef-ae5d-4ff4-97d7-32d82bf91d59": {
             "id": "c6dc81ef-ae5d-4ff4-97d7-32d82bf91d59",
             "timestamp": 1617188001694,
-            "object": {
-                "label": "DataDog",
-                "category": "monitoring",
-                "homepage": "https://www.datadoghq.com/",
-                "offering": "commercial",
-                "id": "6640a2d5-a329-4a26-85aa-c869039a5b2d",
-                "tags": []
-            },
+            "object": "6640a2d5-a329-4a26-85aa-c869039a5b2d",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -2936,13 +1762,7 @@
         "37738b35-ac6d-48c6-95ef-e6199892ec4a": {
             "id": "37738b35-ac6d-48c6-95ef-e6199892ec4a",
             "timestamp": 1617188001694,
-            "object": {
-                "label": "Prometheus",
-                "category": "monitoring",
-                "offering": "oss",
-                "id": "ed39db1a-8f7f-4367-ade6-e9687e47a281",
-                "tags": []
-            },
+            "object": "ed39db1a-8f7f-4367-ade6-e9687e47a281",
             "ambition": "identified",
             "experience": "intermediate",
             "magnitude": "medium",
@@ -2952,13 +1772,7 @@
         "20ccc539-715b-4bb5-ba8f-3ccc56f6cfe3": {
             "id": "20ccc539-715b-4bb5-ba8f-3ccc56f6cfe3",
             "timestamp": 1617188001695,
-            "object": {
-                "label": "OpenMetrics",
-                "category": "monitoring",
-                "offering": "oss",
-                "id": "97accf99-bec6-430c-a6b0-13936a3f7bcc",
-                "tags": []
-            },
+            "object": "97accf99-bec6-430c-a6b0-13936a3f7bcc",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -2968,13 +1782,7 @@
         "b91a9a45-8545-4baf-9fb2-a373b00a2261": {
             "id": "b91a9a45-8545-4baf-9fb2-a373b00a2261",
             "timestamp": 1617188001695,
-            "object": {
-                "label": "Grafana",
-                "category": "monitoring",
-                "offering": "oss",
-                "id": "92784819-09d6-4b5e-99e9-0535e8f849e3",
-                "tags": []
-            },
+            "object": "92784819-09d6-4b5e-99e9-0535e8f849e3",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -2984,13 +1792,7 @@
         "3436c9d9-e03e-4a77-a82a-fa286c2d840d": {
             "id": "3436c9d9-e03e-4a77-a82a-fa286c2d840d",
             "timestamp": 1617188001695,
-            "object": {
-                "label": "Jaeger",
-                "category": "monitoring",
-                "offering": "oss",
-                "id": "47f91da7-56f6-4bcd-b6f5-016d567574ed",
-                "tags": []
-            },
+            "object": "47f91da7-56f6-4bcd-b6f5-016d567574ed",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3000,13 +1802,7 @@
         "3ef618c2-0f42-4eb0-af3a-395d0200510a": {
             "id": "3ef618c2-0f42-4eb0-af3a-395d0200510a",
             "timestamp": 1617188001695,
-            "object": {
-                "label": "Statsd",
-                "category": "monitoring",
-                "offering": "oss",
-                "id": "55315d34-8ff5-4d4b-abb8-ce2e5a4ee885",
-                "tags": []
-            },
+            "object": "55315d34-8ff5-4d4b-abb8-ce2e5a4ee885",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3016,13 +1812,7 @@
         "3a36e2e1-9558-408e-a2d1-296e2303f17d": {
             "id": "3a36e2e1-9558-408e-a2d1-296e2303f17d",
             "timestamp": 1617188001695,
-            "object": {
-                "label": "Lightstep",
-                "category": "monitoring",
-                "offering": "oss",
-                "id": "f65e5029-45f5-4296-97cd-55636b96908a",
-                "tags": []
-            },
+            "object": "f65e5029-45f5-4296-97cd-55636b96908a",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3032,13 +1822,7 @@
         "54e0a7f6-c297-4656-95c5-35f5e364b239": {
             "id": "54e0a7f6-c297-4656-95c5-35f5e364b239",
             "timestamp": 1617188001695,
-            "object": {
-                "label": "Splunk",
-                "category": "monitoring",
-                "offering": "commercial",
-                "id": "def3dce4-d92e-48e7-8790-6a60b1d350fd",
-                "tags": []
-            },
+            "object": "def3dce4-d92e-48e7-8790-6a60b1d350fd",
             "ambition": "identified",
             "experience": "long",
             "magnitude": "medium",
@@ -3048,13 +1832,7 @@
         "89a00dd4-d860-449c-8f74-bd87d2f6d390": {
             "id": "89a00dd4-d860-449c-8f74-bd87d2f6d390",
             "timestamp": 1617188001695,
-            "object": {
-                "label": "Sentry",
-                "category": "monitoring",
-                "offering": "oss",
-                "id": "fbd0cb3f-9422-4c15-9405-1854d84c93c8",
-                "tags": []
-            },
+            "object": "fbd0cb3f-9422-4c15-9405-1854d84c93c8",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3064,13 +1842,7 @@
         "02e8ca99-1ec4-43dc-828e-c977e014ab0d": {
             "id": "02e8ca99-1ec4-43dc-828e-c977e014ab0d",
             "timestamp": 1617188001695,
-            "object": {
-                "label": "Kiali",
-                "category": "monitoring",
-                "offering": "oss",
-                "id": "b97fb1bc-bb97-4770-a4ee-5517bfb3a112",
-                "tags": []
-            },
+            "object": "b97fb1bc-bb97-4770-a4ee-5517bfb3a112",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3080,14 +1852,7 @@
         "17590f44-5511-43f4-9069-793dcc6c3ee0": {
             "id": "17590f44-5511-43f4-9069-793dcc6c3ee0",
             "timestamp": 1617188001695,
-            "object": {
-                "label": "Harness Cloud Cost Management",
-                "category": "opsmanagement",
-                "homepage": "https://harness.io/platform/continuous-efficiency/",
-                "offering": "commercial",
-                "id": "48eb3990-52bb-4de2-b676-ffd50ab77b6f",
-                "tags": []
-            },
+            "object": "48eb3990-52bb-4de2-b676-ffd50ab77b6f",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3097,14 +1862,7 @@
         "f95d2617-6b08-4569-b247-1f9efdd5b05c": {
             "id": "f95d2617-6b08-4569-b247-1f9efdd5b05c",
             "timestamp": 1617188001696,
-            "object": {
-                "label": "AWS Cost Explorer",
-                "category": "opsmanagement",
-                "offering": "commercial",
-                "vendor": "AWS",
-                "id": "f7169a29-6716-4551-b95f-8c972fd61f68",
-                "tags": []
-            },
+            "object": "f7169a29-6716-4551-b95f-8c972fd61f68",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3114,14 +1872,7 @@
         "4e192735-d14e-4c2b-8775-3ff299d0ce21": {
             "id": "4e192735-d14e-4c2b-8775-3ff299d0ce21",
             "timestamp": 1617188001696,
-            "object": {
-                "label": "GCP Billing",
-                "category": "opsmanagement",
-                "offering": "commercial",
-                "vendor": "Google",
-                "id": "0073e707-7ffc-434e-8e73-bfd9003af793",
-                "tags": []
-            },
+            "object": "0073e707-7ffc-434e-8e73-bfd9003af793",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3131,14 +1882,7 @@
         "84d9083c-d53c-43d4-ba46-e92249f9f1fb": {
             "id": "84d9083c-d53c-43d4-ba46-e92249f9f1fb",
             "timestamp": 1617188001696,
-            "object": {
-                "label": "Azure Cost Management & Billing",
-                "category": "opsmanagement",
-                "offering": "commercial",
-                "vendor": "Microsoft",
-                "id": "aade1423-a2e2-452f-b89d-263440ddf1bf",
-                "tags": []
-            },
+            "object": "aade1423-a2e2-452f-b89d-263440ddf1bf",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3148,14 +1892,7 @@
         "431d2ba5-e437-4c4a-8c4d-1850f9b89434": {
             "id": "431d2ba5-e437-4c4a-8c4d-1850f9b89434",
             "timestamp": 1617188001696,
-            "object": {
-                "label": "Cloudability",
-                "category": "opsmanagement",
-                "offering": "commercial",
-                "vendor": "Apptio",
-                "id": "4bac883f-d4e7-4343-8ee0-c1e27ee33fbc",
-                "tags": []
-            },
+            "object": "4bac883f-d4e7-4343-8ee0-c1e27ee33fbc",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3165,14 +1902,7 @@
         "fec2249c-a08b-4876-9692-7b40d569c810": {
             "id": "fec2249c-a08b-4876-9692-7b40d569c810",
             "timestamp": 1617188001696,
-            "object": {
-                "label": "CloudHealth",
-                "category": "opsmanagement",
-                "offering": "commercial",
-                "vendor": "VMWare",
-                "id": "6a46b0a4-8c25-411a-867f-67411fd72ba8",
-                "tags": []
-            },
+            "object": "6a46b0a4-8c25-411a-867f-67411fd72ba8",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3182,14 +1912,7 @@
         "a093f85c-1807-4488-8bed-ee3581030784": {
             "id": "a093f85c-1807-4488-8bed-ee3581030784",
             "timestamp": 1617188001696,
-            "object": {
-                "label": "Spot",
-                "category": "opsmanagement",
-                "offering": "commercial",
-                "vendor": "NetApp",
-                "id": "56099865-7408-42e9-a24f-e9c610af7ce3",
-                "tags": []
-            },
+            "object": "56099865-7408-42e9-a24f-e9c610af7ce3",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3199,13 +1922,7 @@
         "f377d1ea-310e-439a-8e08-fab56472b283": {
             "id": "f377d1ea-310e-439a-8e08-fab56472b283",
             "timestamp": 1617188001696,
-            "object": {
-                "label": "kubecost",
-                "category": "opsmanagement",
-                "offering": "oss",
-                "id": "d0989e0e-a43f-4f8d-b72d-943ffcd200ff",
-                "tags": []
-            },
+            "object": "d0989e0e-a43f-4f8d-b72d-943ffcd200ff",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3215,14 +1932,7 @@
         "f5b27bca-447f-4265-afe2-546a214692fb": {
             "id": "f5b27bca-447f-4265-afe2-546a214692fb",
             "timestamp": 1617188001696,
-            "object": {
-                "label": "ParkMyCloud",
-                "category": "opsmanagement",
-                "offering": "commercial",
-                "vendor": "Turbonomic",
-                "id": "7c2e4bc5-6abd-4a7e-be6d-9dd4da6a7c75",
-                "tags": []
-            },
+            "object": "7c2e4bc5-6abd-4a7e-be6d-9dd4da6a7c75",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3232,13 +1942,7 @@
         "c5340bcc-e3a8-4ffe-99b4-32e24462d5b5": {
             "id": "c5340bcc-e3a8-4ffe-99b4-32e24462d5b5",
             "timestamp": 1617188001696,
-            "object": {
-                "label": "Nutanix Beam",
-                "category": "opsmanagement",
-                "offering": "commercial",
-                "id": "2f775113-b1f9-4853-bd19-d300ec2c4782",
-                "tags": []
-            },
+            "object": "2f775113-b1f9-4853-bd19-d300ec2c4782",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3248,14 +1952,7 @@
         "7b45ef7d-09bd-4e4a-b98f-75b6df27db32": {
             "id": "7b45ef7d-09bd-4e4a-b98f-75b6df27db32",
             "timestamp": 1617188001697,
-            "object": {
-                "label": "Flexera One",
-                "category": "opsmanagement",
-                "offering": "commercial",
-                "vendor": "Flexera",
-                "id": "07ea9be7-9e6e-4bdf-ab51-75695f94afe6",
-                "tags": []
-            },
+            "object": "07ea9be7-9e6e-4bdf-ab51-75695f94afe6",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3265,13 +1962,7 @@
         "891d86b0-b8fb-422b-b751-f33f91a9224f": {
             "id": "891d86b0-b8fb-422b-b751-f33f91a9224f",
             "timestamp": 1617188001697,
-            "object": {
-                "label": "Densify",
-                "category": "opsmanagement",
-                "offering": "commercial",
-                "id": "2b218d9a-68e7-4750-b85c-7291a6d2a1af",
-                "tags": []
-            },
+            "object": "2b218d9a-68e7-4750-b85c-7291a6d2a1af",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3281,13 +1972,7 @@
         "e923bcfa-718f-4e60-8fea-7aed06a56256": {
             "id": "e923bcfa-718f-4e60-8fea-7aed06a56256",
             "timestamp": 1617188699720,
-            "object": {
-                "label": "Kubernetes",
-                "category": "orchestration",
-                "offering": "oss",
-                "id": "a55dd3c7-0251-4d0e-aed0-80c87070cb43",
-                "tags": []
-            },
+            "object": "a55dd3c7-0251-4d0e-aed0-80c87070cb43",
             "ambition": "identified",
             "experience": "intermediate",
             "magnitude": "medium",
@@ -3297,14 +1982,7 @@
         "3532b139-992e-47b6-b460-fa5ad2834403": {
             "id": "3532b139-992e-47b6-b460-fa5ad2834403",
             "timestamp": 1617188699720,
-            "object": {
-                "label": "AKS",
-                "category": "orchestration",
-                "offering": "commercial",
-                "vendor": "Microsoft",
-                "id": "01ff4042-95ef-4317-8e60-82c343185015",
-                "tags": []
-            },
+            "object": "01ff4042-95ef-4317-8e60-82c343185015",
             "ambition": "identified",
             "experience": "intermediate",
             "magnitude": "medium",
@@ -3314,14 +1992,7 @@
         "b33fddb3-c8a6-4538-8d45-d337055b97ba": {
             "id": "b33fddb3-c8a6-4538-8d45-d337055b97ba",
             "timestamp": 1617188699720,
-            "object": {
-                "label": "Azure Automation",
-                "category": "orchestration",
-                "offering": "commercial",
-                "vendor": "Microsoft",
-                "id": "51dbe9b5-1aae-4f03-80d8-c2a6a762fc74",
-                "tags": []
-            },
+            "object": "51dbe9b5-1aae-4f03-80d8-c2a6a762fc74",
             "ambition": "identified",
             "experience": "intermediate",
             "magnitude": "medium",
@@ -3331,15 +2002,7 @@
         "23db496b-0404-4448-a4a9-f31eb8626047": {
             "id": "23db496b-0404-4448-a4a9-f31eb8626047",
             "timestamp": 1617188699720,
-            "object": {
-                "label": "Puppet Bolt",
-                "category": "orchestration",
-                "homepage": "orchestration",
-                "offering": "oss",
-                "vendor": "oss",
-                "id": "0a300c83-75f1-4cd9-866e-3d72f8192d76",
-                "tags": []
-            },
+            "object": "0a300c83-75f1-4cd9-866e-3d72f8192d76",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3349,15 +2012,7 @@
         "f7cfa406-9a57-4f3b-972c-b6db8ffd3967": {
             "id": "f7cfa406-9a57-4f3b-972c-b6db8ffd3967",
             "timestamp": 1617188699720,
-            "object": {
-                "label": "BMC Multi Cloud Management",
-                "category": "orchestration",
-                "homepage": "orchestration",
-                "offering": "oss",
-                "vendor": "commercial",
-                "id": "8cca901b-21f0-4a61-8beb-6b4a4b0461e3",
-                "tags": []
-            },
+            "object": "8cca901b-21f0-4a61-8beb-6b4a4b0461e3",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3367,15 +2022,7 @@
         "1c061a28-1a80-430e-8caf-0c1913103e74": {
             "id": "1c061a28-1a80-430e-8caf-0c1913103e74",
             "timestamp": 1617188699720,
-            "object": {
-                "label": "Morpheus",
-                "category": "orchestration",
-                "homepage": "orchestration",
-                "offering": "oss",
-                "vendor": "oss",
-                "id": "c43ab0b7-0b72-4110-91d6-7e905c932c04",
-                "tags": []
-            },
+            "object": "c43ab0b7-0b72-4110-91d6-7e905c932c04",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3385,14 +2032,7 @@
         "8b1ece8f-760b-49db-b821-32ad7e9219e8": {
             "id": "8b1ece8f-760b-49db-b821-32ad7e9219e8",
             "timestamp": 1617269993921,
-            "object": {
-                "label": "Terraform",
-                "category": "deployment",
-                "offering": "oss",
-                "vendor": "Hashicorp",
-                "id": "aeca0053-b079-40d7-8d45-8c0f7d56c8fa",
-                "tags": []
-            },
+            "object": "aeca0053-b079-40d7-8d45-8c0f7d56c8fa",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3402,14 +2042,7 @@
         "eadadfce-7d9e-4ca2-a926-8d4b4a43a8ad": {
             "id": "eadadfce-7d9e-4ca2-a926-8d4b4a43a8ad",
             "timestamp": 1617269993921,
-            "object": {
-                "label": "Ansible",
-                "category": "deployment",
-                "offering": "oss",
-                "vendor": "Hashicorp",
-                "id": "e93ad69e-b16a-46d4-a9a0-9e7ed7a5341c",
-                "tags": []
-            },
+            "object": "e93ad69e-b16a-46d4-a9a0-9e7ed7a5341c",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3419,14 +2052,7 @@
         "96b973f6-fb0d-4e16-ad24-2c8bf46db5b3": {
             "id": "96b973f6-fb0d-4e16-ad24-2c8bf46db5b3",
             "timestamp": 1617269993922,
-            "object": {
-                "label": "Helm",
-                "category": "deployment",
-                "offering": "oss",
-                "vendor": "CNCF",
-                "id": "f212f301-da82-41aa-875e-2c6add8670f4",
-                "tags": []
-            },
+            "object": "f212f301-da82-41aa-875e-2c6add8670f4",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3436,14 +2062,7 @@
         "38ded420-f901-449d-9e5d-153f8ce7e2c1": {
             "id": "38ded420-f901-449d-9e5d-153f8ce7e2c1",
             "timestamp": 1617269993922,
-            "object": {
-                "label": "Puppet Bolt",
-                "category": "deployment",
-                "offering": "oss",
-                "vendor": "PuppetLabs",
-                "id": "11487c77-045a-4469-823f-4f0fa799d0b4",
-                "tags": []
-            },
+            "object": "11487c77-045a-4469-823f-4f0fa799d0b4",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3453,13 +2072,7 @@
         "3ee8961f-b443-49ea-9297-dc12f6729b18": {
             "id": "3ee8961f-b443-49ea-9297-dc12f6729b18",
             "timestamp": 1617269993922,
-            "object": {
-                "label": "Chef",
-                "category": "deployment",
-                "offering": "oss",
-                "id": "b5f88ee6-ec7f-475a-92bf-ebe9d5cf81e0",
-                "tags": []
-            },
+            "object": "b5f88ee6-ec7f-475a-92bf-ebe9d5cf81e0",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3469,13 +2082,7 @@
         "7f6d842d-9b72-454b-86d9-48ca58ac8571": {
             "id": "7f6d842d-9b72-454b-86d9-48ca58ac8571",
             "timestamp": 1617269993922,
-            "object": {
-                "label": "Salt Stack",
-                "category": "deployment",
-                "offering": "oss",
-                "id": "88cf3eb9-a7ca-415d-8040-2c7c19d60e96",
-                "tags": []
-            },
+            "object": "88cf3eb9-a7ca-415d-8040-2c7c19d60e96",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3485,14 +2092,7 @@
         "1b537855-239b-4ccf-98ea-233f7a09791b": {
             "id": "1b537855-239b-4ccf-98ea-233f7a09791b",
             "timestamp": 1617269993922,
-            "object": {
-                "label": "Azure Resource Manager",
-                "category": "deployment",
-                "offering": "commercial",
-                "vendor": "Microsoft",
-                "id": "5e7e2eda-89e5-405e-bb38-f56e92ddf721",
-                "tags": []
-            },
+            "object": "5e7e2eda-89e5-405e-bb38-f56e92ddf721",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3502,14 +2102,7 @@
         "c2ef0be3-a09a-450b-a848-929a4cb31a3e": {
             "id": "c2ef0be3-a09a-450b-a848-929a4cb31a3e",
             "timestamp": 1617271424337,
-            "object": {
-                "label": "OpenShift",
-                "category": "orchestration",
-                "offering": "oss",
-                "vendor": "RedHat",
-                "id": "0593f5ff-d786-473e-8761-02a099e94fa8",
-                "tags": []
-            },
+            "object": "0593f5ff-d786-473e-8761-02a099e94fa8",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3519,14 +2112,7 @@
         "dc874c40-6116-48ae-a6f3-70927d236500": {
             "id": "dc874c40-6116-48ae-a6f3-70927d236500",
             "timestamp": 1617271424337,
-            "object": {
-                "label": "ARO",
-                "category": "orchestration",
-                "offering": "commercial",
-                "vendor": "Microsoft",
-                "id": "b8f8d314-7918-4591-aba5-705d5bcfccfb",
-                "tags": []
-            },
+            "object": "b8f8d314-7918-4591-aba5-705d5bcfccfb",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3536,14 +2122,7 @@
         "470046da-fa5b-4abb-b712-4f2ddcc8ee37": {
             "id": "470046da-fa5b-4abb-b712-4f2ddcc8ee37",
             "timestamp": 1617271424337,
-            "object": {
-                "label": "AWS EKS",
-                "category": "orchestration",
-                "offering": "commercial",
-                "vendor": "AWS",
-                "id": "6f5820f4-fce6-4f58-8dc2-06bd21cc56b7",
-                "tags": []
-            },
+            "object": "6f5820f4-fce6-4f58-8dc2-06bd21cc56b7",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3553,14 +2132,7 @@
         "01ca8db7-b54d-4290-a7dc-aa351c733291": {
             "id": "01ca8db7-b54d-4290-a7dc-aa351c733291",
             "timestamp": 1617271424338,
-            "object": {
-                "label": "AWS ECS",
-                "category": "orchestration",
-                "offering": "commercial",
-                "vendor": "AWS",
-                "id": "432720a5-22be-4d36-9fe7-785f5a5ceb54",
-                "tags": []
-            },
+            "object": "432720a5-22be-4d36-9fe7-785f5a5ceb54",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3570,14 +2142,7 @@
         "bbce1b73-625b-4a75-b53f-d4b180447cb5": {
             "id": "bbce1b73-625b-4a75-b53f-d4b180447cb5",
             "timestamp": 1617271424338,
-            "object": {
-                "label": "AWS Fargate",
-                "category": "orchestration",
-                "offering": "commercial",
-                "vendor": "AWS",
-                "id": "97204952-ecc4-43ea-92e2-1eb5b8257d2c",
-                "tags": []
-            },
+            "object": "97204952-ecc4-43ea-92e2-1eb5b8257d2c",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3587,14 +2152,7 @@
         "faed9fda-8789-4bc7-92dc-0380883135a5": {
             "id": "faed9fda-8789-4bc7-92dc-0380883135a5",
             "timestamp": 1617275623803,
-            "object": {
-                "label": "Vagrant",
-                "category": "deployment",
-                "offering": "oss",
-                "vendor": "Hashicorp",
-                "id": "9e4f4a18-f42a-4db9-a632-75a0a7945a26",
-                "tags": []
-            },
+            "object": "9e4f4a18-f42a-4db9-a632-75a0a7945a26",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3604,14 +2162,7 @@
         "94e3ed03-70e1-41b5-98c6-d8cb6ef75f6c": {
             "id": "94e3ed03-70e1-41b5-98c6-d8cb6ef75f6c",
             "timestamp": 1617275623803,
-            "object": {
-                "label": "DockerHub",
-                "category": "deployment",
-                "offering": "oss",
-                "vendor": "Docker",
-                "id": "ee5f1cbc-745e-4453-9f64-82e7fefa3147",
-                "tags": []
-            },
+            "object": "ee5f1cbc-745e-4453-9f64-82e7fefa3147",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3621,14 +2172,7 @@
         "9f233a46-d43a-4ffe-adea-02f8ec9d0e57": {
             "id": "9f233a46-d43a-4ffe-adea-02f8ec9d0e57",
             "timestamp": 1617275623803,
-            "object": {
-                "label": "Quay",
-                "category": "deployment",
-                "offering": "oss",
-                "vendor": "RedHat",
-                "id": "f73c8401-b719-4ec7-a859-1262a5bd335d",
-                "tags": []
-            },
+            "object": "f73c8401-b719-4ec7-a859-1262a5bd335d",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3638,14 +2182,7 @@
         "3dc7bc8d-14ee-4091-b7a6-2b0237a0ce8c": {
             "id": "3dc7bc8d-14ee-4091-b7a6-2b0237a0ce8c",
             "timestamp": 1617275623803,
-            "object": {
-                "label": "Artifactory",
-                "category": "deployment",
-                "offering": "oss",
-                "vendor": "JFrog",
-                "id": "a3cf9c16-d08a-4d28-b150-bc1900337cda",
-                "tags": []
-            },
+            "object": "a3cf9c16-d08a-4d28-b150-bc1900337cda",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3655,13 +2192,7 @@
         "6a2b88ad-4aed-4c9e-9699-3df83b9be150": {
             "id": "6a2b88ad-4aed-4c9e-9699-3df83b9be150",
             "timestamp": 1617275623804,
-            "object": {
-                "label": "Nexus",
-                "category": "deployment",
-                "offering": "oss",
-                "id": "700f3dd9-7009-4453-b282-45a4307bbaf3",
-                "tags": []
-            },
+            "object": "700f3dd9-7009-4453-b282-45a4307bbaf3",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3671,13 +2202,7 @@
         "04222b97-7398-48c4-b085-f5c3ed9b4155": {
             "id": "04222b97-7398-48c4-b085-f5c3ed9b4155",
             "timestamp": 1617275623804,
-            "object": {
-                "label": "Spinnaker",
-                "category": "deployment",
-                "offering": "oss",
-                "id": "0aa402eb-4650-4cbe-9562-0412247cd62a",
-                "tags": []
-            },
+            "object": "0aa402eb-4650-4cbe-9562-0412247cd62a",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3687,13 +2212,7 @@
         "5187711a-e565-43cb-acba-72cf75c56b35": {
             "id": "5187711a-e565-43cb-acba-72cf75c56b35",
             "timestamp": 1617275623804,
-            "object": {
-                "label": "Rundeck",
-                "category": "deployment",
-                "offering": "oss",
-                "id": "e02f6d27-5e30-4331-b427-6eee54369d16",
-                "tags": []
-            },
+            "object": "e02f6d27-5e30-4331-b427-6eee54369d16",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3703,13 +2222,7 @@
         "17e58a73-92fd-48cc-babe-89810a4ded42": {
             "id": "17e58a73-92fd-48cc-babe-89810a4ded42",
             "timestamp": 1617275623804,
-            "object": {
-                "label": "XL Deploy",
-                "category": "deployment",
-                "offering": "oss",
-                "id": "440e48ca-71b0-462d-8c3a-6040deb4fb72",
-                "tags": []
-            },
+            "object": "440e48ca-71b0-462d-8c3a-6040deb4fb72",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3719,13 +2232,7 @@
         "a149f338-e21b-4966-8359-5f924d0a9c73": {
             "id": "a149f338-e21b-4966-8359-5f924d0a9c73",
             "timestamp": 1617275623804,
-            "object": {
-                "label": "Capistrano",
-                "category": "deployment",
-                "offering": "oss",
-                "id": "eb847eb2-b70f-48d4-8633-5b2cef40f01f",
-                "tags": []
-            },
+            "object": "eb847eb2-b70f-48d4-8633-5b2cef40f01f",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3735,13 +2242,7 @@
         "46cb5a0f-9488-4246-86ba-c7e7b159aebc": {
             "id": "46cb5a0f-9488-4246-86ba-c7e7b159aebc",
             "timestamp": 1617275623804,
-            "object": {
-                "label": "Octopus Deploy",
-                "category": "deployment",
-                "offering": "oss",
-                "id": "bd04ccdc-781e-4dac-9a6f-40ab53bae533",
-                "tags": []
-            },
+            "object": "bd04ccdc-781e-4dac-9a6f-40ab53bae533",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3751,14 +2252,7 @@
         "c35fc882-2841-4378-b1f5-522f43f9aab5": {
             "id": "c35fc882-2841-4378-b1f5-522f43f9aab5",
             "timestamp": 1617275623804,
-            "object": {
-                "label": "Nomad",
-                "category": "orchestration",
-                "offering": "oss",
-                "vendor": "Hashicorp",
-                "id": "d02867e9-0000-458e-8819-8e17e9b71d44",
-                "tags": []
-            },
+            "object": "d02867e9-0000-458e-8819-8e17e9b71d44",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3768,13 +2262,7 @@
         "41dae670-8edd-48d0-be7b-3510b5426568": {
             "id": "41dae670-8edd-48d0-be7b-3510b5426568",
             "timestamp": 1617275623804,
-            "object": {
-                "label": "Rancher",
-                "category": "orchestration",
-                "offering": "oss",
-                "id": "6117f02c-1c97-4eeb-b6b7-4e38a0d04180",
-                "tags": []
-            },
+            "object": "6117f02c-1c97-4eeb-b6b7-4e38a0d04180",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3784,13 +2272,7 @@
         "2f6a2d75-ba2c-4d73-b712-c5d528a15964": {
             "id": "2f6a2d75-ba2c-4d73-b712-c5d528a15964",
             "timestamp": 1617275623804,
-            "object": {
-                "label": "Mesosphere",
-                "category": "orchestration",
-                "offering": "oss",
-                "id": "86255607-d565-40e1-a575-132620ef986d",
-                "tags": []
-            },
+            "object": "86255607-d565-40e1-a575-132620ef986d",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3800,14 +2282,7 @@
         "7f4cda1d-a8eb-4724-8442-9b7355abc3ad": {
             "id": "7f4cda1d-a8eb-4724-8442-9b7355abc3ad",
             "timestamp": 1617275623805,
-            "object": {
-                "label": "Docker Swarm",
-                "category": "orchestration",
-                "offering": "oss",
-                "vendor": "Docker",
-                "id": "6481240b-f89e-4203-93ec-2d0177fc7bb0",
-                "tags": []
-            },
+            "object": "6481240b-f89e-4203-93ec-2d0177fc7bb0",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3817,13 +2292,7 @@
         "53fd3037-80ff-42cc-8c7e-fa0cd951cd63": {
             "id": "53fd3037-80ff-42cc-8c7e-fa0cd951cd63",
             "timestamp": 1617275623805,
-            "object": {
-                "label": "Mesos",
-                "category": "orchestration",
-                "offering": "oss",
-                "id": "1705c55e-5510-4053-992b-10511f6accb3",
-                "tags": []
-            },
+            "object": "1705c55e-5510-4053-992b-10511f6accb3",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3833,14 +2302,7 @@
         "63b672ee-ddfd-4919-951c-442a388a02b2": {
             "id": "63b672ee-ddfd-4919-951c-442a388a02b2",
             "timestamp": 1617275623805,
-            "object": {
-                "label": "ECR",
-                "category": "orchestration",
-                "offering": "commercial",
-                "vendor": "AWS",
-                "id": "67f2d855-a330-4bae-b92d-2e0091b7f7b4",
-                "tags": []
-            },
+            "object": "67f2d855-a330-4bae-b92d-2e0091b7f7b4",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3850,14 +2312,7 @@
         "22b9227e-a575-4338-921b-6def35855471": {
             "id": "22b9227e-a575-4338-921b-6def35855471",
             "timestamp": 1617275623805,
-            "object": {
-                "label": "Azure Container Registry",
-                "category": "orchestration",
-                "offering": "oss",
-                "vendor": "Microsoft",
-                "id": "814e13e4-7021-49a5-b06e-230b4c49195c",
-                "tags": []
-            },
+            "object": "814e13e4-7021-49a5-b06e-230b4c49195c",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3867,14 +2322,7 @@
         "230007d6-34a3-42ad-8ea9-249bceaa04d1": {
             "id": "230007d6-34a3-42ad-8ea9-249bceaa04d1",
             "timestamp": 1617275623805,
-            "object": {
-                "label": "GCP Container Registry",
-                "category": "orchestration",
-                "offering": "oss",
-                "vendor": "Google",
-                "id": "b6a081aa-c26c-425d-9a46-851b15b1d257",
-                "tags": []
-            },
+            "object": "b6a081aa-c26c-425d-9a46-851b15b1d257",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
@@ -3884,14 +2332,7 @@
         "afaadc78-362d-4876-872a-78e465142092": {
             "id": "afaadc78-362d-4876-872a-78e465142092",
             "timestamp": 1617275623805,
-            "object": {
-                "label": "GitHub Container Registry",
-                "category": "orchestration",
-                "offering": "oss",
-                "vendor": "GitHub",
-                "id": "73394b2d-b694-4e3a-8d55-390f3533ecf5",
-                "tags": []
-            },
+            "object": "73394b2d-b694-4e3a-8d55-390f3533ecf5",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",

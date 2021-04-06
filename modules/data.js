@@ -18,27 +18,46 @@ const datasetMap = {
 // INVOKED BEFORE DOWNLOAD (TODO: and before save to local storage)
 // prepare dataset for deserialization; 
 // replace blip.rating.{} with blip.rating.id
-// TODO make sure all ratings and objects exist under data.objects and data.ratings
+// make sure all ratings and objects exist under data.objects and data.ratings
 // replace rating.object{} with rating.object.id
-// TODO replace ratingType.objectType{} with ratingType.ObjectType{name}
-// TODO replace viewpoint.ratingType{} with viewpoint.ratingType{name}
-// TODO: round blip x and y
+// replace ratingType.objectType{} with ratingType.ObjectType{name}
+// replace viewpoint.ratingType{} with viewpoint.ratingType{name}
+// round blip x and y
 const deserialize = (originalData) => {
     const deserializedData = JSON.parse(JSON.stringify(originalData))
     deserializedData.viewpoints.forEach((viewpoint) => {
         addUUIDtoBlips(viewpoint.blips) // probably unnecessary, should not harm
         viewpoint.blips.forEach((blip) => {
+            if  (!deserializedData.ratings.hasOwnProperty(blip.rating.id)){  // save rating in ratings
+                deserializedData.ratings[blip.rating.id]= blip.rating
+            }
             blip.rating = blip.rating.id
+            if (blip.x != null) blip.x= Math.round(blip.x)
+            if (blip.y != null) blip.y= Math.round(blip.y)
         })
         if (typeof(viewpoint.ratingType)=="object"){
+            deserializedData.model.ratingType[viewpoint.ratingType.name] = viewpoint.ratingType // save ratingType in model.ratingTypes
             viewpoint.ratingType= viewpoint.ratingType.name
         }
+        
     })     
     for (let i=0; i< Object.keys(deserializedData.ratings).length;i++) {
         const rating= deserializedData.ratings[Object.keys(deserializedData.ratings)[i]]
+        if  (!deserializedData.objects.hasOwnProperty(rating.object.id)){  // save object in objects
+            deserializedData.objects[rating.object.id]= blip.object
+        }
+
         rating.object = rating.object.id
     }
-    return deserializedData
+        // go over all rating types and replace their objectType object with objectType name
+        for (let i=0; i< Object.keys(deserializedData.model.ratingTypes).length;i++) {
+            const ratingType= deserializedData.model.ratingTypes[Object.keys(deserializedData.model.ratingTypes)[i]]
+            if (typeof(ratingType.objectType)=="object") {
+              ratingType.objectType = ratingType.objectType.name
+            }
+        }
+    
+        return deserializedData
 }
 
 // some operations to improve data set
@@ -55,19 +74,27 @@ const normalizeDataSet = (dataset) => {
         const rating= dataset.ratings[Object.keys(dataset.ratings)[i]]
         rating.object = dataset.objects[rating.object]
     }
-
+    
+    
+    for (let i=0; i< Object.keys(dataset.model.ratingTypes).length;i++) {
+        const ratingType= dataset.model.ratingTypes[Object.keys(dataset.model.ratingTypes)[i]]
+        if (typeof(ratingType.objectType)=="string") {
+          ratingType.objectType = dataset.model.objectTypes[ratingType.objectType]
+        }
+    }
     dataset.viewpoints.forEach((viewpoint) => {
-        addUUIDtoBlips(viewpoint.blips)
         console.log(`${JSON.stringify(viewpoint.ratingType)}`)
         const objectType = viewpoint.ratingType.objectType
         viewpoint.blips.forEach((blip) => {
             if (typeof (blip.rating) == "string") { // assume the rating is a reference to an UUID
                 blip.rating = dataset.ratings[blip.rating] // possibly check getData() as well
-            } else {
+            } else { // add the rating and object referenced by the blip 
             dataset.objects[blip.rating.object.id] = blip.rating.object
             dataset.ratings[blip.rating.id] = blip.rating
             }
         })
+        addUUIDtoBlips(viewpoint.blips)
+      
     })
     return dataset
 }
