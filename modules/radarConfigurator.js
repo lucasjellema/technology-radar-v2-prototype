@@ -36,11 +36,12 @@ const launchMainEditor = (viewpoint, drawRadarBlips) => {
 
     let html = ``
 
-    html += `<label for="mappedPropertySelector">Rating property to map to sector</label> <select id="mappedPropertySelector" ></select><br/>`
+    html += `<label for="mappedPropertySelector">Rating property to map to sector</label> 
+    <select id="mappedPropertySelector" ></select><span id="refreshSectors" style="padding:20px">Refresh Sector Mapping</span>  <br/>`
     html += `<input type="button" id="addSectorButton"  value="Add Sector"  style="padding:6px;margin:10px"/>`
 
     html += `<table id="sectors">`
-    html += `<tr><th>Sector Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll">Visible</span></th><th>Delete?</th><th>v ^</th></tr>`
+    html += `<tr><th>Sector Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th><th>Delete?</th><th>v ^</th></tr>`
     for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
         const sector = viewpoint.template.sectorConfiguration.sectors[i]
         // find all values mapped to the sectorToEdit
@@ -118,6 +119,8 @@ const launchMainEditor = (viewpoint, drawRadarBlips) => {
     document.getElementById(`mappedPropertySelector`).addEventListener("change", (e) => {
         reconfigureSectors(e.target.value, viewpoint)
     })
+    document.getElementById(`refreshSectors`).addEventListener("click", ()=> {refreshSectorConfiguration(viewpoint)})
+
     document.getElementById(`showAll`).addEventListener("click", (e) => {
         viewpoint.template.sectorConfiguration.sectors.forEach((sector, i) => {
             sector.visible = true;
@@ -229,6 +232,9 @@ const distributeValueOccurrenceBased = (viewpoint) => {
     publishRefreshRadar()
 }
 
+const refreshSectorConfiguration = (viewpoint) => {
+    reconfigureSectors(viewpoint.propertyVisualMaps["sector"]["property"], viewpoint)
+}
 
 const reconfigureSectors = (propertyPath, viewpoint) => {
     const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]

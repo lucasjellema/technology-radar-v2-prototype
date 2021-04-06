@@ -120,7 +120,7 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
     
     document.getElementById('advancedToggle').addEventListener('click',()=> {showOrHideElement('advancedSectorProperties',true)})
 
-    const allowablesValues = sectorProperty.property?.allowableValues.map((allowableValue) => allowableValue.value)
+    const allowablesValues = sectorProperty.property?.allowableValues?.map((allowableValue) => allowableValue.value)
     createAndPopulateDataListFromBlipProperties(`sectorPropertyValueList`, `${sectorVisualMap["property"]}`, viewpoint.blips, allowablesValues)
 
 
