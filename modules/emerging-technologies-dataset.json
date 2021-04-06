@@ -51,6 +51,7 @@
         },
         "ratingTypes": {
             "technologyAdoption": {
+                "name": "technologyAdoption",
                 "label": "Technology Adoption",
                 "objectType": {
                     "name": "technology",

@@ -12,25 +12,61 @@ const datasetMap = {
     , techradar: "./modules/technology-radar-dataset.json"
     , cab: "./modules/cab-technology-radar-dataset.json"
     , sample: "./modules/sampleData.json"
+    , verkenning: "./modules/cab-verkenningen-radar-dataset.json"
+}
+
+// INVOKED BEFORE DOWNLOAD (TODO: and before save to local storage)
+// prepare dataset for deserialization; 
+// replace blip.rating.{} with blip.rating.id
+// TODO make sure all ratings and objects exist under data.objects and data.ratings
+// replace rating.object{} with rating.object.id
+// TODO replace ratingType.objectType{} with ratingType.ObjectType{name}
+// TODO replace viewpoint.ratingType{} with viewpoint.ratingType{name}
+// TODO: round blip x and y
+const deserialize = (originalData) => {
+    const deserializedData = JSON.parse(JSON.stringify(originalData))
+    deserializedData.viewpoints.forEach((viewpoint) => {
+        addUUIDtoBlips(viewpoint.blips) // probably unnecessary, should not harm
+        viewpoint.blips.forEach((blip) => {
+            blip.rating = blip.rating.id
+        })
+        if (typeof(viewpoint.ratingType)=="object"){
+            viewpoint.ratingType= viewpoint.ratingType.name
+        }
+    })     
+    for (let i=0; i< Object.keys(deserializedData.ratings).length;i++) {
+        const rating= deserializedData.ratings[Object.keys(deserializedData.ratings)[i]]
+        rating.object = rating.object.id
+    }
+    return deserializedData
 }
 
 // some operations to improve data set
 // - build data.objects from the nested objects in ratings and blips
 // - build data.ratings from the nested ratings in blips
+// - assign reference to data.ratings if blip.rating contains object with only ID
 // - assign ID values if not already present in Object and Rating
 // - define object type and rating type on objects and ratings respectively
 // - ??? provide references to objects for name reference to ratingType, objectType etc. 
 const normalizeDataSet = (dataset) => {
     dataset.objects = dataset.objects ?? {}
     dataset.ratings = dataset.ratings ?? {}
+    for (let i=0; i< Object.keys(dataset.ratings).length;i++) {
+        const rating= dataset.ratings[Object.keys(dataset.ratings)[i]]
+        rating.object = dataset.objects[rating.object]
+    }
+
     dataset.viewpoints.forEach((viewpoint) => {
         addUUIDtoBlips(viewpoint.blips)
         console.log(`${JSON.stringify(viewpoint.ratingType)}`)
         const objectType = viewpoint.ratingType.objectType
         viewpoint.blips.forEach((blip) => {
-
+            if (typeof (blip.rating) == "string") { // assume the rating is a reference to an UUID
+                blip.rating = dataset.ratings[blip.rating] // possibly check getData() as well
+            } else {
             dataset.objects[blip.rating.object.id] = blip.rating.object
             dataset.ratings[blip.rating.id] = blip.rating
+            }
         })
     })
     return dataset
@@ -234,7 +270,7 @@ initializeDatasetFromURL()
 // create blip from meta-data and from default blip
 const createBlip = (objectId, objectNewLabel, ratingId = null) => {
 
-    let rating = (ratingId != null)
+    let rating = (ratingId != null && ratingId.length > 0)
         ? getRatingById(ratingId)
         : {
             id: uuidv4(),
@@ -245,18 +281,21 @@ const createBlip = (objectId, objectNewLabel, ratingId = null) => {
                 : { id: uuidv4(), pending: true }
         }
     // TODO existing object and new rating, then set defaults on rating propertie
-    if (ratingId == null) {
-        // set defaults on object and on rating properties
-        if (objectId == null) {
-            rating.object.label = objectNewLabel ?? "NEW" // TODO hardcoded object display property
-        }
+    if (ratingId == null || ratingId.length < 1) {
         let properties = getRatingTypeProperties(getViewpoint().ratingType, getData().model, objectId == null)
 
         for (let i = 0; i < properties.length; i++) {
             const property = properties[i]
-            let value = getNestedPropertyValueFromObject(getState().defaultSettings?.rating, property.propertyPath)
-            if (value == null) value = ""
-            setNestedPropertyValueOnObject(rating, property.propertyPath, value)
+            if (property.type == "string" || property.type == "text" || property.type == "url") {
+                let value = getNestedPropertyValueFromObject(getState().defaultSettings?.rating, property.propertyPath)
+                if (value == null) value = ""
+                setNestedPropertyValueOnObject(rating, property.propertyPath, value)
+            }
+        }
+        // set defaults on object and on rating properties
+        if (objectId == null) {
+            rating.object.label = objectNewLabel ?? "NEW" // TODO hardcoded object display property
+            rating.object.tags = [] // TODO hardcoded reference to tags field; check all properties of type tags
         }
     }
 
@@ -341,8 +380,10 @@ function download(filename, text) {
 }
 
 const downloadRadarData = function () {
-    download(`radar-data.json`, JSON.stringify(data))
+    download(`radar-data.json`, JSON.stringify(deserialize(data)))
 }
+
+
 
 const uploadRadarData = () => {
     if (fileElem) {
