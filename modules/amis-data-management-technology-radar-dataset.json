@@ -277,21 +277,29 @@
                     "sectors": [
                         {
                             "label": "NoSQL",
-                            "angle": 0.29411764705882354,
+                            "angle": 0.29,
                             "labelSettings": {
                                 "showCurved": true,
                                 "showStraight": false,
-                                "color": "#000000",
-                                "fontSize": 18,
+                                "color": "#a12121",
+                                "fontSize": "28",
                                 "fontFamily": "Helvetica"
                             },
                             "edge": {
                                 "color": "#000000",
-                                "width": 1
+                                "width": "1"
                             },
-                            "backgroundImage": {},
-                            "backgroundColor": "#FFFFFF",
-                            "outerringBackgroundColor": "#FFFFFF"
+                            "backgroundImage": {
+                                "image": "https://conclusionjaarverslag.nl/wp-content/uploads/2019/06/AMIS-_-conclusion-logo.png",
+                                "scaleFactor": "4",
+                                "x": 307,
+                                "y": -519
+                            },
+                            "backgroundColor": "#ffffff",
+                            "outerringBackgroundColor": "#ffffff",
+                            "opacity": "0.5",
+                            "opacityOutsideRings": "0.5",
+                            "visible": true
                         },
                         {
                             "label": "Event Store/Message Hub",
@@ -299,8 +307,8 @@
                             "labelSettings": {
                                 "showCurved": true,
                                 "showStraight": false,
-                                "color": "#000000",
-                                "fontSize": "18",
+                                "color": "#a12121",
+                                "fontSize": "28",
                                 "fontFamily": "Helvetica"
                             },
                             "edge": {
@@ -322,8 +330,8 @@
                             "labelSettings": {
                                 "showCurved": true,
                                 "showStraight": false,
-                                "color": "#000000",
-                                "fontSize": "18",
+                                "color": "#a12121",
+                                "fontSize": "28",
                                 "fontFamily": "Helvetica"
                             },
                             "edge": {
@@ -345,8 +353,8 @@
                             "labelSettings": {
                                 "showCurved": true,
                                 "showStraight": false,
-                                "color": "#000000",
-                                "fontSize": 18,
+                                "color": "#a12121",
+                                "fontSize": "28",
                                 "fontFamily": "Helvetica"
                             },
                             "edge": {
@@ -363,8 +371,8 @@
                             "labelSettings": {
                                 "showCurved": true,
                                 "showStraight": false,
-                                "color": "#000000",
-                                "fontSize": "18",
+                                "color": "#a12121",
+                                "fontSize": "28",
                                 "fontFamily": "Helvetica"
                             },
                             "edge": {
@@ -386,8 +394,8 @@
                             "labelSettings": {
                                 "showCurved": true,
                                 "showStraight": false,
-                                "color": "#000000",
-                                "fontSize": 18,
+                                "color": "#a12121",
+                                "fontSize": "28",
                                 "fontFamily": "Helvetica"
                             },
                             "edge": {
@@ -404,8 +412,8 @@
                             "labelSettings": {
                                 "showCurved": true,
                                 "showStraight": false,
-                                "color": "#000000",
-                                "fontSize": 18,
+                                "color": "#a12121",
+                                "fontSize": "28",
                                 "fontFamily": "Helvetica"
                             },
                             "edge": {
@@ -417,13 +425,13 @@
                             "outerringBackgroundColor": "#FFFFFF"
                         },
                         {
-                            "label": "Big Data Lake",
+                            "label": "Data Lake",
                             "angle": 0.05,
                             "labelSettings": {
                                 "showCurved": true,
                                 "showStraight": false,
-                                "color": "#000000",
-                                "fontSize": "18",
+                                "color": "#a12121",
+                                "fontSize": "28",
                                 "fontFamily": "Helvetica"
                             },
                             "edge": {
@@ -566,13 +574,13 @@
                 "sector": {
                     "property": "object.category",
                     "valueMap": {
-                        "nosql": 0,
                         "cache": 3,
                         "graph": 5,
                         "blobstore": 6,
                         "timeseries": 4,
                         "rdbms": 2,
                         "events": 1,
+                        "nosql": 0,
                         "lake": 7
                     }
                 },
@@ -636,8 +644,8 @@
                 {
                     "id": "3",
                     "rating": "26e02ede-17ed-40b0-b6d7-0ce86c24a7f4",
-                    "x": 338,
-                    "y": -472
+                    "x": 332,
+                    "y": -363
                 },
                 {
                     "id": "4",
@@ -666,8 +674,8 @@
                 {
                     "id": "8",
                     "rating": "2ffcd5de-6ab7-4bd7-b343-fe7ad785f600",
-                    "x": -448,
-                    "y": -427
+                    "x": -479,
+                    "y": -192
                 },
                 {
                     "id": "9",
@@ -852,8 +860,8 @@
                 {
                     "id": "39",
                     "rating": "1c8d9aee-0a49-4e10-9368-93e379905b0d",
-                    "x": 437,
-                    "y": -443
+                    "x": 545,
+                    "y": -280
                 },
                 {
                     "id": "40",
@@ -1174,7 +1182,13 @@
             "offering": "oss",
             "vendor": "Elastic",
             "id": "61250995-4bdb-4c15-97e8-3d4ce11bd4b3",
-            "tags": []
+            "tags": [
+                "elastic",
+                "nosql"
+            ],
+            "description": "",
+            "homepage": "",
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPo8zQTXkJjjRRIbkSql_8A53TMMgu-htt7Wd6_h5kzBTPviNiVaB3-CP83fln4Gav96M&usqp=CAU"
         },
         "bd3dd320-1263-4f4e-9fac-57696b362578": {
             "label": "MongoDB",
@@ -1182,7 +1196,10 @@
             "offering": "oss",
             "vendor": "MongoDB",
             "id": "bd3dd320-1263-4f4e-9fac-57696b362578",
-            "tags": []
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "https://banner2.cleanpng.com/20180702/bgt/kisspng-mongodb-database-nosql-postgresql-mongo-5b39f9e3445fa6.5652746415305261792801.jpg"
         },
         "dcfb645f-947f-4036-b5a4-23cf6ca690b6": {
             "label": "Apache Kafka",
@@ -1227,15 +1244,22 @@
             "category": "rdbms",
             "offering": "oss",
             "id": "f7cfdafb-5f19-44a3-b246-f7806f0b3bc6",
-            "tags": []
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "https://w7.pngwing.com/pngs/582/361/png-transparent-postgre-sql-logo-postgresql-relational-database-management-system-object-relational-database-database-blue-text-logo.png",
+            "vendor": ""
         },
         "866626a2-291a-4bae-aab5-89da3fefadc3": {
             "label": "MySQL",
-            "category": "events",
+            "category": "rdbms",
             "offering": "oss",
             "vendor": "Oracle",
             "id": "866626a2-291a-4bae-aab5-89da3fefadc3",
-            "tags": []
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "https://1000logos.net/wp-content/uploads/2020/08/MySQL-Logo.png"
         },
         "1024652e-702c-4ab5-9c9a-80772464a877": {
             "label": "DB2",
@@ -1251,7 +1275,10 @@
             "offering": "oss",
             "vendor": "Apache Software Foundation",
             "id": "ff7c6ebd-3a71-4b52-9012-67ba37786a21",
-            "tags": []
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "https://www.logo.wine/a/logo/Apache_Cassandra/Apache_Cassandra-Logo.wine.svg"
         },
         "f1365afd-89e3-41d6-8cbc-bde43deb1f15": {
             "label": "CouchDB",
@@ -1391,7 +1418,11 @@
             "category": "rdbms",
             "offering": "other",
             "id": "3bb6d11f-1de1-444c-9f30-33a33ee3cdd2",
-            "tags": []
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "data:image/png;base64,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",
+            "vendor": ""
         },
         "25920d17-7ad1-4297-b665-d8061cf650f4": {
             "label": "AWS RDS",
@@ -1436,7 +1467,11 @@
             "category": "cache",
             "offering": "oss",
             "id": "ecab4806-d4c6-4787-abc4-15a9fa87a837",
-            "tags": []
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "data:image/png;base64,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",
+            "vendor": ""
         },
         "d8d09c71-9d99-4b37-be60-5569d83c4c79": {
             "label": "Apache Ignite",
@@ -1527,7 +1562,10 @@
             "offering": "commercial",
             "vendor": "Microsoft",
             "id": "1dfcd5e4-d81d-4734-9c45-ae8137c19b8b",
-            "tags": []
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAnFBMVEX///8Acca61jAAa8SgvOIAZ8PN2+8AbsUxic+41Sa31B3j7rm92D36/PLo8cJmmdTw9tvV5ZIAdcfn8/rQ5H/B2lC00wTw99fR44O/2kX9/vj1/P4he8nG3PEAbMS50uv1+eXa6vauzeqAsN5xptpJktGVu+Iifst7rd3g7fiewubi7bDN4XHG3WD4++zb6Z7s88zL4Gne7KcAYsEZn2kiAAAEDklEQVR4nO3d61biMBSG4Uqt0ICchIKgtCCgA3L0/u9tnBlA7CHJipTs3fne3xzyCDNrsUmJ4/xtPLktWpOxc9aL5xYvb/oFDL2bIuZNTsLpyPZicmnUOAkrZduLyaVyBULuQcg/CPkHIf8g5B+E/IOQfxDyD0L+Qcg/CPkHIf+0ha5HN/cSwnZ4R7ewfQnhg0O3BwgPQUg3CI9BSDcIj0FINwiPQUg3CI9BSDcIjxVf2JDtTXwaWhSoGj5JXpzy7HS7uWR/6agieQL7zSQvjvtyutmw4o0yct2x5PHt99DOXLr3evbuG84bGb39Sj7qIGrKigbXA34ufTHNWPrc+J/XsuaL7ALh11pXNV68elBSJd5tL/JHrXylsBREtlf5gwaPamBJ1G0v8wfd1yCEkHoQQkg/CCGkH4QQ0g9CCOkHIYT0Mxfey7q6IztDYW8lmUB+5r+vbWjSMhM2A9WEzvetcFIyE3bUI0ixtOJJqasj3MbupDGC9PtWOCn1hcZq42N9jb+K37HCSem+K3x5QlTjd2IldAbLlrxNM3EfXkKTIISQfhBCSD8IIaQfhBDSD0JiwqhelbWNknfhJewH8rGZCFaJuZmZsLfvyNokPmhfpr3Gzr3uRYStQD5NEKKby5xVa+de/FO+ibCnHgiJVg5As2mixp0Ss7aNxsgr8WaxJjSZl/Y13iyPOezVNRP2NGbe8cXyEjrbbiBN7KL4XZgJDYIQQtMghFA/CCE0DUII9YMQQtMg/H+Fg3VPVspIiZlwWVPMILs93sKtcgTpi/jLyEv4rjGJ2hMR6s1L4285nWlifF66V08T/VUOQKel8cS1S+zca2pMhDd5CJ2d6nsL4cc3X5pN9ffKL0h2Of20QU/61VO1Wk8+r5HQWSueKPHfr8XMhJyCEEL6QQgh/SCEkH4QQkg/ZsL6RnrZ0/5in54sNdgpt5s9Jj64sRJebYphLZ1rSBOTKE5Cs2kip6tkzYQas8/khaeWMhNGwi8pLq2tWeGkZPi9RdTpyqPzm6f4XQwI6QchhPSDEEL6QQgh/SCEkH4QQki/4gvNrnRm1VJ9tbqfxwXIV6zlC8WWulVke43Jwrf0M5NewpQbr6XHPTWb0bVXP0zr+02mnptxZJf3SvlguT+Fs9entCrTs5WHH5LDy2bZD06h+ceonJ5b/iK+uZKz89qUz85zhpKln50sJzuAjvb5h85YIjw7HZDvCY/Os0xYhDMsITwGIeEgPAQh4SA8BCHhIDwEIeEgPAQh4S4iDO8It5CMJ3SFN65HONmESVvINgj5ByH/IOQfhPyDkH8Q8g9C/kHIPwj5ByH/IOQfhPw7EzZkk2O+jb527k0824vJJW/hfL2Inlu8vG97f58Xt4Xr+R/tN8b7+sOgdcxdAAAAAElFTkSuQmCC"
         },
         "956eb3a0-7406-4f1c-acb9-1cec42ff3121": {
             "label": "OCI Streaming",
@@ -1605,23 +1643,25 @@
     "ratings": {
         "9ed7f7cc-bc8d-4585-84d4-8aabcf397eb0": {
             "id": "9ed7f7cc-bc8d-4585-84d4-8aabcf397eb0",
-            "timestamp": 1617704638919,
+            "timestamp": "1617704638919",
             "object": "61250995-4bdb-4c15-97e8-3d4ce11bd4b3",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "System Generated",
+            "comment": ""
         },
         "a20f011c-964a-48f7-92e0-f7fc52161c8c": {
             "id": "a20f011c-964a-48f7-92e0-f7fc52161c8c",
-            "timestamp": 1617704638919,
+            "timestamp": "1617704638919",
             "object": "bd3dd320-1263-4f4e-9fac-57696b362578",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "System Generated",
+            "comment": ""
         },
         "fae47773-b37f-48bc-9fd2-486c495a161c": {
             "id": "fae47773-b37f-48bc-9fd2-486c495a161c",
@@ -1675,23 +1715,25 @@
         },
         "6637ea01-d856-4f05-bc6d-cc194347fe3d": {
             "id": "6637ea01-d856-4f05-bc6d-cc194347fe3d",
-            "timestamp": 1617704638920,
+            "timestamp": "1617704638920",
             "object": "f7cfdafb-5f19-44a3-b246-f7806f0b3bc6",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "System Generated",
+            "comment": ""
         },
         "2ffcd5de-6ab7-4bd7-b343-fe7ad785f600": {
             "id": "2ffcd5de-6ab7-4bd7-b343-fe7ad785f600",
-            "timestamp": 1617704638920,
+            "timestamp": "1617704638920",
             "object": "866626a2-291a-4bae-aab5-89da3fefadc3",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "System Generated",
+            "comment": ""
         },
         "f883299d-64fe-4fcf-b564-4e605520f132": {
             "id": "f883299d-64fe-4fcf-b564-4e605520f132",
@@ -1705,13 +1747,14 @@
         },
         "05218183-c430-44eb-b9d9-98a7666703ca": {
             "id": "05218183-c430-44eb-b9d9-98a7666703ca",
-            "timestamp": 1617704638920,
+            "timestamp": "1617704638920",
             "object": "ff7c6ebd-3a71-4b52-9012-67ba37786a21",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "System Generated",
+            "comment": ""
         },
         "6a8f1495-d650-46c3-955b-55a1ca3a9521": {
             "id": "6a8f1495-d650-46c3-955b-55a1ca3a9521",
@@ -1895,13 +1938,14 @@
         },
         "9871293d-9c51-4730-a134-d03dffdfd5ca": {
             "id": "9871293d-9c51-4730-a134-d03dffdfd5ca",
-            "timestamp": 1617707198334,
+            "timestamp": "1617707198334",
             "object": "3bb6d11f-1de1-444c-9f30-33a33ee3cdd2",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "System Generated",
+            "comment": ""
         },
         "c4a7e838-d2f5-4a19-8f52-bb496922f672": {
             "id": "c4a7e838-d2f5-4a19-8f52-bb496922f672",
@@ -1947,13 +1991,14 @@
         },
         "e59ab6f1-36a4-472f-838f-b6838c177ef2": {
             "id": "e59ab6f1-36a4-472f-838f-b6838c177ef2",
-            "timestamp": 1617707198335,
+            "timestamp": "1617707198335",
             "object": "ecab4806-d4c6-4787-abc4-15a9fa87a837",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "System Generated",
+            "comment": ""
         },
         "e9681782-045f-4a35-8974-b9bc3baab3df": {
             "id": "e9681782-045f-4a35-8974-b9bc3baab3df",
@@ -2067,13 +2112,14 @@
         },
         "2aea2f5f-cc91-4412-a419-a5a73b3cc6aa": {
             "id": "2aea2f5f-cc91-4412-a419-a5a73b3cc6aa",
-            "timestamp": 1617708276540,
+            "timestamp": "1617708276540",
             "object": "1dfcd5e4-d81d-4734-9c45-ae8137c19b8b",
             "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "System Generated",
+            "comment": ""
         },
         "7294c4cb-da85-4272-86ed-ec859a2a6270": {
             "id": "7294c4cb-da85-4272-86ed-ec859a2a6270",

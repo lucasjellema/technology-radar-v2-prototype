@@ -100,7 +100,7 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
      </td><td><img id="backgroundImage" style="padding:6px" src="${sector.backgroundImage.image}" width="70px"></img></td></tr>`
 
     html += `<tr><td>Scalefactor
-                <input type="text" title="Scalefactor for background image"  value="${undefinedToDefined(sector.backgroundImage?.scaleFactor)}"></input>
+                <input type="text"  id="backgroundImageScaleFactor" title="Scalefactor for background image"  value="${undefinedToDefined(sector.backgroundImage?.scaleFactor)}"></input>
              </td><td></td></tr>`
 
 
@@ -175,6 +175,12 @@ const saveSector = (sectorToEdit, sector, viewpoint) => {
     sector.label = getElementValue("sectorLabel")
     sector.angle = getElementValue("sectorAnglePercentage") / 100
     sector.backgroundImage.image = getElementValue("backgroundImageURL")
+    sector.backgroundImage.scaleFactor = getElementValue("backgroundImageScaleFactor")
+    if (sector.backgroundImage.scaleFactor==null || sector.backgroundImage.scaleFactor.length==0) {
+        delete sector.backgroundImage.scaleFactor
+    }
+
+
     sector.opacity = getElementValue("sectorOpacityInside")
     sector.opacityOutsideRings = getElementValue("sectorOpacityOutside")
 
