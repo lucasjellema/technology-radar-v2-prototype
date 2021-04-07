@@ -106,6 +106,9 @@ const launchBlipEditor = (blip, viewpoint, drawRadarBlips) => {
     let html = ''
     for (let i = 0; i < blipProperties.length; i++) {
         const blipProperty = blipProperties[i]
+        if (blipProperty.property.type == "tags") { // skip tags type properties
+            continue
+        }
         let value = getNestedPropertyValueFromObject(blip.rating, blipProperty.propertyPath)
         if (value == null) value = ""
 
@@ -119,7 +122,8 @@ const launchBlipEditor = (blip, viewpoint, drawRadarBlips) => {
         }
         else if (blipProperty.property.type == "text") {
             inputElement = `<textarea id="${inputElementId}" rows="2" columns="75" value="${value}"></textarea>`
-        }
+        }       
+        
         else {
             inputElement = `<input id="${inputElementId}" type="text" value="${value}"></input>`
         }

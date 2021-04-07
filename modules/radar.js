@@ -1,6 +1,6 @@
 import { cartesianFromPolar, polarFromCartesian } from './drawingUtilities.js'
 import { getState, getConfiguration } from './data.js'
-export { drawRadar, subscribeToRadarEvents,publishRadarEvent }
+export { drawRadar, subscribeToRadarEvents, publishRadarEvent }
 
 const color_white = "#FFF"
 
@@ -15,7 +15,7 @@ const styleText = (textElement, configNode, config, alternativeFontSource = null
     ]
     fontStyleElements.forEach((fontStyleElement) => {
         try {
-            let styleProperty = (configNode?.[fontStyleElement.property]?? configNode?.font?.[fontStyleElement.property] ?? alternativeFontSource?.font?.[fontStyleElement.property]) ?? config.defaultFont[fontStyleElement.property]
+            let styleProperty = (configNode?.[fontStyleElement.property] ?? configNode?.font?.[fontStyleElement.property] ?? alternativeFontSource?.font?.[fontStyleElement.property]) ?? config.defaultFont[fontStyleElement.property]
             textElement
                 .style(fontStyleElement.style
                     , styleProperty
@@ -60,6 +60,10 @@ function drawRadar(viewpoint, elementDecorator = null) {
         initializeShapesLegend(viewpoint)
         initializeColorsLegend(viewpoint)
     }
+
+    if (!viewpoint.blipDisplaySettings.hasOwnProperty("blipScaleFactor") || viewpoint.blipDisplaySettings?.blipScaleFactor == null) {
+        viewpoint.blipDisplaySettings.blipScaleFactor = 1
+    }
 }
 
 function initializeRadar(config) {
@@ -78,9 +82,9 @@ function initializeRadar(config) {
 
 const sectorExpansionFactor = (config) => {
     // factor to multiply each angle with - derived from the sum of angles of all visible sectors , calibrated with the total available angle
-    const totalVisibleSectorsAngleSum = config.sectorConfiguration.sectors.reduce((sum, sector) => 
-    sum + (sector?.visible !=false ? sector.angle:0), 0)
-    return totalVisibleSectorsAngleSum==0 ? 1 : 1/totalVisibleSectorsAngleSum
+    const totalVisibleSectorsAngleSum = config.sectorConfiguration.sectors.reduce((sum, sector) =>
+        sum + (sector?.visible != false ? sector.angle : 0), 0)
+    return totalVisibleSectorsAngleSum == 0 ? 1 : 1 / totalVisibleSectorsAngleSum
 }
 
 const drawSectors = function (radar, config, elementDecorator = null) {
@@ -98,12 +102,12 @@ const drawSectors = function (radar, config, elementDecorator = null) {
         let currentAnglePercentage = 0
         for (let i = 0; i < config.sectorConfiguration.sectors.length; i++) {
             let sector = config.sectorConfiguration.sectors[i]
-            if (sector?.visible ==  false) continue;
+            if (sector?.visible == false) continue;
             currentAnglePercentage = currentAnglePercentage + sectorExpansionFactor(config) * sector.angle
             let currentAngle = 2 * Math.PI * currentAnglePercentage
             const sectorEndpoint = cartesianFromPolar({ r: config.sectorBoundariesExtended ? 2000 : config.maxRingRadius, phi: currentAngle })
 
-            let startAngle = (- 2 * (currentAnglePercentage -  sectorExpansionFactor(config) * sector.angle) + 0.5) * Math.PI
+            let startAngle = (- 2 * (currentAnglePercentage - sectorExpansionFactor(config) * sector.angle) + 0.5) * Math.PI
             let endAngle = (- 2 * currentAnglePercentage + 0.5) * Math.PI
             if (layer == 0) {
                 // using angle and maxring radius, determine x and y for endpoint of line, then draw line
@@ -125,11 +129,11 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                     .style("fill", sector.backgroundColor ?? color_white)
                     .attr("opacity", sector.opacity != null ? sector.opacity : 0.6)
                     // define borders of sectors
-                    .style("stroke", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "red" 
-                                                        : sector?.edge?.color ?? config.sectorConfiguration?.stroke?.strokeColor ?? "#000")
-                    .style("stroke-width", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? 8 
-                                                        : sector?.edge?.width ?? config.sectorConfiguration?.stroke?.strokeWidth ?? 3
-                                                        )
+                    .style("stroke", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "red"
+                        : sector?.edge?.color ?? config.sectorConfiguration?.stroke?.strokeColor ?? "#000")
+                    .style("stroke-width", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? 8
+                        : sector?.edge?.width ?? config.sectorConfiguration?.stroke?.strokeWidth ?? 3
+                    )
                     .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "" : config.sectorConfiguration?.stroke?.strokeArray ?? "#000")
                     .on('click', () => { const sector = i; publishRadarEvent({ type: "sectorClick", sector: i }) })
                     .on('dblclick', () => { const sector = i; publishRadarEvent({ type: "sectorDblClick", sector: i }) })
@@ -143,10 +147,10 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                     .attr("id", `outerring${i}`)
                     .attr("d", outerringArc)
                     .style("fill", sector?.outerringBackgroundColor ?? "white")
-                    
+
                     .on('dblclick', () => { const sector = i; publishRadarEvent({ type: "sectorDblClick", sector: i }) })
 
-                if ( sector?.labelSettings?.showCurved ?? (config?.sectorConfiguration?.showEdgeSectorLabels)) {
+                if (sector?.labelSettings?.showCurved ?? (config?.sectorConfiguration?.showEdgeSectorLabels)) {
                     // print sector label along the edge of the arc
                     displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sectorCanvas, i, sector, config, elementDecorator)
                 }
@@ -163,9 +167,9 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                         .attr("class", "draggable")
 
                 }
-                if ( sector?.labelSettings?.showStraight ?? (config?.sectorConfiguration?.showRegularSectorLabels)) {
+                if (sector?.labelSettings?.showStraight ?? (config?.sectorConfiguration?.showRegularSectorLabels)) {
                     // print horizontal sector label in the sector
-                    const labelCoordinates = cartesianFromPolar({ phi: 2 * (1 - (currentAnglePercentage-0.05)) * Math.PI , r: config.maxRingRadius * 1.2 })
+                    const labelCoordinates = cartesianFromPolar({ phi: 2 * (1 - (currentAnglePercentage - 0.05)) * Math.PI, r: config.maxRingRadius * 1.2 })
                     const sectorLabel = sectorCanvas.append("text")
                         .attr("id", `sectorLabel${i}`)
                         .text(sector.label)
@@ -176,7 +180,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                         .attr("class", getState().editMode ? "draggable" : "")
                         .on('dblclick', () => { console(`sector drilldown`); publishRadarEvent({ type: "sectorDrilldown", sector: i }) }) // facilitate drilldown on sector
                         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, sector.label, `sectorLabel${i}`])
-                        
+
                     styleText(sectorLabel, sector.labelSettings, config, config.sectorConfiguration)
                 }
 
@@ -216,10 +220,10 @@ const drawRings = function (radar, config) {
         const ringArc = d3.arc()
             .outerRadius(config.maxRingRadius * currentRadiusPercentage)
             .innerRadius(config.maxRingRadius * (currentRadiusPercentage - ring.width))
-            .startAngle( ((0.5 - 2* totalSectorPercentage) * Math.PI))
-	        .endAngle( 0.5 * Math.PI)
-    // start angle naar end angle met de klok mee; -0.5 PI is 9 uur, 0.5 PI = 3 uur
-    // TODO  check sum of sector angles
+            .startAngle(((0.5 - 2 * totalSectorPercentage) * Math.PI))
+            .endAngle(0.5 * Math.PI)
+        // start angle naar end angle met de klok mee; -0.5 PI is 9 uur, 0.5 PI = 3 uur
+        // TODO  check sum of sector angles
 
 
         ringCanvas.append("path")
@@ -232,9 +236,9 @@ const drawRings = function (radar, config) {
             .style("stroke-width", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? 6 : config.ringConfiguration?.stroke?.strokeWidth ?? 2)
             .style("stroke-dasharray", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "" : config.ringConfiguration?.stroke?.strokeArray ?? "9 1")
             .on('click', () => { const ring = i; publishRadarEvent({ type: "ringClick", ring: i }) })
-            .on('dblclick', () => { console.log(`dbl click on ring`);const sectorring = i; publishRadarEvent({ type: "ringDblClick", ring: i }) })
+            .on('dblclick', () => { console.log(`dbl click on ring`); const sectorring = i; publishRadarEvent({ type: "ringDblClick", ring: i }) })
 
-        
+
         if (ring.backgroundImage && ring.backgroundImage.image) {
             ringCanvas.append('image')
                 .attr("id", `ringBackgroundImage${i}`)
@@ -433,10 +437,10 @@ const initializeShapesLegend = (viewpoint) => {
         }
         if (shapeToDraw == "rectangleVertical") {
             shape = shapeEntry.append('rect')
-            .attr('width', 10)
-            .attr('height', 38)
-            .attr('x', -5)
-            .attr('y', -15)
+                .attr('width', 10)
+                .attr('height', 38)
+                .attr('x', -5)
+                .attr('y', -15)
 
         }
 
@@ -534,7 +538,7 @@ const radarMenu = (x, y, d, blip, viewpoint) => {
             // create blip
             publishRadarEvent({ type: "blipCreation" })
         })
-        menuOptions.append("text")
+    menuOptions.append("text")
         .text(`Edit Default Settings`)
         .attr("transform", `translate(0, ${25})`)
         .style("fill", "blue")
@@ -547,7 +551,7 @@ const radarMenu = (x, y, d, blip, viewpoint) => {
             // create blip
             publishRadarEvent({ type: "editBlipDefaults" })
         })
-        menuOptions.append("text")
+    menuOptions.append("text")
         .text(`Shuffle Blips`)
         .attr("transform", `translate(0, ${50})`)
         .style("fill", "blue")
@@ -561,7 +565,7 @@ const radarMenu = (x, y, d, blip, viewpoint) => {
             publishRadarEvent({ type: "shuffleBlips" })
         })
 
-        menuOptions.append("text")
+    menuOptions.append("text")
         .text(`Radar Configurator`)
         .attr("transform", `translate(0, ${75})`)
         .style("fill", "blue")
@@ -575,4 +579,4 @@ const radarMenu = (x, y, d, blip, viewpoint) => {
             publishRadarEvent({ type: "mainRadarConfigurator" })
         })
 
-    }
+}

@@ -97,7 +97,8 @@ const drawRadarBlips = function (viewpoint) {
 
     document.getElementById('showLabels').checked = currentViewpoint.blipDisplaySettings.showLabels
 
-    document.getElementById('showShapes').checked = currentViewpoint.blipDisplaySettings.showShapes
+    document.getElementById('showShapes').checked = currentViewpoint.blipDisplaySettings.showShapes    
+    document.getElementById('blipScaleFactorSlider').value = currentViewpoint.blipDisplaySettings.blipScaleFactor ?? 1
 
     initializeTagsFilter()
 
@@ -243,7 +244,7 @@ const drawRadarBlip = (blip, d, viewpoint) => {
     } else {
         xy = sectorRingToPosition(blipSector, blipRing, viewpoint.template)
     }
-    blip.attr("transform", `translate(${xy.x},${xy.y}) scale(${blipSize})`)
+    blip.attr("transform", `translate(${xy.x},${xy.y}) scale(${blipSize * viewpoint.blipDisplaySettings.blipScaleFactor ?? 1})`)
         .attr("id", `blip-${d.id}`)
     if (!viewpoint.blipDisplaySettings.showLabels
         || (!viewpoint.blipDisplaySettings.showImages && d.rating.object.image)
@@ -373,6 +374,12 @@ const drawRadarBlip = (blip, d, viewpoint) => {
             .style("stroke", "red") // TODO: use the blip color
             .style("stroke-width", "0px") // TODO: when a color is derived properly, set a border width
     }
+}
+
+const handleBlipScaleFactorChange = (event) => {
+    currentViewpoint.blipDisplaySettings.blipScaleFactor = event.target.value
+    console.log(`handle scale factor change ${currentViewpoint.blipDisplaySettings.blipScaleFactor}`)
+    drawRadarBlips(currentViewpoint)
 }
 
 const handleShowImagesChange = (event) => {
@@ -727,6 +734,8 @@ const getKeyForValue = function (object, value) {
 }
 
 document.getElementById('showImages').addEventListener("change", handleShowImagesChange);
+document.getElementById('blipScaleFactorSlider').addEventListener("change", handleBlipScaleFactorChange);
+
 document.getElementById('showLabels').addEventListener("change", handleShowLabelsChange);
 document.getElementById('showShapes').addEventListener("change", handleShowShapesChange);
 document.getElementById('addTagToFilter').addEventListener("click", handleTagFilterChange);
