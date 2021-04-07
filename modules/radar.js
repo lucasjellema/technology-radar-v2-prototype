@@ -64,6 +64,10 @@ function drawRadar(viewpoint, elementDecorator = null) {
     if (!viewpoint.blipDisplaySettings.hasOwnProperty("blipScaleFactor") || viewpoint.blipDisplaySettings?.blipScaleFactor == null) {
         viewpoint.blipDisplaySettings.blipScaleFactor = 1
     }
+    if (!viewpoint.blipDisplaySettings.hasOwnProperty("tagFilter") || viewpoint.blipDisplaySettings?.tagFilter == null
+    ||!(Array.isArray(viewpoint.blipDisplaySettings.tagFilter))) {
+        viewpoint.blipDisplaySettings.tagFilter = []
+    }
 }
 
 function initializeRadar(config) {
