@@ -1,7 +1,7 @@
 export { launchSectorEditor }
-import { drawRadar, subscribeToRadarEvents,publishRadarEvent } from './radar.js';
+import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
-import { populateFontsList, createAndPopulateDataListFromBlipProperties,undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { populateFontsList, populateDatalistFromValueSet, getPropertyFromPropertyPath, getDistinctTagValues, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 
 
 
@@ -57,13 +57,13 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
 
 
     html += `<tr><td rowspan="1"><label for="sectorLabel">Label</label></td><td><input id="sectorLabel" type="text" value="${sector.label}"></input></td>
-    <td><label for="curvedSectorLabel" >Curved Label?</label><input id="curvedSectorLabel" type="checkbox" ${sector?.labelSettings?.showCurved?"checked":""}/>
-    <label for="straightSectorLabel" >Straight Label?</label><input id="straightSectorLabel" type="checkbox"  ${sector?.labelSettings?.showStraight?"checked":""}/></td>
+    <td><label for="curvedSectorLabel" >Curved Label?</label><input id="curvedSectorLabel" type="checkbox" ${sector?.labelSettings?.showCurved ? "checked" : ""}/>
+    <label for="straightSectorLabel" >Straight Label?</label><input id="straightSectorLabel" type="checkbox"  ${sector?.labelSettings?.showStraight ? "checked" : ""}/></td>
     </tr>`
-    html += `<tr><td><label for="showSector">Visible?</label></td><td><input id="showSector" type="checkbox" ${sector?.visible == false?"":"checked"}></input></td></tr>`
+    html += `<tr><td><label for="showSector">Visible?</label></td><td><input id="showSector" type="checkbox" ${sector?.visible == false ? "" : "checked"}></input></td></tr>`
     html += `</table><br/><a href="#" id="advancedToggle" >Show Advanced Properties?</a>
     <table id="advancedSectorProperties"><tr>`
-    
+
 
     html += `<tr>
     <td><label for="sectorLabelFont">Font (Family)</label>
@@ -83,17 +83,17 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
     value="${sector?.backgroundColor ?? '#FFFFFF'}"></input>
     
     </td>`
-        + `<td><label for="sectorColorOutside">Color (outside rings)</label></td><td><input id="sectorColorOutside" type="color" value="${sector?.outerringBackgroundColor  ?? "#FFFFFF"}"></input>
+        + `<td><label for="sectorColorOutside">Color (outside rings)</label></td><td><input id="sectorColorOutside" type="color" value="${sector?.outerringBackgroundColor ?? "#FFFFFF"}"></input>
       
         </td></tr>`
-        html += `<tr><td>  <label for="sectorOpacity">Opacity</label></td>
+    html += `<tr><td>  <label for="sectorOpacity">Opacity</label></td>
         <td><label for="sectorOpacityInside">Opacity (inside rings)</label>
         <input id="sectorOpacityInside" type="range" min="0" max="1" step="0.05" value="${sector.opacity}">    </input>
         </td>`
-            + `<td><label for="sectorOpacityOutside">Opacity (outside rings)</label>
+        + `<td><label for="sectorOpacityOutside">Opacity (outside rings)</label>
         <input id="sectorOpacityOutside" type="range" min="0" max="1" step="0.05" value="${sector.opacityOutsideRings}">    </input>
             </td></tr>`
-    
+
     html += `<tr><td rowspan="2"><label for="backgroundImageURL">Background Image</label></td>
     <td>URL<input id="backgroundImageURL" type="text" value="${undefinedToDefined(sector.backgroundImage.image)}" title="URL to image to use as sector illustration"></input>     
      <textarea id="backgroundImagePasteArea" placeholder="Paste Image" title="Paste Image for sector here" rows="1" cols="15" title="Paste image from clip board"></textarea>
@@ -104,7 +104,7 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
              </td><td></td></tr>`
 
 
-     html += `<tr><td><label for="edge">Edge Settings</label></td>
+    html += `<tr><td><label for="edge">Edge Settings</label></td>
      <td><label for="sectorEdgeWidth">Width (<span id="sectorEdgeHeading">${undefinedToDefined(sector.edge?.width)}</span>)</label><input id="sectorEdgeWidth" type="range" min="0" max="15" step="1" value="${sector.edge?.width}"></input>
      </td>
      <td ><label for="sectorEdgeColor">Color</label><input id="sectorEdgeColor" type="color"  value="${sector?.edge?.color ?? "#FFFFFF"}" >
@@ -115,20 +115,24 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
     contentContainer.innerHTML = `${html}</table>
     <br/><datalist id="fontsList"></datalist>
     `
-    showOrHideElement(`backgroundImage`,!(typeof sector.backgroundImage?.image == 'undefined' || sector?.backgroundImage?.image== null || sector?.backgroundImage?.image.length<5))
-    showOrHideElement('advancedSectorProperties',false)
-    
-    document.getElementById('advancedToggle').addEventListener('click',()=> {showOrHideElement('advancedSectorProperties',true)})
+    showOrHideElement(`backgroundImage`, !(typeof sector.backgroundImage?.image == 'undefined' || sector?.backgroundImage?.image == null || sector?.backgroundImage?.image.length < 5))
+    showOrHideElement('advancedSectorProperties', false)
 
-    const allowablesValues = sectorProperty.property?.allowableValues?.map((allowableValue) => allowableValue.value)
-    createAndPopulateDataListFromBlipProperties(`sectorPropertyValueList`, `${sectorVisualMap["property"]}`, viewpoint.blips, allowablesValues)
+    document.getElementById('advancedToggle').addEventListener('click', () => { showOrHideElement('advancedSectorProperties', true) })
 
+    if (getPropertyFromPropertyPath(sectorVisualMap["property"], viewpoint.ratingType, getData().model).type == "tags") {
+        populateDatalistFromValueSet(`sectorPropertyValueList`, getDistinctTagValues(viewpoint))
+
+    } else {
+        const allowablesValues = sectorProperty.property?.allowableValues?.map((allowableValue) => allowableValue.value)
+        createAndPopulateDataListFromBlipProperties(`sectorPropertyValueList`, sectorVisualMap["property"], viewpoint.blips, allowablesValues)
+    }
 
     populateFontsList('fontsList')
     initializeImagePaster((imageURL) => {
         document.getElementById("backgroundImageURL").value = imageURL
         document.getElementById(`backgroundImage`).src = imageURL
-            showOrHideElement(`backgroundImage`,!(typeof imageURL == 'undefined' || imageURL== null || imageURL.length<5))
+        showOrHideElement(`backgroundImage`, !(typeof imageURL == 'undefined' || imageURL == null || imageURL.length < 5))
 
     }, `backgroundImagePasteArea`)
 
@@ -136,6 +140,7 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
     document.getElementById("addMappedPropertyValue").addEventListener("click",
         (event) => {
             const propertyValue = document.getElementById("sectorPropertyValue").value
+            document.getElementById("sectorPropertyValue").value =""
             mappedSectorPropertyValues.push(propertyValue)
             renderMappedPropertiesEditor(document.getElementById("mappedPropertiesContainer"), mappedSectorPropertyValues)
         })
@@ -160,12 +165,12 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
 
         })
 
-        document.getElementById("launchMainEditor").addEventListener("click",() => {
-            hideMe()
+    document.getElementById("launchMainEditor").addEventListener("click", () => {
+        hideMe()
 
         publishRadarEvent({ type: "mainRadarConfigurator" })
     })
-        
+
 }
 const saveSector = (sectorToEdit, sector, viewpoint) => {
     console.log(`save changes to sector`)
@@ -176,7 +181,7 @@ const saveSector = (sectorToEdit, sector, viewpoint) => {
     sector.angle = getElementValue("sectorAnglePercentage") / 100
     sector.backgroundImage.image = getElementValue("backgroundImageURL")
     sector.backgroundImage.scaleFactor = getElementValue("backgroundImageScaleFactor")
-    if (sector.backgroundImage.scaleFactor==null || sector.backgroundImage.scaleFactor.length==0) {
+    if (sector.backgroundImage.scaleFactor == null || sector.backgroundImage.scaleFactor.length == 0) {
         delete sector.backgroundImage.scaleFactor
     }
 
@@ -185,7 +190,7 @@ const saveSector = (sectorToEdit, sector, viewpoint) => {
     sector.opacityOutsideRings = getElementValue("sectorOpacityOutside")
 
 
-    
+
     sector.edge = sector.edge ?? {}
     sector.edge.color = getElementValue("sectorEdgeColor")
     sector.edge.width = getElementValue("sectorEdgeWidth")
@@ -196,8 +201,8 @@ const saveSector = (sectorToEdit, sector, viewpoint) => {
     sector.labelSettings.fontSize = getElementValue("sectorLabelSize")
     sector.labelSettings.showCurved = document.getElementById("curvedSectorLabel").checked // checkbox?
     sector.labelSettings.showStraight = document.getElementById("straightSectorLabel").checked // checkbox?
-    sector.visible = document.getElementById("showSector").checked 
-    
+    sector.visible = document.getElementById("showSector").checked
+
 
     const valueMap = viewpoint.propertyVisualMaps["sector"].valueMap
     // remove all entries from valueMap with value sector (sequence)

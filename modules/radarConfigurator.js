@@ -2,7 +2,7 @@ export { launchMainEditor }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { launchSectorEditor } from './sectorEditing.js'
-import { capitalize, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 
 
 const getPropertyValuesAndCounts = (propertyPath, ratings) => { // filter on rating type!
@@ -18,7 +18,8 @@ const getPropertyValuesAndCounts = (propertyPath, ratings) => { // filter on rat
 
 const launchMainEditor = (viewpoint, drawRadarBlips) => {
     const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
-    const valueOccurrenceMap = getPropertyValuesAndCounts(sectorVisualMap["property"], getData().ratings) // TODO only ratings of proper rating type!!
+    //const valueOccurrenceMap = getPropertyValuesAndCounts(sectorVisualMap["property"], getData().ratings) // TODO only ratings of proper rating type!!
+    const valueOccurrenceMap = getValueOccurrenceMap(sectorVisualMap["property"], viewpoint, true);
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator")
     const contentContainer = document.getElementById("modalMainContentContainer")
@@ -119,7 +120,7 @@ const launchMainEditor = (viewpoint, drawRadarBlips) => {
     document.getElementById(`mappedPropertySelector`).addEventListener("change", (e) => {
         reconfigureSectors(e.target.value, viewpoint)
     })
-    document.getElementById(`refreshSectors`).addEventListener("click", ()=> {refreshSectorConfiguration(viewpoint)})
+    document.getElementById(`refreshSectors`).addEventListener("click", () => { refreshSectorConfiguration(viewpoint) })
 
     document.getElementById(`showAll`).addEventListener("click", (e) => {
         viewpoint.template.sectorConfiguration.sectors.forEach((sector, i) => {
@@ -289,17 +290,27 @@ const hideMe = () => {
     showOrHideElement("modalMain", false); publishRefreshRadar()
 }
 function getValueOccurrenceMap(propertyPath, viewpoint, includeAllowableValues = false) {
-    let ratingType = viewpoint.ratingType;
-    if (typeof (ratingType) == "string") {
-        ratingType = getData().model?.ratingTypes[ratingType];
-    }
-    let ratingTypeProperties = getRatingTypeProperties(ratingType, getData().model);
-    let sectorProperty = ratingTypeProperties.filter((property) => property.propertyPath == propertyPath)[0];
+    const model = getData().model
+    let sectorProperty = getPropertyFromPropertyPath(propertyPath, viewpoint.ratingType, model)
+    let valueOccurrenceMap
+    if (sectorProperty.type == "tags") {
+        valueOccurrenceMap = {}
+        for (let i = 0; i < Object.keys(getData().ratings).length; i++) {
+            const tags = getNestedPropertyValueFromObject(getData().ratings[Object.keys(getData().ratings)[i]], propertyPath)
+            tags.forEach((tag) => {
+                const currentCount = valueOccurrenceMap[tag] ?? 0
+                valueOccurrenceMap[tag] = currentCount + 1
 
-    const valueOccurrenceMap = getPropertyValuesAndCounts(propertyPath, getData().ratings); // TODO only ratings of proper rating type!!
-    if (includeAllowableValues) {
-        for (let i = 0; i < sectorProperty.property?.allowableValues?.length; i++) {
-            valueOccurrenceMap[sectorProperty.property?.allowableValues[i].value] = valueOccurrenceMap[sectorProperty.property?.allowableValues[i].value] ?? 0;
+            })
+        }
+
+    }
+    else {
+        valueOccurrenceMap = getPropertyValuesAndCounts(propertyPath, getData().ratings); // TODO only ratings of proper rating type!!
+        if (includeAllowableValues) {
+            for (let i = 0; i < sectorProperty.property?.allowableValues?.length; i++) {
+                valueOccurrenceMap[sectorProperty.property?.allowableValues[i].value] = valueOccurrenceMap[sectorProperty.property?.allowableValues[i].value] ?? 0;
+            }
         }
     }
     return valueOccurrenceMap;

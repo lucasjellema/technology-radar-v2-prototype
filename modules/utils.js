@@ -1,80 +1,138 @@
-export {isOperationBlackedOut, uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject
-       ,getRatingTypeProperties, getElementValue, showOrHideElement,getDateTimeString
-       ,populateSelect, getAllKeysMappedToValue, createAndPopulateDataListFromBlipProperties
-       ,populateFontsList , setTextOnElement,initializeImagePaster,undefinedToDefined, capitalize}
+export {
+    isOperationBlackedOut, uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject
+    , getRatingTypeProperties, getElementValue, showOrHideElement, getDateTimeString
+    , populateSelect, getAllKeysMappedToValue, createAndPopulateDataListFromBlipProperties
+    , populateFontsList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
+    , getDistinctTagValues, populateDatalistFromValueSet, getPropertyFromPropertyPath
+}
 
 
 // to prevent an operation from being executed too often, we record a timestamp in the near future until when 
 // the operation cannot be executed; the function isOperationBlackedOut checks if the operation is currently blacked out and sets a new blackout end in the map
 const blackoutMap = {} // records end of blackout timestamps under specific keys
 const blackoutPeriodDefault = 100 // milliseconds
-const isOperationBlackedOut = ( blackoutKey, blackoutPeriod = blackoutPeriodDefault) => {
-   let isBlackedout = false
-   const blackoutDeadline = blackoutMap[blackoutKey]
-   const now = new Date().getTime() 
-   if (blackoutDeadline != null)  
-      isBlackedout = now < blackoutDeadline 
-   if (!isBlackedout)  
-      blackoutMap[blackoutKey] = now + blackoutPeriod // set fresh blackout if currently not blacked out 
-   return isBlackedout
+const isOperationBlackedOut = (blackoutKey, blackoutPeriod = blackoutPeriodDefault) => {
+    let isBlackedout = false
+    const blackoutDeadline = blackoutMap[blackoutKey]
+    const now = new Date().getTime()
+    if (blackoutDeadline != null)
+        isBlackedout = now < blackoutDeadline
+    if (!isBlackedout)
+        blackoutMap[blackoutKey] = now + blackoutPeriod // set fresh blackout if currently not blacked out 
+    return isBlackedout
 }
 
 
-const  uuidv4= ()=>  {
-   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-   );
- }
 
- // also see: https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arrays-by-string-path
- const getNestedPropertyValueFromObject = (object, propertyPath) => {
-   const propertyPathSegments = propertyPath.split('.')
-   let value = object
-   for (let i=0;i<propertyPathSegments.length;i++) {
-      if (value==null) break
-       value = value[propertyPathSegments[i]]
-   }
-   if (typeof value == 'undefined') value=null
-   return value
+function addValuesForProperty(propertyPath, blips, distinctValues) {
+    const listOfDistinctPropertyValues = new Set()
+    for (let i = 0; i < blips.length; i++) {
+        const blip = blips[i]
+        listOfDistinctPropertyValues.add(getNestedPropertyValueFromObject(blip.rating, propertyPath)?.toLowerCase().trim())
+    }
+    distinctValues = new Set([...distinctValues, ...listOfDistinctPropertyValues])
+    return distinctValues
 }
 
-const setNestedPropertyValueOnObject = (object, propertyPath , value) => {    
-   const propertyPathSegments = propertyPath.split('.')
-   let elementToSet = object
-   for (let i=0;i<propertyPathSegments.length-1;i++) {
-       elementToSet = elementToSet[propertyPathSegments[i]]
-   }
-   elementToSet[propertyPathSegments[propertyPathSegments.length-1]] = value
-   return object
+const getDistinctTagValues = (viewpoint, includeDiscreteProperties = false) => {
+    const listOfDistinctTagValues = new Set()
+    for (let i = 0; i < viewpoint.blips.length; i++) {
+        const blip = viewpoint.blips[i]
+        if (blip.rating.object?.tags != null && blip.rating.object?.tags.length > 0) {
+            for (let j = 0; j < blip.rating.object?.tags.length; j++) {
+                listOfDistinctTagValues.add(blip.rating.object.tags[j].toLowerCase().trim())
+            }
+        }
+    }
+    let distinctValues = listOfDistinctTagValues
+    // TODO replace hardcoded property paths with meta model driven derivation
+    const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
+    if (includeDiscreteProperties) {
+        for (let i = 0; i < discretePropertyPaths.length; i++) {
+            distinctValues = addValuesForProperty(discretePropertyPaths[i], viewpoint.blips, distinctValues)
+        }
+    }
+    return distinctValues
 }
 
-function getRatingTypeProperties(ratingType, model, includeObjectType=true) { // model = getData().model
-   let theRatingType = ratingType
-   if (typeof (theRatingType) == "string") {
-       theRatingType = model?.ratingTypes[ratingType]
-   }
-   let properties = []
-   if (includeObjectType) {
-       properties = properties.concat(Object.keys(theRatingType.objectType.properties).map(
-        (propertyName) => {
-            return {
-                propertyPath: `object.${propertyName}`,
-                propertyScope: "object",
-                property: theRatingType.objectType.properties[propertyName]
-            };
-        }))
-   }
-   properties = properties.concat(
-           Object.keys(theRatingType.properties).map(
-               (propertyName) => {
-                   return {
-                       propertyPath: `${propertyName}`,
-                       propertyScope: "rating",
-                       property: theRatingType.properties[propertyName]
-                   };
-               })
-       )
-       return properties
+
+const uuidv4 = () => {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+}
+
+// also see: https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arrays-by-string-path
+const getNestedPropertyValueFromObject = (object, propertyPath) => {
+    const propertyPathSegments = propertyPath.split('.')
+    let value = object
+    for (let i = 0; i < propertyPathSegments.length; i++) {
+        if (value == null) break
+        value = value[propertyPathSegments[i]]
+    }
+    if (typeof value == 'undefined') value = null
+    return value
+}
+
+const setNestedPropertyValueOnObject = (object, propertyPath, value) => {
+    const propertyPathSegments = propertyPath.split('.')
+    let elementToSet = object
+    for (let i = 0; i < propertyPathSegments.length - 1; i++) {
+        elementToSet = elementToSet[propertyPathSegments[i]]
+    }
+    if (Array.isArray(elementToSet[propertyPathSegments[propertyPathSegments.length - 1]])) {
+        // if property of type  [] then add value to top of array - 
+        // but only if the array does not already contain the value
+        // note: if property is intended as [] but not initialized as such, this function will not treat it as array
+        if (!elementToSet[propertyPathSegments[propertyPathSegments.length - 1]].includes(value)) {
+            elementToSet[propertyPathSegments[propertyPathSegments.length - 1]].unshift(value)
+        }
+
+    } else {
+        elementToSet[propertyPathSegments[propertyPathSegments.length - 1]] = value
+    }
+    return object
+}
+
+const getPropertyFromPropertyPath = (propertyPath, ratingType, model) => {
+    const ratingTypeProperties = getRatingTypeProperties(ratingType, model, true)
+    let property
+    for (let i = 0; i < ratingTypeProperties.length; i++) {
+        if (ratingTypeProperties[i].propertyPath == propertyPath) {
+            property = ratingTypeProperties[i].property
+            break
+        }
+    }
+    return property
+}
+
+function getRatingTypeProperties(ratingType, model, includeObjectType = true) { // model = getData().model
+    let theRatingType = ratingType
+    if (typeof (theRatingType) == "string") {
+        theRatingType = model?.ratingTypes[ratingType]
+    }
+    let properties = []
+    if (includeObjectType) {
+        properties = properties.concat(Object.keys(theRatingType.objectType.properties).map(
+            (propertyName) => {
+                return {
+                    propertyPath: `object.${propertyName}`,
+                    propertyScope: "object",
+                    property: theRatingType.objectType.properties[propertyName]
+                };
+            }))
+    }
+    properties = properties.concat(
+        Object.keys(theRatingType.properties).map(
+            (propertyName) => {
+                return {
+                    propertyPath: `${propertyName}`,
+                    propertyScope: "rating",
+                    property: theRatingType.properties[propertyName]
+                };
+            })
+    )
+    return properties
 }
 
 const getAllKeysMappedToValue = (object, value) => {
@@ -83,18 +141,18 @@ const getAllKeysMappedToValue = (object, value) => {
 
 const showOrHideElement = (elementId, show) => {
     var x = document.getElementById(elementId);
-      x.style.display = show?"block":"none"
-  }
+    x.style.display = show ? "block" : "none"
+}
 
 const getDateTimeString = (timestampInMS) => {
     const time = new Date(timestampInMS)
-    return `${time.getUTCHours()}:${(time.getMinutes()+"").padStart(2, '0')} ${time.getUTCDay()}-${time.getUTCMonth()}-${time.getUTCFullYear()}` 
-}  
+    return `${time.getUTCHours()}:${(time.getMinutes() + "").padStart(2, '0')} ${time.getUTCDay()}-${time.getUTCMonth()}-${time.getUTCFullYear()}`
+}
 
 const setTextOnElement = (elementId, text) => {
     const element = document.getElementById(elementId)
-    if (element!=null) {
-        element.innerText= text
+    if (element != null) {
+        element.innerText = text
     }
 }
 
@@ -152,8 +210,8 @@ const populateFontsList = (fontsListElementId) => {
     populateDatalistFromValueSet(fontsListElementId, fontsList)
 }
 
-const undefinedToDefined = (value, definedValue="") => {
-    let derivedValue = (typeof value == 'undefined') ? definedValue: value
+const undefinedToDefined = (value, definedValue = "") => {
+    let derivedValue = (typeof value == 'undefined') ? definedValue : value
     return derivedValue
 }
 
@@ -176,7 +234,7 @@ function populateDatalistFromValueSet(listId, listOfDistinctValues) {
 }
 
 
-const createAndPopulateDataListFromBlipProperties = (listId, propertyPath, blips, additionalValues =[]) => {
+const createAndPopulateDataListFromBlipProperties = (listId, propertyPath, blips, additionalValues = []) => {
 
     const listOfDistinctValues = new Set()
     for (let i = 0; i < blips.length; i++) {
@@ -217,4 +275,4 @@ const initializeImagePaster = (handleImagePaste, pasteAreaElementId) => {
 const capitalize = (s) => {
     if (typeof s !== 'string') return ''
     return s.charAt(0).toUpperCase() + s.slice(1)
-  }
+}

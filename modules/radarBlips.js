@@ -1,7 +1,7 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { launchBlipEditor } from './blipEditing.js'
 import { getViewpoint, getData } from './data.js'
-import { getNestedPropertyValueFromObject, uuidv4 } from './utils.js'
+import { getDistinctTagValues, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4 } from './utils.js'
 export { drawRadarBlips }
 
 
@@ -143,14 +143,14 @@ const drawRadarBlips = function (viewpoint) {
 
 const sectorExpansionFactor = () => {
     // factor to multiply each angle with - derived from the sum of angles of all visible sectors , calibrated with the total available angle
-    const totalVisibleSectorsAngleSum = currentViewpoint.template.sectorConfiguration.sectors.reduce((sum, sector) => 
-    sum + (sector?.visible !=false ? sector.angle:0), 0)
-    return totalVisibleSectorsAngleSum==0 ? 1 : 1/totalVisibleSectorsAngleSum
+    const totalVisibleSectorsAngleSum = currentViewpoint.template.sectorConfiguration.sectors.reduce((sum, sector) =>
+        sum + (sector?.visible != false ? sector.angle : 0), 0)
+    return totalVisibleSectorsAngleSum == 0 ? 1 : 1 / totalVisibleSectorsAngleSum
 }
 
 const priorSectorsAnglePercentageSum = (sectorId, config) => config.sectorConfiguration.sectors.filter((sector, index) => index < sectorId)
-    .reduce((sum, sector) => 
-     sum + (sector?.visible !=false ? sector.angle:0), 0) * sectorExpansionFactor()
+    .reduce((sum, sector) =>
+        sum + (sector?.visible != false ? sector.angle : 0), 0) * sectorExpansionFactor()
 
 const priorRingsWidthPercentageSum = (ringId, config) => config.ringConfiguration.rings.filter((ring, index) => index < ringId)
     .reduce((sum, ring) => sum + ring.width, 0)
@@ -175,15 +175,33 @@ const blipInSegment = (cartesian, viewpoint, segment) => {
     const cartesianSegment = segmentFromCartesian(cartesian, viewpoint, sectorExpansionFactor())
     //console.log(`REAL sector ${segment.sector} ring ${segment.ring};XY RING  ${cartesianSegment.ring} sector ${cartesianSegment.sector}`)
     const isBlipInSegment =
-         ( (cartesianSegment.sector??-1) == (segment.sector??-1))
-           && 
-           ( (cartesianSegment.ring ?? -1) == (segment.ring ?? -1))
-           return isBlipInSegment
+        ((cartesianSegment.sector ?? -1) == (segment.sector ?? -1))
+        &&
+        ((cartesianSegment.ring ?? -1) == (segment.ring ?? -1))
+    return isBlipInSegment
+}
+
+const findSectorForRating = (rating, viewpoint) => {
+    const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
+    let sectorProperty = getPropertyFromPropertyPath(propertyMappedToSector, viewpoint.ratingType, getData().model)
+    let sector
+    const propertyValue = getNestedPropertyValueFromObject(rating, propertyMappedToSector)
+    if (sectorProperty.type == "tags") {
+        for (let i = 0; i < propertyValue.length; i++) {
+            sector = viewpoint.propertyVisualMaps.sector.valueMap[propertyValue[i]]
+            if (sector != null) break // stop looking as soon as one of the tags has produced a sector. The order of tags can be important
+        }
+    } else {
+        sector = viewpoint.propertyVisualMaps.sector.valueMap[propertyValue]
+    }
+    // TODO support for a catch all sector and/or a sector -1
+    return sector
 }
 
 const drawRadarBlip = (blip, d, viewpoint) => {
-    const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
-    const blipSector = viewpoint.propertyVisualMaps.sector.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSector)]
+
+    const blipSector = findSectorForRating(d.rating, viewpoint)
+    //   viewpoint.propertyVisualMaps.sector.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSector)]
     if (blipSector == null || viewpoint.template.sectorConfiguration.sectors[blipSector]?.visible == false) {
         // TODO get sector designated as default / other OR do NOT draw blip at all
         return
@@ -218,9 +236,9 @@ const drawRadarBlip = (blip, d, viewpoint) => {
     }
     let xy
 
-    if (d.x != null && d.y != null 
-        && blipInSegment(d, viewpoint, { sector: blipSector, ring: blipRing }) 
-        ) { 
+    if (d.x != null && d.y != null
+        && blipInSegment(d, viewpoint, { sector: blipSector, ring: blipRing })
+    ) {
         xy = { x: d.x, y: d.y }
     } else {
         xy = sectorRingToPosition(blipSector, blipRing, viewpoint.template)
@@ -566,7 +584,7 @@ const menu = (x, y, d, blip, viewpoint) => {
         .attr("transform", "scale(0.7,1)")
 
 
-    const menuItemHeight = 18 
+    const menuItemHeight = 18
     // TODO: does clone blip mean clone rating (but for the same existing object?) it probably does; current implementation is full copy - object and rating
     iconsBox.append("text")
         .text("Clone Blip")
@@ -585,7 +603,7 @@ const menu = (x, y, d, blip, viewpoint) => {
             newBlip.id = uuidv4()
             drawRadarBlips(viewpoint)
         })
-        iconsBox.append("text")
+    iconsBox.append("text")
         .text("Delete Blip")
         .attr("x", 0)
         .style("fill", "#000")
@@ -601,7 +619,7 @@ const menu = (x, y, d, blip, viewpoint) => {
             drawRadarBlips(viewpoint)
         })
 
-        iconsBox.append("text")
+    iconsBox.append("text")
         .text("Show Similar Blips")
         .attr("x", 0)
         .style("fill", "#000")
@@ -614,8 +632,8 @@ const menu = (x, y, d, blip, viewpoint) => {
             const blipIndex = viewpoint.blips.indexOf(d)
             // create tag filters from tags on d
             const tags = d.rating.object.tags
-            if (tags!= null && tags.length != null) {
-                tags.forEach((tag) => viewpoint.blipDisplaySettings.tagFilter.push({type:"plus", tag: tag}))
+            if (tags != null && tags.length != null) {
+                tags.forEach((tag) => viewpoint.blipDisplaySettings.tagFilter.push({ type: "plus", tag: tag }))
             }
             drawRadarBlips(viewpoint)
         })
@@ -625,50 +643,17 @@ const menu = (x, y, d, blip, viewpoint) => {
 }
 
 function populateDatalistWithTags(includeDiscreteProperties = false) {
-
-    const listOfDistinctTagValues = new Set()
-    for (let i = 0; i < getViewpoint().blips.length; i++) {
-        const blip = getViewpoint().blips[i]
-        if (blip.rating.object?.tags != null && blip.rating.object?.tags.length > 0) {
-            for (let j = 0; j < blip.rating.object?.tags.length; j++) {
-                listOfDistinctTagValues.add(blip.rating.object.tags[j].toLowerCase().trim())
-            }
-        }
-    }
-    let distinctValues = listOfDistinctTagValues
-
-    // TODO replace hardcoded property paths with meta model driven derivation
-    const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
-    if (includeDiscreteProperties) {
-        for (let i = 0; i < discretePropertyPaths.length; i++) {
-            distinctValues = addValuesForProperty(discretePropertyPaths[i], getViewpoint().blips, distinctValues)
-        }
-    }
-
+    const distinctValues = getDistinctTagValues(getViewpoint(), includeDiscreteProperties)
     const tagsList = document.getElementById('tagsList')
     //remove current contents
     tagsList.length = 0
     tagsList.innerHTML = null
-
     let option
     for (let tagvalue of distinctValues) {
         option = document.createElement('option')
         option.value = tagvalue
         tagsList.appendChild(option)
     }
-
-
-    function addValuesForProperty(propertyPath, blips, distinctValues) {
-        const listOfDistinctPropertyValues = new Set()
-        for (let i = 0; i < blips.length; i++) {
-            const blip = blips[i]
-            listOfDistinctPropertyValues.add(getNestedPropertyValueFromObject(blip.rating, propertyPath)?.toLowerCase().trim())
-        }
-        distinctValues = new Set([...distinctValues, ...listOfDistinctPropertyValues])
-        return distinctValues
-    }
-
-
 }
 
 function decorateContextMenuEntry(menuEntry, dimension, value, blip, viewpoint, label) { // dimension = shape, size, color
