@@ -248,10 +248,11 @@
                     "rings": [
                         {
                             "label": "Geen Tijd in Stoppen",
-                            "width": 0.10
-                        }, {
+                            "width": 0.1
+                        },
+                        {
                             "label": "Potentie",
-                            "width": 0.10
+                            "width": 0.1
                         },
                         {
                             "label": "Verkennen",
@@ -595,16 +596,15 @@
                     "property": "ambition",
                     "valueMap": {
                         "identified": -1,
-                        "potentie": 0,
-                        "interesting": 0,
-                        "hold": 1,
+                        "potentie": 1,
+                        "interesting": 1,
+                        "hold": 0,
                         "assess": 2,
-                        "adopt": 3,
-                        "trial": 2
+                        "trial": 3,
+                        "adopt": 4,
+                        "production": 4
                     }
                 },
-
-
                 "shape": {
                     "property": "object.offering",
                     "valueMap": {
@@ -631,86 +631,87 @@
                 "applyShapes": false,
                 "applySizes": true,
                 "applyColors": true,
-                "tagFilter": []
+                "tagFilter": [],
+                "blipScaleFactor": 1
             },
             "blips": [
                 {
                     "id": "0",
                     "rating": "9ed7f7cc-bc8d-4585-84d4-8aabcf397eb0",
-                    "x": 472,
-                    "y": -228
+                    "x": 34,
+                    "y": -92
                 },
                 {
                     "id": "1",
                     "rating": "a20f011c-964a-48f7-92e0-f7fc52161c8c",
-                    "x": 574,
-                    "y": -195
+                    "x": 82,
+                    "y": -41
                 },
                 {
                     "id": "2",
                     "rating": "fae47773-b37f-48bc-9fd2-486c495a161c",
-                    "x": -498,
-                    "y": -456
+                    "x": -114,
+                    "y": -103
                 },
                 {
                     "id": "3",
                     "rating": "26e02ede-17ed-40b0-b6d7-0ce86c24a7f4",
-                    "x": 332,
-                    "y": -363
+                    "x": 202,
+                    "y": -382
                 },
                 {
                     "id": "4",
                     "rating": "8c94467b-1a79-4267-a591-1404c9b38776",
-                    "x": 227,
-                    "y": -469
+                    "x": 87,
+                    "y": -374
                 },
                 {
                     "id": "5",
                     "rating": "8299c5c2-d0d0-43f5-ba52-c885943f06e9",
-                    "x": 378,
-                    "y": -402
+                    "x": 94,
+                    "y": -159
                 },
                 {
                     "id": "6",
                     "rating": "dd8836fa-0b8f-40ca-808e-b3f82d1cb80a",
-                    "x": -517,
-                    "y": 100
+                    "x": -251,
+                    "y": 90
                 },
                 {
                     "id": "7",
                     "rating": "6637ea01-d856-4f05-bc6d-cc194347fe3d",
-                    "x": -557,
-                    "y": -22
+                    "x": -187,
+                    "y": 6
                 },
                 {
                     "id": "8",
                     "rating": "2ffcd5de-6ab7-4bd7-b343-fe7ad785f600",
-                    "x": -479,
-                    "y": -192
+                    "x": -268,
+                    "y": -36
                 },
                 {
                     "id": "9",
                     "rating": "f883299d-64fe-4fcf-b564-4e605520f132",
-                    "x": -608,
-                    "y": 125
+                    "x": -426,
+                    "y": 82
                 },
                 {
                     "id": "10",
                     "rating": "05218183-c430-44eb-b9d9-98a7666703ca",
-                    "x": -74,
-                    "y": -480
+                    "x": 208,
+                    "y": -172
                 },
                 {
                     "id": "11",
                     "rating": "6a8f1495-d650-46c3-955b-55a1ca3a9521",
-                    "x": 426,
-                    "y": -272
+                    "x": 317,
+                    "y": -223
                 },
                 {
                     "id": "12",
                     "rating": "5c610f89-b28a-48a2-8b62-3f25e2f4c094",
-                    "x": -488,
-                    "y": -102
+                    "x": -161,
+                    "y": 78
                 },
                 {
                     "id": "13",
@@ -733,38 +734,38 @@
                 {
                     "id": "16",
                     "rating": "4a4b6542-d7d5-4049-b8b0-f22b3b5fc09e",
-                    "x": 26,
-                    "y": 482
+                    "x": 14,
+                    "y": 269
                 },
                 {
                     "id": "17",
                     "rating": "6ae276de-010b-4f4a-8c65-62b3d2d7fe45",
-                    "x": -137,
-                    "y": 543
+                    "x": -47,
+                    "y": 332
                 },
                 {
                     "id": "18",
                     "rating": "f3c3cc99-3b69-426a-86c6-294d840483b7",
-                    "x": -227,
-                    "y": 463
+                    "x": -127,
+                    "y": 363
                 },
                 {
                     "id": "19",
                     "rating": "9bc9976e-4d5b-467c-a076-4202ef593159",
-                    "x": 26,
-                    "y": 539
+                    "x": -182,
+                    "y": 389
                 },
                 {
                     "id": "20",
                     "rating": "cf58cfec-95a8-456c-ba01-ff13e760a6d7",
-                    "x": -259,
-                    "y": 522
+                    "x": -53,
+                    "y": 429
                 },
                 {
                     "id": "21",
                     "rating": "12e9c1f4-9e55-455d-851c-a5841c040464",
-                    "x": 307,
-                    "y": 476
+                    "x": 83,
+                    "y": 258
                 },
                 {
                     "id": "22",
@@ -775,50 +776,50 @@
                 {
                     "id": "23",
                     "rating": "d5a4c463-59e0-4100-b032-a7334750690a",
-                    "x": -75,
-                    "y": 540
+                    "x": 17,
+                    "y": 394
                 },
                 {
                     "id": "24",
                     "rating": "26d414ab-abe4-4125-b02b-1960a62e7ceb",
-                    "x": -214,
-                    "y": 526
+                    "x": -57,
+                    "y": 384
                 },
                 {
                     "id": "25",
                     "rating": "491d2386-c9df-43ef-af7c-768dae8eb690",
-                    "x": 315,
-                    "y": 406
+                    "x": 155,
+                    "y": 298
                 },
                 {
                     "id": "26",
                     "rating": "e5e8c3d8-adc4-4264-a6f2-2f18abbf6357",
-                    "x": 377,
-                    "y": 481
+                    "x": 232,
+                    "y": 365
                 },
                 {
                     "id": "27",
                     "rating": "2bb0851b-85c9-48bd-8e55-c0ff07c1c68e",
-                    "x": 108,
-                    "y": 481
+                    "x": 156,
+                    "y": 225
                 },
                 {
                     "id": "28",
                     "rating": "290feb27-89b7-4d64-9c6b-7ea01fcebf78",
-                    "x": 182,
-                    "y": 490
+                    "x": 138,
+                    "y": 411
                 },
                 {
                     "id": "29",
                     "rating": "9871293d-9c51-4730-a134-d03dffdfd5ca",
-                    "x": -656,
-                    "y": 65
+                    "x": -58,
+                    "y": 3
                 },
                 {
                     "id": "30",
                     "rating": "c4a7e838-d2f5-4a19-8f52-bb496922f672",
-                    "x": -547,
-                    "y": -433
+                    "x": -375,
+                    "y": -104
                 },
                 {
                     "id": "31",
@@ -829,32 +830,32 @@
                 {
                     "id": "32",
                     "rating": "404e8bd3-abde-40a8-af11-b84d65b3faa2",
-                    "x": -637,
-                    "y": -115
+                    "x": -108,
+                    "y": -19
                 },
                 {
                     "id": "33",
                     "rating": "65c118e4-a0db-4314-b737-2ffb5108077c",
-                    "x": -560,
-                    "y": -196
+                    "x": -190,
+                    "y": -65
                 },
                 {
                     "id": "34",
                     "rating": "e59ab6f1-36a4-472f-838f-b6838c177ef2",
-                    "x": -467,
-                    "y": 503
+                    "x": -128,
+                    "y": 147
                 },
                 {
                     "id": "35",
                     "rating": "e9681782-045f-4a35-8974-b9bc3baab3df",
-                    "x": -472,
-                    "y": 448
+                    "x": -188,
+                    "y": 202
                 },
                 {
                     "id": "36",
                     "rating": "c695427e-5b82-411c-9a9e-d3464e497960",
-                    "x": 475,
-                    "y": -330
+                    "x": 117,
+                    "y": -235
                 },
                 {
                     "id": "37",
@@ -865,8 +866,8 @@
                 {
                     "id": "38",
                     "rating": "10757ca4-6d6d-4d09-9e1b-9b5c1eb24e3f",
-                    "x": 385,
-                    "y": -332
+                    "x": 143,
+                    "y": -406
                 },
                 {
                     "id": "39",
@@ -877,32 +878,32 @@
                 {
                     "id": "40",
                     "rating": "e641d973-6a95-4d44-b906-f29fa92b8abd",
-                    "x": 164,
-                    "y": -463
+                    "x": 409,
+                    "y": -143
                 },
                 {
                     "id": "41",
                     "rating": "18f8805b-338b-494a-ac0a-fc1c55d71ab4",
-                    "x": 114,
-                    "y": -474
+                    "x": 152,
+                    "y": 351
                 },
                 {
                     "id": "42",
                     "rating": "35147101-d6b2-41ae-8e70-c0e65b51a650",
-                    "x": 585,
-                    "y": 282
+                    "x": 112,
+                    "y": 76
                 },
                 {
                     "id": "43",
                     "rating": "9695235f-0a9f-44cb-8cd4-990ffc687d38",
-                    "x": 412,
-                    "y": 363
+                    "x": 243,
+                    "y": 110
                 },
                 {
                     "id": "44",
                     "rating": "307e205e-ae84-4d34-82d8-79ab00602d14",
-                    "x": 487,
-                    "y": 302
+                    "x": 170,
+                    "y": 130
                 },
                 {
                     "id": "45",
@@ -913,8 +914,8 @@
                 {
                     "id": "46",
                     "rating": "2aea2f5f-cc91-4412-a419-a5a73b3cc6aa",
-                    "x": -261,
-                    "y": -431
+                    "x": -50,
+                    "y": -63
                 },
                 {
                     "id": "47",
@@ -931,14 +932,14 @@
                 {
                     "id": "49",
                     "rating": "7e75769e-57c4-48a5-ab0d-24066d21d205",
-                    "x": -371,
-                    "y": -475
+                    "x": -200,
+                    "y": -158
                 },
                 {
                     "id": "50",
                     "rating": "3ff22d3a-160e-43e5-820c-40d7e82c38b5",
-                    "x": -167,
-                    "y": -459
+                    "x": -82,
+                    "y": -176
                 },
                 {
                     "id": "51",
@@ -949,14 +950,14 @@
                 {
                     "id": "52",
                     "rating": "eb82f804-19b8-4cc8-ad41-d1cba493284e",
-                    "x": -305,
-                    "y": -463
+                    "x": -314,
+                    "y": -222
                 },
                 {
                     "id": "53",
                     "rating": "d4b6c276-3ddf-4f7e-8382-6be894af38fe",
-                    "x": 617,
-                    "y": 84
+                    "x": 155,
+                    "y": 32
                 },
                 {
                     "id": "54",
@@ -967,8 +968,8 @@
                 {
                     "id": "55",
                     "rating": "bf24eca9-4278-46cf-b765-8a6fce681c59",
-                    "x": 558,
-                    "y": 55
+                    "x": 272,
+                    "y": 42
                 }
             ]
         }
@@ -1437,7 +1438,7 @@
         },
         "25920d17-7ad1-4297-b665-d8061cf650f4": {
             "label": "AWS RDS",
-            "category": "events",
+            "category": "rdbms",
             "offering": "commercial",
             "vendor": "AWS",
             "id": "25920d17-7ad1-4297-b665-d8061cf650f4",
@@ -1530,7 +1531,7 @@
         },
         "2d70bd6b-cdf9-4065-88f6-5b517b25c8b8": {
             "label": "OrientDB",
-            "category": "nosql",
+            "category": "graph",
             "offering": "oss",
             "id": "2d70bd6b-cdf9-4065-88f6-5b517b25c8b8",
             "tags": []
@@ -1656,146 +1657,146 @@
             "id": "9ed7f7cc-bc8d-4585-84d4-8aabcf397eb0",
             "timestamp": "1617704638919",
             "object": "61250995-4bdb-4c15-97e8-3d4ce11bd4b3",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated",
-            "comment": ""
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt"
         },
         "a20f011c-964a-48f7-92e0-f7fc52161c8c": {
             "id": "a20f011c-964a-48f7-92e0-f7fc52161c8c",
             "timestamp": "1617704638919",
             "object": "bd3dd320-1263-4f4e-9fac-57696b362578",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated",
-            "comment": ""
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt"
         },
         "fae47773-b37f-48bc-9fd2-486c495a161c": {
             "id": "fae47773-b37f-48bc-9fd2-486c495a161c",
             "timestamp": 1617704638919,
             "object": "dcfb645f-947f-4036-b5a4-23cf6ca690b6",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime",
+            "ambition": "adopt"
         },
         "26e02ede-17ed-40b0-b6d7-0ce86c24a7f4": {
             "id": "26e02ede-17ed-40b0-b6d7-0ce86c24a7f4",
             "timestamp": 1617704638920,
             "object": "ec2ae004-d384-42d0-b7e6-1fbd43a4c077",
-            "ambition": "identified",
+            "ambition": "hold",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "8c94467b-1a79-4267-a591-1404c9b38776": {
             "id": "8c94467b-1a79-4267-a591-1404c9b38776",
             "timestamp": 1617704638920,
             "object": "d87c5d1d-e10a-42b5-8b20-35565f68afd3",
-            "ambition": "identified",
+            "ambition": "potentie",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "8299c5c2-d0d0-43f5-ba52-c885943f06e9": {
             "id": "8299c5c2-d0d0-43f5-ba52-c885943f06e9",
             "timestamp": 1617704638920,
             "object": "91088f45-d595-443f-8428-62dc7ad5da0c",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime",
+            "ambition": "adopt"
         },
         "dd8836fa-0b8f-40ca-808e-b3f82d1cb80a": {
             "id": "dd8836fa-0b8f-40ca-808e-b3f82d1cb80a",
             "timestamp": 1617704638920,
             "object": "2e6922d6-f9ce-469e-90c7-ebc50484c86a",
-            "ambition": "identified",
+            "ambition": "trial",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "6637ea01-d856-4f05-bc6d-cc194347fe3d": {
             "id": "6637ea01-d856-4f05-bc6d-cc194347fe3d",
             "timestamp": "1617704638920",
             "object": "f7cfdafb-5f19-44a3-b246-f7806f0b3bc6",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated",
-            "comment": ""
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt"
         },
         "2ffcd5de-6ab7-4bd7-b343-fe7ad785f600": {
             "id": "2ffcd5de-6ab7-4bd7-b343-fe7ad785f600",
             "timestamp": "1617704638920",
             "object": "866626a2-291a-4bae-aab5-89da3fefadc3",
-            "ambition": "identified",
+            "ambition": "trial",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated",
+            "author": "Maxime",
             "comment": ""
         },
         "f883299d-64fe-4fcf-b564-4e605520f132": {
             "id": "f883299d-64fe-4fcf-b564-4e605520f132",
             "timestamp": 1617704638920,
             "object": "1024652e-702c-4ab5-9c9a-80772464a877",
-            "ambition": "identified",
+            "ambition": "hold",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "05218183-c430-44eb-b9d9-98a7666703ca": {
             "id": "05218183-c430-44eb-b9d9-98a7666703ca",
             "timestamp": "1617704638920",
             "object": "ff7c6ebd-3a71-4b52-9012-67ba37786a21",
-            "ambition": "identified",
+            "ambition": "trial",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated",
+            "author": "Maxime",
             "comment": ""
         },
         "6a8f1495-d650-46c3-955b-55a1ca3a9521": {
             "id": "6a8f1495-d650-46c3-955b-55a1ca3a9521",
             "timestamp": 1617704638921,
             "object": "f1365afd-89e3-41d6-8cbc-bde43deb1f15",
-            "ambition": "identified",
+            "ambition": "potentie",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "5c610f89-b28a-48a2-8b62-3f25e2f4c094": {
             "id": "5c610f89-b28a-48a2-8b62-3f25e2f4c094",
             "timestamp": 1617704638921,
             "object": "0b55181a-0a49-4b1d-820e-b0aa404d5613",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime",
+            "ambition": "adopt"
         },
         "132cd37b-27fe-4301-b6ee-a26c6a7a514c": {
             "id": "132cd37b-27fe-4301-b6ee-a26c6a7a514c",
             "timestamp": 1617704638921,
             "object": "f1b2f641-6f9c-413c-ae5f-931fd2b10aa3",
-            "ambition": "identified",
+            "ambition": "assess",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "17bf492e-eb9d-41d2-b468-2aad009ff997": {
             "id": "17bf492e-eb9d-41d2-b468-2aad009ff997",
@@ -1805,7 +1806,7 @@
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "219536b8-ba5e-4220-8cbb-0da443bff83d": {
             "id": "219536b8-ba5e-4220-8cbb-0da443bff83d",
@@ -1815,158 +1816,158 @@
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "4a4b6542-d7d5-4049-b8b0-f22b3b5fc09e": {
             "id": "4a4b6542-d7d5-4049-b8b0-f22b3b5fc09e",
             "timestamp": 1617704638921,
             "object": "9380aff9-7d00-406e-86dc-8ccfcad78a43",
-            "ambition": "identified",
+            "ambition": "trial",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "6ae276de-010b-4f4a-8c65-62b3d2d7fe45": {
             "id": "6ae276de-010b-4f4a-8c65-62b3d2d7fe45",
             "timestamp": 1617704638922,
             "object": "5538b6ae-3c7f-41c6-9c4f-0853adc359c9",
-            "ambition": "identified",
+            "ambition": "assess",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "f3c3cc99-3b69-426a-86c6-294d840483b7": {
             "id": "f3c3cc99-3b69-426a-86c6-294d840483b7",
             "timestamp": 1617704638922,
             "object": "0f509c42-26ad-4c46-bc41-09445e3d7bd0",
-            "ambition": "identified",
+            "ambition": "potentie",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "9bc9976e-4d5b-467c-a076-4202ef593159": {
             "id": "9bc9976e-4d5b-467c-a076-4202ef593159",
             "timestamp": 1617704638922,
             "object": "01b5f8a6-248e-4435-86b6-6bd88c3cae5c",
-            "ambition": "identified",
+            "ambition": "hold",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "cf58cfec-95a8-456c-ba01-ff13e760a6d7": {
             "id": "cf58cfec-95a8-456c-ba01-ff13e760a6d7",
             "timestamp": 1617704638922,
             "object": "ab74bc67-cef8-48b4-8a58-dfdb67402b74",
-            "ambition": "identified",
+            "ambition": "hold",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "12e9c1f4-9e55-455d-851c-a5841c040464": {
             "id": "12e9c1f4-9e55-455d-851c-a5841c040464",
             "timestamp": 1617704638923,
             "object": "d3ec43d5-ebb5-4eb8-b1aa-7ad01731f9e1",
-            "ambition": "identified",
+            "ambition": "trial",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "aef5ea07-9d98-4501-a2c0-b1310339cadf": {
             "id": "aef5ea07-9d98-4501-a2c0-b1310339cadf",
             "timestamp": 1617704638923,
             "object": "1f26c870-5919-49a6-80f3-d1c40c243df3",
-            "ambition": "identified",
+            "ambition": "assess",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "d5a4c463-59e0-4100-b032-a7334750690a": {
             "id": "d5a4c463-59e0-4100-b032-a7334750690a",
             "timestamp": 1617704638923,
             "object": "d1c0f7da-1803-4fbe-bac8-0e84c3476de4",
-            "ambition": "identified",
+            "ambition": "potentie",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "26d414ab-abe4-4125-b02b-1960a62e7ceb": {
             "id": "26d414ab-abe4-4125-b02b-1960a62e7ceb",
             "timestamp": 1617704638923,
             "object": "34fa44ec-f939-4bfa-957e-516b372c6144",
-            "ambition": "identified",
+            "ambition": "potentie",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "491d2386-c9df-43ef-af7c-768dae8eb690": {
             "id": "491d2386-c9df-43ef-af7c-768dae8eb690",
             "timestamp": 1617704638924,
             "object": "1c681347-a1cb-4f40-8554-99590e701b7b",
-            "ambition": "identified",
+            "ambition": "assess",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "e5e8c3d8-adc4-4264-a6f2-2f18abbf6357": {
             "id": "e5e8c3d8-adc4-4264-a6f2-2f18abbf6357",
             "timestamp": 1617707198334,
             "object": "fb5c96ec-9c6d-4cf5-9c30-7c9c0607e387",
-            "ambition": "identified",
+            "ambition": "hold",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "2bb0851b-85c9-48bd-8e55-c0ff07c1c68e": {
             "id": "2bb0851b-85c9-48bd-8e55-c0ff07c1c68e",
             "timestamp": 1617707198334,
             "object": "247d5a16-311e-4e1c-8c27-9f613834afc6",
-            "ambition": "identified",
+            "ambition": "trial",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "290feb27-89b7-4d64-9c6b-7ea01fcebf78": {
             "id": "290feb27-89b7-4d64-9c6b-7ea01fcebf78",
             "timestamp": 1617707198334,
             "object": "52c5fb96-1adc-4f84-83ca-6d9fe9aca388",
-            "ambition": "identified",
+            "ambition": "hold",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "9871293d-9c51-4730-a134-d03dffdfd5ca": {
             "id": "9871293d-9c51-4730-a134-d03dffdfd5ca",
             "timestamp": "1617707198334",
             "object": "3bb6d11f-1de1-444c-9f30-33a33ee3cdd2",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated",
-            "comment": ""
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt"
         },
         "c4a7e838-d2f5-4a19-8f52-bb496922f672": {
             "id": "c4a7e838-d2f5-4a19-8f52-bb496922f672",
             "timestamp": 1617707198334,
             "object": "25920d17-7ad1-4297-b665-d8061cf650f4",
-            "ambition": "identified",
+            "ambition": "potentie",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "3dadddde-c4a8-4f2b-b363-183abe358dc5": {
             "id": "3dadddde-c4a8-4f2b-b363-183abe358dc5",
@@ -1976,80 +1977,81 @@
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "404e8bd3-abde-40a8-af11-b84d65b3faa2": {
             "id": "404e8bd3-abde-40a8-af11-b84d65b3faa2",
             "timestamp": "1617707198334",
             "object": "4d5eb6ca-7ad6-476c-8f52-11829a4b1456",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated",
-            "comment": ""
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt"
         },
         "65c118e4-a0db-4314-b737-2ffb5108077c": {
             "id": "65c118e4-a0db-4314-b737-2ffb5108077c",
             "timestamp": "1617707198335",
             "object": "bf6924a1-a2a9-4e46-86e8-2b1780c9c5a7",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated",
-            "comment": ""
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt"
         },
         "e59ab6f1-36a4-472f-838f-b6838c177ef2": {
             "id": "e59ab6f1-36a4-472f-838f-b6838c177ef2",
             "timestamp": "1617707198335",
             "object": "ecab4806-d4c6-4787-abc4-15a9fa87a837",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated",
-            "comment": ""
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt"
         },
         "e9681782-045f-4a35-8974-b9bc3baab3df": {
             "id": "e9681782-045f-4a35-8974-b9bc3baab3df",
             "timestamp": 1617707198335,
             "object": "d8d09c71-9d99-4b37-be60-5569d83c4c79",
-            "ambition": "identified",
+            "ambition": "trial",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "c695427e-5b82-411c-9a9e-d3464e497960": {
             "id": "c695427e-5b82-411c-9a9e-d3464e497960",
             "timestamp": 1617707198335,
             "object": "a0b4ea28-3935-4304-b5c0-70b650f66723",
-            "ambition": "identified",
+            "ambition": "trial",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "0868415b-17f5-40c7-bb08-daca5b5f2376": {
             "id": "0868415b-17f5-40c7-bb08-daca5b5f2376",
             "timestamp": 1617707198335,
             "object": "55c416e7-77be-4108-bfbf-bb8e6d2ccf18",
-            "ambition": "identified",
+            "ambition": "assess",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "10757ca4-6d6d-4d09-9e1b-9b5c1eb24e3f": {
             "id": "10757ca4-6d6d-4d09-9e1b-9b5c1eb24e3f",
-            "timestamp": 1617707198335,
+            "timestamp": "1617707198335",
             "object": "f0e25026-aac3-4eb9-b7ac-8947528df0be",
-            "ambition": "identified",
+            "ambition": "hold",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime",
+            "comment": "mainly C# usage"
         },
         "1c8d9aee-0a49-4e10-9368-93e379905b0d": {
             "id": "1c8d9aee-0a49-4e10-9368-93e379905b0d",
@@ -2059,148 +2061,149 @@
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "e641d973-6a95-4d44-b906-f29fa92b8abd": {
             "id": "e641d973-6a95-4d44-b906-f29fa92b8abd",
             "timestamp": 1617707198335,
             "object": "6e3a3f56-61d7-43ff-95be-e0ae43f86946",
-            "ambition": "identified",
+            "ambition": "hold",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "18f8805b-338b-494a-ac0a-fc1c55d71ab4": {
             "id": "18f8805b-338b-494a-ac0a-fc1c55d71ab4",
-            "timestamp": 1617707198336,
+            "timestamp": "1617707198336",
             "object": "2d70bd6b-cdf9-4065-88f6-5b517b25c8b8",
-            "ambition": "identified",
+            "ambition": "potentie",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime",
+            "comment": ""
         },
         "35147101-d6b2-41ae-8e70-c0e65b51a650": {
             "id": "35147101-d6b2-41ae-8e70-c0e65b51a650",
             "timestamp": 1617707198336,
             "object": "07838412-ada3-4794-8991-f67b7bb7b070",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime",
+            "ambition": "adopt"
         },
         "9695235f-0a9f-44cb-8cd4-990ffc687d38": {
             "id": "9695235f-0a9f-44cb-8cd4-990ffc687d38",
             "timestamp": 1617707198336,
             "object": "b8806e3b-dd01-48e0-b773-f9b4a4d6f0dd",
-            "ambition": "identified",
+            "ambition": "trial",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "307e205e-ae84-4d34-82d8-79ab00602d14": {
             "id": "307e205e-ae84-4d34-82d8-79ab00602d14",
             "timestamp": 1617707198336,
             "object": "adc3747e-7788-47fb-ad1c-152c0a0f83c9",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime",
+            "ambition": "adopt"
         },
         "e18c1f6c-ab29-4bd5-891d-181ee754cf6c": {
             "id": "e18c1f6c-ab29-4bd5-891d-181ee754cf6c",
             "timestamp": 1617707198336,
             "object": "dd73abc9-aa6c-41af-b994-95de38c50021",
-            "ambition": "identified",
+            "ambition": "assess",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "2aea2f5f-cc91-4412-a419-a5a73b3cc6aa": {
             "id": "2aea2f5f-cc91-4412-a419-a5a73b3cc6aa",
             "timestamp": "1617708276540",
             "object": "1dfcd5e4-d81d-4734-9c45-ae8137c19b8b",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated",
-            "comment": ""
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt"
         },
         "7294c4cb-da85-4272-86ed-ec859a2a6270": {
             "id": "7294c4cb-da85-4272-86ed-ec859a2a6270",
             "timestamp": 1617708276542,
             "object": "956eb3a0-7406-4f1c-acb9-1cec42ff3121",
-            "ambition": "identified",
+            "ambition": "assess",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "3a264eca-0e8e-42f1-87e5-5133e7eef148": {
             "id": "3a264eca-0e8e-42f1-87e5-5133e7eef148",
             "timestamp": 1617708276543,
             "object": "22fec7d4-2b7a-4cae-bd51-f14a28e06606",
-            "ambition": "identified",
+            "ambition": "assess",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "7e75769e-57c4-48a5-ab0d-24066d21d205": {
             "id": "7e75769e-57c4-48a5-ab0d-24066d21d205",
             "timestamp": 1617708276543,
             "object": "5e1e2516-fb0a-48cb-9e0d-3fe7bb6cf91d",
-            "ambition": "identified",
+            "ambition": "trial",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "3ff22d3a-160e-43e5-820c-40d7e82c38b5": {
             "id": "3ff22d3a-160e-43e5-820c-40d7e82c38b5",
             "timestamp": 1617708276543,
             "object": "9485df92-a56f-486d-94be-eb19fc07daf1",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime",
+            "ambition": "adopt"
         },
         "d2f27561-449a-47b6-96bf-3c176521de14": {
             "id": "d2f27561-449a-47b6-96bf-3c176521de14",
             "timestamp": 1617708276543,
             "object": "020128a9-5397-4bd4-b5d4-aeaabe09e199",
-            "ambition": "identified",
+            "ambition": "assess",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "eb82f804-19b8-4cc8-ad41-d1cba493284e": {
             "id": "eb82f804-19b8-4cc8-ad41-d1cba493284e",
             "timestamp": 1617708276544,
             "object": "8baf555d-3d5d-406d-aeaa-b3a8d8780ce0",
-            "ambition": "identified",
+            "ambition": "potentie",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "d4b6c276-3ddf-4f7e-8382-6be894af38fe": {
             "id": "d4b6c276-3ddf-4f7e-8382-6be894af38fe",
             "timestamp": 1617708276544,
             "object": "b7e5841b-c6b7-48f1-8252-ced1f189838e",
-            "ambition": "identified",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime",
+            "ambition": "adopt"
         },
         "5bcb0b3b-cd40-42b4-b502-d12e64fa3f83": {
             "id": "5bcb0b3b-cd40-42b4-b502-d12e64fa3f83",
@@ -2210,17 +2213,17 @@
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         },
         "bf24eca9-4278-46cf-b765-8a6fce681c59": {
             "id": "bf24eca9-4278-46cf-b765-8a6fce681c59",
             "timestamp": 1617708276544,
             "object": "83a9f0d6-848e-43ff-912b-7d894572fd71",
-            "ambition": "identified",
+            "ambition": "trial",
             "experience": "medium",
             "magnitude": "medium",
             "scope": "AMIS",
-            "author": "System Generated"
+            "author": "Maxime"
         }
     }
 }
