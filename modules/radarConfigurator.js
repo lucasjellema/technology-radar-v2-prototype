@@ -1,318 +1,132 @@
 export { launchMainEditor }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
-import { launchSectorEditor } from './sectorEditing.js'
 import { capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { launchSectorConfigurator } from './sectorConfigurator.js'
 
 
-const getPropertyValuesAndCounts = (propertyPath, ratings) => { // filter on rating type!
-    const valueOccurenceMap = {}
-    for (let i = 0; i < Object.keys(ratings).length; i++) {
-        const value = getNestedPropertyValueFromObject(ratings[Object.keys(ratings)[i]], propertyPath)
-        const currentCount = valueOccurenceMap[value] ?? 0
-        valueOccurenceMap[value] = currentCount + 1
+
+
+const launchMainEditor = (viewpoint, drawRadarBlips, tab) => {
+    renderTabs(tab, viewpoint, drawRadarBlips)
+    if (tab == "sector") {
+        launchSectorConfigurator(viewpoint, drawRadarBlips)
     }
-    return valueOccurenceMap
+    // renders tabs
+    else {
+        showOrHideElement("modalMain", true)
+        setTextOnElement("modalMainTitle", "Radar Configurator - Main")
+        
+        const contentContainer = document.getElementById("modalMainContentContainer")
+        let html =`
+        <label for="radarTitle">Radar Title</label>
+        <input id="radarTitle" type="text" value="${viewpoint.template.title.text}" size="60"></input>
+        <br/><br/><br/><br/>
+        `
+        //html += `</table><br/>`
+        html += `<a href="#" id="advancedToggle" >Show Advanced Properties?</a>
+        <table id="advancedradarProperties"><tr>`
+    
+    
+        html += `<tr>
+        <td><label for="radarLabelFont">Font (Family)</label>
+        <input id="radarLabelFont" list="fontsList"   value="${undefinedToDefined(viewpoint.template?.title?.fontFamily)}"></input>
+        <label for="radarLabelSize">Font Size</label>
+        <input id="radarLabelSize" type="text" value="${undefinedToDefined(viewpoint.template.title?.fontSize)}"></input
+        </td>
+        <td ><label for="radarLabelColor">Color</label><input id="radarLabelColor" type="color"  value="${viewpoint.template.title?.color}" ></input>
+        </td>
+        </td></tr>`
+    
+        // html += `<tr><td><label for="radarAngle">%</label></td><td><input id="radarAnglePercentage" value="${Math.round(radar.angle * 100)}"></input>
+        // <input id="radarAngle" type="range" min="5" max="95" value="${Math.round(radar.angle * 100)}"></input></td>
+        // </tr>`
+        // html += `<tr><td><label for="radarColor">Color</label></td>
+        // <td><label for="radarColorInside">Color (inside rings)</label><input id="radarColorInside" type="color" 
+        // value="${radar?.backgroundColor ?? '#FFFFFF'}"></input>
+        
+        // </td>`
+        //     + `<td><label for="radarColorOutside">Color (outside rings)</label></td><td><input id="radarColorOutside" type="color" value="${radar?.outerringBackgroundColor ?? "#FFFFFF"}"></input>
+          
+        //     </td></tr>`
+        // html += `<tr><td>  <label for="radarOpacity">Opacity</label></td>
+        //     <td><label for="radarOpacityInside">Opacity (inside rings)</label>
+        //     <input id="radarOpacityInside" type="range" min="0" max="1" step="0.05" value="${radar.opacity}">    </input>
+        //     </td>`
+        //     + `<td><label for="radarOpacityOutside">Opacity (outside rings)</label>
+        //     <input id="radarOpacityOutside" type="range" min="0" max="1" step="0.05" value="${radar.opacityOutsideRings}">    </input>
+        //         </td></tr>`
+    
+        // html += `<tr><td rowspan="2"><label for="backgroundImageURL">Background Image</label></td>
+        // <td>URL<input id="backgroundImageURL" type="text" value="${undefinedToDefined(radar.backgroundImage.image)}" title="URL to image to use as radar illustration"></input>     
+        //  <textarea id="backgroundImagePasteArea" placeholder="Paste Image" title="Paste Image for radar here" rows="1" cols="15" title="Paste image from clip board"></textarea>
+        //  </td><td><img id="backgroundImage" style="padding:6px" src="${radar.backgroundImage.image}" width="70px"></img></td></tr>`
+    
+        // html += `<tr><td>Scalefactor
+        //             <input type="text"  id="backgroundImageScaleFactor" title="Scalefactor for background image"  value="${undefinedToDefined(radar.backgroundImage?.scaleFactor)}"></input>
+        //          </td><td></td></tr>`
+    
+    
+        // html += `<tr><td><label for="edge">Edge Settings</label></td>
+        //  <td><label for="radarEdgeWidth">Width (<span id="radarEdgeHeading">${undefinedToDefined(radar.edge?.width)}</span>)</label><input id="radarEdgeWidth" type="range" min="0" max="15" step="1" value="${radar.edge?.width}"></input>
+        //  </td>
+        //  <td ><label for="radarEdgeColor">Color</label><input id="radarEdgeColor" type="color"  value="${radar?.edge?.color ?? "#FFFFFF"}" >
+        //  </td>
+        //  </td></tr>`
+    
+    
+        html = `${html}</table>
+        <br/><datalist id="fontsList"></datalist>
+        `
+        contentContainer.innerHTML=html
+
+      //  showOrHideElement(`backgroundImage`, !(typeof radar.backgroundImage?.image == 'undefined' || radar?.backgroundImage?.image == null || radar?.backgroundImage?.image.length < 5))
+        showOrHideElement('advancedradarProperties', false)
+    
+        document.getElementById('advancedToggle').addEventListener('click', () => { showOrHideElement('advancedradarProperties', true) })
+        populateFontsList('fontsList')    
+
+
+        const buttonBar = document.getElementById("modalMainButtonBar")
+    buttonBar.innerHTML = `<input id="saveRadarEdits" type="button" value="Save Changes"></input>`
+    document.getElementById("saveRadarEdits").addEventListener("click",
+        (event) => {
+            console.log(`save radar edits  `)
+            saveRadarSettings(viewpoint)
+            showOrHideElement('modalEditor', false)
+            publishRefreshRadar()
+            if (drawRadarBlips != null) drawRadarBlips(viewpoint)
+
+        })
+    }
 }
 
-
-const launchMainEditor = (viewpoint, drawRadarBlips) => {
-    const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
-    //const valueOccurrenceMap = getPropertyValuesAndCounts(sectorVisualMap["property"], getData().ratings) // TODO only ratings of proper rating type!!
-    const valueOccurrenceMap = getValueOccurrenceMap(sectorVisualMap["property"], viewpoint, true);
-    showOrHideElement("modalMain", true)
-    setTextOnElement("modalMainTitle", "Radar Configurator")
-    const contentContainer = document.getElementById("modalMainContentContainer")
-
-    let ratingType = viewpoint.ratingType
-    if (typeof (ratingType) == "string") {
-        ratingType = getData().model?.ratingTypes[ratingType]
-    }
-    let ratingTypeProperties = getRatingTypeProperties(ratingType, getData().model)
-
-    // populate list with all discrete properties plus properties of type tag
-    const candidateMappedProperties = ratingTypeProperties
-        .filter((property) => property.property?.discrete || property.property?.allowableValues?.length > 0 || property.property.type == "tags")
-        .map((property) => { return { label: property.propertyPath, value: property.propertyPath } })
-
-    let html = ``
-
-    html += `<label for="mappedPropertySelector">Rating property to map to sector</label> 
-    <select id="mappedPropertySelector" ></select><span id="refreshSectors" style="padding:20px">Refresh Sector Mapping</span>  <br/>`
-    html += `<input type="button" id="addSectorButton"  value="Add Sector"  style="padding:6px;margin:10px"/>`
-
-    html += `<table id="sectors">`
-    html += `<tr><th>Sector Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th><th>Delete?</th><th>v ^</th></tr>`
-    for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
-        const sector = viewpoint.template.sectorConfiguration.sectors[i]
-        // find all values mapped to the sectorToEdit
-        const mappedSectorPropertyValues = getAllKeysMappedToValue(sectorVisualMap.valueMap, i)
-        // find out how many occurrences of this value exist? 
-
-
-
-        html += `<tr>
-        <td><span id="editSector${i}" class="clickableProperty">${sector.label}</a> </td>
-        <td>${Math.round(100 * sector.angle)} </td>
-        <td>`
-        let valueCount = 0
-        for (let j = 0; j < mappedSectorPropertyValues.length; j++) {
-            html += `
-        <span id="tag0" class="extra tagfilter dropbtn">${mappedSectorPropertyValues[j]} (${undefinedToDefined(valueOccurrenceMap[mappedSectorPropertyValues[j]], 0)})</span>`
-            valueCount += undefinedToDefined(valueOccurrenceMap[mappedSectorPropertyValues[j]], 0)
-        }
-        html += `</td>
-        <td>${valueCount} </td>
-        <td><input id="showSector${i}" type="checkbox" ${sector?.visible == false ? "" : "checked"}></input></td> 
-        <td><span id="deleteSector${i}" class="clickableProperty">Delete</span></td> 
-        <td><span id="downSector${i}" class="clickableProperty">${i < viewpoint.template.sectorConfiguration.sectors.length - 1 ? "v" : ""}</span>&nbsp;
-        <span id="upSector${i}" class="clickableProperty">${i > 0 ? "^" : ""}</span></td> 
-        </tr> `
-
-    }
-    html += `</table>`
-    html += `<input type="button" id="distributeEvenly"  value="Distribute Evenly"  style="padding:10px;margin:10px"/>`
-    html += `<input type="button" id="distributeValueOccurrenceBased"  value="Distribute According to Value Occurrences"  style="padding:10px;margin:10px"/>`
-
-    contentContainer.innerHTML = `${html}</table>`
+const renderTabs = (tab, viewpoint, drawRadarBlips) => {
+    const tabContainer = document.getElementById('modalMainTabs')
+    const html = `            
+            <span id="radarConfigurationTab" class="extra tagfilter ">Radar</span>
+            <span id="datamodelConfigurationTab" class="extra tagfilter">Data Model</span>
+            <span id="sectorConfigurationTab" class="extra  tagfilter">Sector</span>
+            <span id="ringConfigurationTab" class="extra tagfilter">Rings</span>
+            <span id="shapeConfigurationTab" class="extra tagfilter">Shapes</span>
+            <span id="colorConfigurationTab" class="extra tagfilter">Colors</span>
+            <span id="sizeConfigurationTab" class="extra tagfilter">Sizes</span>
+`
+    tabContainer.innerHTML = html
+    const selectedTab = document.getElementById(`${tab ?? "radar"}ConfigurationTab`)
+    if (selectedTab != null) selectedTab.classList.add("warning")
 
     // add event listeners
-    for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
-        document.getElementById(`showSector${i}`).addEventListener("change", (e) => {
-            viewpoint.template.sectorConfiguration.sectors[i].visible = e.target.checked
-            publishRadarEvent({ type: "shuffleBlips" })
-            publishRefreshRadar()
-        })
-
-        document.getElementById(`editSector${i}`).addEventListener("click", () => {
-            launchSectorEditor(i, viewpoint, drawRadarBlips)
-            // hideMe() // show the main editor?
-        })
-        document.getElementById(`downSector${i}`).addEventListener("click", () => {
-            backSector(i, viewpoint)
-        })
-        document.getElementById(`upSector${i}`).addEventListener("click", () => {
-            upSector(i, viewpoint)
-        })
-        document.getElementById(`deleteSector${i}`).addEventListener("click", () => {
-            viewpoint.template.sectorConfiguration.sectors.splice(i, 1)
-            // remove from propertyVisualMap all value mappings to this sector and decrease the sector reference for any entry  higher than i
-            const valueMap = sectorVisualMap.valueMap
-            for (let j = 0; j < Object.keys(valueMap).length; j++) {
-                console.log(`evaluate mapping for ${Object.keys(valueMap)[j]}; sector = ${valueMap[Object.keys(valueMap)[j]]}`)
-                if (valueMap[Object.keys(valueMap)[j]] == i) {
-                    console.log(`delete mapping for ${Object.keys(valueMap)[j]}`)
-                    delete valueMap[Object.keys(valueMap)[j]];
-                }
-
-                if (valueMap[Object.keys(valueMap)[j]] > i) {
-                    valueMap[Object.keys(valueMap)[j]] = valueMap[Object.keys(valueMap)[j]] - 1;
-                    console.log(`reassign mapping for ${Object.keys(valueMap)[j]}`)
-                }
-            }
-            launchMainEditor(viewpoint)
-            publishRadarEvent({ type: "shuffleBlips" })
-            publishRefreshRadar()
-
-        })
-    }
-    populateSelect("mappedPropertySelector", candidateMappedProperties, sectorVisualMap["property"])   // data is array objects with two properties : label and value
-    document.getElementById(`mappedPropertySelector`).addEventListener("change", (e) => {
-        reconfigureSectors(e.target.value, viewpoint)
-    })
-    document.getElementById(`refreshSectors`).addEventListener("click", () => { refreshSectorConfiguration(viewpoint) })
-
-    document.getElementById(`showAll`).addEventListener("click", (e) => {
-        viewpoint.template.sectorConfiguration.sectors.forEach((sector, i) => {
-            sector.visible = true;
-            document.getElementById(`showSector${i}`).checked = true
-        })
-
-        publishRadarEvent({ type: "shuffleBlips" })
-        publishRefreshRadar()
-
-    })
-    document.getElementById(`distributeEvenly`).addEventListener("click", (e) => { distributeEvenly(viewpoint) })
-    document.getElementById(`distributeValueOccurrenceBased`).addEventListener("click", (e) => { distributeValueOccurrenceBased(viewpoint) })
-    document.getElementById(`addSectorButton`).addEventListener("click", (e) => {
-        const newSector = {
-            label: "NEW SECTOR",
-            angle: 0.05,
-            labelSettings: { showCurved: true, showStraight: false, color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
-            backgroundImage: {},
-            backgroundColor: "#FFFFFF",
-            outerringBackgroundColor: "#FFFFFF"
-        }
-        viewpoint.template.sectorConfiguration.sectors.push(newSector)
-        launchMainEditor(viewpoint)
-
-        launchSectorEditor(viewpoint.template.sectorConfiguration.sectors.length - 1, viewpoint, drawRadarBlips)
-
-    })
-
-
-
+    document.getElementById(`sectorConfigurationTab`).addEventListener("click"
+        , () => { launchSectorConfigurator(viewpoint, drawRadarBlips) })
+    document.getElementById(`radarConfigurationTab`).addEventListener("click"
+        , () => { launchMainEditor(viewpoint, drawRadarBlips, "radar") })
 
 }
 
-const backSector = (sectorToMoveBack, viewpoint) => {
-    const sectorToMove = viewpoint.template.sectorConfiguration.sectors[sectorToMoveBack]
-    viewpoint.template.sectorConfiguration.sectors[sectorToMoveBack] = viewpoint.template.sectorConfiguration.sectors[sectorToMoveBack + 1]
-    viewpoint.template.sectorConfiguration.sectors[sectorToMoveBack + 1] = sectorToMove
-    const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
-    // update in propertyVisualMap all value mappings to either of these sectors
-    const valueMap = sectorVisualMap.valueMap
-    for (let j = 0; j < Object.keys(valueMap).length; j++) {
-        if (valueMap[Object.keys(valueMap)[j]] == sectorToMoveBack) {
-            valueMap[Object.keys(valueMap)[j]] = sectorToMoveBack + 1
-        } else if (valueMap[Object.keys(valueMap)[j]] == sectorToMoveBack + 1) {
-            valueMap[Object.keys(valueMap)[j]] = sectorToMoveBack
-        }
-    }
-    launchMainEditor(viewpoint)
-    publishRadarEvent({ type: "shuffleBlips" })
-    publishRefreshRadar()
+const saveRadarSettings = (viewpoint) => {
+    viewpoint.template.title.text = getElementValue("radarTitle")
+    viewpoint.template.title.fontFamily = getElementValue("radarLabelFont")
+    viewpoint.template.title.fontSize = getElementValue("radarLabelSize")
+    viewpoint.template.title.color = getElementValue("radarLabelColor")
 }
-
-const upSector = (sectorToMoveUp, viewpoint) => {
-    const sectorToMove = viewpoint.template.sectorConfiguration.sectors[sectorToMoveUp]
-    viewpoint.template.sectorConfiguration.sectors[sectorToMoveUp] = viewpoint.template.sectorConfiguration.sectors[sectorToMoveUp - 1]
-    viewpoint.template.sectorConfiguration.sectors[sectorToMoveUp + -1] = sectorToMove
-    const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
-    // update in propertyVisualMap all value mappings to either of these sectors
-    const valueMap = sectorVisualMap.valueMap
-    for (let j = 0; j < Object.keys(valueMap).length; j++) {
-        if (valueMap[Object.keys(valueMap)[j]] == sectorToMoveUp) {
-            valueMap[Object.keys(valueMap)[j]] = sectorToMoveUp - 1
-        } else if (valueMap[Object.keys(valueMap)[j]] == sectorToMoveUp - 1) {
-            valueMap[Object.keys(valueMap)[j]] = sectorToMoveUp
-        }
-    }
-    launchMainEditor(viewpoint)
-    publishRadarEvent({ type: "shuffleBlips" })
-    publishRefreshRadar()
-}
-
-const distributeEvenly = (viewpoint) => {
-    for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
-        viewpoint.template.sectorConfiguration.sectors[i].angle = 1 / viewpoint.template.sectorConfiguration.sectors.length
-    }
-    launchMainEditor(viewpoint)
-    publishRadarEvent({ type: "shuffleBlips" })
-    publishRefreshRadar()
-}
-
-const distributeValueOccurrenceBased = (viewpoint) => {
-    const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
-    const propertyPath = viewpoint.propertyVisualMaps["sector"].property
-    sectorVisualMap["property"] = propertyPath
-    const valueOccurrenceMap = getValueOccurrenceMap(propertyPath, viewpoint, true);
-
-    const valueCountPerSector = []
-    let total = 0
-
-    for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
-        const sector = viewpoint.template.sectorConfiguration.sectors[i]
-        const mappedSectorPropertyValues = getAllKeysMappedToValue(sectorVisualMap.valueMap, i)
-        // find out how many occurrences of this value exist? 
-        let valueCount = 0
-        for (let j = 0; j < mappedSectorPropertyValues.length; j++) {
-            valueCount += undefinedToDefined(valueOccurrenceMap[mappedSectorPropertyValues[j]], 0)
-        }
-        valueCount = Math.max(valueCount, 3) // 3 is arbitrary minimum to prevent too small sectors
-        valueCountPerSector.push(valueCount)
-        total += valueCount
-    }
-    console.log(`value count per sector ${JSON.stringify(valueCountPerSector)}; total ${total}; minimum number ${0.03 * total}`)
-    for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
-        viewpoint.template.sectorConfiguration.sectors[i].angle = valueCountPerSector[i] / total
-    }
-
-    launchMainEditor(viewpoint)
-    publishRadarEvent({ type: "shuffleBlips" })
-    publishRefreshRadar()
-}
-
-const refreshSectorConfiguration = (viewpoint) => {
-    reconfigureSectors(viewpoint.propertyVisualMaps["sector"]["property"], viewpoint)
-}
-
-const reconfigureSectors = (propertyPath, viewpoint) => {
-    const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
-    sectorVisualMap["property"] = propertyPath
-
-    const valueOccurrenceMap = getValueOccurrenceMap(viewpoint.propertyVisualMaps["sector"].property, viewpoint, true);
-    // TODO cater for tags in getPropertyValuesAndCounts
-
-    // remove entries from valueMap
-    sectorVisualMap.valueMap = {}
-    viewpoint.template.sectorConfiguration.sectors = []
-    // create new entries for values in valueOccurrenceMap
-    for (let i = 0; i < Object.keys(valueOccurrenceMap).length; i++) {
-        const allowableLabel = getLabelForAllowableValue(Object.keys(valueOccurrenceMap)[i], viewpoint.propertyVisualMaps["sector"].property, viewpoint)
-        const newSector = {
-            label: allowableLabel ?? capitalize(Object.keys(valueOccurrenceMap)[i]),
-            angle: 1 / Object.keys(valueOccurrenceMap).length,
-            labelSettings: { showCurved: true, showStraight: false, color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
-            edge: { color: "#000000", width: 1 },
-            backgroundImage: {},
-            backgroundColor: "#FFFFFF",
-            outerringBackgroundColor: "#FFFFFF"
-        }
-
-        viewpoint.template.sectorConfiguration.sectors.push(newSector)
-
-        sectorVisualMap.valueMap[Object.keys(valueOccurrenceMap)[i]] = i // map value to numerically corresponding sector
-    }
-
-
-    launchMainEditor(viewpoint)
-    publishRadarEvent({ type: "shuffleBlips" })
-    publishRefreshRadar()
-
-}
-
-const getLabelForAllowableValue = (value, propertyPath, viewpoint) => {
-    let ratingType = viewpoint.ratingType;
-    if (typeof (ratingType) == "string") {
-        ratingType = getData().model?.ratingTypes[ratingType];
-    }
-    let ratingTypeProperties = getRatingTypeProperties(ratingType, getData().model);
-    let sectorProperty = ratingTypeProperties.filter((property) => property.propertyPath == propertyPath)[0];
-
-    for (let i = 0; i < sectorProperty.property?.allowableValues?.length; i++) {
-        if (sectorProperty.property?.allowableValues[i].value == value) return sectorProperty.property?.allowableValues[i].label
-    }
-    return null
-}
-
-const hideMe = () => {
-    showOrHideElement("modalMain", false); publishRefreshRadar()
-}
-function getValueOccurrenceMap(propertyPath, viewpoint, includeAllowableValues = false) {
-    const model = getData().model
-    let sectorProperty = getPropertyFromPropertyPath(propertyPath, viewpoint.ratingType, model)
-    let valueOccurrenceMap
-    if (sectorProperty.type == "tags") {
-        valueOccurrenceMap = {}
-        for (let i = 0; i < Object.keys(getData().ratings).length; i++) {
-            const tags = getNestedPropertyValueFromObject(getData().ratings[Object.keys(getData().ratings)[i]], propertyPath)
-            tags.forEach((tag) => {
-                const currentCount = valueOccurrenceMap[tag] ?? 0
-                valueOccurrenceMap[tag] = currentCount + 1
-
-            })
-        }
-
-    }
-    else {
-        valueOccurrenceMap = getPropertyValuesAndCounts(propertyPath, getData().ratings); // TODO only ratings of proper rating type!!
-        if (includeAllowableValues) {
-            for (let i = 0; i < sectorProperty.property?.allowableValues?.length; i++) {
-                valueOccurrenceMap[sectorProperty.property?.allowableValues[i].value] = valueOccurrenceMap[sectorProperty.property?.allowableValues[i].value] ?? 0;
-            }
-        }
-    }
-    return valueOccurrenceMap;
-}
-

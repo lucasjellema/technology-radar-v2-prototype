@@ -168,7 +168,7 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
     document.getElementById("launchMainEditor").addEventListener("click", () => {
         hideMe()
 
-        publishRadarEvent({ type: "mainRadarConfigurator" })
+        publishRadarEvent({ type: "mainRadarConfigurator", tab:"sector" })
     })
 
 }

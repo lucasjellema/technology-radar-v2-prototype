@@ -109,6 +109,10 @@
                                 "label": "Waargenomen"
                             },
                             {
+                                "value": "hold",
+                                "label": "Geen Waarde"
+                            },
+                            {
                                 "value": "interesting",
                                 "label": "Potentie"
                             },
@@ -243,12 +247,15 @@
                     },
                     "rings": [
                         {
+                            "label": "Geen Tijd in Stoppen",
+                            "width": 0.10
+                        }, {
                             "label": "Potentie",
-                            "width": 0.13
+                            "width": 0.10
                         },
                         {
                             "label": "Verkennen",
-                            "width": 0.17
+                            "width": 0.14
                         },
                         {
                             "label": "Toepassen",
@@ -256,7 +263,7 @@
                         },
                         {
                             "label": "In Productie",
-                            "width": 0.55
+                            "width": 0.52
                         }
                     ]
                 },
@@ -589,11 +596,15 @@
                     "valueMap": {
                         "identified": -1,
                         "potentie": 0,
-                        "assess": 1,
+                        "interesting": 0,
+                        "hold": 1,
+                        "assess": 2,
                         "adopt": 3,
                         "trial": 2
                     }
                 },
+
+
                 "shape": {
                     "property": "object.offering",
                     "valueMap": {
