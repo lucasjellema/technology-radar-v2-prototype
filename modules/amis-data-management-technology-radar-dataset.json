@@ -203,7 +203,7 @@
                 "svg_id": "radarSVGContainer",
                 "width": 1450,
                 "height": 1100,
-                "topLayer": "sectors",
+                "topLayer": "rings",
                 "selectedRing": null,
                 "selectedSector": null,
                 "rotation": 0,

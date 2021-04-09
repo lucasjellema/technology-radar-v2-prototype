@@ -31,7 +31,7 @@ function drawRadar(viewpoint, elementDecorator = null) {
         .attr("id", "radarCanvas")
 
     let sectorCanvas, ringCanvas
-    if ("sectors" == config.topLayer) { // draw top layer last 
+    if ("sectors" == config.topLayer && config.editMode == true) { // draw top layer last 
         ringCanvas = drawRings(radarCanvas, config)
         sectorCanvas = drawSectors(radarCanvas, config, elementDecorator)
     }
@@ -217,16 +217,6 @@ const drawSectors = function (radar, config, elementDecorator = null) {
     return sectorCanvas
 }
 
-
-// currentAnglePercentage = currentAnglePercentage + sectorExpansionFactor(config) * sector.angle
-// let currentAngle = 2 * Math.PI * currentAnglePercentage
-// const sectorEndpoint = cartesianFromPolar({ r: config.sectorBoundariesExtended ? 2000 : config.maxRingRadius, phi: currentAngle })
-
-// let startAngle = (- 2 * (currentAnglePercentage - sectorExpansionFactor(config) * sector.angle) + 0.5) * Math.PI
-// let endAngle = (- 2 * currentAnglePercentage + 0.5) * Math.PI
-
-
-
 const drawRings = function (radar, config) {
     const ringCanvas = radar.append("g").attr("id", "ringCanvas")
     const totalRingPercentage = config.ringConfiguration.rings.reduce((sum, ring) => { return sum + (ring?.visible != false ? ring.width : 0) }, 0)
@@ -244,9 +234,6 @@ const drawRings = function (radar, config) {
             .innerRadius(config.maxRingRadius * (currentRadiusPercentage -  ring.width * ringExpansionFactor(config)))
             .startAngle(((0.5 - 2 * totalSectorPercentage*sectorExpansionFactor(config) ) * Math.PI))
             .endAngle(0.5 * Math.PI)
-        // start angle naar end angle met de klok mee; -0.5 PI is 9 uur, 0.5 PI = 3 uur
-        // TODO  check sum of sector angles
-
 
         ringCanvas.append("path")
             .attr("id", `ring${i}`)
@@ -304,7 +291,7 @@ const drawRingLabels = function (radar, config, elementDecorator) {
             .attr("text-anchor", "middle")
             .style("user-select", "none")
             .attr("class", getState().editMode ? "draggable" : "")
-            .on('dblclick', () => { console.log(`dbl click on ring`); publishRadarEvent({ type: "ringDblClick", ring: i }) })
+            .on('dblclick', () => { console.log(`dbl click on ring`); publishRadarEvent({ type: "ringDrilldown", ring: i }) })
 
             .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, ring.label, `ringLabel${i}`]);
         styleText(ringlabel, ring, config, config.ringConfiguration)
