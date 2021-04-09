@@ -2,18 +2,9 @@ export { launchSectorConfigurator }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { launchSectorEditor } from './sectorEditing.js'
-import { capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { capitalize, getPropertyValuesAndCounts, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 
 
-const getPropertyValuesAndCounts = (propertyPath, ratings) => { // filter on rating type!
-    const valueOccurenceMap = {}
-    for (let i = 0; i < Object.keys(ratings).length; i++) {
-        const value = getNestedPropertyValueFromObject(ratings[Object.keys(ratings)[i]], propertyPath)
-        const currentCount = valueOccurenceMap[value] ?? 0
-        valueOccurenceMap[value] = currentCount + 1
-    }
-    return valueOccurenceMap
-}
 
 
 const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {

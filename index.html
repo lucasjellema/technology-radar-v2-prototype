@@ -267,6 +267,7 @@
         import { makeDraggable } from './modules/blipDrag.js'
         import { handleBlipDrag, launchNewBlipWizard, launchBlipEditor } from './modules/blipEditing.js'
         import { launchSectorEditor } from './modules/sectorEditing.js'
+        import { launchRingEditor } from './modules/ringEditing.js'
         import { launchMainEditor } from './modules/radarConfigurator.js'
 
         initializeViewpointFromURL()
@@ -304,6 +305,9 @@
             }
             if (event.type == "sectorDblClick") {
                 launchSectorEditor(event.sector, getViewpoint(), drawRadarBlips)
+            }
+            if (event.type == "ringDblClick") {
+                launchRingEditor(event.ring, getViewpoint(), drawRadarBlips)
             }
             if (event.type == "sectorDrilldown") {
                 // set visible to false for all sectors except for sector event.sector; then redraw radar and blips

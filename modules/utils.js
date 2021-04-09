@@ -3,7 +3,7 @@ export {
     , getRatingTypeProperties, getElementValue, showOrHideElement, getDateTimeString
     , populateSelect, getAllKeysMappedToValue, createAndPopulateDataListFromBlipProperties
     , populateFontsList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
-    , getDistinctTagValues, populateDatalistFromValueSet, getPropertyFromPropertyPath
+    , getDistinctTagValues, getPropertyValuesAndCounts, populateDatalistFromValueSet, getPropertyFromPropertyPath
 }
 
 
@@ -32,6 +32,16 @@ function addValuesForProperty(propertyPath, blips, distinctValues) {
     }
     distinctValues = new Set([...distinctValues, ...listOfDistinctPropertyValues])
     return distinctValues
+}
+
+const getPropertyValuesAndCounts = (propertyPath, ratings) => { // filter on rating type!
+    const valueOccurenceMap = {}
+    for (let i = 0; i < Object.keys(ratings).length; i++) {
+        const value = getNestedPropertyValueFromObject(ratings[Object.keys(ratings)[i]], propertyPath)
+        const currentCount = valueOccurenceMap[value] ?? 0
+        valueOccurenceMap[value] = currentCount + 1
+    }
+    return valueOccurenceMap
 }
 
 const getDistinctTagValues = (viewpoint, includeDiscreteProperties = false) => {

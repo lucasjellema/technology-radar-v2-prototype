@@ -97,7 +97,7 @@ const drawRadarBlips = function (viewpoint) {
 
     document.getElementById('showLabels').checked = currentViewpoint.blipDisplaySettings.showLabels
 
-    document.getElementById('showShapes').checked = currentViewpoint.blipDisplaySettings.showShapes    
+    document.getElementById('showShapes').checked = currentViewpoint.blipDisplaySettings.showShapes
     document.getElementById('blipScaleFactorSlider').value = currentViewpoint.blipDisplaySettings.blipScaleFactor ?? 1
 
     initializeTagsFilter()
@@ -131,12 +131,12 @@ const drawRadarBlips = function (viewpoint) {
     // configure each blip
     blipElements.each(function (d) {
         const blip = d3.select(this);
-        try {
-            drawRadarBlip(blip, d, viewpoint);
-        } catch (e) {
-            console.log(`failed to draw blip ${d.rating?.object?.label} because of ${e}`)
-            console.log(`blip:  ${JSON.stringify(d)}`)
-        }
+        //        try {
+        drawRadarBlip(blip, d, viewpoint);
+        //       } catch (e) {
+        //         console.log(`failed to draw blip ${d.rating?.object?.label} because of ${e}`)
+        //       console.log(`blip:  ${JSON.stringify(d)}`)
+        // }
 
     });
     return viewpoint.blips
@@ -153,18 +153,31 @@ const priorSectorsAnglePercentageSum = (sectorId, config) => config.sectorConfig
     .reduce((sum, sector) =>
         sum + (sector?.visible != false ? sector.angle : 0), 0) * sectorExpansionFactor()
 
+
+
+const ringExpansionFactor = () => {
+    // factor to multiply each witdh with - derived from the sum of widths of all visible rings , calibrated with the total available ring width
+    const totalVisibleRingsWidthSum = currentViewpoint.template.ringConfiguration.rings.reduce((sum, ring) =>
+        sum + (ring?.visible != false ? ring.width : 0), 0)
+    const expansionFactor = totalVisibleRingsWidthSum == 0 ? 1 : 1 / totalVisibleRingsWidthSum
+    return expansionFactor
+}
 const priorRingsWidthPercentageSum = (ringId, config) => config.ringConfiguration.rings.filter((ring, index) => index < ringId)
-    .reduce((sum, ring) => sum + ring.width, 0)
+    .reduce((sum, ring) => sum+ (ring?.visible != false ? ring.width : 0), 0) * ringExpansionFactor()
 
 const sectorRingToPosition = (sector, ring, config) => { // return randomized X,Y coordinates in segment corresponding to the sector and ring 
     try {
         const phi = priorSectorsAnglePercentageSum(sector, config) + (0.1 + Math.random() * 0.8) * config.sectorConfiguration.sectors[sector].angle * sectorExpansionFactor()
         // ring can be undefined (== the so called -1 ring, outside the real rings)
         let r
-        if (ring && ring > -1)
-            r = config.maxRingRadius * (1 - priorRingsWidthPercentageSum(ring, config) - (0.1 + Math.random() * 0.8) * config.ringConfiguration.rings[ring].width) // 0.1 to not position the on the outer edge of the segment
-        else
+        if (ring != null && ring > -1) {
+            let rFactor = (1 - priorRingsWidthPercentageSum(ring, config) -
+            (0.1 + Math.random() * 0.8) * config.ringConfiguration.rings[ring].width * ringExpansionFactor())  // 0.1 to not position the on the outer edge of the segment
+            r = config.maxRingRadius * rFactor
+        }
+        else {
             r = config.maxRingRadius * (1.01 + Math.random() * 0.33)  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
+        }
         return cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
     } catch (e) {
         console.log(`radarblips,.sectorRingToPosition ${e} ${sector}${ring}`)
@@ -210,6 +223,10 @@ const drawRadarBlip = (blip, d, viewpoint) => {
 
     const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
     const blipRing = viewpoint.propertyVisualMaps.ring.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToRing)]
+    if (blipRing == null || viewpoint.template.ringConfiguration.rings[blipRing]?.visible == false) {
+        //do NOT draw blip at all
+        return
+    }
 
     const propertyMappedToShape = viewpoint.propertyVisualMaps.shape.property
     const blipShapeId = viewpoint.propertyVisualMaps.shape.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToShape)]

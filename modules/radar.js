@@ -91,6 +91,13 @@ const sectorExpansionFactor = (config) => {
     return totalVisibleSectorsAngleSum == 0 ? 1 : 1 / totalVisibleSectorsAngleSum
 }
 
+const ringExpansionFactor = (config) => {
+    // factor to multiply each witdh with - derived from the sum of widths of all visible rings , calibrated with the total available ring width
+    const totalVisibleRingsWidthSum = config.ringConfiguration.rings.reduce((sum, ring) =>
+        sum + (ring?.visible != false ? ring.width : 0), 0)
+    return totalVisibleRingsWidthSum == 0 ? 1 : 1 / totalVisibleRingsWidthSum
+}
+
 const drawSectors = function (radar, config, elementDecorator = null) {
 
     const sectorCanvas = radar.append("g").attr("id", "sectorCanvas")
@@ -211,20 +218,31 @@ const drawSectors = function (radar, config, elementDecorator = null) {
 }
 
 
+// currentAnglePercentage = currentAnglePercentage + sectorExpansionFactor(config) * sector.angle
+// let currentAngle = 2 * Math.PI * currentAnglePercentage
+// const sectorEndpoint = cartesianFromPolar({ r: config.sectorBoundariesExtended ? 2000 : config.maxRingRadius, phi: currentAngle })
+
+// let startAngle = (- 2 * (currentAnglePercentage - sectorExpansionFactor(config) * sector.angle) + 0.5) * Math.PI
+// let endAngle = (- 2 * currentAnglePercentage + 0.5) * Math.PI
+
+
+
 const drawRings = function (radar, config) {
     const ringCanvas = radar.append("g").attr("id", "ringCanvas")
-    const totalRingPercentage = config.ringConfiguration.rings.reduce((sum, ring) => { return sum + ring.width }, 0)
-    const totalSectorPercentage = config.sectorConfiguration.sectors.reduce((sum, sector) => { return sum + sector.angle }, 0)
+    const totalRingPercentage = config.ringConfiguration.rings.reduce((sum, ring) => { return sum + (ring?.visible != false ? ring.width : 0) }, 0)
+  const totalSectorPercentage = config.sectorConfiguration.sectors.reduce((sum, sector) => { return sum + ((sector?.visible!= false) ? sector.angle:0) }, 0) // TODO cater for invisible sectors??
     // 
-    let currentRadiusPercentage = totalRingPercentage
+    let currentRadiusPercentage = totalRingPercentage* ringExpansionFactor(config)
     for (let i = 0; i < config.ringConfiguration.rings.length; i++) {
         let ring = config.ringConfiguration.rings[i]
-        let currentRadius = currentRadiusPercentage * config.maxRingRadius
+        if (ring?.visible == false) continue;
+
+        let currentRadius = currentRadiusPercentage * config.maxRingRadius  //TODO cater for sector expansion / hidden sectors/ sectors total area
 
         const ringArc = d3.arc()
             .outerRadius(config.maxRingRadius * currentRadiusPercentage)
-            .innerRadius(config.maxRingRadius * (currentRadiusPercentage - ring.width))
-            .startAngle(((0.5 - 2 * totalSectorPercentage) * Math.PI))
+            .innerRadius(config.maxRingRadius * (currentRadiusPercentage -  ring.width * ringExpansionFactor(config)))
+            .startAngle(((0.5 - 2 * totalSectorPercentage*sectorExpansionFactor(config) ) * Math.PI))
             .endAngle(0.5 * Math.PI)
         // start angle naar end angle met de klok mee; -0.5 PI is 9 uur, 0.5 PI = 3 uur
         // TODO  check sum of sector angles
@@ -255,7 +273,7 @@ const drawRings = function (radar, config) {
             // draw ring knob at the out edge, horizontal axis
             ringCanvas.append("circle")
                 .attr("id", `ringKnob${i}`)
-                .attr("cx", config.maxRingRadius * currentRadiusPercentage)
+                .attr("cx", config.maxRingRadius * currentRadiusPercentage )
                 .attr("cy", 0)
                 .attr("r", 15)
                 .style("fill", "red")
@@ -265,30 +283,33 @@ const drawRings = function (radar, config) {
                 .attr("class", "draggable")
         }
 
-        currentRadiusPercentage = currentRadiusPercentage - ring.width
+        currentRadiusPercentage = currentRadiusPercentage - ring.width *  ringExpansionFactor(config)
     }
     return ringCanvas
 }
 
 
 const drawRingLabels = function (radar, config, elementDecorator) {
-    const totalRingPercentage = config.ringConfiguration.rings.reduce((sum, ring) => { return sum + ring.width }, 0)
-    let currentRadiusPercentage = totalRingPercentage
+    const totalRingPercentage = config.ringConfiguration.rings.reduce((sum, ring) => { return sum + (ring?.visible != false ? ring.width : 0) }, 0)
+    let currentRadiusPercentage = totalRingPercentage* ringExpansionFactor(config)
     for (let i = 0; i < config.ringConfiguration.rings.length; i++) {
         let ring = config.ringConfiguration.rings[i]
+        if (ring?.visible == false) continue;
         let currentRadius = currentRadiusPercentage * config.maxRingRadius
         const ringlabel = radar.append("text")
             .attr("id", `ringLabel${i}`)
             .text(ring.label)
-            .attr("y", ring.y != null ? ring.y : -currentRadius + 35) // 35 under the ring edge
+            .attr("y", ring.y != null ? ring.y : -currentRadius  + 35) // 35 under the ring edge
             .attr("x", ring.x != null ? ring.x : 0) // 35 under the ring edge
             .attr("text-anchor", "middle")
             .style("user-select", "none")
             .attr("class", getState().editMode ? "draggable" : "")
+            .on('dblclick', () => { console.log(`dbl click on ring`); publishRadarEvent({ type: "ringDblClick", ring: i }) })
+
             .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, ring.label, `ringLabel${i}`]);
         styleText(ringlabel, ring, config, config.ringConfiguration)
 
-        currentRadiusPercentage = currentRadiusPercentage - ring.width
+        currentRadiusPercentage = currentRadiusPercentage - ring.width * ringExpansionFactor(config)
     }
 }
 

@@ -3,6 +3,7 @@ import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 import { launchSectorConfigurator } from './sectorConfigurator.js'
+import { launchRingConfigurator } from './ringConfigurator.js'
 
 
 
@@ -11,8 +12,10 @@ const launchMainEditor = (viewpoint, drawRadarBlips, tab) => {
     renderTabs(tab, viewpoint, drawRadarBlips)
     if (tab == "sector") {
         launchSectorConfigurator(viewpoint, drawRadarBlips)
+    } else if (tab == "ring") {
+        launchRingConfigurator(viewpoint, drawRadarBlips)
     }
-    // renders tabs
+
     else {
         showOrHideElement("modalMain", true)
         setTextOnElement("modalMainTitle", "Radar Configurator - Main")
@@ -119,6 +122,8 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
     // add event listeners
     document.getElementById(`sectorConfigurationTab`).addEventListener("click"
         , () => { launchSectorConfigurator(viewpoint, drawRadarBlips) })
+        document.getElementById(`ringConfigurationTab`).addEventListener("click"
+        , () => { launchRingConfigurator(viewpoint, drawRadarBlips) })
     document.getElementById(`radarConfigurationTab`).addEventListener("click"
         , () => { launchMainEditor(viewpoint, drawRadarBlips, "radar") })
 
