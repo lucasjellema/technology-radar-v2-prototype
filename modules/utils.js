@@ -2,7 +2,7 @@ export {
     isOperationBlackedOut, uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject
     , getRatingTypeProperties, getElementValue, showOrHideElement, getDateTimeString
     , populateSelect, getAllKeysMappedToValue, createAndPopulateDataListFromBlipProperties
-    , populateFontsList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
+    , populateFontsList, populateShapesList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
     , getDistinctTagValues, getPropertyValuesAndCounts, populateDatalistFromValueSet, getPropertyFromPropertyPath
 }
 
@@ -219,6 +219,19 @@ const populateFontsList = (fontsListElementId) => {
 
     populateDatalistFromValueSet(fontsListElementId, fontsList)
 }
+
+const populateShapesList = (shapesListElementId) => {
+    const shapesList = []
+    shapesList.push(`circle`)
+    shapesList.push(`diamond`)
+    shapesList.push(`square`)
+    shapesList.push(`triangle`)
+    shapesList.push(`ring`)
+    shapesList.push(`star`)
+
+    populateDatalistFromValueSet(shapesListElementId, shapesList)
+}
+
 
 const undefinedToDefined = (value, definedValue = "") => {
     let derivedValue = (typeof value == 'undefined') ? definedValue : value

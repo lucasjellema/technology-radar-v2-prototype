@@ -54,6 +54,17 @@ function drawRadar(viewpoint, elementDecorator = null) {
         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, config.title.text, `title`])
     styleText(titleElement, config.title, config)
 
+    if (config.backgroundImage?.image != null) {
+        radarCanvas.append('image')
+            .attr("id", `radarBackgroundImage`)
+            .attr('xlink:href', config.backgroundImage.image)
+            .attr('width', 100)
+            .attr("transform", `translate(${config.backgroundImage.x ?? 350},${config.backgroundImage.y ?? -350}) scale(${config.backgroundImage.scaleFactor ?? 1}) `)
+            .attr("class", "draggable")
+    }
+
+
+
     if (!getState().editMode) {
         // legend
         initializeSizesLegend(viewpoint)
@@ -61,11 +72,12 @@ function drawRadar(viewpoint, elementDecorator = null) {
         initializeColorsLegend(viewpoint)
     }
 
-    if (!viewpoint.blipDisplaySettings.hasOwnProperty("blipScaleFactor") || viewpoint.blipDisplaySettings?.blipScaleFactor == null) {
+    if (!viewpoint.blipDisplaySettings?.hasOwnProperty("blipScaleFactor") || viewpoint.blipDisplaySettings?.blipScaleFactor == null) {
+        if (viewpoint.blipDisplaySettings == null) {viewpoint.blipDisplaySettings={}}
         viewpoint.blipDisplaySettings.blipScaleFactor = 1
     }
     if (!viewpoint.blipDisplaySettings.hasOwnProperty("tagFilter") || viewpoint.blipDisplaySettings?.tagFilter == null
-    ||!(Array.isArray(viewpoint.blipDisplaySettings.tagFilter))) {
+        || !(Array.isArray(viewpoint.blipDisplaySettings.tagFilter))) {
         viewpoint.blipDisplaySettings.tagFilter = []
     }
 }
@@ -220,9 +232,9 @@ const drawSectors = function (radar, config, elementDecorator = null) {
 const drawRings = function (radar, config) {
     const ringCanvas = radar.append("g").attr("id", "ringCanvas")
     const totalRingPercentage = config.ringConfiguration.rings.reduce((sum, ring) => { return sum + (ring?.visible != false ? ring.width : 0) }, 0)
-  const totalSectorPercentage = config.sectorConfiguration.sectors.reduce((sum, sector) => { return sum + ((sector?.visible!= false) ? sector.angle:0) }, 0) // TODO cater for invisible sectors??
+    const totalSectorPercentage = config.sectorConfiguration.sectors.reduce((sum, sector) => { return sum + ((sector?.visible != false) ? sector.angle : 0) }, 0) // TODO cater for invisible sectors??
     // 
-    let currentRadiusPercentage = totalRingPercentage* ringExpansionFactor(config)
+    let currentRadiusPercentage = totalRingPercentage * ringExpansionFactor(config)
     for (let i = 0; i < config.ringConfiguration.rings.length; i++) {
         let ring = config.ringConfiguration.rings[i]
         if (ring?.visible == false) continue;
@@ -231,8 +243,8 @@ const drawRings = function (radar, config) {
 
         const ringArc = d3.arc()
             .outerRadius(config.maxRingRadius * currentRadiusPercentage)
-            .innerRadius(config.maxRingRadius * (currentRadiusPercentage -  ring.width * ringExpansionFactor(config)))
-            .startAngle(((0.5 - 2 * totalSectorPercentage*sectorExpansionFactor(config) ) * Math.PI))
+            .innerRadius(config.maxRingRadius * (currentRadiusPercentage - ring.width * ringExpansionFactor(config)))
+            .startAngle(((0.5 - 2 * totalSectorPercentage * sectorExpansionFactor(config)) * Math.PI))
             .endAngle(0.5 * Math.PI)
 
         ringCanvas.append("path")
@@ -260,7 +272,7 @@ const drawRings = function (radar, config) {
             // draw ring knob at the out edge, horizontal axis
             ringCanvas.append("circle")
                 .attr("id", `ringKnob${i}`)
-                .attr("cx", config.maxRingRadius * currentRadiusPercentage )
+                .attr("cx", config.maxRingRadius * currentRadiusPercentage)
                 .attr("cy", 0)
                 .attr("r", 15)
                 .style("fill", "red")
@@ -270,7 +282,7 @@ const drawRings = function (radar, config) {
                 .attr("class", "draggable")
         }
 
-        currentRadiusPercentage = currentRadiusPercentage - ring.width *  ringExpansionFactor(config)
+        currentRadiusPercentage = currentRadiusPercentage - ring.width * ringExpansionFactor(config)
     }
     return ringCanvas
 }
@@ -278,7 +290,7 @@ const drawRings = function (radar, config) {
 
 const drawRingLabels = function (radar, config, elementDecorator) {
     const totalRingPercentage = config.ringConfiguration.rings.reduce((sum, ring) => { return sum + (ring?.visible != false ? ring.width : 0) }, 0)
-    let currentRadiusPercentage = totalRingPercentage* ringExpansionFactor(config)
+    let currentRadiusPercentage = totalRingPercentage * ringExpansionFactor(config)
     for (let i = 0; i < config.ringConfiguration.rings.length; i++) {
         let ring = config.ringConfiguration.rings[i]
         if (ring?.visible == false) continue;
@@ -286,7 +298,7 @@ const drawRingLabels = function (radar, config, elementDecorator) {
         const ringlabel = radar.append("text")
             .attr("id", `ringLabel${i}`)
             .text(ring.label)
-            .attr("y", ring.y != null ? ring.y : -currentRadius  + 35) // 35 under the ring edge
+            .attr("y", ring.y != null ? ring.y : -currentRadius + 35) // 35 under the ring edge
             .attr("x", ring.x != null ? ring.x : 0) // 35 under the ring edge
             .attr("text-anchor", "middle")
             .style("user-select", "none")

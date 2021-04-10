@@ -218,13 +218,19 @@
                     "fontWeight": "bold"
                 },
                 "title": {
-                    "text": "AMIS | Conclusion - Radar Data Management - Spring 2021",
+                    "text": "Radar Data Management - Spring 2021",
                     "x": -700,
                     "y": -520,
                     "font": {
                         "fontSize": "34px",
                         "fontFamily": "Courier"
                     }
+                },
+                "backgroundImage": {
+                    "image": "https://conclusionjaarverslag.nl/wp-content/uploads/2019/06/AMIS-_-conclusion-logo.png",
+                    "scaleFactor": "4",
+                    "x": 322,
+                    "y": -537
                 },
                 "colors": {
                     "background": "#FFF",
@@ -296,12 +302,6 @@
                             "edge": {
                                 "color": "#000000",
                                 "width": "1"
-                            },
-                            "backgroundImage": {
-                                "image": "https://conclusionjaarverslag.nl/wp-content/uploads/2019/06/AMIS-_-conclusion-logo.png",
-                                "scaleFactor": "4",
-                                "x": 307,
-                                "y": -519
                             },
                             "backgroundColor": "#ffffff",
                             "outerringBackgroundColor": "#ffffff",
@@ -563,6 +563,13 @@
                             "enabled": false
                         }
                     ]
+                },
+                "blip": {
+                    "labelProperty": "object.label",
+                    "imageProperty": "object.image",
+                    "defaultShape": "square",
+                    "defaultColor": "#c216c5",
+                    "defaultSize": ""
                 }
             },
             "ratingType": "technologyAdoption",
@@ -1001,6 +1008,12 @@
                     "fontSize": "34px",
                     "fontFamily": "Courier"
                 }
+            },
+            "backgroundImage": {
+                "image": "https://conclusionjaarverslag.nl/wp-content/uploads/2019/06/AMIS-_-conclusion-logo.png",
+                "scaleFactor": "4",
+                "x": 322,
+                "y": -537
             },
             "colors": {
                 "background": "#fFf",

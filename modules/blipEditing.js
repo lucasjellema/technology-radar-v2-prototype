@@ -256,6 +256,7 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
     // TODO not all elements are supported for dragging (yet) 
 
     if (blipDragEvent.blipId.startsWith("sectorBackgroundImage")) { handleSectorBackgroundImageDrag(blipDragEvent, viewpoint) }
+    else if (blipDragEvent.blipId.startsWith("radarBackgroundImage")) { handleRadarBackgroundImageDrag(blipDragEvent, viewpoint) }
     else {
 
         const dropSegment = segmentFromCartesian({ x: blipDragEvent.newX, y: blipDragEvent.newY }, viewpoint)
@@ -290,5 +291,11 @@ const handleSectorBackgroundImageDrag = (blipDragEvent, viewpoint) => {
     const sector = viewpoint.template.sectorConfiguration.sectors[sectorId]
     sector.backgroundImage.x = blipDragEvent.newX // newCoordinates.x - config.width / 2
     sector.backgroundImage.y = blipDragEvent.newY // newCoordinates.y - config.height / 2
+}
+
+const handleRadarBackgroundImageDrag = (blipDragEvent, viewpoint) => {
+    console.log(`OK, end radar background image drag`)
+    viewpoint.template.backgroundImage.x = blipDragEvent.newX // newCoordinates.x - config.width / 2
+    viewpoint.template.backgroundImage.y = blipDragEvent.newY // newCoordinates.y - config.height / 2
 }
 

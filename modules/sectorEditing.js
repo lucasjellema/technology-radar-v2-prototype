@@ -95,9 +95,9 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
             </td></tr>`
 
     html += `<tr><td rowspan="2"><label for="backgroundImageURL">Background Image</label></td>
-    <td>URL<input id="backgroundImageURL" type="text" value="${undefinedToDefined(sector.backgroundImage.image)}" title="URL to image to use as sector illustration"></input>     
+    <td>URL<input id="backgroundImageURL" type="text" value="${undefinedToDefined(sector.backgroundImage?.image)}" title="URL to image to use as sector illustration"></input>     
      <textarea id="backgroundImagePasteArea" placeholder="Paste Image" title="Paste Image for sector here" rows="1" cols="15" title="Paste image from clip board"></textarea>
-     </td><td><img id="backgroundImage" style="padding:6px" src="${sector.backgroundImage.image}" width="70px"></img></td></tr>`
+     </td><td><img id="backgroundImage" style="padding:6px" src="${sector.backgroundImage?.image}" width="70px"></img></td></tr>`
 
     html += `<tr><td>Scalefactor
                 <input type="text"  id="backgroundImageScaleFactor" title="Scalefactor for background image"  value="${undefinedToDefined(sector.backgroundImage?.scaleFactor)}"></input>

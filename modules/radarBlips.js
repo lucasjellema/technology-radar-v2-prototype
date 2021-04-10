@@ -244,13 +244,14 @@ const drawRadarBlip = (blip, d, viewpoint) => {
     let blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
 
     if (!viewpoint.blipDisplaySettings.applyShapes) {
-        blipShape = "circle" // TODO replace with configurable default shape
+        blipShape = viewpoint.propertyVisualMaps.blip?.defaultShape ?? "circle" 
     }
     if (!viewpoint.blipDisplaySettings.applyColors) {
-        blipColor = "blue" // TODO replace with configurable default color
+        blipColor = viewpoint.propertyVisualMaps.blip?.defaultColor ?? "blue" 
     }
     if (!viewpoint.blipDisplaySettings.applySizes) {
-        blipSize = 1  // TODO replace with configurable default size
+        blipSize = viewpoint.propertyVisualMaps.blip?.defaultSize ?? 1  
+        if (blipSize =="") blipSize=1
     }
     let xy
 
