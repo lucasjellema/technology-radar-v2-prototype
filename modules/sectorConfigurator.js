@@ -31,6 +31,7 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
 
     html += `<label for="mappedPropertySelector">Rating property to map to sector</label> 
     <select id="mappedPropertySelector" ></select><span id="refreshSectors" style="padding:20px">Refresh Sector Mapping</span>  <br/>`
+
     html += `<input type="button" id="addSectorButton"  value="Add Sector"  style="padding:6px;margin:10px"/>`
 
     html += `<table id="sectors">`
@@ -66,7 +67,21 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     html += `<input type="button" id="distributeEvenly"  value="Distribute Evenly"  style="padding:10px;margin:10px"/>`
     html += `<input type="button" id="distributeValueOccurrenceBased"  value="Distribute According to Value Occurrences"  style="padding:10px;margin:10px"/>`
 
-    contentContainer.innerHTML = `${html}</table>`
+    html += `<br/>
+    <a href="#" id="advancedSectorPropsToggle" >Show Advanced Properties?</a>
+    <br />
+    <div id="sectorAdvancedProps">
+    <label for="totalAngle">Total % of full circle available for all sectors combined</label>
+    <input id="totalAngle" type="text" value="${ undefinedToDefined(viewpoint.template.sectorConfiguration.totalAngle,1)}"></input>
+    <label for="initialAngle">Initial or Tilt angle</label>
+    <input id="initialAngle" type="text" value="${ undefinedToDefined(viewpoint.template.sectorConfiguration.initialAngle,0)}"></input> 
+    <p>Default Font & background color & edge Settings</p>
+    </div>
+    <br/><br/> `
+
+    contentContainer.innerHTML = `${html}`
+showOrHideElement("sectorAdvancedProps", false)
+document.getElementById('advancedSectorPropsToggle').addEventListener('click', () => { showOrHideElement('sectorAdvancedProps', true) })
 
     // add event listeners
     for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
@@ -142,8 +157,21 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
 
     })
 
+    const buttonBar = document.getElementById("modalMainButtonBar")
+    buttonBar.innerHTML = `<input id="saveSectorSettings" type="button" value="Save Changes"></input>`
+    document.getElementById("saveSectorSettings").addEventListener("click",
+        (event) => {
+            console.log(`save sector edits  `)
+            saveSettings( viewpoint)
+            publishRefreshRadar()
+            if (drawRadarBlips != null) drawRadarBlips(viewpoint)
 
+        })
+}
 
+const saveSettings = ( viewpoint) => {
+    viewpoint.template.sectorConfiguration.totalAngle = getElementValue("totalAngle")
+    viewpoint.template.sectorConfiguration.initialAngle = getElementValue("initialAngle")
 
 }
 

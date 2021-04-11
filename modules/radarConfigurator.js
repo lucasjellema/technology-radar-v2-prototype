@@ -6,6 +6,7 @@ import { launchSectorConfigurator } from './sectorConfigurator.js'
 import { launchRingConfigurator } from './ringConfigurator.js'
 import { launchDatamodelConfigurator } from './datamodelConfigurator.js'
 import { launchBlipConfigurator } from './blipConfigurator.js'
+import { launchShapeConfigurator } from './shapeConfigurator.js'
 
 
 
@@ -20,6 +21,8 @@ const launchMainEditor = (viewpoint, drawRadarBlips, tab) => {
         launchDatamodelConfigurator(viewpoint, drawRadarBlips)
     } else if (tab == "blip") {
         launchBlipConfigurator(viewpoint, drawRadarBlips)
+    }else if (tab == "shape") {
+        launchShapeConfigurator(viewpoint, drawRadarBlips)
     }
 
     else {
@@ -118,8 +121,10 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
     // add tab event listeners
     document.getElementById(`sectorConfigurationTab`).addEventListener("click"
         , () => { launchSectorConfigurator(viewpoint, drawRadarBlips) })
-    document.getElementById(`ringConfigurationTab`).addEventListener("click"
+        document.getElementById(`ringConfigurationTab`).addEventListener("click"
         , () => { launchRingConfigurator(viewpoint, drawRadarBlips) })
+        document.getElementById(`shapeConfigurationTab`).addEventListener("click"
+        , () => { launchShapeConfigurator(viewpoint, drawRadarBlips) })
     document.getElementById(`radarConfigurationTab`).addEventListener("click"
         , () => { launchMainEditor(viewpoint, drawRadarBlips, "radar") })
     document.getElementById(`datamodelConfigurationTab`).addEventListener("click"

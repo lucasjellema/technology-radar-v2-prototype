@@ -1,6 +1,6 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { launchBlipEditor } from './blipEditing.js'
-import { getViewpoint, getData } from './data.js'
+import { getViewpoint, getData,publishRefreshRadar } from './data.js'
 import { getDistinctTagValues, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4 } from './utils.js'
 export { drawRadarBlips }
 
@@ -23,12 +23,23 @@ const filterBlip = (blip, viewpoint) => {
             for (let i = 0; i < viewpoint.blipDisplaySettings.tagFilter.length; i++) {
                 const filter = viewpoint.blipDisplaySettings.tagFilter[i]
                 try {
-                    let blipHasFilter = JSON.stringify(blip.rating.object.tags)?.toLowerCase()?.trim()?.indexOf(filter.tag) > -1
-                    // TODO if not yet found, check discrete properties
-                    const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
-                    for (let j = 0; !blipHasFilter && j < discretePropertyPaths.length; j++) {
-                        blipHasFilter = getNestedPropertyValueFromObject(blip.rating, discretePropertyPaths[j])?.toLowerCase().trim() == filter.tag
+                    let blipHasFilter
+                    if (filter.tag.startsWith('"')) {
+                        const labelProperty = viewpoint.propertyVisualMaps.blip.label
+                        const blipLabel = getNestedPropertyValueFromObject(blip.rating, labelProperty).toLowerCase()
+                        const filterTag = filter.tag.replace(/^"+|"+$/g, '').toLowerCase()
+
+                        blipHasFilter = blipLabel.includes(filterTag)
+                    } else {
+                        blipHasFilter = JSON.stringify(blip.rating.object.tags)?.toLowerCase()?.trim()?.indexOf(filter.tag) > -1
+
+                        // TODO derive discrete properties dynamically from data.model instead of hard coded
+                        const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
+                        for (let j = 0; !blipHasFilter && j < discretePropertyPaths.length; j++) {
+                            blipHasFilter = getNestedPropertyValueFromObject(blip.rating, discretePropertyPaths[j])?.toLowerCase().trim() == filter.tag
+                        }
                     }
+
 
                     // minus filter: if tag is in rating.object.tags then blip is not ok  
                     if (blipHasFilter && filter.type == "minus") {
@@ -98,7 +109,19 @@ const drawRadarBlips = function (viewpoint) {
     document.getElementById('showLabels').checked = currentViewpoint.blipDisplaySettings.showLabels
 
     document.getElementById('showShapes').checked = currentViewpoint.blipDisplaySettings.showShapes
+    document.getElementById('sectors').checked = currentViewpoint.template.topLayer=="sectors"
+    document.getElementById('rings').checked = currentViewpoint.template.topLayer=="rings"
     document.getElementById('blipScaleFactorSlider').value = currentViewpoint.blipDisplaySettings.blipScaleFactor ?? 1
+    document.getElementById('sectors').addEventListener("change", (e) => {
+        const changed = currentViewpoint.template.topLayer  != e.currentTarget.id
+        currentViewpoint.template.topLayer = e.currentTarget.id
+        if (changed) publishRefreshRadar()
+    });
+    document.getElementById('rings').addEventListener("change", (e) => {
+        const changed = currentViewpoint.template.topLayer  != e.currentTarget.id
+        currentViewpoint.template.topLayer = e.currentTarget.id
+        if (changed) publishRefreshRadar()
+    });
 
     initializeTagsFilter()
 
@@ -143,15 +166,26 @@ const drawRadarBlips = function (viewpoint) {
 }
 
 const sectorExpansionFactor = () => {
+    const totalAvailableAngle = currentViewpoint.template.sectorConfiguration.totalAngle ?? 1
+    const initialAngle = parseFloat(currentViewpoint.template.sectorConfiguration.initialAngle ?? 0)
+    //  console.log(`totalAvailableAngle = ${totalAvailableAngle}`)
+
     // factor to multiply each angle with - derived from the sum of angles of all visible sectors , calibrated with the total available angle
     const totalVisibleSectorsAngleSum = currentViewpoint.template.sectorConfiguration.sectors.reduce((sum, sector) =>
         sum + (sector?.visible != false ? sector.angle : 0), 0)
-    return totalVisibleSectorsAngleSum == 0 ? 1 : 1 / totalVisibleSectorsAngleSum
+    //    return totalAvailableAngle * (totalVisibleSectorsAngleSum == 0 ? 1 : 1 / totalVisibleSectorsAngleSum)
+    const expansionFactor = parseFloat((totalAvailableAngle - initialAngle) * (totalVisibleSectorsAngleSum == 0 ? 1 : (1 / totalVisibleSectorsAngleSum)))
+    //   console.log(`expansionFactor ${expansionFactor}`)
+    return expansionFactor
+
 }
+
+
+
 
 const priorSectorsAnglePercentageSum = (sectorId, config) => config.sectorConfiguration.sectors.filter((sector, index) => index < sectorId)
     .reduce((sum, sector) =>
-        sum + (sector?.visible != false ? sector.angle : 0), 0) * sectorExpansionFactor()
+        sum + (sector?.visible != false ? sector.angle : 0), 0) * sectorExpansionFactor() + parseFloat(currentViewpoint.template.sectorConfiguration.initialAngle ?? 0)
 
 
 
@@ -163,16 +197,17 @@ const ringExpansionFactor = () => {
     return expansionFactor
 }
 const priorRingsWidthPercentageSum = (ringId, config) => config.ringConfiguration.rings.filter((ring, index) => index < ringId)
-    .reduce((sum, ring) => sum+ (ring?.visible != false ? ring.width : 0), 0) * ringExpansionFactor()
+    .reduce((sum, ring) => sum + (ring?.visible != false ? ring.width : 0), 0) * ringExpansionFactor()
 
 const sectorRingToPosition = (sector, ring, config) => { // return randomized X,Y coordinates in segment corresponding to the sector and ring 
     try {
-        const phi = priorSectorsAnglePercentageSum(sector, config) + (0.1 + Math.random() * 0.8) * config.sectorConfiguration.sectors[sector].angle * sectorExpansionFactor()
+        const phi = priorSectorsAnglePercentageSum(sector, config) +
+            (0.1 + Math.random() * 0.8) * config.sectorConfiguration.sectors[sector].angle * sectorExpansionFactor()
         // ring can be undefined (== the so called -1 ring, outside the real rings)
         let r
         if (ring != null && ring > -1) {
             let rFactor = (1 - priorRingsWidthPercentageSum(ring, config) -
-            (0.1 + Math.random() * 0.8) * config.ringConfiguration.rings[ring].width * ringExpansionFactor())  // 0.1 to not position the on the outer edge of the segment
+                (0.1 + Math.random() * 0.8) * config.ringConfiguration.rings[ring].width * ringExpansionFactor())  // 0.1 to not position the on the outer edge of the segment
             r = config.maxRingRadius * rFactor
         }
         else {
@@ -244,14 +279,14 @@ const drawRadarBlip = (blip, d, viewpoint) => {
     let blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
 
     if (!viewpoint.blipDisplaySettings.applyShapes) {
-        blipShape = viewpoint.propertyVisualMaps.blip?.defaultShape ?? "circle" 
+        blipShape = viewpoint.propertyVisualMaps.blip?.defaultShape ?? "circle"
     }
     if (!viewpoint.blipDisplaySettings.applyColors) {
-        blipColor = viewpoint.propertyVisualMaps.blip?.defaultColor ?? "blue" 
+        blipColor = viewpoint.propertyVisualMaps.blip?.defaultColor ?? "blue"
     }
     if (!viewpoint.blipDisplaySettings.applySizes) {
-        blipSize = viewpoint.propertyVisualMaps.blip?.defaultSize ?? 1  
-        if (blipSize =="") blipSize=1
+        blipSize = viewpoint.propertyVisualMaps.blip?.defaultSize ?? 1
+        if (blipSize == "") blipSize = 1
     }
     let xy
 

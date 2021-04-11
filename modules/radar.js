@@ -31,7 +31,7 @@ function drawRadar(viewpoint, elementDecorator = null) {
         .attr("id", "radarCanvas")
 
     let sectorCanvas, ringCanvas
-    if ("sectors" == config.topLayer && config.editMode == true) { // draw top layer last 
+    if ("sectors" == config.topLayer ){ //&& config.editMode == true) { // draw top layer last 
         ringCanvas = drawRings(radarCanvas, config)
         sectorCanvas = drawSectors(radarCanvas, config, elementDecorator)
     }
@@ -67,13 +67,21 @@ function drawRadar(viewpoint, elementDecorator = null) {
 
     if (!getState().editMode) {
         // legend
-        initializeSizesLegend(viewpoint)
-        initializeShapesLegend(viewpoint)
-        initializeColorsLegend(viewpoint)
+        try {
+            initializeSizesLegend(viewpoint)
+        } catch (e) { console.log(`initializeSizesLegend failed with ${e} `) }
+        try {
+            initializeShapesLegend(viewpoint)
+        } catch (e) { console.log(`initializeShapesLegend failed with ${e} `) }
+        
+        try {
+            initializeColorsLegend(viewpoint)
+        } catch (e) { console.log(`initializeColorsLegend failed with ${e} `) }
+
     }
 
     if (!viewpoint.blipDisplaySettings?.hasOwnProperty("blipScaleFactor") || viewpoint.blipDisplaySettings?.blipScaleFactor == null) {
-        if (viewpoint.blipDisplaySettings == null) {viewpoint.blipDisplaySettings={}}
+        if (viewpoint.blipDisplaySettings == null) { viewpoint.blipDisplaySettings = {} }
         viewpoint.blipDisplaySettings.blipScaleFactor = 1
     }
     if (!viewpoint.blipDisplaySettings.hasOwnProperty("tagFilter") || viewpoint.blipDisplaySettings?.tagFilter == null
@@ -97,16 +105,21 @@ function initializeRadar(config) {
 
 
 const sectorExpansionFactor = (config) => {
+    const totalAvailableAngle = parseFloat(config.sectorConfiguration.totalAngle ?? 1)
+    const initialAngle = parseFloat(config.sectorConfiguration.initialAngle ?? 0)
+
     // factor to multiply each angle with - derived from the sum of angles of all visible sectors , calibrated with the total available angle
     const totalVisibleSectorsAngleSum = config.sectorConfiguration.sectors.reduce((sum, sector) =>
-        sum + (sector?.visible != false ? sector.angle : 0), 0)
-    return totalVisibleSectorsAngleSum == 0 ? 1 : 1 / totalVisibleSectorsAngleSum
+        sum + (sector?.visible != false ? parseFloat(sector.angle) : 0), 0)
+    const expansionFactor = parseFloat((totalAvailableAngle - initialAngle) * (totalVisibleSectorsAngleSum == 0 ? 1 : (1 / totalVisibleSectorsAngleSum)))
+    console.log(`expansionFactor ${expansionFactor}`)
+    return expansionFactor
 }
 
 const ringExpansionFactor = (config) => {
     // factor to multiply each witdh with - derived from the sum of widths of all visible rings , calibrated with the total available ring width
     const totalVisibleRingsWidthSum = config.ringConfiguration.rings.reduce((sum, ring) =>
-        sum + (ring?.visible != false ? ring.width : 0), 0)
+        sum + (ring?.visible != false ? parseFloat(ring.width) : 0), 0)
     return totalVisibleRingsWidthSum == 0 ? 1 : 1 / totalVisibleRingsWidthSum
 }
 
@@ -120,29 +133,36 @@ const drawSectors = function (radar, config, elementDecorator = null) {
     //     .attr("y2", 0)
     //     .style("stroke", config.colors.grid)
     //     .style("stroke-width", 1);
-
+    const initialAngle = parseFloat(config.sectorConfiguration.initialAngle ?? 0)
+    const sectorExpansionFctr = sectorExpansionFactor(config)
     for (let layer = 0; layer < 2; layer++) { // TODO if not edit mode then only one layer
-        let currentAnglePercentage = 0
+        let currentAnglePercentage = initialAngle
         for (let i = 0; i < config.sectorConfiguration.sectors.length; i++) {
             let sector = config.sectorConfiguration.sectors[i]
             if (sector?.visible == false) continue;
-            currentAnglePercentage = currentAnglePercentage + sectorExpansionFactor(config) * sector.angle
+            const sectorAnglePercentage = sectorExpansionFctr * sector.angle
+           // console.log(`sector ${i} sector.angle ${sector.angle} actually allotted ${sectorAnglePercentage}; current angle % = ${currentAnglePercentage}`)
             let currentAngle = 2 * Math.PI * currentAnglePercentage
             const sectorEndpoint = cartesianFromPolar({ r: config.sectorBoundariesExtended ? 2000 : config.maxRingRadius, phi: currentAngle })
+            let startAngle = (0.5 - 2 * (currentAnglePercentage + sectorAnglePercentage)) * Math.PI
+            let endAngle = (0.5 - 2 * currentAnglePercentage) * Math.PI
+            currentAnglePercentage += sectorAnglePercentage
 
-            let startAngle = (- 2 * (currentAnglePercentage - sectorExpansionFactor(config) * sector.angle) + 0.5) * Math.PI
-            let endAngle = (- 2 * currentAnglePercentage + 0.5) * Math.PI
+
+            // .startAngle(((0.5 - 2 *  sectorExpansionFactor(config)) * Math.PI))
+            // .endAngle(( 0.5 - 2 * initialAngle) * Math.PI)  
+
             if (layer == 0) {
                 // using angle and maxring radius, determine x and y for endpoint of line, then draw line
-                sectorCanvas.append("line")
-                    .attr("x1", 0).attr("y1", 0)
-                    .attr("x2", sectorEndpoint.x).attr("y2", - sectorEndpoint.y)
-                    .style("stroke", config.colors.grid)
-                    .style("stroke-width", 4);
+                // sectorCanvas.append("line")
+                //     .attr("x1", 0).attr("y1", 0)
+                //     .attr("x2", sectorEndpoint.x).attr("y2", - sectorEndpoint.y)
+                //     .style("stroke", config.colors.grid)
+                //     .style("stroke-width", 4);
 
                 const sectorArc = d3.arc()
                     .outerRadius(config.maxRingRadius)
-                    .innerRadius(3) // bull's eye - how big should it be?
+                    .innerRadius(1) // bull's eye - how big should it be?
                     // startAngle and endAngle are measured clockwise from the 12 o’clock in radians; the minus takes care of anti-clockwise and the +0.5 is for starting at the horizontal axis pointing east
                     .startAngle(startAngle)
                     .endAngle(endAngle)
@@ -230,9 +250,12 @@ const drawSectors = function (radar, config, elementDecorator = null) {
 }
 
 const drawRings = function (radar, config) {
+
     const ringCanvas = radar.append("g").attr("id", "ringCanvas")
     const totalRingPercentage = config.ringConfiguration.rings.reduce((sum, ring) => { return sum + (ring?.visible != false ? ring.width : 0) }, 0)
-    const totalSectorPercentage = config.sectorConfiguration.sectors.reduce((sum, sector) => { return sum + ((sector?.visible != false) ? sector.angle : 0) }, 0) // TODO cater for invisible sectors??
+    const initialAngle = config.sectorConfiguration.initialAngle ?? 0
+    const totalRadarAngle = config.sectorConfiguration.totalAngle ?? 1
+    // const totalSectorPercentage =config.sectorConfiguration.sectors.reduce((sum, sector) => { return sum + ((sector?.visible != false) ? sector.angle : 0) }, initialAngle)  
     // 
     let currentRadiusPercentage = totalRingPercentage * ringExpansionFactor(config)
     for (let i = 0; i < config.ringConfiguration.rings.length; i++) {
@@ -244,9 +267,9 @@ const drawRings = function (radar, config) {
         const ringArc = d3.arc()
             .outerRadius(config.maxRingRadius * currentRadiusPercentage)
             .innerRadius(config.maxRingRadius * (currentRadiusPercentage - ring.width * ringExpansionFactor(config)))
-            .startAngle(((0.5 - 2 * totalSectorPercentage * sectorExpansionFactor(config)) * Math.PI))
-            .endAngle(0.5 * Math.PI)
-
+            .startAngle(((0.5 - 2 * totalRadarAngle) * Math.PI))
+            .endAngle((0.5 - 2 * initialAngle) * Math.PI)
+        // -1.5 tot 0.5   van 0.5 - 2* total % tot 0.5 - 2* 0 
         ringCanvas.append("path")
             .attr("id", `ring${i}`)
             .attr("d", ringArc)
@@ -315,14 +338,16 @@ const drawRingLabels = function (radar, config, elementDecorator) {
 
 
 function displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sectorCanvas, sectorIndex, sector, config, elementDecorator = null) {
+    let sum = startAngle/(2* Math.PI) + 0.2
+    let anticlockwise = sum < 0 
     let textArc = d3.arc()
-        .outerRadius(config.maxRingRadius + 30)
+        .outerRadius(config.maxRingRadius + 20)
         .innerRadius(150)
         // startAngle and endAngle are measured clockwise from the 12 o’clock in radians; the minus takes care of anti-clockwise and the +0.5 is for starting at the horizontal axis pointing east
-        // for angle + rotation percentages up to 70%, we flip the text - by sweeping from end to begin
-        .endAngle((currentAnglePercentage + config.rotation) % 1 < 0.6 ? startAngle : endAngle)
-        .startAngle((currentAnglePercentage + config.rotation) % 1 < 0.6 ? endAngle : startAngle)
-    textArc = textArc().substring(0, textArc().indexOf("L"))
+        .endAngle(anticlockwise ? startAngle : endAngle)
+        .startAngle(anticlockwise ? endAngle : startAngle)
+
+        textArc = textArc().substring(0, textArc().indexOf("L"))
     // create the path following the circle along which the text is printed; the actual printing of the text is done next
     sectorCanvas.append("path")
         .attr("id", `pieText${sectorIndex}`)

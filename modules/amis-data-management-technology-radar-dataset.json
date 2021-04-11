@@ -276,6 +276,8 @@
                 },
                 "sectorConfiguration": {
                     "outsideSectorsAllowed": true,
+                    "totalAngle": 0.5,
+                    "initialAngle": 0.16,
                     "font": {
                         "color": "#000",
                         "fontSize": "28px",

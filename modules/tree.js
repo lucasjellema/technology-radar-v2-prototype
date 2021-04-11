@@ -127,7 +127,9 @@ const mapRadarDataToTreeModel = (radarData) => {
             if (objectType.properties != null) {
                 for (let j = 0; j < Object.keys(objectType.properties).length; j++) {
                     const property = objectType.properties[Object.keys(objectType.properties)[j]]
-                    objectTypeNode.children.properties.children[Object.keys(objectType.properties)[j]] = { label: property.label }
+                    objectTypeNode.children.properties.children[Object.keys(objectType.properties)[j]] =
+                     { label: property.label , propertyPath: `object.${Object.keys(objectType.properties)[j]}`
+                    , data: property}
                 }
             }
             data.model.children.objectTypes.children[Object.keys(radarData.model.objectTypes)[i]] = objectTypeNode
@@ -143,7 +145,8 @@ const mapRadarDataToTreeModel = (radarData) => {
             if (ratingType.properties != null) {
                 for (let j = 0; j < Object.keys(ratingType.properties).length; j++) {
                     const property = ratingType.properties[Object.keys(ratingType.properties)[j]]
-                    ratingTypeNode.children.properties.children[Object.keys(ratingType.properties)[j]] = { label: property.label }
+                    ratingTypeNode.children.properties.children[Object.keys(ratingType.properties)[j]] = 
+                    { label: property.label , property: property,  propertyPath: Object.keys(ratingType.properties)[j]}
                 }
             }
             data.model.children.ratingTypes.children[Object.keys(radarData.model.ratingTypes)[i]] = ratingTypeNode
@@ -198,11 +201,13 @@ const mapRadarDataToTreeModel = (radarData) => {
                 if (objectSets[objectTypeKey].size > 0) {
                     const objectType = radarData.model.objectTypes[objectTypeKey]
                     data.data.children[objectTypeKey] = { label: objectType.label, selectable: true, id: `dataobjects${objectTypeKey}`, children: {} }
-                    objectSets[objectTypeKey].forEach((objectLabel) => data.data.children[objectTypeKey].children[objectLabel] = { label: objectLabel })
+                    objectSets[objectTypeKey].forEach((objectLabel) => data.data.children[objectTypeKey].children[objectLabel] = { label: objectLabel, id:"uuid" })
                 }
             }
         }
     }
+    return data
+    // TODO fix issue with properties exception : data.objects is not organized by object type ; object keys are UUID 
     if (radarData.objects != null) {
         for (let i = 0; i < Object.keys(radarData.objects).length; i++) {
             const objectTypeKey = Object.keys(radarData.objects)[i]
@@ -342,9 +347,9 @@ const getDataFromSelectedTreeElementsInRadarData = (treeElementId, radarData) =>
 // }
 
 const initializeTree = (treeElementId, radarData, treeDataProcessingType = null, uploadedDataProcessorFunction=null) => {
-    try {
+  //  try {
     var treeview = new Treeview(treeElementId, "https://s3-us-west-2.amazonaws.com/s.cdpn.io/620300/");
-       treeview.replaceData(mapRadarDataToTreeModel(radarData));
+    treeview.replaceData(mapRadarDataToTreeModel(radarData));
 
     if (treeDataProcessingType == "download") {
         // button for downloading parts of the current data model
@@ -373,14 +378,14 @@ const initializeTree = (treeElementId, radarData, treeDataProcessingType = null,
     treeview.on("select", (event) => {
         var node = event.target;
         var data = node.dataset
-
-   // display.innerHTML = `<div class="label">${data.label}</div>${data.description ? `<div class="descr">${data.description}</div>` : ''}`;
+const display = document.getElementById("display")
+   display.innerHTML = `<div >${data.label}</div>${data.description ? `<div class="descr">${data.description}</div>` : ''}`;
         console.log(`${event.target} ${JSON.stringify(data)}`)
     });
 
-    } catch (e) {
-        console.log(`initializeTree failed with ${e}`)
-    }
+    // } catch (e) {
+    //     console.log(`initializeTree failed with ${e}`)
+    // }
 }
 
 
