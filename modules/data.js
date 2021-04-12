@@ -20,46 +20,85 @@ const datasetMap = {
 // prepare dataset for deserialization; 
 // replace blip.rating.{} with blip.rating.id
 // make sure all ratings and objects exist under data.objects and data.ratings
-// replace rating.object{} with rating.object.id
-// replace ratingType.objectType{} with ratingType.ObjectType{name}
-// replace viewpoint.ratingType{} with viewpoint.ratingType{name}
+// replace rating.object{} with string rating.object.id
+// replace ratingType.objectType{} with string ratingType.ObjectType{name}
+// replace viewpoint.ratingType{} with string viewpoint.ratingType{name}
 // round blip x and y
-const deserialize = (originalData) => {
-    const deserializedData = JSON.parse(JSON.stringify(originalData))
-    deserializedData.viewpoints.forEach((viewpoint) => {
+const serialize = (originalData) => {
+    const serializedData = JSON.parse(JSON.stringify(originalData))
+    serializedData.viewpoints.forEach((viewpoint) => {
         addUUIDtoBlips(viewpoint.blips) // probably unnecessary, should not harm
         viewpoint.blips.forEach((blip) => {
-            if  (!deserializedData.ratings.hasOwnProperty(blip.rating.id)){  // save rating in ratings
-                deserializedData.ratings[blip.rating.id]= blip.rating
+            if  (!serializedData.ratings.hasOwnProperty(blip.rating.id)){  // save rating in ratings
+                serializedData.ratings[blip.rating.id]= blip.rating
             }
             blip.rating = blip.rating.id
             if (blip.x != null) blip.x= Math.round(blip.x)
             if (blip.y != null) blip.y= Math.round(blip.y)
         })
         if (typeof(viewpoint.ratingType)=="object"){
-            deserializedData.model.ratingType[viewpoint.ratingType.name] = viewpoint.ratingType // save ratingType in model.ratingTypes
+            serializedData.model.ratingType[viewpoint.ratingType.name] = viewpoint.ratingType // save ratingType in model.ratingTypes
             viewpoint.ratingType= viewpoint.ratingType.name
         }
         
     })     
-    for (let i=0; i< Object.keys(deserializedData.ratings).length;i++) {
-        const rating= deserializedData.ratings[Object.keys(deserializedData.ratings)[i]]
-        if  (!deserializedData.objects.hasOwnProperty(rating.object.id)){  // save object in objects
-            deserializedData.objects[rating.object.id]= rating.object
+    for (let i=0; i< Object.keys(serializedData.ratings).length;i++) {
+        const rating= serializedData.ratings[Object.keys(serializedData.ratings)[i]]
+        if  (!serializedData.objects.hasOwnProperty(rating.object.id)){  // save object in objects
+            serializedData.objects[rating.object.id]= rating.object
         }
 
         rating.object = rating.object.id
     }
         // go over all rating types and replace their objectType object with objectType name
-        for (let i=0; i< Object.keys(deserializedData.model.ratingTypes).length;i++) {
-            const ratingType= deserializedData.model.ratingTypes[Object.keys(deserializedData.model.ratingTypes)[i]]
+        for (let i=0; i< Object.keys(serializedData.model.ratingTypes).length;i++) {
+            const ratingType= serializedData.model.ratingTypes[Object.keys(serializedData.model.ratingTypes)[i]]
             if (typeof(ratingType.objectType)=="object") {
               ratingType.objectType = ratingType.objectType.name
             }
         }
     
+        return serializedData
+}
+
+// INVOKED AFTER UPLOAD (TODO: and after load from local storage)
+// prepare dataset from serialized format; assume that the set is fully self contained - all objects and ratings are in the data set
+// replace blip.rating.id string with blip{rating} object
+// replace rating.object (id string value) with object (reference) 
+// replace ratingType.objectType (name as string) with ratingType.ObjectType (object reference)
+// replace viewpoint.ratingType (name as string) with viewpoint.ratingType{} object reference
+const deserialize = (originalData) => {
+    const deserializedData = JSON.parse(JSON.stringify(originalData)) // create clone
+
+    deserializedData.viewpoints.forEach((viewpoint) => {
+        viewpoint.blips.forEach((blip) => {
+            if (typeof (blip.rating) == "string") { // assume the rating is a reference to an UUID
+                blip.rating = deserializedData.ratings[blip.rating] 
+            }
+        })
+        if (viewpoint.ratingType != null && typeof(viewpoint.ratingType)=="string"){
+            viewpoint.ratingType=  deserializedData.model.ratingTypes[viewpoint.ratingType] 
+        }
+        
+    })     
+    for (let i=0; i< Object.keys(deserializedData.ratings).length;i++) {
+        const rating= deserializedData.ratings[Object.keys(deserializedData.ratings)[i]]
+        if (rating?.object != null && typeof(rating.object)=="string"){
+            rating.object = deserializedData.objects[rating.object]
+        }
+     }
+
+     for (let i=0; i< Object.keys(deserializedData.model.ratingTypes).length;i++) {
+        const ratingType= deserializedData.model.ratingTypes[Object.keys(deserializedData.model.ratingTypes)[i]]
+        if (typeof(ratingType.objectType)=="string") {
+          ratingType.objectType = deserializedData.model.objectTypes[ratingType.objectType]
+        }
+    }
+
+    
         return deserializedData
 }
+
 
 // some operations to improve data set
 // - build data.objects from the nested objects in ratings and blips
@@ -408,7 +447,7 @@ function download(filename, text) {
 }
 
 const downloadRadarData = function () {
-    download(`radar-data.json`, JSON.stringify(deserialize(data)))
+    download(`radar-data.json`, JSON.stringify(serialize(data)))
 }
 
 
@@ -427,7 +466,7 @@ function initializeUpload() {
 }
 
 let uploadedData
-//TODO support multiple filers
+//TODO support multiple files
 async function handleUploadedFiles() {
     if (!this.files.length) {
         console.log(`no files selected`)
@@ -436,29 +475,33 @@ async function handleUploadedFiles() {
 
         const contents = await this.files[0].text()
         uploadedData = JSON.parse(contents)
-        initializeTree("filemodelTree", uploadedData, "upload", (uploadedData) => {
+        // initializeTree("filemodelTree", uploadedData, "upload", (uploadedData) => {
 
-            console.log(`uploaded data has arrived ${JSON.stringify(uploadedData)}`)
-            data.model = Object.assign(data.model, uploadedData.model)
-            data.templates = data.templates.concat(uploadedData.templates)
-            data.viewpoints = data.viewpoints.concat(uploadedData.viewpoints)
-            // set id values on all ratings and objects that currently do not have them
-            // probably temporary function until all data sets have id values
-            // add uuid to objects and ratings - just to be sure
-            data.viewpoints.forEach((viewpoint) => addUUIDtoBlips(viewpoint.blips))
-            if (uploadedData.objects != null && uploadedData.objects.length > 0) {
-                // merge the arrays of uploaded objects in with the existing objects per object type
-                for (let i = 0; i < Object.keys(uploadedData.objects).length; i++) {
-                    data.objects[Object.keys(uploadedData.objects)[i]] =
-                        uploadedData.objects[Object.keys(uploadedData.objects)[i]].
-                            concat(data.objects[Object.keys(uploadedData.objects)[i]])
+        //     console.log(`uploaded data has arrived ${JSON.stringify(uploadedData)}`)
+        //     data.model = Object.assign(data.model, uploadedData.model)
+        //     data.templates = data.templates.concat(uploadedData.templates)
+        //     data.viewpoints = data.viewpoints.concat(uploadedData.viewpoints)
+        //     // set id values on all ratings and objects that currently do not have them
+        //     // probably temporary function until all data sets have id values
+        //     // add uuid to objects and ratings - just to be sure
+        //     data.viewpoints.forEach((viewpoint) => addUUIDtoBlips(viewpoint.blips))
+        //     if (uploadedData.objects != null && uploadedData.objects.length > 0) {
+        //         // merge the arrays of uploaded objects in with the existing objects per object type
+        //         for (let i = 0; i < Object.keys(uploadedData.objects).length; i++) {
+        //             data.objects[Object.keys(uploadedData.objects)[i]] =
+        //                 uploadedData.objects[Object.keys(uploadedData.objects)[i]].
+        //                     concat(data.objects[Object.keys(uploadedData.objects)[i]])
 
-                    data.objects[Object.keys(uploadedData.objects)[i]].forEach((object) => { if (object.id == null) { object.id = uuidv4() } })
-                }
-            }
+        //             data.objects[Object.keys(uploadedData.objects)[i]].forEach((object) => { if (object.id == null) { object.id = uuidv4() } })
+        //         }
+        //     }
 
-            publishRefreshRadar()
-        }, data.model)
+        //     publishRefreshRadar()
+        // }, data.model)
+        // TODO serialize data
+        const deserializedData = deserialize (uploadedData)
+        data = deserializedData
+        
         publishRefreshRadar()
 
     }
@@ -659,7 +702,7 @@ const populateTemplateSelector = () => {
 document.getElementById('save').addEventListener("click", saveDataToLocalStorage);
 document.getElementById('load').addEventListener("click", loadDataFromLocalStore);
 document.getElementById('download').addEventListener("click", downloadRadarData);
-document.getElementById('upload').addEventListener("click", uploadRadarData);
+document.getElementById('uploadRadarDatafile').addEventListener("click", uploadRadarData);
 document.getElementById('newTemplate').addEventListener("click", createNewTemplate);
 document.getElementById('cloneTemplate').addEventListener("click", cloneTemplate);
 document.getElementById('resetTemplate').addEventListener("click", resetCurrentTemplate);
