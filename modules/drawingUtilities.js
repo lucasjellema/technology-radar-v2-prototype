@@ -33,6 +33,9 @@ export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian}
             break
         }
     }
+    if (dropSector==null) {
+      dropSector = viewpoint.template.sectorConfiguration.sectors.length-1
+    }
     // iterate of rings until sum of ring widths > 1- radialPercentage; the last ring is the dropzone
 
     let dropRing
@@ -45,6 +48,11 @@ export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian}
             break
         }
     }
+    if (dropRing==null) {
+      dropRing = viewpoint.template.ringConfiguration.rings.length-1
+    }
+
+
     if (dropRadialPercentage > 1) dropRing = -1
    // console.log(`drop blip  ring ${dropRing} ${viewpoint.template.ringConfiguration.rings[dropRing]?.label}`)
     return {sector: dropSector, ring: dropRing}

@@ -7,7 +7,7 @@ import { launchRingConfigurator } from './ringConfigurator.js'
 import { launchDatamodelConfigurator } from './datamodelConfigurator.js'
 import { launchBlipConfigurator } from './blipConfigurator.js'
 import { launchShapeConfigurator } from './shapeConfigurator.js'
-
+import {launchRadarsManagementConfigurator} from './radarsManagement.js'
 
 
 
@@ -111,9 +111,8 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
             <span id="colorConfigurationTab" class="extra tagfilter">Colors</span>
             <span id="sizeConfigurationTab" class="extra tagfilter">Sizes</span>
             <span id="blipConfigurationTab" class="extra tagfilter">Blips</span>
+            <span id="radarManagementConfigurationTab" class="extra tagfilter" style="margin:60">Radars Management</span>
 `
-    // blips config for defining the properties that make up the label, the image, default color/shape/size
-
     tabContainer.innerHTML = html
     const selectedTab = document.getElementById(`${tab ?? "radar"}ConfigurationTab`)
     if (selectedTab != null) selectedTab.classList.add("warning")
@@ -129,9 +128,12 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
         , () => { launchMainEditor(viewpoint, drawRadarBlips, "radar") })
     document.getElementById(`datamodelConfigurationTab`).addEventListener("click"
         , () => { launchDatamodelConfigurator(viewpoint, drawRadarBlips) })
-    document.getElementById(`blipConfigurationTab`).addEventListener("click"
+        document.getElementById(`blipConfigurationTab`).addEventListener("click"
         , () => { launchBlipConfigurator(viewpoint, drawRadarBlips) })
-}
+
+        document.getElementById(`radarManagementConfigurationTab`).addEventListener("click"
+        , () => { launchRadarsManagementConfigurator() })
+    }
 
 const saveRadarSettings = (viewpoint) => {
     viewpoint.template.title.text = getElementValue("radarTitle")

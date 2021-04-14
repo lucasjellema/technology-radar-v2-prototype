@@ -1,4 +1,4 @@
-import { getNestedPropertyValueFromObject } from './utils.js'
+import { getNestedPropertyValueFromObject ,findDisplayProperty} from './utils.js'
 export { initializeTree }
 
 class Treeview {
@@ -78,18 +78,7 @@ class Treeview {
     }
 }
 
-const findDisplayProperty = (properties) => {
-    let displayProperty
-    for (let i = 0; i < Object.keys(properties).length; i++) {
-        const property = properties[Object.keys(properties)[i]]
-        if (i == 0 || (property.displayLabel != null && property.displayLabel)) { // i==0 is to provide a default value in case no property is designated as displayLabel
-            displayProperty = property
-            displayProperty.key = Object.keys(properties)[i]
-            break
-        }
-    }
-    return displayProperty
-}
+
 
 const mapRadarDataToTreeModel = (radarData) => {
     const data = {}

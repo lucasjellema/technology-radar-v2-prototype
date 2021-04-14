@@ -1,8 +1,8 @@
 
 export { launchBlipConfigurator }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
-import { getViewpoint, getData, publishRefreshRadar } from './data.js';
-import { capitalize, getPropertyFromPropertyPath, populateFontsList, populateShapesList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { getRatingTypeForRatingTypeName,getViewpoint, getData, publishRefreshRadar } from './data.js';
+import {  capitalize, getPropertyFromPropertyPath, populateFontsList, populateShapesList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 
 const launchBlipConfigurator = (viewpoint, drawRadarBlips) => {
     showOrHideElement("modalMain", true)
@@ -32,10 +32,7 @@ Blip Edge (decoration)?
 
 
 
-    let ratingType = viewpoint.ratingType
-    if (typeof (ratingType) == "string") {
-        ratingType = getData().model?.ratingTypes[ratingType]
-    }
+    let ratingType = getRatingTypeForRatingTypeName(viewpoint.ratingType)
     let ratingTypeProperties = getRatingTypeProperties(ratingType, getData().model)
 
     // populate list with all string properties 

@@ -10,7 +10,7 @@ import { capitalize, getPropertyValuesAndCounts, getPropertyFromPropertyPath, po
 const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
     //const valueOccurrenceMap = getPropertyValuesAndCounts(sectorVisualMap["property"], getData().ratings) // TODO only ratings of proper rating type!!
-    const valueOccurrenceMap = getValueOccurrenceMap(sectorVisualMap["property"], viewpoint, true);
+    const valueOccurrenceMap = (sectorVisualMap==null ||sectorVisualMap["property"]==null)?null:getValueOccurrenceMap(sectorVisualMap["property"], viewpoint, true);
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator - Sectors")
     document.getElementById("sectorConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
@@ -80,8 +80,8 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     <br/><br/> `
 
     contentContainer.innerHTML = `${html}`
-showOrHideElement("sectorAdvancedProps", false)
-document.getElementById('advancedSectorPropsToggle').addEventListener('click', () => { showOrHideElement('sectorAdvancedProps', true) })
+    showOrHideElement("sectorAdvancedProps", false)
+    document.getElementById('advancedSectorPropsToggle').addEventListener('click', () => { showOrHideElement('sectorAdvancedProps', true) })
 
     // add event listeners
     for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
@@ -328,8 +328,8 @@ function getValueOccurrenceMap(propertyPath, viewpoint, includeAllowableValues =
     else {
         valueOccurrenceMap = getPropertyValuesAndCounts(propertyPath, getData().ratings); // TODO only ratings of proper rating type!!
         if (includeAllowableValues) {
-            for (let i = 0; i < sectorProperty.property?.allowableValues?.length; i++) {
-                valueOccurrenceMap[sectorProperty.property?.allowableValues[i].value] = valueOccurrenceMap[sectorProperty.property?.allowableValues[i].value] ?? 0;
+            for (let i = 0; i < sectorProperty.allowableValues?.length; i++) {
+                valueOccurrenceMap[sectorProperty.allowableValues[i].value] = valueOccurrenceMap[sectorProperty.allowableValues[i].value] ?? 0;
             }
         }
     }

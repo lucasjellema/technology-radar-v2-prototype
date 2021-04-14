@@ -1,7 +1,7 @@
 
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
-import {createAndPopulateDataListFromBlipProperties, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, setTextOnElement, populateSelect, getRatingTypeProperties, showOrHideElement, initializeImagePaster } from './utils.js'
-import { getViewpoint, getObjectListOfOptions, getRatingListOfOptions, getData, createBlip } from './data.js'
+import {createAndPopulateDataListFromBlipProperties,  getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, setTextOnElement, populateSelect, getRatingTypeProperties, showOrHideElement, initializeImagePaster } from './utils.js'
+import { getViewpoint, getObjectListOfOptions, getRatingListOfOptions, getData, createBlip,getRatingTypeForRatingTypeName, } from './data.js'
 export { handleBlipDrag, launchNewBlipWizard, launchBlipEditor }
 
 
@@ -52,16 +52,14 @@ const launchNewBlipWizard = (viewpoint, drawRadarBlips) => {
                 </select>
                 <br />
              </div>`
-
-    populateSelect("objectSelect", getObjectListOfOptions(), null)
+    
+    populateSelect("objectSelect", getObjectListOfOptions(getRatingTypeForRatingTypeName(viewpoint.ratingType).objectType), null)
     document.getElementById("objectSelect").addEventListener("change", (e) => {
         console.log(`object selection changed to ${e.target.value}`)
         // find ratings for selected object
         const objectId = e.target.value
         if (objectId != null && objectId != "-1") {
-            // TODO: show ratingSelectionSection with the current ratings for this object (if any exist)
             populateSelect("ratingSelect", getRatingListOfOptions(viewpoint.ratingType, objectId), null)
-
             showOrHideElement('ratingSelectionSection', true)
         } else showOrHideElement('ratingSelectionSection', false)
     })
@@ -81,6 +79,8 @@ const launchNewBlipWizard = (viewpoint, drawRadarBlips) => {
         }
     })
 }
+
+
 
 const launchBlipEditor = (blip, viewpoint, drawRadarBlips) => {
     // var modal = document.getElementById("modalBlipEditor");
@@ -251,6 +251,22 @@ document.getElementById("saveBlipEdits").addEventListener("click", () => {
 })
 
 
+const getSectorExpansionFactor = (viewpoint) => {
+    const totalAvailableAngle = viewpoint.template.sectorConfiguration.totalAngle ?? 1
+    const initialAngle = parseFloat(viewpoint.template.sectorConfiguration.initialAngle ?? 0)
+    //  console.log(`totalAvailableAngle = ${totalAvailableAngle}`)
+
+    // factor to multiply each angle with - derived from the sum of angles of all visible sectors , calibrated with the total available angle
+    const totalVisibleSectorsAngleSum = viewpoint.template.sectorConfiguration.sectors.reduce((sum, sector) =>
+        sum + (sector?.visible != false ? sector.angle : 0), 0)
+    //    return totalAvailableAngle * (totalVisibleSectorsAngleSum == 0 ? 1 : 1 / totalVisibleSectorsAngleSum)
+    const expansionFactor = parseFloat((totalAvailableAngle - initialAngle) * (totalVisibleSectorsAngleSum == 0 ? 1 : (1 / totalVisibleSectorsAngleSum)))
+    //   console.log(`expansionFactor ${expansionFactor}`)
+    return expansionFactor
+
+}
+
+
 
 const handleBlipDrag = function (blipDragEvent, viewpoint) {
     // TODO not all elements are supported for dragging (yet) 
@@ -258,8 +274,9 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
     if (blipDragEvent.blipId.startsWith("sectorBackgroundImage")) { handleSectorBackgroundImageDrag(blipDragEvent, viewpoint) }
     else if (blipDragEvent.blipId.startsWith("radarBackgroundImage")) { handleRadarBackgroundImageDrag(blipDragEvent, viewpoint) }
     else {
-
-        const dropSegment = segmentFromCartesian({ x: blipDragEvent.newX, y: blipDragEvent.newY }, viewpoint)
+        // TODO use the real sector expansion factor!!!
+        let sectorExpansionFactor = getSectorExpansionFactor(viewpoint)
+        const dropSegment = segmentFromCartesian({ x: blipDragEvent.newX, y: blipDragEvent.newY }, viewpoint, sectorExpansionFactor)
         //console.log(`dropsegment ${JSON.stringify(dropSegment)}`)
         const blipId = blipDragEvent.blipId.substring(5)
         let blip

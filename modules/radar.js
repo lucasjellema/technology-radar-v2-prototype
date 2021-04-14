@@ -39,8 +39,6 @@ function drawRadar(viewpoint, elementDecorator = null) {
         sectorCanvas = drawSectors(radarCanvas, config, elementDecorator)
         ringCanvas = drawRings(radarCanvas, config)
     }
-    //rotation only on sectors - not on rings
-    sectorCanvas.attr("transform", `rotate(${-360 * config.rotation})`) // clockwise rotation
     drawRingLabels(radar, config, elementDecorator)
     const title = config.title.text
     const titleElement = radar.append("text")

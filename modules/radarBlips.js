@@ -1,6 +1,6 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { launchBlipEditor } from './blipEditing.js'
-import { getViewpoint, getData,publishRefreshRadar } from './data.js'
+import { getViewpoint, getData, publishRefreshRadar } from './data.js'
 import { getDistinctTagValues, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4 } from './utils.js'
 export { drawRadarBlips }
 
@@ -109,16 +109,16 @@ const drawRadarBlips = function (viewpoint) {
     document.getElementById('showLabels').checked = currentViewpoint.blipDisplaySettings.showLabels
 
     document.getElementById('showShapes').checked = currentViewpoint.blipDisplaySettings.showShapes
-    document.getElementById('sectors').checked = currentViewpoint.template.topLayer=="sectors"
-    document.getElementById('rings').checked = currentViewpoint.template.topLayer=="rings"
+    document.getElementById('sectors').checked = currentViewpoint.template.topLayer == "sectors"
+    document.getElementById('rings').checked = currentViewpoint.template.topLayer == "rings"
     document.getElementById('blipScaleFactorSlider').value = currentViewpoint.blipDisplaySettings.blipScaleFactor ?? 1
     document.getElementById('sectors').addEventListener("change", (e) => {
-        const changed = currentViewpoint.template.topLayer  != e.currentTarget.id
+        const changed = currentViewpoint.template.topLayer != e.currentTarget.id
         currentViewpoint.template.topLayer = e.currentTarget.id
         if (changed) publishRefreshRadar()
     });
     document.getElementById('rings').addEventListener("change", (e) => {
-        const changed = currentViewpoint.template.topLayer  != e.currentTarget.id
+        const changed = currentViewpoint.template.topLayer != e.currentTarget.id
         currentViewpoint.template.topLayer = e.currentTarget.id
         if (changed) publishRefreshRadar()
     });
@@ -262,27 +262,47 @@ const drawRadarBlip = (blip, d, viewpoint) => {
         //do NOT draw blip at all
         return
     }
+    let blipShape
+    try {
+        // TODO cater for : no shape property set; no shape property value to map; no default shape defined to fall back to
+        const propertyMappedToShape = viewpoint.propertyVisualMaps.shape.property
+        const blipShapeId = viewpoint.propertyVisualMaps.shape.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToShape)]
+            ?? viewpoint.propertyVisualMaps.shape.valueMap["other"]
+        blipShape = viewpoint.template.shapesConfiguration.shapes[blipShapeId].shape
+    } catch (e) { viewpoint.blipDisplaySettings.applyShapes = false; console.log(`draw radar blip fall back to no apply shape because of ${e}`) }
 
-    const propertyMappedToShape = viewpoint.propertyVisualMaps.shape.property
-    const blipShapeId = viewpoint.propertyVisualMaps.shape.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToShape)]
-        ?? viewpoint.propertyVisualMaps.shape.valueMap["other"]
-    let blipShape = viewpoint.template.shapesConfiguration.shapes[blipShapeId].shape
 
-    const propertyMappedToColor = viewpoint.propertyVisualMaps.color.property
-    const blipColorId = viewpoint.propertyVisualMaps.color.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToColor)]
-        ?? viewpoint.propertyVisualMaps.color.valueMap["other"]
-    let blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
+    let blipColor
+    try {
+        // TODO cater for : no color property set; no color property value to map; no default color defined to fall back to
+        const propertyMappedToColor = viewpoint.propertyVisualMaps.color.property
+        const blipColorId = viewpoint.propertyVisualMaps.color.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToColor)]
+            ?? viewpoint.propertyVisualMaps.color.valueMap["other"]
+        blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
+    } catch (e) {
+        viewpoint.blipDisplaySettings.applyColors = false;
+        console.log(`draw radar blip fall back to no apply color because of ${e}`)
+    }
 
-    const propertyMappedToSize = viewpoint.propertyVisualMaps.size.property
-    const blipSizeId = viewpoint.propertyVisualMaps.size.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSize)]
-        ?? viewpoint.propertyVisualMaps.size.valueMap["other"]
-    let blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
+    let blipSize
+    try {
+        // TODO cater for : no size property set; no size property value to map; no default size defined to fall back to
+        const propertyMappedToSize = viewpoint.propertyVisualMaps.size.property
+        const blipSizeId = viewpoint.propertyVisualMaps.size.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSize)]
+            ?? viewpoint.propertyVisualMaps.size.valueMap["other"]
+        blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
+    } catch (e) {
+        viewpoint.blipDisplaySettings.applySizes = false;
+        console.log(`draw radar blip fall back to no apply size because of ${e}`)
+    }
 
     if (!viewpoint.blipDisplaySettings.applyShapes) {
         blipShape = viewpoint.propertyVisualMaps.blip?.defaultShape ?? "circle"
+        if (blipShape == "") blipShape = "circle"
     }
     if (!viewpoint.blipDisplaySettings.applyColors) {
         blipColor = viewpoint.propertyVisualMaps.blip?.defaultColor ?? "blue"
+        if (blipColor == "") blipColor = "blue"
     }
     if (!viewpoint.blipDisplaySettings.applySizes) {
         blipSize = viewpoint.propertyVisualMaps.blip?.defaultSize ?? 1
@@ -487,7 +507,10 @@ const menu = (x, y, d, blip, viewpoint) => {
         });
 
     const entryHeight = 45 // number vertical pixel per context menu entry
-    let height = 30 + Math.max(Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length, Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length, Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length) * entryHeight // derive from maximum number of entries in each category
+    let height = 30 + Math.max(0,
+        viewpoint.propertyVisualMaps.size?.valueMap == null ? 0 : Object.keys(viewpoint.propertyVisualMaps.size?.valueMap)?.length
+        , viewpoint.propertyVisualMaps.shape?.valueMap == null ? 0 : Object.keys(viewpoint.propertyVisualMaps.shape?.valueMap)?.length
+        , viewpoint.propertyVisualMaps.color?.valueMap == null ? 0 : Object.keys(viewpoint.propertyVisualMaps.color?.valueMap)?.length) * entryHeight // derive from maximum number of entries in each category
     const circleRadius = 12
     const initialColumnIndent = 30
     const columnWidth = 70
@@ -525,19 +548,20 @@ const menu = (x, y, d, blip, viewpoint) => {
         .style("font-size", "12px")
         .style("font-weight", "normal")
         .attr("transform", "scale(0.7,1)")
-
-    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length; i++) {
-        const key = Object.keys(viewpoint.propertyVisualMaps.size.valueMap)[i]
-        const scaleFactor = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].size
-        const label = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].label
-        const sizeEntry = sizesBox.append('g')
-            .attr("transform", `translate(0, ${30 + i * entryHeight})`)
-            .append('circle')
-            .attr("id", `templateSizes${i}`)
-            .attr("r", circleRadius)
-            .attr("fill", "black")
-            .attr("transform", `scale(${scaleFactor})`)
-        decorateContextMenuEntry(sizeEntry, "size", key, d, viewpoint, label)
+    if (viewpoint.propertyVisualMaps.size?.valueMap != null) {
+        for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length; i++) {
+            const key = Object.keys(viewpoint.propertyVisualMaps.size.valueMap)[i]
+            const scaleFactor = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].size
+            const label = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].label
+            const sizeEntry = sizesBox.append('g')
+                .attr("transform", `translate(0, ${30 + i * entryHeight})`)
+                .append('circle')
+                .attr("id", `templateSizes${i}`)
+                .attr("r", circleRadius)
+                .attr("fill", "black")
+                .attr("transform", `scale(${scaleFactor})`)
+            decorateContextMenuEntry(sizeEntry, "size", key, d, viewpoint, label)
+        }
     }
     const shapesBox = contextMenu.append('g')
         .attr('class', 'shapesBox')
@@ -552,59 +576,62 @@ const menu = (x, y, d, blip, viewpoint) => {
         .style("font-weight", "normal")
         .attr("transform", "scale(0.7,1)")
 
+    if (viewpoint.propertyVisualMaps.shape?.valueMap != null) {
 
-    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
-        const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
-        const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
-        const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
-        const shapeEntry = shapesBox.append('g')
-            .attr("transform", `translate(0, ${30 + i * entryHeight})`)
-        let shape
+        for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
+            const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
+            const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
+            const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
+            const shapeEntry = shapesBox.append('g')
+                .attr("transform", `translate(0, ${30 + i * entryHeight})`)
+            let shape
 
-        if (shapeToDraw == "circle") {
-            shape = shapeEntry.append("circle")
-                .attr("r", circleRadius)
-        }
-        if (shapeToDraw == "diamond") {
-            const diamond = d3.symbol().type(d3.symbolDiamond).size(420);
-            shape = shapeEntry.append('path').attr("d", diamond)
-        }
-        if (shapeToDraw == "square") {
-            const square = d3.symbol().type(d3.symbolSquare).size(420);
-            shape = shapeEntry.append('path').attr("d", square)
-        }
-        if (shapeToDraw == "star") {
-            const star = d3.symbol().type(d3.symbolStar).size(420);
-            shape = shapeEntry.append('path').attr("d", star)
-        }
-        if (shapeToDraw == "plus") {
-            const plus = d3.symbol().type(d3.symbolCross).size(420);
-            shape = shapeEntry.append('path').attr("d", plus)
-        }
-        if (shapeToDraw == "triangle") {
-            const triangle = d3.symbol().type(d3.symbolTriangle).size(420);
-            shape = shapeEntry.append('path').attr("d", triangle)
-        }
-        if (shapeToDraw == "rectangleHorizontal") {
-            shape = shapeEntry.append('rect').attr('width', 38)
-                .attr('height', 10)
-                .attr('x', -20)
-                .attr('y', -4)
-        }
+            if (shapeToDraw == "circle") {
+                shape = shapeEntry.append("circle")
+                    .attr("r", circleRadius)
+            }
+            if (shapeToDraw == "diamond") {
+                const diamond = d3.symbol().type(d3.symbolDiamond).size(420);
+                shape = shapeEntry.append('path').attr("d", diamond)
+            }
+            if (shapeToDraw == "square") {
+                const square = d3.symbol().type(d3.symbolSquare).size(420);
+                shape = shapeEntry.append('path').attr("d", square)
+            }
+            if (shapeToDraw == "star") {
+                const star = d3.symbol().type(d3.symbolStar).size(420);
+                shape = shapeEntry.append('path').attr("d", star)
+            }
+            if (shapeToDraw == "plus") {
+                const plus = d3.symbol().type(d3.symbolCross).size(420);
+                shape = shapeEntry.append('path').attr("d", plus)
+            }
+            if (shapeToDraw == "triangle") {
+                const triangle = d3.symbol().type(d3.symbolTriangle).size(420);
+                shape = shapeEntry.append('path').attr("d", triangle)
+            }
+            if (shapeToDraw == "rectangleHorizontal") {
+                shape = shapeEntry.append('rect').attr('width', 38)
+                    .attr('height', 10)
+                    .attr('x', -20)
+                    .attr('y', -4)
+            }
 
-        if (shapeToDraw == "rectangleVertical") {
-            shape = shapeEntry.append('rect')
-                .attr('width', 10)
-                .attr('height', 38)
-                .attr('x', -5)
-                .attr('y', -15)
+            if (shapeToDraw == "rectangleVertical") {
+                shape = shapeEntry.append('rect')
+                    .attr('width', 10)
+                    .attr('height', 38)
+                    .attr('x', -5)
+                    .attr('y', -15)
+            }
+            if (shape) {
+            shape
+                .attr("id", `templateSizes${i}`)
+                .attr("fill", "black")
+
+            decorateContextMenuEntry(shapeEntry, "shape", key, d, viewpoint, label)
+            }
         }
-
-        shape
-            .attr("id", `templateSizes${i}`)
-            .attr("fill", "black")
-
-        decorateContextMenuEntry(shapeEntry, "shape", key, d, viewpoint, label)
     }
     // draw color
     const colorsBox = contextMenu.append('g')
@@ -618,18 +645,21 @@ const menu = (x, y, d, blip, viewpoint) => {
         .style("font-size", "12px")
         .style("font-weight", "normal")
         .attr("transform", "scale(0.7,1)")
-    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length; i++) {
-        const key = Object.keys(viewpoint.propertyVisualMaps.color.valueMap)[i]
-        const colorToFill = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].color
-        const label = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].label
-        const colorEntry = colorsBox.append('g')
-            .attr("transform", `translate(0, ${30 + i * entryHeight})`)
-            .append('circle')
-            .attr("id", `templateSizes${i}`)
-            .attr("r", circleRadius)
-            .attr("fill", colorToFill)
+    if (viewpoint.propertyVisualMaps.color?.valueMap != null) {
 
-        decorateContextMenuEntry(colorEntry, "color", key, d, viewpoint, label)
+        for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length; i++) {
+            const key = Object.keys(viewpoint.propertyVisualMaps.color.valueMap)[i]
+            const colorToFill = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].color
+            const label = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].label
+            const colorEntry = colorsBox.append('g')
+                .attr("transform", `translate(0, ${30 + i * entryHeight})`)
+                .append('circle')
+                .attr("id", `templateSizes${i}`)
+                .attr("r", circleRadius)
+                .attr("fill", colorToFill)
+
+            decorateContextMenuEntry(colorEntry, "color", key, d, viewpoint, label)
+        }
     }
     const iconsBox = contextMenu.append('g')
         .attr('class', 'iconsBox')

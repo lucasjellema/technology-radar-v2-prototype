@@ -11,7 +11,7 @@ import { capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, po
 const launchShapeConfigurator = (viewpoint, drawRadarBlips) => {
     const shapeVisualMap = viewpoint.propertyVisualMaps["shape"]
     //const valueOccurrenceMap = getPropertyValuesAndCounts(shapeVisualMap["property"], getData().ratings) // TODO only ratings of proper rating type!!
-    const valueOccurrenceMap = getValueOccurrenceMap(shapeVisualMap["property"], viewpoint, true);
+    const valueOccurrenceMap = (shapeVisualMap==null ||shapeVisualMap["property"]==null)?null:getValueOccurrenceMap(shapeVisualMap["property"], viewpoint, true);
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator - Shapes")
     document.getElementById("shapeConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
@@ -257,8 +257,8 @@ function getValueOccurrenceMap(propertyPath, viewpoint, includeAllowableValues =
     else {
         valueOccurrenceMap = getPropertyValuesAndCounts(propertyPath, getData().ratings); // TODO only ratings of proper rating type!!
         if (includeAllowableValues) {
-            for (let i = 0; i < shapeProperty.property?.allowableValues?.length; i++) {
-                valueOccurrenceMap[shapeProperty.property?.allowableValues[i].value] = valueOccurrenceMap[shapeProperty.property?.allowableValues[i].value] ?? 0;
+            for (let i = 0; i < shapeProperty.allowableValues?.length; i++) {
+                valueOccurrenceMap[shapeProperty.allowableValues[i].value] = valueOccurrenceMap[shapeProperty.property?.allowableValues[i].value] ?? 0;
             }
         }
     }
