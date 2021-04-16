@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="https://res.conclusion.nl/inc/img/favicon.gif">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="./radar.css">
-    
+
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://unpkg.com/d3-simple-slider"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
@@ -34,7 +34,7 @@
             <span id="closeModalMain" class="close">&times;</span>
             <h3 id="modalMainTitle"></h3>
             <div id="modalMainTabs">
-        </div>
+            </div>
         </div>
         <!-- Modal content -->
         <div class="modal-content">
@@ -57,45 +57,9 @@
             <h3 id="blipEditorTitle"></h3>
 
             <div id="newBlip">
-                <div class="column1_3">
-                    <div id="objectForNewBlipSelectionContainer">
-                    </div>
-                    <br />
-                    <p>or</p>
-                    <hr />
-                    <label for="newObjectLabel">Label for new object</label>
-                    <input type="text" title="Label for new object" id="newObjectLabel"></input>
-                </div>
-                <div id="ratingSelectionSection" class="column1_3">
-                    <label for="ratingSelect">Based on Existing Rating</label>
-                    <select id="ratingSelect" name="ratingSelect">
-                        <option value="" disabled selected>Select Rating to create Blip for</option>
-                    </select>
-                    <label for="newRatingCheck">Create a new rating</label>
-                    <input type="checkbox" title="Create a new rating for the object" id="newRatingCheck"></input>
-                </div>
-                <div id="newblipEditorButtonBar" style="position: absolute; bottom: 25;right: 100;">
-
-                </div>
-                <br /><br /><br /><br />
-                <br /><br /><br /><br />
-                <br /><br /><br /><br />
-
             </div>
             <div id="blipForm">
 
-                <table id="blipEditorTable">
-                </table>
-                <hr />
-                <label for="blipTagsContainer">Tags</label>
-                <div id="blipTagsContainer"></div>
-                <br />
-                <div id="tagControls">
-                </div>
-
-                <div id="blipEditorButtonBar" style="position: absolute; bottom: 25;right: 100;">
-                    <input id="saveBlipEdits" type="button" value="Save Changes"></input>
-                </div>
             </div>
         </div>
         <script>
@@ -171,15 +135,15 @@
                     <input id="blipScaleFactorSlider" type="range" min="0.1" max="5" step="0.1" value="1"
                         style="width:80%"></input>
                 </div>
-                <br/>
+                <br />
                 <label for="layering">Select top layer</label>
                 <div id="layering">
-                        <input type="radio" id="sectors" name="layering" value="sectors" checked>
-                        <label for=" sectors">Sectors</label>
-                        <input type="radio" id="rings" name="layering" value="rings">
-                        <label for="rings">Rings</label>
+                    <input type="radio" id="sectors" name="layering" value="sectors" checked>
+                    <label for=" sectors">Sectors</label>
+                    <input type="radio" id="rings" name="layering" value="rings">
+                    <label for="rings">Rings</label>
                 </div>
-    
+
                 <div id="filter">
                     <br />
                     <label for="tagFilter">Filter on Tags</label>
@@ -307,7 +271,7 @@
 
             if (event.type == "editBlipDefaults") {
                 const blip = getDefaultSettingsBlip()
-                launchBlipEditor(blip, getViewpoint(), (viewpoint) => { setDefaultSettingsBlip(blip) })
+                launchBlipEditor(blip, getViewpoint(), (viewpoint) => { setDefaultSettingsBlip(blip) }, false)
             }
 
             if (event.type == "shuffleBlips") {
@@ -320,12 +284,26 @@
                 launchRingEditor(event.ring, getViewpoint(), drawRadarBlips)
             }
             if (event.type == "sectorDrilldown") {
-                // set visible to false for all sectors except for sector event.sector; then redraw radar and blips
-                getViewpoint().template.sectorConfiguration.sectors.forEach((sector, i) => sector.visible = (i == event.sector))
+                // if currently only one sector is visible, the drilldown is actually a drill up and all sectors should be made visible
+                const numberOfVisibleSectors = getViewpoint().template.sectorConfiguration.sectors.filter((sector) => sector.visible).length
+                if (numberOfVisibleSectors == 1) {
+                    // drill up: set visible to true for all sectors ; then redraw radar and blips
+                    getViewpoint().template.sectorConfiguration.sectors.forEach((sector, i) => sector.visible = true)
+                } else {
+                    // set visible to false for all sectors except for sector event.sector; then redraw radar and blips
+                    getViewpoint().template.sectorConfiguration.sectors.forEach((sector, i) => sector.visible = (i == event.sector))
+                }
                 shuffleBlips()
             } if (event.type == "ringDrilldown") {
-                // set visible to false for all sectors except for sector event.sector; then redraw radar and blips
-                getViewpoint().template.ringConfiguration.rings.forEach((ring, i) => ring.visible = (i == event.ring))
+                // if currently only one ring is visible, the drilldown is actually a drill up and all rings should be made visible
+                const numberOfVisibleRings = getViewpoint().template.ringConfiguration.rings.filter((ring) => ring.visible).length
+                if (numberOfVisibleRings == 1) {
+                    // drill up: set visible to true for all ringfs except for sector event.sector; then redraw radar and blips
+                    getViewpoint().template.ringConfiguration.rings.forEach((ring, i) => ring.visible = true)
+                } else {
+                    // drill down: set visible to false for all rings except for ring event.ring; then redraw radar and blips
+                    getViewpoint().template.ringConfiguration.rings.forEach((ring, i) => ring.visible = (i == event.ring))
+                }
                 shuffleBlips()
             }
 
