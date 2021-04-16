@@ -39,7 +39,7 @@ const getPropertyValuesAndCounts = (propertyPath, ratings, ratingTypeName = null
     const valueOccurenceMap = {}
     for (let i = 0; i < Object.keys(ratings).length; i++) {
         const rating = ratings[Object.keys(ratings)[i]]
-        if (ratingTypeName == null || rating.ratingType == ratingTypeName ) {
+        if (ratingTypeName == null || rating.ratingType == ratingTypeName || rating.ratingType?.name == ratingTypeName ) {
             const value = getNestedPropertyValueFromObject(rating, propertyPath)
             const currentCount = valueOccurenceMap[value] ?? 0
             valueOccurenceMap[value] = currentCount + 1

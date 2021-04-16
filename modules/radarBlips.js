@@ -928,6 +928,11 @@ function blipWindow(blip, viewpoint) {
         for (let propertyName in ratingType.properties) {
             const property = ratingType.properties[propertyName]
             let value = blip.rating[propertyName]
+            if (property.type == "time") {
+                // rewrite value to nice date time format
+                const date = new Date(value)
+                value = date.toDateString()
+            }
             if (property.allowableValues != null && property.allowableValues.length > 0) {
                 value = getLabelForAllowableValue(value, property.allowableValues)
             }

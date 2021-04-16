@@ -291,6 +291,9 @@ const launchBlipEditor = (blip, viewpoint, drawRadarBlips, editObject = true) =>
         else if (blipProperty.property.type == "text") {
             inputElement = `<textarea id="${inputElementId}" rows="2" columns="75" value="${value}"></textarea>`
         }
+        else if (blipProperty.property.type == "time") {
+            inputElement = `<input id="${inputElementId}" type="date" ></input>`
+        }
 
         else {
             inputElement = `<input id="${inputElementId}" type="text" value="${value}"></input>`
@@ -314,6 +317,10 @@ const launchBlipEditor = (blip, viewpoint, drawRadarBlips, editObject = true) =>
         if (blipProperty.property.allowableValues != null && blipProperty.property.allowableValues.length > 0) {
             let value = getNestedPropertyValueFromObject(blip.rating, blipProperty.propertyPath)
             populateSelect(inputElementId, blipProperty.property.allowableValues, value)
+        }
+        if (blipProperty.property.type == "time") {
+            let value = getNestedPropertyValueFromObject(blip.rating, blipProperty.propertyPath)
+            document.getElementById(inputElementId).valueAsNumber= value
         }
         if (blipProperty.property.type == "image") {
             initializeImagePaster((imageURL) => {
@@ -388,6 +395,7 @@ const saveBlipEdit = (editObject) => {
         else {
             const inputElementId = `blip${blipProperty.propertyPath}`
             let value = document.getElementById(inputElementId).value
+            if (blipProperty.property.type == "time") {value = document.getElementById(inputElementId).valueAsNumber}
             setNestedPropertyValueOnObject(blip.rating, blipProperty.propertyPath, value)
         }
     }

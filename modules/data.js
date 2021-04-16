@@ -1,5 +1,5 @@
 export {
-    initializeViewpointFromURL, initializeFiltersTagsFromURL, getDefaultSettingsBlip,createRating 
+    initializeViewpointFromURL, initializeFiltersTagsFromURL, getDefaultSettingsBlip, createRating, createObject
     , setDefaultSettingsBlip, shuffleBlips, getConfiguration, getViewpoint, getData, getObjectById
     , populateTemplateSelector, createBlip, getObjectListOfOptions, getRatingListOfOptions, getRatingTypeForRatingTypeName, subscribeToRadarRefresh, getState, publishRefreshRadar
 }
@@ -128,13 +128,13 @@ const normalizeDataSet = (dataset) => {
     dataset.ratings = dataset.ratings ?? {}
     for (let i = 0; i < Object.keys(dataset.objects).length; i++) {
         const object = dataset.ratings[Object.keys(dataset.ratings)[i]]
-  // will this ruin anything?     object.objectType = dataset.model.objectTypes[object.objectType]
+        // will this ruin anything?     object.objectType = dataset.model.objectTypes[object.objectType]
     }
 
     for (let i = 0; i < Object.keys(dataset.ratings).length; i++) {
         const rating = dataset.ratings[Object.keys(dataset.ratings)[i]]
         rating.object = dataset.objects[rating.object]
-// will this ruin anything?       rating.ratingType = dataset.model.ratingTypes[rating.ratingType]
+        // will this ruin anything?       rating.ratingType = dataset.model.ratingTypes[rating.ratingType]
     }
 
 
@@ -359,6 +359,23 @@ const initializeDatasetFromURL = async () => {
 initializeDatasetFromURL()
 //let radarIndex = { templates: [{ title: encodeURI(config.title.text), description: "", lastupdate: "20210310T192400" }], objects: [] }
 
+const createObject = (objectTypeName) => {
+    let object = {
+        id: uuidv4(),
+        timestamp: Date.now(),
+        objectType: getData().model.objectTypes[objectTypeName]
+    }
+    let properties = getData().model.objectTypes[objectTypeName].properties
+    for (let i = 0; i < properties.length; i++) {
+        const property = properties[i]
+        if (property.defaultValue != null) {
+            object[property.name] = property.defaultValue
+        }
+    }
+    return object
+}
+
+
 const createRating = (ratingTypeName, object) => {
     let rating = {
         id: uuidv4(),
@@ -374,14 +391,14 @@ const createRating = (ratingTypeName, object) => {
 
     for (let i = 0; i < properties.length; i++) {
         const property = properties[i]
-//        if (property.property.type == "string" || property.property.type == "text" || property.property.type == "url") {
+        if (property.property.type != "time") { // || property.property.type == "text" || property.property.type == "url") {
             let value = getNestedPropertyValueFromObject(defaultRating, property.propertyPath)
-            if (value == null || value.length==0 || value == "-1"){
-              // the value was not set on the defaultRating; perhaps the property definition contains a default value
-              value = property.property?.defaultValue 
-            } 
+            if (value == null || value.length == 0 || value == "-1") {
+                // the value was not set on the defaultRating; perhaps the property definition contains a default value
+                value = property.property?.defaultValue
+            }
             setNestedPropertyValueOnObject(rating, property.propertyPath, value)
-  //      }
+        }
     }
     return rating
 }
@@ -391,7 +408,7 @@ const createRating = (ratingTypeName, object) => {
 const createBlip = (objectId, objectNewLabel, ratingId = null, viewpoint = getState().currentViewpoint) => {
     const focusRatingTypeName = typeof (viewpoint.ratingType) == "object" ? viewpoint.ratingType.name : viewpoint.ratingType
     let object = objectId != null ? getObjectById(objectId)
-        : { id: uuidv4(), pending: true, objectType: viewpoint.ratingType.objectType.name }
+        : createObject(viewpoint.ratingType.objectType.name)
 
     let rating = (ratingId != null && ratingId.length > 0)
         ? getRatingById(ratingId)
