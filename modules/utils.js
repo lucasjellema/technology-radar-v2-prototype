@@ -2,9 +2,9 @@ export {
     isOperationBlackedOut, uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject
     , getRatingTypeProperties, getElementValue, showOrHideElement, getDateTimeString
     , populateSelect, getAllKeysMappedToValue, createAndPopulateDataListFromBlipProperties
-    , populateFontsList,populateDataTypesList, populateShapesList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
+    , populateFontsList, populateDataTypesList, populateShapesList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
     , getDistinctTagValues, getPropertyValuesAndCounts, populateDatalistFromValueSet, getPropertyFromPropertyPath
-    , findDisplayProperty
+    , findDisplayProperty, getListOfSupportedShapes
 }
 
 
@@ -35,12 +35,15 @@ function addValuesForProperty(propertyPath, blips, distinctValues) {
     return distinctValues
 }
 
-const getPropertyValuesAndCounts = (propertyPath, ratings) => { // filter on rating type!
+const getPropertyValuesAndCounts = (propertyPath, ratings, ratingTypeName = null) => { // filter on rating type!
     const valueOccurenceMap = {}
     for (let i = 0; i < Object.keys(ratings).length; i++) {
-        const value = getNestedPropertyValueFromObject(ratings[Object.keys(ratings)[i]], propertyPath)
-        const currentCount = valueOccurenceMap[value] ?? 0
-        valueOccurenceMap[value] = currentCount + 1
+        const rating = ratings[Object.keys(ratings)[i]]
+        if (ratingTypeName == null || rating.ratingType == ratingTypeName ) {
+            const value = getNestedPropertyValueFromObject(rating, propertyPath)
+            const currentCount = valueOccurenceMap[value] ?? 0
+            valueOccurenceMap[value] = currentCount + 1
+        }
     }
     return valueOccurenceMap
 }
@@ -215,16 +218,16 @@ const populateSelect = (selectElementId, data, defaultValue = null) => { // data
     }
 }
 
-const populateDataTypesList = (datatypesListElementId, value="string") => {
+const populateDataTypesList = (datatypesListElementId, value = "string") => {
     const datatypesList = []
-    datatypesList.push({label:`String`, value:`string`})
-    datatypesList.push({label:`Text`, value:`text`})
-    datatypesList.push({label:`URL`, value:`url`})
-    datatypesList.push({label:`Number`, value:`number`})
-    datatypesList.push({label:`Image`, value:`image`})
-    datatypesList.push({label:`Time`, value:`time`})
-    datatypesList.push({label:`Tags`, value:`tags`})
- 
+    datatypesList.push({ label: `String`, value: `string` })
+    datatypesList.push({ label: `Text`, value: `text` })
+    datatypesList.push({ label: `URL`, value: `url` })
+    datatypesList.push({ label: `Number`, value: `number` })
+    datatypesList.push({ label: `Image`, value: `image` })
+    datatypesList.push({ label: `Time`, value: `time` })
+    datatypesList.push({ label: `Tags`, value: `tags` })
+
     populateSelect(datatypesListElementId, datatypesList, value)
 }
 
@@ -254,15 +257,22 @@ const populateFontsList = (fontsListElementId) => {
 
 
 const populateShapesList = (shapesListElementId) => {
+
+    populateDatalistFromValueSet(shapesListElementId, getListOfSupportedShapes())
+}
+
+const getListOfSupportedShapes = () => {
     const shapesList = []
     shapesList.push(`circle`)
     shapesList.push(`diamond`)
     shapesList.push(`square`)
     shapesList.push(`triangle`)
-    shapesList.push(`ring`)
+    shapesList.push(`plus`)
+    shapesList.push(`rectangleHorizontal`)
+    shapesList.push(`rectangleVertical`)
     shapesList.push(`star`)
-
-    populateDatalistFromValueSet(shapesListElementId, shapesList)
+    shapesList.push(`ring`)
+    return shapesList
 }
 
 

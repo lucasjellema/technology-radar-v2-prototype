@@ -267,13 +267,15 @@
                         "label": "Scope",
                         "description": "The scope or context to which the rating applies",
                         "defaultValue": "AMIS",
-                        "discrete": true
+                        "discrete": true,
+                        "context":true
                     },
                     "author": {
                         "label": "Author/Evaluator",
                         "description": "The name of the person who made the judgement",
                         "defaultValue": "System Generated",
-                        "discrete": true
+                        "discrete": true,
+                        "context":true
                     },
                     "timestamp": {
                         "label": "Time of Evaluation",
@@ -353,6 +355,20 @@
                         "type": "string",
                         "defaultValue": "idea",
                         "discrete": false
+                    },
+                    "scope": {
+                        "label": "Scope",
+                        "description": "The scope or context to which the rating applies",
+                        "defaultValue": "AMIS",
+                        "discrete": true,
+                        "context":true
+                    },
+                    "author": {
+                        "label": "Author/Evaluator",
+                        "description": "The name of the person who made the judgement",
+                        "defaultValue": "System Generated",
+                        "discrete": true,
+                        "context":true
                     },
                     "remainingEffort": {
                         "name": "remainingEffort",
@@ -441,23 +457,28 @@
                     "rings": [
                         {
                             "label": "Geen Tijd in Stoppen",
-                            "width": 0.1
+                            "width": 0.1,
+                            "visible": true
                         },
                         {
                             "label": "Potentie",
-                            "width": 0.1
+                            "width": 0.1,
+                            "visible": true
                         },
                         {
                             "label": "Verkennen",
-                            "width": 0.14
+                            "width": 0.14,
+                            "visible": true
                         },
                         {
                             "label": "Toepassen",
-                            "width": 0.15
+                            "width": 0.15,
+                            "visible": true
                         },
                         {
                             "label": "In Productie",
-                            "width": 0.52
+                            "width": 0.52,
+                            "visible": true
                         }
                     ]
                 },
@@ -560,7 +581,8 @@
                             },
                             "backgroundImage": {},
                             "backgroundColor": "#FFFFFF",
-                            "outerringBackgroundColor": "#FFFFFF"
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true
                         },
                         {
                             "label": "Time Series",
@@ -601,7 +623,8 @@
                             },
                             "backgroundImage": {},
                             "backgroundColor": "#FFFFFF",
-                            "outerringBackgroundColor": "#FFFFFF"
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true
                         },
                         {
                             "label": "Blob Storage",
@@ -619,7 +642,8 @@
                             },
                             "backgroundImage": {},
                             "backgroundColor": "#FFFFFF",
-                            "outerringBackgroundColor": "#FFFFFF"
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true
                         },
                         {
                             "label": "Data Lake",
@@ -834,338 +858,338 @@
                 {
                     "id": "0",
                     "rating": "9ed7f7cc-bc8d-4585-84d4-8aabcf397eb0",
-                    "x": 34,
-                    "y": -92
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "1",
                     "rating": "a20f011c-964a-48f7-92e0-f7fc52161c8c",
-                    "x": 82,
-                    "y": -41
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "2",
                     "rating": "fae47773-b37f-48bc-9fd2-486c495a161c",
-                    "x": -114,
-                    "y": -103
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "3",
                     "rating": "26e02ede-17ed-40b0-b6d7-0ce86c24a7f4",
-                    "x": 202,
-                    "y": -382
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "4",
                     "rating": "8c94467b-1a79-4267-a591-1404c9b38776",
-                    "x": 87,
-                    "y": -374
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "5",
                     "rating": "8299c5c2-d0d0-43f5-ba52-c885943f06e9",
-                    "x": 94,
-                    "y": -159
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "6",
                     "rating": "dd8836fa-0b8f-40ca-808e-b3f82d1cb80a",
-                    "x": -251,
-                    "y": 90
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "7",
                     "rating": "6637ea01-d856-4f05-bc6d-cc194347fe3d",
-                    "x": -187,
-                    "y": 6
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "8",
                     "rating": "2ffcd5de-6ab7-4bd7-b343-fe7ad785f600",
-                    "x": -268,
-                    "y": -36
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "9",
                     "rating": "f883299d-64fe-4fcf-b564-4e605520f132",
-                    "x": -426,
-                    "y": 82
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "10",
                     "rating": "05218183-c430-44eb-b9d9-98a7666703ca",
-                    "x": 208,
-                    "y": -172
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "11",
                     "rating": "6a8f1495-d650-46c3-955b-55a1ca3a9521",
-                    "x": 317,
-                    "y": -223
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "12",
                     "rating": "5c610f89-b28a-48a2-8b62-3f25e2f4c094",
-                    "x": -161,
-                    "y": 78
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "13",
                     "rating": "132cd37b-27fe-4301-b6ee-a26c6a7a514c",
-                    "x": 533,
-                    "y": -47
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "14",
                     "rating": "17bf492e-eb9d-41d2-b468-2aad009ff997",
-                    "x": 600,
-                    "y": -112
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "15",
                     "rating": "219536b8-ba5e-4220-8cbb-0da443bff83d",
-                    "x": -411,
-                    "y": 433
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "16",
                     "rating": "4a4b6542-d7d5-4049-b8b0-f22b3b5fc09e",
-                    "x": 14,
-                    "y": 269
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "17",
                     "rating": "6ae276de-010b-4f4a-8c65-62b3d2d7fe45",
-                    "x": -47,
-                    "y": 332
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "18",
                     "rating": "f3c3cc99-3b69-426a-86c6-294d840483b7",
-                    "x": -127,
-                    "y": 363
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "19",
                     "rating": "9bc9976e-4d5b-467c-a076-4202ef593159",
-                    "x": -182,
-                    "y": 389
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "20",
                     "rating": "cf58cfec-95a8-456c-ba01-ff13e760a6d7",
-                    "x": -53,
-                    "y": 429
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "21",
                     "rating": "12e9c1f4-9e55-455d-851c-a5841c040464",
-                    "x": 83,
-                    "y": 258
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "22",
                     "rating": "aef5ea07-9d98-4501-a2c0-b1310339cadf",
-                    "x": -158,
-                    "y": 457
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "23",
                     "rating": "d5a4c463-59e0-4100-b032-a7334750690a",
-                    "x": 17,
-                    "y": 394
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "24",
                     "rating": "26d414ab-abe4-4125-b02b-1960a62e7ceb",
-                    "x": -57,
-                    "y": 384
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "25",
                     "rating": "491d2386-c9df-43ef-af7c-768dae8eb690",
-                    "x": 155,
-                    "y": 298
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "26",
                     "rating": "e5e8c3d8-adc4-4264-a6f2-2f18abbf6357",
-                    "x": 232,
-                    "y": 365
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "27",
                     "rating": "2bb0851b-85c9-48bd-8e55-c0ff07c1c68e",
-                    "x": 156,
-                    "y": 225
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "28",
                     "rating": "290feb27-89b7-4d64-9c6b-7ea01fcebf78",
-                    "x": 138,
-                    "y": 411
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "29",
                     "rating": "9871293d-9c51-4730-a134-d03dffdfd5ca",
-                    "x": -58,
-                    "y": 3
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "30",
                     "rating": "c4a7e838-d2f5-4a19-8f52-bb496922f672",
-                    "x": -375,
-                    "y": -104
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "31",
                     "rating": "3dadddde-c4a8-4f2b-b363-183abe358dc5",
-                    "x": -499,
-                    "y": 215
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "32",
                     "rating": "404e8bd3-abde-40a8-af11-b84d65b3faa2",
-                    "x": -108,
-                    "y": -19
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "33",
                     "rating": "65c118e4-a0db-4314-b737-2ffb5108077c",
-                    "x": -190,
-                    "y": -65
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "34",
                     "rating": "e59ab6f1-36a4-472f-838f-b6838c177ef2",
-                    "x": -128,
-                    "y": 147
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "35",
                     "rating": "e9681782-045f-4a35-8974-b9bc3baab3df",
-                    "x": -188,
-                    "y": 202
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "36",
                     "rating": "c695427e-5b82-411c-9a9e-d3464e497960",
-                    "x": 117,
-                    "y": -235
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "37",
                     "rating": "0868415b-17f5-40c7-bb08-daca5b5f2376",
-                    "x": 297,
-                    "y": -432
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "38",
                     "rating": "10757ca4-6d6d-4d09-9e1b-9b5c1eb24e3f",
-                    "x": 143,
-                    "y": -406
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "39",
                     "rating": "1c8d9aee-0a49-4e10-9368-93e379905b0d",
-                    "x": 545,
-                    "y": -280
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "40",
                     "rating": "e641d973-6a95-4d44-b906-f29fa92b8abd",
-                    "x": 409,
-                    "y": -143
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "41",
                     "rating": "18f8805b-338b-494a-ac0a-fc1c55d71ab4",
-                    "x": 152,
-                    "y": 351
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "42",
                     "rating": "35147101-d6b2-41ae-8e70-c0e65b51a650",
-                    "x": 112,
-                    "y": 76
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "43",
                     "rating": "9695235f-0a9f-44cb-8cd4-990ffc687d38",
-                    "x": 243,
-                    "y": 110
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "44",
                     "rating": "307e205e-ae84-4d34-82d8-79ab00602d14",
-                    "x": 170,
-                    "y": 130
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "45",
                     "rating": "e18c1f6c-ab29-4bd5-891d-181ee754cf6c",
-                    "x": 523,
-                    "y": 390
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "46",
                     "rating": "2aea2f5f-cc91-4412-a419-a5a73b3cc6aa",
-                    "x": -50,
-                    "y": -63
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "47",
                     "rating": "7294c4cb-da85-4272-86ed-ec859a2a6270",
-                    "x": -368,
-                    "y": -414
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "48",
                     "rating": "3a264eca-0e8e-42f1-87e5-5133e7eef148",
-                    "x": -404,
-                    "y": -353
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "49",
                     "rating": "7e75769e-57c4-48a5-ab0d-24066d21d205",
-                    "x": -200,
-                    "y": -158
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "50",
                     "rating": "3ff22d3a-160e-43e5-820c-40d7e82c38b5",
-                    "x": -82,
-                    "y": -176
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "51",
                     "rating": "d2f27561-449a-47b6-96bf-3c176521de14",
-                    "x": -472,
-                    "y": -369
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "52",
                     "rating": "eb82f804-19b8-4cc8-ad41-d1cba493284e",
-                    "x": -314,
-                    "y": -222
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "53",
                     "rating": "d4b6c276-3ddf-4f7e-8382-6be894af38fe",
-                    "x": 155,
-                    "y": 32
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "54",
                     "rating": "5bcb0b3b-cd40-42b4-b502-d12e64fa3f83",
-                    "x": 687,
-                    "y": 107
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "55",
                     "rating": "bf24eca9-4278-46cf-b765-8a6fce681c59",
-                    "x": 272,
-                    "y": 42
+                    "x": null,
+                    "y": null
                 }
             ]
         },
@@ -1625,45 +1649,51 @@
                         },
                         {
                             "label": "Design",
-                            "width": 0.2,
+                            "width": 0.1,
                             "labelSettings": {
                                 "showCurved": true,
                                 "showStraight": false,
                                 "color": "#000000",
-                                "fontSize": 18,
-                                "fontFamily": "Helvetica"
+                                "fontSize": "12",
+                                "fontFamily": "Calibri"
                             },
                             "edge": {
                                 "color": "#000000",
-                                "width": 1
+                                "width": "1"
                             },
-                            "backgroundImage": {},
-                            "backgroundColor": "#FFFFFF",
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#ffffff",
                             "outerringBackgroundColor": "#FFFFFF",
-                            "visible": true
+                            "visible": true,
+                            "opacity": "0.5"
                         },
                         {
                             "label": "Implementation",
-                            "width": 0.2,
+                            "width": 0.14,
                             "labelSettings": {
                                 "showCurved": true,
                                 "showStraight": false,
                                 "color": "#000000",
-                                "fontSize": 18,
+                                "fontSize": "18",
                                 "fontFamily": "Helvetica"
                             },
                             "edge": {
                                 "color": "#000000",
-                                "width": 1
+                                "width": "1"
                             },
-                            "backgroundImage": {},
-                            "backgroundColor": "#FFFFFF",
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#ffffff",
                             "outerringBackgroundColor": "#FFFFFF",
-                            "visible": true
+                            "visible": true,
+                            "opacity": "0.5"
                         },
                         {
                             "label": "Done",
-                            "width": 0.2,
+                            "width": 0.39,
                             "labelSettings": {
                                 "showCurved": true,
                                 "showStraight": false,
@@ -1825,8 +1855,8 @@
                 "shapesConfiguration": {
                     "shapes": [
                         {
-                            "label": "Null",
-                            "width": 0.16666666666666666,
+                            "label": "Functionality",
+                            "width": 0.2,
                             "labelSettings": {
                                 "color": "#000000",
                                 "fontSize": 18,
@@ -1838,11 +1868,12 @@
                             },
                             "backgroundImage": {},
                             "backgroundColor": "#FFFFFF",
-                            "outershapeBackgroundColor": "#FFFFFF"
+                            "outershapeBackgroundColor": "#FFFFFF",
+                            "shape": "circle"
                         },
                         {
                             "label": "Fix",
-                            "width": 0.16666666666666666,
+                            "width": 0.2,
                             "labelSettings": {
                                 "color": "#000000",
                                 "fontSize": 18,
@@ -1854,11 +1885,12 @@
                             },
                             "backgroundImage": {},
                             "backgroundColor": "#FFFFFF",
-                            "outershapeBackgroundColor": "#FFFFFF"
+                            "outershapeBackgroundColor": "#FFFFFF",
+                            "shape": "diamond"
                         },
                         {
                             "label": "Documentation",
-                            "width": 0.16666666666666666,
+                            "width": 0.2,
                             "labelSettings": {
                                 "color": "#000000",
                                 "fontSize": 18,
@@ -1870,11 +1902,12 @@
                             },
                             "backgroundImage": {},
                             "backgroundColor": "#FFFFFF",
-                            "outershapeBackgroundColor": "#FFFFFF"
+                            "outershapeBackgroundColor": "#FFFFFF",
+                            "shape": "square"
                         },
                         {
                             "label": "Test",
-                            "width": 0.16666666666666666,
+                            "width": 0.2,
                             "labelSettings": {
                                 "color": "#000000",
                                 "fontSize": 18,
@@ -1886,11 +1919,12 @@
                             },
                             "backgroundImage": {},
                             "backgroundColor": "#FFFFFF",
-                            "outershapeBackgroundColor": "#FFFFFF"
+                            "outershapeBackgroundColor": "#FFFFFF",
+                            "shape": "triangle"
                         },
                         {
                             "label": "Refactor",
-                            "width": 0.16666666666666666,
+                            "width": 0.2,
                             "labelSettings": {
                                 "color": "#000000",
                                 "fontSize": 18,
@@ -1902,25 +1936,12 @@
                             },
                             "backgroundImage": {},
                             "backgroundColor": "#FFFFFF",
-                            "outershapeBackgroundColor": "#FFFFFF"
-                        },
-                        {
-                            "label": "Functionality",
-                            "width": 0.16666666666666666,
-                            "labelSettings": {
-                                "color": "#000000",
-                                "fontSize": 18,
-                                "fontFamily": "Helvetica"
-                            },
-                            "edge": {
-                                "color": "#000000",
-                                "width": 1
-                            },
-                            "backgroundImage": {},
-                            "backgroundColor": "#FFFFFF",
-                            "outershapeBackgroundColor": "#FFFFFF"
+                            "outershapeBackgroundColor": "#FFFFFF",
+                            "shape": "rectangleHorizontal",
+                            "visible": true
                         }
-                    ]
+                    ],
+                    "label": "Type of Work"
                 },
                 "sizesConfiguration": {
                     "sizes": []
@@ -1955,21 +1976,20 @@
                 "ring": {
                     "property": "status",
                     "valueMap": {
-                        "design": 1,
-                        "implement": 2,
                         "idea": 0,
-                        "done": 3
+                        "done": 3,
+                        "implement": 2,
+                        "design": 1
                     }
                 },
                 "shape": {
                     "property": "object.type",
                     "valueMap": {
-                        "null": 0,
+                        "functionality": 0,
                         "fix": 1,
                         "doc": 2,
                         "test": 3,
-                        "refactor": 4,
-                        "functionality": 5
+                        "refactor": 4
                     }
                 },
                 "color": {}
@@ -1978,7 +1998,7 @@
                 "showImages": true,
                 "showShapes": true,
                 "showLabels": true,
-                "applyShapes": false,
+                "applyShapes": true,
                 "applySizes": false,
                 "applyColors": false,
                 "tagFilter": [],
@@ -1988,14 +2008,14 @@
                 {
                     "id": "0",
                     "rating": "f83e70e1-8404-41e6-804b-1afd10301963",
-                    "x": 312,
-                    "y": -270
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "1",
                     "rating": "a397de5f-3ace-418b-bdf6-b431b67f6a88",
-                    "x": 84,
-                    "y": 387
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "3",
@@ -2006,8 +2026,8 @@
                 {
                     "id": "4",
                     "rating": "57955e5e-118c-471c-9fe4-47c8445bb6da",
-                    "x": 226,
-                    "y": 171
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "5",
@@ -2024,6 +2044,72 @@
                 {
                     "id": "6",
                     "rating": "1a087ebe-222f-4936-a16b-640d3abec4ce",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "7",
+                    "rating": "91e63cc8-3f59-4865-af49-1a4fb8f09613",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "8",
+                    "rating": "325b9d80-f44d-4070-af6d-ef02a44e1cef",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "9",
+                    "rating": "ae38930a-91c0-42ff-bde9-3612ec409792",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "10",
+                    "rating": "c0f31905-3e99-4f8f-9513-7242f427a8d8",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "11",
+                    "rating": "d5a71b69-5d30-4faf-8fc5-f260143e972b",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "12",
+                    "rating": "0aaff6cc-e5b2-46d7-bd82-ee6f19873edd",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "13",
+                    "rating": "e684ef44-c02e-4a2d-b9ff-94a3adc428cb",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "14",
+                    "rating": "f733e809-f764-4ee6-aa13-73c8d3aca82f",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "15",
+                    "rating": "09c4a9e3-fc62-40d9-90d7-a20619a95a4b",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "16",
+                    "rating": "9744aaf8-aae8-450f-a4e6-eb98b2b7b0b2",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "17",
+                    "rating": "8447ce45-6ef9-4316-9628-0e6a48e963fc",
                     "x": null,
                     "y": null
                 }
@@ -2798,7 +2884,7 @@
             ],
             "title": "Define Ring Value Mapping by Range",
             "description": "Define Ring Value Mapping by Range\nfor properties of type number or date/time allow a ring to be derived on a range:\nif property value is between X and Y then this Ring is allocated\n\nfor example: if date is > 12 months in the past, is between 6-12 months in the past, is less than 6 months ago\nor:\nif effort > 10 then ring = HUGE\nelse if 5 < effort < 10 then ring = Substantial\n...\n\n",
-            "area": "datamanagement",
+            "area": "metadata",
             "type": "functionality",
             "objectType": "workitem"
         },
@@ -2838,7 +2924,7 @@
             ],
             "title": "Default font settings Sector Label",
             "description": "Define and apply font defaults for sector labels",
-            "area": "ui",
+            "area": "quickstart",
             "type": "functionality",
             "objectType": "technology"
         },
@@ -2867,6 +2953,156 @@
             "area": "files",
             "type": "functionality",
             "objectType": "technology"
+        },
+        "34ae2a96-17de-4cc3-b065-7a075e5d5fac": {
+            "id": "34ae2a96-17de-4cc3-b065-7a075e5d5fac",
+            "label": "Show curved sector label after drilldown",
+            "tags": [
+                "drill down",
+                "sector",
+                "label"
+            ],
+            "title": "Show curved sector label after drilldown",
+            "description": "Show curved sector label after drilldown",
+            "area": "navigation",
+            "type": "fix",
+            "objectType": "technology"
+        },
+        "1cc6e081-8f0b-4ad8-ab07-75b262444090": {
+            "id": "1cc6e081-8f0b-4ad8-ab07-75b262444090",
+            "label": "Sector drill up from label",
+            "tags": [
+                "sector",
+                "drill down",
+                "rollup"
+            ],
+            "title": "Sector drill up from label",
+            "description": "double click on sector label in drilled down state makes all sectors visible",
+            "area": "navigation",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "7aefc5e9-b21c-4dd5-aa00-d99dabb2efa1": {
+            "id": "7aefc5e9-b21c-4dd5-aa00-d99dabb2efa1",
+            "label": "New Blip: Set object name from new object labek",
+            "tags": [
+                "new blip",
+                "",
+                "new object"
+            ],
+            "title": "New Blip: Set object name from new object labek",
+            "description": "upon create new blip - nothing seems done with the new object label entered",
+            "area": "ui",
+            "type": "fix",
+            "objectType": "technology"
+        },
+        "18f7ebab-b739-49c4-9ad9-6abe89c9b8a3": {
+            "id": "18f7ebab-b739-49c4-9ad9-6abe89c9b8a3",
+            "label": "Load file & embrace new model & objects",
+            "tags": [
+                "file",
+                "upload"
+            ],
+            "title": "Load file & embrace new model & objects",
+            "description": "Load file & embrace new model & objects:\n- load file\n- create new object types and rating types\n- create new objects\n\nNew tab un Main Configurator",
+            "area": "files",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "d5c58ecf-321e-468a-a281-8f1e390db7d8": {
+            "id": "d5c58ecf-321e-468a-a281-8f1e390db7d8",
+            "label": "Use d3 force to repel blips",
+            "tags": [
+                "d3",
+                "force",
+                "blip",
+                "shuffle"
+            ],
+            "title": "Use d3 force to repel blips",
+            "description": "Use d3 force to repel blips - make blips not overlap when shuffled/assigned",
+            "area": "ui",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "f2235f35-97ea-4561-9bd7-bc4f1dc7c5f9": {
+            "id": "f2235f35-97ea-4561-9bd7-bc4f1dc7c5f9",
+            "label": "Generate Ratings for Object Type of current Radar",
+            "tags": [
+                "generate",
+                "blip",
+                "rating"
+            ],
+            "title": "Generate Ratings for Object Type of current Radar",
+            "description": "Generate Ratings for Object Type of current Radar\n\nIn create blip(s) dialog, allow user to specify \ngenerate ratings & blips for all objects of appropriate type for which currently no ratings exist",
+            "area": "quickstart",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "b5d64706-518b-464b-90b7-f5a32fe2d4e1": {
+            "id": "b5d64706-518b-464b-90b7-f5a32fe2d4e1",
+            "label": "Define Blip Opacity",
+            "tags": [
+                "opacity",
+                "blip"
+            ],
+            "title": "Define Blip Opacity",
+            "description": "Define Blip Opacity in Blip tab in Main Menu",
+            "area": "metadata",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "e102e11e-1bb2-486d-a343-db693510ce87": {
+            "id": "e102e11e-1bb2-486d-a343-db693510ce87",
+            "label": "Show Data Model iin Tree",
+            "tags": [
+                "tree",
+                "data",
+                "data management"
+            ],
+            "title": "Show Data Model iin Tree",
+            "description": "Show Data Model iin Tree\n- new tab Data Management in main menu\n- show tree with all objects per object type\n- all ratings per rating type\n",
+            "area": "datamanagement",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "dbaa4400-7aad-4809-9394-534604900a35": {
+            "id": "dbaa4400-7aad-4809-9394-534604900a35",
+            "objectType": "workitem",
+            "title": "Size Configurator like Shape Configurator",
+            "tags": [
+                "size",
+                "configurator",
+                "visual dimension"
+            ],
+            "description": "Size Configurator like Shape Configurator\n\nClone Shape Configurator and modify to manage Size visual dimension",
+            "area": "metadata",
+            "type": "functionality"
+        },
+        "d6e5065e-e9f0-4973-a917-4a730082b738": {
+            "id": "d6e5065e-e9f0-4973-a917-4a730082b738",
+            "objectType": "workitem",
+            "title": "Color configurator like Shape Configurator",
+            "tags": [
+                "color",
+                "visual dimension",
+                "configurator"
+            ],
+            "description": "Color configurator to map colors to values for a specific property - similar to Shape configurator",
+            "area": "metadata",
+            "type": "functionality"
+        },
+        "b8fc9777-61a2-4b48-8e27-fe479182489f": {
+            "id": "b8fc9777-61a2-4b48-8e27-fe479182489f",
+            "objectType": "workitem",
+            "title": "Use ring font for ring label",
+            "tags": [
+                "ring",
+                "font",
+                "label"
+            ],
+            "description": "when printing the ring label, make sure to apply the ring font or the rings default font or the radar default tont",
+            "area": "ui",
+            "type": "fix"
         }
     },
     "ratings": {
@@ -3518,7 +3754,7 @@
             "object": "6b72c74e-b270-498e-82d0-170e7a21d3e5",
             "status": "idea",
             "remainingEffort": "small",
-            "ratingType": "workitem"
+            "ratingType": "workitemStatus"
         },
         "a397de5f-3ace-418b-bdf6-b431b67f6a88": {
             "id": "a397de5f-3ace-418b-bdf6-b431b67f6a88",
@@ -3526,7 +3762,7 @@
             "object": "cf3e0d48-5ea0-4329-8276-92cdaff6dadd",
             "status": "idea",
             "remainingEffort": "medium",
-            "ratingType": "workitem"
+            "ratingType": "workitemStatus"
         },
         "9a7e603b-980e-471b-aa3e-9480600d1f57": {
             "id": "9a7e603b-980e-471b-aa3e-9480600d1f57",
@@ -3534,7 +3770,7 @@
             "object": "ae5e22e7-7890-49e0-894a-ab16038ad53d",
             "status": "implement",
             "remainingEffort": "small",
-            "ratingType": "workitem"
+            "ratingType": "workitemStatus"
         },
         "e264ba9a-73c5-4947-86e0-67c203087d96": {
             "id": "e264ba9a-73c5-4947-86e0-67c203087d96",
@@ -3542,36 +3778,127 @@
             "object": "a9f4615c-7afc-4e31-a2ad-8ab5b371c9d7",
             "status": "idea",
             "remainingEffort": "medium",
-            "ratingType": "workitem"
+            "ratingType": "workitemStatus"
         },
         "57955e5e-118c-471c-9fe4-47c8445bb6da": {
             "id": "57955e5e-118c-471c-9fe4-47c8445bb6da",
             "timestamp": 1618399767849,
             "object": "ae5e22e7-7890-49e0-894a-ab16038ad53d",
-            "status": "design",
+            "status": "done",
             "remainingEffort": "small",
-            "ratingType": "workitem"
+            "ratingType": "workitemStatus"
         },
         "ad65a8f7-6e86-4ec2-830d-eda0b1afe7af": {
             "id": "ad65a8f7-6e86-4ec2-830d-eda0b1afe7af",
             "timestamp": 1618402914394,
             "object": "e3ebcf9a-f54d-4e11-9ed9-99e313b7d579",
-            "status": "design",
-            "remainingEffort": "small"
+            "status": "idea",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
         },
         "81d49277-044f-45ac-b7b0-fc2ee9cd230c": {
             "id": "81d49277-044f-45ac-b7b0-fc2ee9cd230c",
             "timestamp": 1618403694010,
             "object": "202521e5-e1db-44e4-a066-421c47993c59",
             "status": "idea",
-            "remainingEffort": "medium"
+            "remainingEffort": "medium",
+            "ratingType": "workitemStatus"
         },
         "1a087ebe-222f-4936-a16b-640d3abec4ce": {
             "id": "1a087ebe-222f-4936-a16b-640d3abec4ce",
             "timestamp": 1618404396295,
             "object": "c9d22ba0-cf91-4a01-a156-6fc3b0c55bb5",
             "status": "idea",
+            "remainingEffort": "medium",
+            "ratingType": "workitemStatus"
+        },
+        "91e63cc8-3f59-4865-af49-1a4fb8f09613": {
+            "id": "91e63cc8-3f59-4865-af49-1a4fb8f09613",
+            "timestamp": 1618460175786,
+            "object": "34ae2a96-17de-4cc3-b065-7a075e5d5fac",
+            "status": "design",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
+        },
+        "325b9d80-f44d-4070-af6d-ef02a44e1cef": {
+            "id": "325b9d80-f44d-4070-af6d-ef02a44e1cef",
+            "timestamp": 1618460299839,
+            "object": "1cc6e081-8f0b-4ad8-ab07-75b262444090",
+            "status": "done",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
+        },
+        "ae38930a-91c0-42ff-bde9-3612ec409792": {
+            "id": "ae38930a-91c0-42ff-bde9-3612ec409792",
+            "timestamp": 1618460420363,
+            "object": "7aefc5e9-b21c-4dd5-aa00-d99dabb2efa1",
+            "status": "idea",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
+        },
+        "c0f31905-3e99-4f8f-9513-7242f427a8d8": {
+            "id": "c0f31905-3e99-4f8f-9513-7242f427a8d8",
+            "timestamp": 1618460590553,
+            "object": "18f7ebab-b739-49c4-9ad9-6abe89c9b8a3",
+            "status": "idea",
+            "remainingEffort": "medium",
+            "ratingType": "workitemStatus"
+        },
+        "d5a71b69-5d30-4faf-8fc5-f260143e972b": {
+            "id": "d5a71b69-5d30-4faf-8fc5-f260143e972b",
+            "timestamp": 1618460677848,
+            "object": "d5c58ecf-321e-468a-a281-8f1e390db7d8",
+            "status": "idea",
+            "remainingEffort": "medium",
+            "ratingType": "workitemStatus"
+        },
+        "0aaff6cc-e5b2-46d7-bd82-ee6f19873edd": {
+            "id": "0aaff6cc-e5b2-46d7-bd82-ee6f19873edd",
+            "timestamp": 1618460828481,
+            "object": "f2235f35-97ea-4561-9bd7-bc4f1dc7c5f9",
+            "status": "idea",
+            "remainingEffort": "-1",
+            "ratingType": "workitemStatus"
+        },
+        "e684ef44-c02e-4a2d-b9ff-94a3adc428cb": {
+            "id": "e684ef44-c02e-4a2d-b9ff-94a3adc428cb",
+            "timestamp": 1618460918886,
+            "object": "b5d64706-518b-464b-90b7-f5a32fe2d4e1",
+            "status": "idea",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
+        },
+        "f733e809-f764-4ee6-aa13-73c8d3aca82f": {
+            "id": "f733e809-f764-4ee6-aa13-73c8d3aca82f",
+            "timestamp": 1618461065975,
+            "object": "e102e11e-1bb2-486d-a343-db693510ce87",
+            "status": "idea",
+            "remainingEffort": "medium",
+            "ratingType": "workitemStatus"
+        },
+        "09c4a9e3-fc62-40d9-90d7-a20619a95a4b": {
+            "id": "09c4a9e3-fc62-40d9-90d7-a20619a95a4b",
+            "timestamp": 1618463774595,
+            "ratingType": "workitemStatus",
+            "object": "dbaa4400-7aad-4809-9394-534604900a35",
+            "status": "implement",
+            "remainingEffort": "small"
+        },
+        "9744aaf8-aae8-450f-a4e6-eb98b2b7b0b2": {
+            "id": "9744aaf8-aae8-450f-a4e6-eb98b2b7b0b2",
+            "timestamp": 1618484949930,
+            "ratingType": "workitemStatus",
+            "object": "d6e5065e-e9f0-4973-a917-4a730082b738",
+            "status": "design",
             "remainingEffort": "medium"
+        },
+        "8447ce45-6ef9-4316-9628-0e6a48e963fc": {
+            "id": "8447ce45-6ef9-4316-9628-0e6a48e963fc",
+            "timestamp": 1618485205056,
+            "ratingType": "workitemStatus",
+            "object": "b8fc9777-61a2-4b48-8e27-fe479182489f",
+            "status": "idea",
+            "remainingEffort": "small"
         }
     }
 }

@@ -311,22 +311,23 @@ const hideMe = () => {
 }
 function getValueOccurrenceMap(propertyPath, viewpoint, includeAllowableValues = false) {
     const model = getData().model
+    const focusRatingTypeName = typeof (viewpoint.ratingType) == "object" ? viewpoint.ratingType.name : viewpoint.ratingType
     let sectorProperty = getPropertyFromPropertyPath(propertyPath, viewpoint.ratingType, model)
     let valueOccurrenceMap
     if (sectorProperty.type == "tags") {
         valueOccurrenceMap = {}
         for (let i = 0; i < Object.keys(getData().ratings).length; i++) {
+            const rating = getData().ratings[Object.keys(getData().ratings)[i]]
+            if (rating.ratingType == focusRatingTypeName) {
             const tags = getNestedPropertyValueFromObject(getData().ratings[Object.keys(getData().ratings)[i]], propertyPath)
             tags.forEach((tag) => {
                 const currentCount = valueOccurrenceMap[tag] ?? 0
                 valueOccurrenceMap[tag] = currentCount + 1
-
             })
-        }
-
+                }        }
     }
     else {
-        valueOccurrenceMap = getPropertyValuesAndCounts(propertyPath, getData().ratings); // TODO only ratings of proper rating type!!
+        valueOccurrenceMap = getPropertyValuesAndCounts(propertyPath, getData().ratings, focusRatingTypeName)
         if (includeAllowableValues) {
             for (let i = 0; i < sectorProperty.allowableValues?.length; i++) {
                 valueOccurrenceMap[sectorProperty.allowableValues[i].value] = valueOccurrenceMap[sectorProperty.allowableValues[i].value] ?? 0;

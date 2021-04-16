@@ -7,6 +7,7 @@ import { launchRingConfigurator } from './ringConfigurator.js'
 import { launchDatamodelConfigurator } from './datamodelConfigurator.js'
 import { launchBlipConfigurator } from './blipConfigurator.js'
 import { launchShapeConfigurator } from './shapeConfigurator.js'
+import { launchFileManager } from './fileManager.js'
 import {launchRadarsManagementConfigurator} from './radarsManagement.js'
 
 
@@ -111,7 +112,8 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
             <span id="colorConfigurationTab" class="extra tagfilter">Colors</span>
             <span id="sizeConfigurationTab" class="extra tagfilter">Sizes</span>
             <span id="blipConfigurationTab" class="extra tagfilter">Blips</span>
-            <span id="radarManagementConfigurationTab" class="extra tagfilter" style="margin:60">Radars Management</span>
+            <span id="radarManagementConfigurationTab" class="extra tagfilter" style="margin:40">Radars Management</span>
+            <span id="fileConfigurationTab" class="extra tagfilter">File Manager</span>
 `
     tabContainer.innerHTML = html
     const selectedTab = document.getElementById(`${tab ?? "radar"}ConfigurationTab`)
@@ -133,6 +135,8 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
 
         document.getElementById(`radarManagementConfigurationTab`).addEventListener("click"
         , () => { launchRadarsManagementConfigurator() })
+        document.getElementById(`fileConfigurationTab`).addEventListener("click"
+        , () => { launchFileManager() })
     }
 
 const saveRadarSettings = (viewpoint) => {

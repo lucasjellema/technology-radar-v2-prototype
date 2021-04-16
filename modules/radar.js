@@ -8,6 +8,7 @@ const subscribers = []
 const subscribeToRadarEvents = (subscriber) => { subscribers.push(subscriber) }
 const publishRadarEvent = (event) => { subscribers.forEach((subscriber) => { subscriber(event) }) }
 
+// configNode maps to ring.labelSettings (and sector.labelSettings)
 const styleText = (textElement, configNode, config, alternativeFontSource = null) => {
     const fontStyleElements = [{ style: "fill", property: "color" }, { style: "font-size", property: "fontSize" }
         , { style: "font-family", property: "fontFamily" }, { style: "font-weight", property: "fontWeight" }
@@ -31,7 +32,7 @@ function drawRadar(viewpoint, elementDecorator = null) {
         .attr("id", "radarCanvas")
 
     let sectorCanvas, ringCanvas
-    if ("sectors" == config.topLayer ){ //&& config.editMode == true) { // draw top layer last 
+    if ("sectors" == config.topLayer) { //&& config.editMode == true) { // draw top layer last 
         ringCanvas = drawRings(radarCanvas, config)
         sectorCanvas = drawSectors(radarCanvas, config, elementDecorator)
     }
@@ -65,13 +66,13 @@ function drawRadar(viewpoint, elementDecorator = null) {
 
     if (!getState().editMode) {
         // legend
-        try {
-            initializeSizesLegend(viewpoint)
-        } catch (e) { console.log(`initializeSizesLegend failed with ${e} `) }
-        try {
-            initializeShapesLegend(viewpoint)
-        } catch (e) { console.log(`initializeShapesLegend failed with ${e} `) }
-        
+        // try {
+        initializeSizesLegend(viewpoint)
+        // } catch (e) { console.log(`initializeSizesLegend failed with ${e} `) }
+        // try {
+        initializeShapesLegend(viewpoint)
+        // } catch (e) { console.log(`initializeShapesLegend failed with ${e} `) }
+
         try {
             initializeColorsLegend(viewpoint)
         } catch (e) { console.log(`initializeColorsLegend failed with ${e} `) }
@@ -139,7 +140,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
             let sector = config.sectorConfiguration.sectors[i]
             if (sector?.visible == false) continue;
             const sectorAnglePercentage = sectorExpansionFctr * sector.angle
-           // console.log(`sector ${i} sector.angle ${sector.angle} actually allotted ${sectorAnglePercentage}; current angle % = ${currentAnglePercentage}`)
+            // console.log(`sector ${i} sector.angle ${sector.angle} actually allotted ${sectorAnglePercentage}; current angle % = ${currentAnglePercentage}`)
             let currentAngle = 2 * Math.PI * currentAnglePercentage
             const sectorEndpoint = cartesianFromPolar({ r: config.sectorBoundariesExtended ? 2000 : config.maxRingRadius, phi: currentAngle })
             let startAngle = (0.5 - 2 * (currentAnglePercentage + sectorAnglePercentage)) * Math.PI
@@ -327,7 +328,7 @@ const drawRingLabels = function (radar, config, elementDecorator) {
             .on('dblclick', () => { console.log(`dbl click on ring`); publishRadarEvent({ type: "ringDrilldown", ring: i }) })
 
             .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, ring.label, `ringLabel${i}`]);
-        styleText(ringlabel, ring, config, config.ringConfiguration)
+        styleText(ringlabel, ring.labelSettings, config, config.ringConfiguration)
 
         currentRadiusPercentage = currentRadiusPercentage - ring.width * ringExpansionFactor(config)
     }
@@ -336,8 +337,11 @@ const drawRingLabels = function (radar, config, elementDecorator) {
 
 
 function displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sectorCanvas, sectorIndex, sector, config, elementDecorator = null) {
-    let sum = startAngle/(2* Math.PI) + 0.2
-    let anticlockwise = sum < 0 
+    let sum = startAngle / (2 * Math.PI) + 0.2
+    let anticlockwise = sum < 0
+    // if startAngle - endAngle < -6.20  => sector has entire circle 
+    let fullCircle = startAngle - endAngle < -6.20
+    console.log(`full circle ${fullCircle}`)
     let textArc = d3.arc()
         .outerRadius(config.maxRingRadius + 20)
         .innerRadius(150)
@@ -345,7 +349,17 @@ function displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sector
         .endAngle(anticlockwise ? startAngle : endAngle)
         .startAngle(anticlockwise ? endAngle : startAngle)
 
-        textArc = textArc().substring(0, textArc().indexOf("L"))
+    if (fullCircle) {
+        textArc = d3.arc()
+            .outerRadius(config.maxRingRadius + 20)
+            .innerRadius(150)
+            // startAngle and endAngle are measured clockwise from the 12 o’clock in radians; the minus takes care of anti-clockwise and the +0.5 is for starting at the horizontal axis pointing east
+            // this fixed angle corresponds to 2 'o clock
+            .endAngle(1.5)
+            .startAngle(-0.2)
+    }
+
+    textArc = textArc().substring(0, textArc().indexOf("L"))
     // create the path following the circle along which the text is printed; the actual printing of the text is done next
     sectorCanvas.append("path")
         .attr("id", `pieText${sectorIndex}`)
@@ -372,16 +386,29 @@ function displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sector
 
 const initializeSizesLegend = (viewpoint) => {
     const config = viewpoint.template
-    document.getElementById('sizesLegendTitle').innerText = config.sizesConfiguration.label;
+    document.getElementById('sizesLegendTitle').innerText = "";
 
 
     const sizesBox = d3.select("svg#sizesLegend")
         .style("background-color", "silver")
-        .attr("width", "80%")
-        .attr("height", Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length * 55 + 20)
+        .attr("width", "1%")
+        .attr("height", 1)
+
     sizesBox.selectAll("*").remove(); // clean content (if there is any)
 
+    if (viewpoint.propertyVisualMaps.size?.property == null
+        || viewpoint.propertyVisualMaps.size.property == ""
+        || viewpoint.propertyVisualMaps.size.valueMap == null
+        || Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length == 0) {
+        return
+    }
+
+    sizesBox
+        .style("background-color", "silver")
+        .attr("width", "80%")
+        .attr("height", Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length * 55 + 20)
     sizesBox.append('g').attr('class', 'sizesBox')
+    document.getElementById('sizesLegendTitle').innerText = config.sizesConfiguration.label;
     const circleIndent = 10
     const labelIndent = 70
     for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length; i++) {
@@ -415,20 +442,33 @@ const initializeSizesLegend = (viewpoint) => {
 
 
 const initializeShapesLegend = (viewpoint) => {
+
     const config = viewpoint.template
     document.getElementById('shapesLegendTitle').innerText = config.shapesConfiguration.label;
 
     const shapesBox = d3.select("svg#shapesLegend")
+        .style("background-color", "silver")
+        .attr("width", "1%")
+        .attr("height", 1)
+
+    shapesBox.selectAll("*").remove(); // clean content (if there is any)
+    if (viewpoint.propertyVisualMaps.shape?.property == null
+        || viewpoint.propertyVisualMaps.shape.property == ""
+        || viewpoint.propertyVisualMaps.shape.valueMap == null
+        || Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length == 0) {
+        return
+    }
+    shapesBox
         .style("background-color", "#FEE")
         .attr("width", "80%")
         .attr("height", Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length * 45 + 20)
-    shapesBox.selectAll("*").remove(); // clean content (if there is any)
 
     shapesBox.append('g').attr('class', 'shapesBox')
     const circleIndent = 5
     const labelIndent = 50
     for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
         const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
+        const vm = viewpoint.propertyVisualMaps.shape.valueMap[key]
         const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
         const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
 
@@ -498,15 +538,29 @@ const initializeShapesLegend = (viewpoint) => {
 }
 
 const initializeColorsLegend = (viewpoint) => {
+
+
     const config = viewpoint.template
-    document.getElementById('colorLegendTitle').innerText = config.colorsConfiguration.label;
 
     const colorsBox = d3.select("svg#colorsLegend")
+        .style("background-color", "silver")
+        .attr("width", "1%")
+        .attr("height", 1)
+
+    colorsBox.selectAll("*").remove(); // clean content (if there is any)
+    document.getElementById('colorLegendTitle').innerText = "";
+
+    if (viewpoint.propertyVisualMaps.color?.property == null
+        || viewpoint.propertyVisualMaps.color.property == ""
+        || viewpoint.propertyVisualMaps.color.valueMap == null
+        || Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length == 0) {
+        return
+    }
+    colorsBox
         .style("background-color", "#EFF")
         .attr("width", "80%")
         .attr("height", Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length * 45 + 20)
-    colorsBox.selectAll("*").remove(); // clean content (if there is any)
-
+    document.getElementById('colorLegendTitle').innerText = config.colorsConfiguration.label;
     colorsBox.append('g').attr('class', 'colorsBox')
     const circleIndent = 5
     const labelIndent = 50
@@ -549,6 +603,8 @@ const radarMenu = (x, y, d, blip, viewpoint) => {
     const contextMenu = d3.select(`svg#${config.svg_id}`)
         .append('g').attr('class', 'radar-context-menu')
         .attr('transform', `translate(${x},${y + 30})`)
+
+
     const width = 170
     const height = 130
     contextMenu.append('rect')
@@ -574,7 +630,7 @@ const radarMenu = (x, y, d, blip, viewpoint) => {
         .attr("transform", `translate(${initialColumnIndent}, ${20})`)
 
     menuOptions.append("text")
-        .text(`Create Blip`)
+        .text(`Create Blip[s]`)
         .style("fill", "blue")
         .style("font-family", "Arial, Helvetica")
         .style("font-size", "15px")

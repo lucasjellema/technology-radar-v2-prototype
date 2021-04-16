@@ -11,7 +11,7 @@ import { capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, po
 const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
     const ringVisualMap = viewpoint.propertyVisualMaps["ring"]
     //const valueOccurrenceMap = getPropertyValuesAndCounts(ringVisualMap["property"], getData().ratings) // TODO only ratings of proper rating type!!
-    const valueOccurrenceMap = (ringVisualMap==null ||ringVisualMap["property"]==null)?null:getValueOccurrenceMap(ringVisualMap["property"], viewpoint, true);
+    const valueOccurrenceMap = (ringVisualMap == null || ringVisualMap["property"] == null) ? null : getValueOccurrenceMap(ringVisualMap["property"], viewpoint, true);
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator - Rings")
     document.getElementById("ringConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
@@ -284,22 +284,26 @@ const hideMe = () => {
 }
 function getValueOccurrenceMap(propertyPath, viewpoint, includeAllowableValues = false) {
     const model = getData().model
+    const focusRatingTypeName = typeof (viewpoint.ratingType) == "object" ? viewpoint.ratingType.name : viewpoint.ratingType
+
     let ringProperty = getPropertyFromPropertyPath(propertyPath, viewpoint.ratingType, model)
     let valueOccurrenceMap
     if (ringProperty.type == "tags") {
         valueOccurrenceMap = {}
         for (let i = 0; i < Object.keys(getData().ratings).length; i++) {
-            const tags = getNestedPropertyValueFromObject(getData().ratings[Object.keys(getData().ratings)[i]], propertyPath)
-            tags.forEach((tag) => {
-                const currentCount = valueOccurrenceMap[tag] ?? 0
-                valueOccurrenceMap[tag] = currentCount + 1
-
-            })
+            const rating = getData().ratings[Object.keys(getData().ratings)[i]]
+            if (rating.ratingType == focusRatingTypeName) {
+                const tags = getNestedPropertyValueFromObject(getData().ratings[Object.keys(getData().ratings)[i]], propertyPath)
+                tags.forEach((tag) => {
+                    const currentCount = valueOccurrenceMap[tag] ?? 0
+                    valueOccurrenceMap[tag] = currentCount + 1
+                })
+            }
         }
 
     }
     else {
-        valueOccurrenceMap = getPropertyValuesAndCounts(propertyPath, getData().ratings); // TODO only ratings of proper rating type!!
+        valueOccurrenceMap = getPropertyValuesAndCounts(propertyPath, getData().ratings, focusRatingTypeName); 
         if (includeAllowableValues) {
             for (let i = 0; i < ringProperty.allowableValues?.length; i++) {
                 valueOccurrenceMap[ringProperty.allowableValues[i].value] = valueOccurrenceMap[ringProperty.allowableValues[i].value] ?? 0;
