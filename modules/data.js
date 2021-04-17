@@ -1,5 +1,5 @@
 export {
-    initializeViewpointFromURL, initializeFiltersTagsFromURL, getDefaultSettingsBlip, createRating, createObject
+    initializeViewpointFromURL, download, initializeFiltersTagsFromURL, getDefaultSettingsBlip, createRating, createObject
     , setDefaultSettingsBlip, shuffleBlips, getConfiguration, getViewpoint, getData, getObjectById
     , populateTemplateSelector, createBlip, getObjectListOfOptions, getRatingListOfOptions, getRatingTypeForRatingTypeName, subscribeToRadarRefresh, getState, publishRefreshRadar
 }
@@ -111,6 +111,17 @@ const deserialize = (originalData) => {
         }
 
     }
+    for (let i = 0; i < Object.keys(deserializedData.model.objectTypes).length; i++) {
+        const objectType = deserializedData.model.objectTypes[Object.keys(deserializedData.model.objectTypes)[i]]
+        if (objectType.properties != null ) {
+        for (let j = 0; j < Object.keys(objectType.properties).length; j++) {
+            const property = objectType.properties[Object.keys(objectType.properties)[j]]
+            // if objectType property does not have a property called name, then assign one based on key of property
+            property.name = Object.keys(objectType.properties)[j]
+        }
+    }
+    }
+
 
     return deserializedData
 }
@@ -148,6 +159,18 @@ const normalizeDataSet = (dataset) => {
             property.name = Object.keys(ratingType.properties)[j]
         }
     }
+
+    for (let i = 0; i < Object.keys(dataset.model.objectTypes).length; i++) {
+        const objectType = dataset.model.objectTypes[Object.keys(dataset.model.objectTypes)[i]]
+        if (objectType.properties != null ) {
+        for (let j = 0; j < Object.keys(objectType?.properties).length; j++) {
+            const property = objectType.properties[Object.keys(objectType.properties)[j]]
+            // if objectType property does not have a property called name, then assign one based on key of property
+            property.name = Object.keys(objectType.properties)[j]
+        }
+    }
+    }
+
     dataset.viewpoints.forEach((viewpoint) => {
         if (typeof (viewpoint.ratingType) == "string") { viewpoint.ratingType = dataset.model.ratingTypes[viewpoint.ratingType] }
         console.log(`${JSON.stringify(viewpoint.ratingType)}`)

@@ -1,7 +1,7 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { launchBlipEditor } from './blipEditing.js'
 import { getViewpoint, getData, publishRefreshRadar } from './data.js'
-import { getRatingTypeProperties,getDistinctTagValues, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
+import { getLabelForAllowableValue, getRatingTypeProperties,getDistinctTagValues, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
 export { drawRadarBlips }
 
 
@@ -965,11 +965,3 @@ function blipWindow(blip, viewpoint) {
 
 }
 
-
-const getLabelForAllowableValue = (value, allowableValues) => {
-    let label = ""
-    for (let i = 0; i < allowableValues.length; i++) {
-        if (allowableValues[i].value == value) { label = allowableValues[i].label; break }
-    }
-    return label
-}
