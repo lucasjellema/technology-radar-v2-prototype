@@ -260,12 +260,12 @@ const launchBlipEditor = (blip, viewpoint, drawRadarBlips, editObject = true) =>
     const tbl = document.getElementById("blipEditorTable")
     // remove current content
     tbl.innerHTML = null
-    let ratingType = viewpoint.ratingType
+    let ratingType = blip.rating.ratingType ?? viewpoint.ratingType
     if (typeof (ratingType) == "string") {
         ratingType = getData().model?.ratingTypes[ratingType]
     }
 
-    setTextOnElement('blipEditorTitle', `Edit Blip for ${blip.rating[viewpoint.propertyVisualMaps.blip.label]}`)
+    setTextOnElement('blipEditorTitle', `Edit Blip for ${blip.rating[viewpoint?.propertyVisualMaps?.blip?.label]}`)
 
 
     // TODO cater for tags
@@ -335,7 +335,7 @@ const launchBlipEditor = (blip, viewpoint, drawRadarBlips, editObject = true) =>
     blipEditorTitle.innerText = `Editing Rating of ${getNestedPropertyValueFromObject(blip.rating, viewpoint.propertyVisualMaps.blip.label)}`
 
     // set main image for blip 
-    let imageSource = getNestedPropertyValueFromObject(blip.rating, viewpoint.propertyVisualMaps.blip.image)
+    let imageSource = getNestedPropertyValueFromObject(blip.rating, viewpoint?.propertyVisualMaps?.blip?.image)
     if (imageSource != null && imageSource.length > 0) {
         document.getElementById("blipImage").src = imageSource
     }
@@ -420,7 +420,9 @@ const saveBlipEdit = (editObject) => {
     // close modal editor
 
     showOrHideElement("modalBlipEditor", false)
+    if (drawRadarBlipsToCall!=null){ 
     drawRadarBlipsToCall(viewpointToReuse)
+    }
 }
 
 

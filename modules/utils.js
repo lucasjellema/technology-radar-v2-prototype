@@ -2,9 +2,9 @@ export {
     isOperationBlackedOut, uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject
     , getRatingTypeProperties, getElementValue, showOrHideElement,toggleShowHideElement, getDateTimeString
     , populateSelect, getAllKeysMappedToValue, createAndPopulateDataListFromBlipProperties
-    , populateFontsList, populateDataTypesList, populateShapesList,populateColorsList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
+    , populateFontsList, populateDataTypesList, populateShapesList,populateColorsList,populateSizesList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
     , getPropertyValuesAndCounts, populateDatalistFromValueSet, getPropertyFromPropertyPath
-    , findDisplayProperty, getListOfSupportedShapes, getListOfSupportedColors, getLabelForAllowableValue, getUniqueFieldValues
+    , findDisplayProperty, getListOfSupportedShapes, getListOfSupportedColors, getListOfSupportedSizes, getLabelForAllowableValue, getUniqueFieldValues
 }
 
 
@@ -268,6 +268,26 @@ const getListOfSupportedColors = () => {
     
     
     return colorsList
+}
+
+
+const populateSizesList = (sizesListElementId) => {
+
+    populateDatalistFromValueSet(sizesListElementId, getListOfSupportedSizes())
+}
+
+const getListOfSupportedSizes = () => {
+    const sizesList = []
+    sizesList.push(1) 
+    sizesList.push(0.8) 
+    sizesList.push(1.2) 
+    sizesList.push(0.5) 
+    sizesList.push(1.8) 
+    sizesList.push(2) 
+    sizesList.push(2.5) 
+    sizesList.push(0.2) 
+
+    return sizesList
 }
 
 

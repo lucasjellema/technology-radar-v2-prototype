@@ -6,6 +6,7 @@ import { reconfigureSectorsFromPropertyPath } from './sectorConfigurator.js'
 import { reconfigureRingsFromPropertyPath } from './ringConfigurator.js'
 import { reconfigureShapesFromPropertyPath } from './shapeConfigurator.js'
 import { reconfigureColorsFromPropertyPath } from './colorConfigurator.js'
+import { reconfigureSizesFromPropertyPath } from './sizeConfigurator.js'
 
 
 const createRadarFromCSV = (contents) => {
@@ -200,7 +201,11 @@ const generateRadarFromCSV = (objects, newRadar) => {
         viewpoint.template.colorsConfiguration.label=`${propertyPath}`
     }
 
-
+    propertyPath = getPropertyPathForVisualDimension(newRadar, "size");
+    if (propertyPath != null && propertyPath.length > 1) {
+        reconfigureSizesFromPropertyPath(propertyPath, viewpoint)
+        viewpoint.template.sizesConfiguration.label=`${propertyPath}`
+    }
     // create propertyVisualMap
 
     // show newly generated radar

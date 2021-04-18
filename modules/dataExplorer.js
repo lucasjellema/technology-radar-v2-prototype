@@ -1,6 +1,7 @@
 export { launchDataExplorer }
 import { getLabelForAllowableValue, findDisplayProperty, capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 import { getViewpoint, getData, download, publishRefreshRadar, populateTemplateSelector, createObject, createRating } from './data.js';
+import {launchBlipEditor} from './blipEditing.js'
 
 const launchDataExplorer = () => {
 
@@ -107,7 +108,15 @@ const ratingViewer = (ratingId, displayContainer) => {
         const property = properties[i]
         html = writeProperty(rating, property.propertyPath, property.property, html);
     }
+
+    html += `<br /> <br /> <input type="button" id="editRating"  value="Edit Rating"  />`
+
+
     displayContainer.innerHTML = html
+    document.getElementById('editRating').addEventListener("click", () =>{
+        launchBlipEditor({rating: rating}, getData().viewpoints[0])
+
+    })
 }
 
 const mapRadarDataToTreeModel = (radarData) => {

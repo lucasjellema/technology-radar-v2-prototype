@@ -9,6 +9,7 @@ import { launchDataExplorer } from './dataExplorer.js'
 import { launchBlipConfigurator } from './blipConfigurator.js'
 import { launchShapeConfigurator } from './shapeConfigurator.js'
 import { launchColorConfigurator } from './colorConfigurator.js'
+import { launchSizeConfigurator } from './sizeConfigurator.js'
 import { launchFileManager } from './fileManager.js'
 import { launchRadarsManagementConfigurator } from './radarsManagement.js'
 
@@ -28,6 +29,8 @@ const launchMainEditor = (viewpoint, drawRadarBlips, tab) => {
         launchShapeConfigurator(viewpoint, drawRadarBlips)
     } else if (tab == "color") {
         launchColorConfigurator(viewpoint, drawRadarBlips)
+    } else if (tab == "size") {
+        launchSizeConfigurator(viewpoint, drawRadarBlips)
     } else if (tab == "explorer") {
         launchDataExplorer(viewpoint, drawRadarBlips)
     }
@@ -135,6 +138,8 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
         , () => { launchShapeConfigurator(viewpoint, drawRadarBlips) })
     document.getElementById(`colorConfigurationTab`).addEventListener("click"
         , () => { launchColorConfigurator(viewpoint, drawRadarBlips) })
+    document.getElementById(`sizeConfigurationTab`).addEventListener("click"
+        , () => { launchSizeConfigurator(viewpoint, drawRadarBlips) })
     document.getElementById(`radarConfigurationTab`).addEventListener("click"
         , () => { launchMainEditor(viewpoint, drawRadarBlips, "radar") })
     document.getElementById(`datamodelConfigurationTab`).addEventListener("click"
