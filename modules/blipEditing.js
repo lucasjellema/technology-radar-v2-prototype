@@ -444,6 +444,13 @@ const getSectorExpansionFactor = (viewpoint) => {
 
 }
 
+const getRingExpansionFactor = (viewpoint) => {
+    // factor to multiply each witdh with - derived from the sum of widths of all visible rings , calibrated with the total available ring width
+    const totalVisibleRingsWidthSum = viewpoint.template.ringConfiguration.rings.reduce((sum, ring) =>
+        sum + (ring?.visible != false ? ring.width : 0), 0)
+    const expansionFactor = totalVisibleRingsWidthSum == 0 ? 1 : 1 / totalVisibleRingsWidthSum
+    return expansionFactor
+}
 
 
 const handleBlipDrag = function (blipDragEvent, viewpoint) {
@@ -454,8 +461,12 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
     else {
         // TODO use the real sector expansion factor!!!
         let sectorExpansionFactor = getSectorExpansionFactor(viewpoint)
-        const dropSegment = segmentFromCartesian({ x: blipDragEvent.newX, y: blipDragEvent.newY }, viewpoint, sectorExpansionFactor)
-        //console.log(`dropsegment ${JSON.stringify(dropSegment)}`)
+        // TODO use the real sector expansion factor!!!
+        let ringExpansionFactor = getRingExpansionFactor(viewpoint)
+        const dropSegment = segmentFromCartesian({ x: blipDragEvent.newX, y: blipDragEvent.newY }, viewpoint, sectorExpansionFactor, ringExpansionFactor)
+
+// TODO: only visible rings and sectors are counted; the real ring or sector could be a different one!
+        console.log(`dropsegment ${JSON.stringify(dropSegment)}`)
         const blipId = blipDragEvent.blipId.substring(5)
         let blip
         blip = viewpoint.blips.filter((blip) => blip.id == blipId ? blip : null)[0]

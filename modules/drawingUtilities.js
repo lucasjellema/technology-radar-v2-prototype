@@ -17,11 +17,16 @@ export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian}
     }
   }
 
-  const segmentFromCartesian = (cartesian, viewpoint, sectorExpansionFactor=1) => {
+  const segmentFromCartesian = (cartesian, viewpoint, sectorExpansionFactor=1, ringExpansionFactor=1) => {
     const polar = polarFromCartesian({ x: cartesian.x, y: cartesian.y })
     const dropAnglePercentage = (polar.phi < 0) ? - polar.phi / (2 * Math.PI) : 1 - polar.phi / (2 * Math.PI)
     const dropRadialPercentage = polar.r / viewpoint.template.maxRingRadius
-   // console.log(`polar drop zone ${JSON.stringify(polar)} anglepercentage ${dropAnglePercentage} radial percentage = ${dropRadialPercentage} `)
+   console.log(`polar drop zone ${JSON.stringify(polar)} 
+   anglepercentage ${dropAnglePercentage} 
+   ring/radial percentage = ${dropRadialPercentage} 
+   ring expansion factor = ${ringExpansionFactor}
+   
+   `)
     let dropSector
     let angleSum = 0
     // iterate over sectors until sum of sector angles > anglePercentage    ; the last sector is the dropzone 
@@ -42,8 +47,10 @@ export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian}
     let widthSum = 0
     // iterate over rings until sum of ring widths > dropRadialPercentage    ; the last ring is the dropzone 
     for (let i = 0; i < viewpoint.template.ringConfiguration.rings.length; i++) {
-        widthSum = widthSum + viewpoint.template.ringConfiguration.rings[i].width
-        if (widthSum > 1 - dropRadialPercentage) {
+        widthSum = widthSum +
+        ((viewpoint.template.ringConfiguration.rings[i]?.visible != false) 
+        ?  viewpoint.template.ringConfiguration.rings[i].width:0)
+        if (widthSum * ringExpansionFactor > (1 - dropRadialPercentage)) {
             dropRing = i
             break
         }

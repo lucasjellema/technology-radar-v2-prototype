@@ -235,7 +235,7 @@ const sectorRingToPosition = (sector, ring, config) => { // return randomized X,
 }
 
 const blipInSegment = (cartesian, viewpoint, segment) => {
-    const cartesianSegment = segmentFromCartesian(cartesian, viewpoint, sectorExpansionFactor())
+    const cartesianSegment = segmentFromCartesian(cartesian, viewpoint, sectorExpansionFactor(), ringExpansionFactor())
     //console.log(`REAL sector ${segment.sector} ring ${segment.ring};XY RING  ${cartesianSegment.ring} sector ${cartesianSegment.sector}`)
     const isBlipInSegment =
         ((cartesianSegment.sector ?? -1) == (segment.sector ?? -1))
