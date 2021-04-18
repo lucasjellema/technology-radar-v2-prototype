@@ -2,9 +2,9 @@ export {
     isOperationBlackedOut, uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject
     , getRatingTypeProperties, getElementValue, showOrHideElement,toggleShowHideElement, getDateTimeString
     , populateSelect, getAllKeysMappedToValue, createAndPopulateDataListFromBlipProperties
-    , populateFontsList, populateDataTypesList, populateShapesList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
+    , populateFontsList, populateDataTypesList, populateShapesList,populateColorsList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
     , getPropertyValuesAndCounts, populateDatalistFromValueSet, getPropertyFromPropertyPath
-    , findDisplayProperty, getListOfSupportedShapes, getLabelForAllowableValue, getUniqueFieldValues
+    , findDisplayProperty, getListOfSupportedShapes, getListOfSupportedColors, getLabelForAllowableValue, getUniqueFieldValues
 }
 
 
@@ -242,6 +242,32 @@ const populateFontsList = (fontsListElementId) => {
     fontsList.push(`"Courier New"`)
 
     populateDatalistFromValueSet(fontsListElementId, fontsList)
+}
+
+
+const populateColorsList = (colorsListElementId) => {
+
+    populateDatalistFromValueSet(colorsListElementId, getListOfSupportedColors())
+}
+
+const getListOfSupportedColors = () => {
+    const colorsList = []
+    colorsList.push(`#ff0000`) // red
+    colorsList.push(`#ffff00`) // yellow
+    colorsList.push(`#00ff00`) // green
+    colorsList.push(`#00ccff`) // medium blue
+    colorsList.push(`#ff00ff`) // pink
+    colorsList.push(`#00b300`) // darker green
+    colorsList.push(`#0059b3`) // darker blue
+    colorsList.push(`#ff9900`) // orange
+    colorsList.push(`#ffcccc`) // salmon
+    colorsList.push(`#990099`) // fairly deep purple
+    colorsList.push(`#d9d9d9`) // light grey
+    colorsList.push(`#666666`) // dark grey
+    colorsList.push(`#992600`) // dark red
+    
+    
+    return colorsList
 }
 
 
