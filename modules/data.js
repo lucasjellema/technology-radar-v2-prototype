@@ -1,7 +1,8 @@
 export {
     initializeViewpointFromURL, download, initializeFiltersTagsFromURL, getDefaultSettingsBlip, createRating, createObject
     , setDefaultSettingsBlip, shuffleBlips, getConfiguration, getViewpoint, getData, getObjectById
-    , populateTemplateSelector, createBlip, getObjectListOfOptions, getRatingListOfOptions, getRatingTypeForRatingTypeName, subscribeToRadarRefresh, getState, publishRefreshRadar
+    , populateTemplateSelector, createBlip, getObjectListOfOptions, getRatingListOfOptions, getRatingTypeForRatingTypeName
+    , subscribeToRadarRefresh, getState, publishRefreshRadar, getDistinctTagValues
 }
 import { initializeTree } from './tree.js'
 
@@ -15,6 +16,44 @@ const datasetMap = {
     , verkenning: "./modules/cab-verkenningen-radar-dataset.json"
     , amisdatamgt: "./modules/amis-data-management-technology-radar-dataset.json"
 }
+
+
+function addValuesForProperty(propertyPath, blips, distinctValues) {
+    const listOfDistinctPropertyValues = new Set()
+    for (let i = 0; i < blips.length; i++) {
+        const blip = blips[i]
+        listOfDistinctPropertyValues.add(getNestedPropertyValueFromObject(blip.rating, propertyPath)?.toLowerCase().trim())
+    }
+    distinctValues = new Set([...distinctValues, ...listOfDistinctPropertyValues])
+    return distinctValues
+}
+
+const getDistinctTagValues = (viewpoint, includeDiscreteProperties = false) => {
+    const listOfDistinctTagValues = new Set()
+    for (let i = 0; i < viewpoint.blips.length; i++) {
+        const blip = viewpoint.blips[i]
+        if (blip.rating.object?.tags != null && blip.rating.object?.tags.length > 0) {
+            for (let j = 0; j < blip.rating.object?.tags.length; j++) {
+                listOfDistinctTagValues.add(blip.rating.object.tags[j].toLowerCase().trim())
+            }
+        }
+    }
+    let distinctValues = listOfDistinctTagValues
+    // TODO replace hardcoded property paths with meta model driven derivation
+    const discretePropertyPaths = getRatingTypeProperties(viewpoint.ratingType, getData().model, true)
+    .filter((property) => property.property.discrete || property.property.allowableValues!=null)
+    .map((property) => property.propertyPath)
+console.log(`getDistinctTagValues paths ${JSON.stringify(discretePropertyPaths)}`)
+  //  const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
+    if (includeDiscreteProperties) {
+        for (let i = 0; i < discretePropertyPaths.length; i++) {
+            distinctValues = addValuesForProperty(discretePropertyPaths[i], viewpoint.blips, distinctValues)
+        }
+    }
+    return distinctValues
+}
+
+
 
 // INVOKED BEFORE DOWNLOAD (TODO: and before save to local storage)
 // prepare dataset for deserialization; 
@@ -173,7 +212,6 @@ const normalizeDataSet = (dataset) => {
 
     dataset.viewpoints.forEach((viewpoint) => {
         if (typeof (viewpoint.ratingType) == "string") { viewpoint.ratingType = dataset.model.ratingTypes[viewpoint.ratingType] }
-        console.log(`${JSON.stringify(viewpoint.ratingType)}`)
         // const objectType = viewpoint.ratingType.objectType
         viewpoint.blips.forEach((blip) => {
             if (typeof (blip.rating) == "string") { // assume the rating is a reference to an UUID

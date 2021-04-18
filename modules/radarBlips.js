@@ -1,7 +1,7 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { launchBlipEditor } from './blipEditing.js'
-import { getViewpoint, getData, publishRefreshRadar } from './data.js'
-import { getLabelForAllowableValue, getRatingTypeProperties,getDistinctTagValues, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
+import { getViewpoint, getData, publishRefreshRadar ,getDistinctTagValues} from './data.js'
+import { getLabelForAllowableValue, getRatingTypeProperties, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
 export { drawRadarBlips }
 
 

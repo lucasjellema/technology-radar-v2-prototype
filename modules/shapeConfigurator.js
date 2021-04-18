@@ -1,4 +1,4 @@
-export { launchShapeConfigurator }
+export { launchShapeConfigurator, reconfigureShapesFromPropertyPath }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { launchShapeEditor } from './shapeEditing.js'
@@ -199,35 +199,7 @@ const refreshShapeConfiguration = (viewpoint) => {
 }
 
 const reconfigureShapes = (propertyPath, viewpoint) => {
-    const shapeVisualMap = viewpoint.propertyVisualMaps["shape"]
-    shapeVisualMap["property"] = propertyPath
-
-    const valueOccurrenceMap = getValueOccurrenceMap(viewpoint.propertyVisualMaps["shape"].property, viewpoint, true);
-    // TODO cater for tags in getPropertyValuesAndCounts
-
-    // remove entries from valueMap
-    shapeVisualMap.valueMap = {}
-    viewpoint.template.shapesConfiguration.shapes = []
-    const shapes = getListOfSupportedShapes()
-
-    // create new entries for values in valueOccurrenceMap
-    for (let i = 0; i < Object.keys(valueOccurrenceMap).length; i++) {
-        const allowableLabel = getLabelForAllowableValue(Object.keys(valueOccurrenceMap)[i], viewpoint.propertyVisualMaps["shape"].property, viewpoint)
-        const newShape = {
-            label: allowableLabel ?? capitalize(Object.keys(valueOccurrenceMap)[i]),
-            width: 1 / Object.keys(valueOccurrenceMap).length,
-            labelSettings: { color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
-            edge: { color: "#000000", width: 1 },
-            backgroundImage: {},
-            backgroundColor: "#FFFFFF",
-            outershapeBackgroundColor: "#FFFFFF",
-            shape: i < shapes.length ? shapes[i] : shapes[0]
-        }
-
-        viewpoint.template.shapesConfiguration.shapes.push(newShape)
-
-        shapeVisualMap.valueMap[Object.keys(valueOccurrenceMap)[i]] = i // map value to numerically corresponding shape
-    }
+    reconfigureShapesFromPropertyPath(propertyPath,viewpoint);
 
 
     launchShapeConfigurator(viewpoint)
@@ -253,6 +225,37 @@ const getLabelForAllowableValue = (value, propertyPath, viewpoint) => {
 const hideMe = () => {
     showOrHideElement("modalMain", false); publishRefreshRadar()
 }
+function reconfigureShapesFromPropertyPath(propertyPath,viewpoint) {
+    const shapeVisualMap = viewpoint.propertyVisualMaps["shape"];
+    shapeVisualMap["property"] = propertyPath;
+
+    const valueOccurrenceMap = getValueOccurrenceMap(viewpoint.propertyVisualMaps["shape"].property, viewpoint, true);
+    // TODO cater for tags in getPropertyValuesAndCounts
+    // remove entries from valueMap
+    shapeVisualMap.valueMap = {};
+    viewpoint.template.shapesConfiguration.shapes = [];
+    const shapes = getListOfSupportedShapes();
+
+    // create new entries for values in valueOccurrenceMap
+    for (let i = 0; i < Object.keys(valueOccurrenceMap).length; i++) {
+        const allowableLabel = getLabelForAllowableValue(Object.keys(valueOccurrenceMap)[i], viewpoint.propertyVisualMaps["shape"].property, viewpoint);
+        const newShape = {
+            label: allowableLabel ?? capitalize(Object.keys(valueOccurrenceMap)[i]),
+            width: 1 / Object.keys(valueOccurrenceMap).length,
+            labelSettings: { color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
+            edge: { color: "#000000", width: 1 },
+            backgroundImage: {},
+            backgroundColor: "#FFFFFF",
+            outershapeBackgroundColor: "#FFFFFF",
+            shape: i < shapes.length ? shapes[i] : shapes[0]
+        };
+
+        viewpoint.template.shapesConfiguration.shapes.push(newShape);
+
+        shapeVisualMap.valueMap[Object.keys(valueOccurrenceMap)[i]] = i;
+    }
+}
+
 function getValueOccurrenceMap(propertyPath, viewpoint, includeAllowableValues = false) {
     const model = getData().model
     const focusRatingTypeName = typeof (viewpoint.ratingType) == "object" ? viewpoint.ratingType.name : viewpoint.ratingType

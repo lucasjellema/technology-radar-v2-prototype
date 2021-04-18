@@ -1,4 +1,4 @@
-export { launchRadarsManagementConfigurator }
+export { launchRadarsManagementConfigurator , starterTemplate}
 import { getViewpoint, getData, getState, publishRefreshRadar } from './data.js';
 import { uuidv4, capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 import { publishRadarEvent } from './radar.js';
@@ -67,56 +67,64 @@ const createNewRadar = () => {
     let ratingType
     if (ratingTypeName != null && ratingTypeName.length > 0) {
         // new rating type
-        ratingType = { id: uuidv4(), name: ratingTypeName, label: ratingTypeName
+        ratingType = {
+            id: uuidv4(), name: ratingTypeName, label: ratingTypeName
             , properties: {
-                "scope": {
-                    "label": "Scope",
-                    "type": "string",
-                    "description": "The scope or context to which the rating applies",
-                    "discrete": true,
-                    "context":true
+                scope: {
+                    name: "scope",
+                    label: "Scope",
+                    type: "string",
+                    description: "The scope or context to which the rating applies",
+                    discrete: true,
+                    context: true
                 },
-                "author": {
-                    "label": "Author/Evaluator",
-                    "type": "string",
-                    "description": "The name of the person who made the judgement",
-                    "discrete": true,
-                    "context":true
+                author: {
+                    name: "author",
+                    label: "Author/Evaluator",
+                    type: "string",
+                    description: "The name of the person who made the judgement",
+                    discrete: true,
+                    context: true
                 },
-                "timestamp": {
-                    "label": "Time of Evaluation",                    
-                    "description": "When was this rating defined",
-                    "type": "time",
-                    "readOnly": true
+                timestamp: {
+                    name: "timestamp",
+                    label: "Time of Evaluation",
+                    description: "When was this rating defined",
+                    type: "time",
+                    readOnly: true
                 },
-                "comment": {
-                    "label": "Comment/Rationale",
-                    "description": "Additional remark regarding this rating",
-                    "type": "text"
+                comment: {
+                    name: "comment",
+                    label: "Comment/Rationale",
+                    description: "Additional remark regarding this rating",
+                    type: "text"
                 }
             }
-            , timestamp: Date.now() }
+            , timestamp: Date.now()
+        }
         getData().model.ratingTypes[ratingTypeName] = ratingType
         let objectType
         const selectedObjectType = getElementValue("objectTypeSelect")
         const objectTypeName = getElementValue("newObjectTypeName")
         if (objectTypeName != null && objectTypeName.length > 0) {
             //TODO create new objecttype
-            objectType = { id: uuidv4(), name: objectTypeName, label: objectTypeName
-                , properties: {                     
-                "label": {
-                    "label": "Label",
-                    "type": "string",
-                    "displayLabel": true,
-                    "name": "label"
-                },
-                "description": {
-                    "label": "Description",
-                    "type": "text",
-                    "name": description
+            objectType = {
+                id: uuidv4(), name: objectTypeName, label: objectTypeName
+                , properties: {
+                    "label": {
+                        "label": "Label",
+                        "type": "string",
+                        "displayLabel": true,
+                        "name": "label"
+                    },
+                    "description": {
+                        "label": "Description",
+                        "type": "text",
+                        "name": description
+                    }
                 }
-                }
-                , timestamp: Date.now() }
+                , timestamp: Date.now()
+            }
             getData().model.objectTypes[objectTypeName] = objectType
         } else {
             if (selectedObjectType != "-1") {
@@ -162,10 +170,10 @@ const starterTemplate = {
     },
     backgroundImage: {},
     colors: {},
-    ringConfiguration: {rings:[]},
-    sectorConfiguration: {sectors:[]},
-    shapesConfiguration: {shapes:[]},
-    sizesConfiguration: {sizes:[]},
-    colorsConfiguration: {colors:[]},
+    ringConfiguration: { rings: [] },
+    sectorConfiguration: { sectors: [] },
+    shapesConfiguration: { shapes: [] },
+    sizesConfiguration: { sizes: [] },
+    colorsConfiguration: { colors: [] },
     blip: ""
 }

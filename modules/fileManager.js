@@ -2,7 +2,8 @@ export { launchFileManager }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, download, publishRefreshRadar, populateTemplateSelector, createObject, createRating } from './data.js';
 import { launchShapeEditor } from './shapeEditing.js'
-import { getListOfSupportedShapes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, toggleShowHideElement, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, uuidv4, populateDatalistFromValueSet } from './utils.js'
+import { getUniqueFieldValues, getListOfSupportedShapes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, toggleShowHideElement, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, uuidv4, populateDatalistFromValueSet } from './utils.js'
+import {createRadarFromCSV} from './csvWizard.js'
 
 const launchFileManager = (viewpoint, drawRadarBlips) => {
     showOrHideElement("modalMain", true)
@@ -17,6 +18,9 @@ const launchFileManager = (viewpoint, drawRadarBlips) => {
     <br />
     <br />
     <input type="button" id="exportCSVFile" name="export" value="Export CSV File from Radar">
+    <br />
+    <br />
+    <input type="button" id="CSVtoRadarWizard" name="csvWizard" value="Create New Radar from CSV file">
     <input type="file" id="uploadfileElem" multiple accept="application/json,text/*" style="display:none">
      `
 
@@ -37,6 +41,9 @@ const launchFileManager = (viewpoint, drawRadarBlips) => {
             else if (fileType == "csv") {
                 handleUploadedCSVFiles(contents)
             }
+            else if (fileType == "csvwizard") {
+                createRadarFromCSV(contents)
+            }
         }
     }
         , false);
@@ -50,6 +57,12 @@ const launchFileManager = (viewpoint, drawRadarBlips) => {
         fileType = "csv"
         if (fileElem) { fileElem.click() }
     });
+    document.getElementById('CSVtoRadarWizard').addEventListener("click", () => {
+        fileType = "csvwizard"
+        if (fileElem) { fileElem.click() }
+    });
+
+    
 
     document.getElementById('exportCSVFile').addEventListener("click", () => {
         fileType = "csv"
@@ -506,13 +519,7 @@ const processCSVRecords = (objects, extendAllowableValues, propertyValueMap, rad
     }
 
 }
-function getUniqueFieldValues(objects, csvField) {
-    return objects.reduce((valueSample, row) => {
-        const value = row[csvField];
-        if (value != null && value.length > 0) { valueSample.add(value); }
-        return valueSample;
-    }, new Set());
-}
+
 
 function identifyAndAddNewProperties(radarFromCSVMap) {
     const objectType = getViewpoint().ratingType.objectType

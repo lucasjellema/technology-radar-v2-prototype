@@ -1,4 +1,4 @@
-export { launchSectorConfigurator }
+export { launchSectorConfigurator, reconfigureSectorsFromPropertyPath }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { launchSectorEditor } from './sectorEditing.js'
@@ -258,32 +258,7 @@ const refreshSectorConfiguration = (viewpoint) => {
 }
 
 const reconfigureSectors = (propertyPath, viewpoint) => {
-    const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
-    sectorVisualMap["property"] = propertyPath
-
-    const valueOccurrenceMap = getValueOccurrenceMap(viewpoint.propertyVisualMaps["sector"].property, viewpoint, true);
-    // TODO cater for tags in getPropertyValuesAndCounts
-
-    // remove entries from valueMap
-    sectorVisualMap.valueMap = {}
-    viewpoint.template.sectorConfiguration.sectors = []
-    // create new entries for values in valueOccurrenceMap
-    for (let i = 0; i < Object.keys(valueOccurrenceMap).length; i++) {
-        const allowableLabel = getLabelForAllowableValue(Object.keys(valueOccurrenceMap)[i], viewpoint.propertyVisualMaps["sector"].property, viewpoint)
-        const newSector = {
-            label: allowableLabel ?? capitalize(Object.keys(valueOccurrenceMap)[i]),
-            angle: 1 / Object.keys(valueOccurrenceMap).length,
-            labelSettings: { showCurved: true, showStraight: false, color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
-            edge: { color: "#000000", width: 1 },
-            backgroundImage: {},
-            backgroundColor: "#FFFFFF",
-            outerringBackgroundColor: "#FFFFFF"
-        }
-
-        viewpoint.template.sectorConfiguration.sectors.push(newSector)
-
-        sectorVisualMap.valueMap[Object.keys(valueOccurrenceMap)[i]] = i // map value to numerically corresponding sector
-    }
+    reconfigureSectorsFromPropertyPath( propertyPath,viewpoint);
 
 
     launchSectorConfigurator(viewpoint)
@@ -309,6 +284,34 @@ const getLabelForAllowableValue = (value, propertyPath, viewpoint) => {
 const hideMe = () => {
     showOrHideElement("modalMain", false); publishRefreshRadar()
 }
+function reconfigureSectorsFromPropertyPath( propertyPath,viewpoint) {
+    const sectorVisualMap = viewpoint.propertyVisualMaps["sector"];
+    sectorVisualMap["property"] = propertyPath;
+
+    const valueOccurrenceMap = getValueOccurrenceMap(viewpoint.propertyVisualMaps["sector"].property, viewpoint, true);
+    // TODO cater for tags in getPropertyValuesAndCounts
+    // remove entries from valueMap
+    sectorVisualMap.valueMap = {};
+    viewpoint.template.sectorConfiguration.sectors = [];
+    // create new entries for values in valueOccurrenceMap
+    for (let i = 0; i < Object.keys(valueOccurrenceMap).length; i++) {
+        const allowableLabel = getLabelForAllowableValue(Object.keys(valueOccurrenceMap)[i], viewpoint.propertyVisualMaps["sector"].property, viewpoint);
+        const newSector = {
+            label: allowableLabel ?? capitalize(Object.keys(valueOccurrenceMap)[i]),
+            angle: 1 / Object.keys(valueOccurrenceMap).length,
+            labelSettings: { showCurved: true, showStraight: false, color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
+            edge: { color: "#000000", width: 1 },
+            backgroundImage: {},
+            backgroundColor: "#FFFFFF",
+            outerringBackgroundColor: "#FFFFFF"
+        };
+
+        viewpoint.template.sectorConfiguration.sectors.push(newSector);
+
+        sectorVisualMap.valueMap[Object.keys(valueOccurrenceMap)[i]] = i;
+    }
+}
+
 function getValueOccurrenceMap(propertyPath, viewpoint, includeAllowableValues = false) {
     const model = getData().model
     const focusRatingTypeName = typeof (viewpoint.ratingType) == "object" ? viewpoint.ratingType.name : viewpoint.ratingType

@@ -1,4 +1,4 @@
-export { launchRingConfigurator }
+export { launchRingConfigurator, reconfigureRingsFromPropertyPath }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { launchRingEditor } from './ringEditing.js'
@@ -231,32 +231,7 @@ const refreshRingConfiguration = (viewpoint) => {
 }
 
 const reconfigureRings = (propertyPath, viewpoint) => {
-    const ringVisualMap = viewpoint.propertyVisualMaps["ring"]
-    ringVisualMap["property"] = propertyPath
-
-    const valueOccurrenceMap = getValueOccurrenceMap(viewpoint.propertyVisualMaps["ring"].property, viewpoint, true);
-    // TODO cater for tags in getPropertyValuesAndCounts
-
-    // remove entries from valueMap
-    ringVisualMap.valueMap = {}
-    viewpoint.template.ringConfiguration.rings = []
-    // create new entries for values in valueOccurrenceMap
-    for (let i = 0; i < Object.keys(valueOccurrenceMap).length; i++) {
-        const allowableLabel = getLabelForAllowableValue(Object.keys(valueOccurrenceMap)[i], viewpoint.propertyVisualMaps["ring"].property, viewpoint)
-        const newRing = {
-            label: allowableLabel ?? capitalize(Object.keys(valueOccurrenceMap)[i]),
-            width: 1 / Object.keys(valueOccurrenceMap).length,
-            labelSettings: { showCurved: true, showStraight: false, color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
-            edge: { color: "#000000", width: 1 },
-            backgroundImage: {},
-            backgroundColor: "#FFFFFF",
-            outerringBackgroundColor: "#FFFFFF"
-        }
-
-        viewpoint.template.ringConfiguration.rings.push(newRing)
-
-        ringVisualMap.valueMap[Object.keys(valueOccurrenceMap)[i]] = i // map value to numerically corresponding ring
-    }
+    reconfigureRingsFromPropertyPath(propertyPath,viewpoint);
 
 
     launchRingConfigurator(viewpoint)
@@ -282,6 +257,34 @@ const getLabelForAllowableValue = (value, propertyPath, viewpoint) => {
 const hideMe = () => {
     showOrHideElement("modalMain", false); publishRefreshRadar()
 }
+function reconfigureRingsFromPropertyPath( propertyPath,viewpoint) {
+    const ringVisualMap = viewpoint.propertyVisualMaps["ring"];
+    ringVisualMap["property"] = propertyPath;
+
+    const valueOccurrenceMap = getValueOccurrenceMap(viewpoint.propertyVisualMaps["ring"].property, viewpoint, true);
+    // TODO cater for tags in getPropertyValuesAndCounts
+    // remove entries from valueMap
+    ringVisualMap.valueMap = {};
+    viewpoint.template.ringConfiguration.rings = [];
+    // create new entries for values in valueOccurrenceMap
+    for (let i = 0; i < Object.keys(valueOccurrenceMap).length; i++) {
+        const allowableLabel = getLabelForAllowableValue(Object.keys(valueOccurrenceMap)[i], viewpoint.propertyVisualMaps["ring"].property, viewpoint);
+        const newRing = {
+            label: allowableLabel ?? capitalize(Object.keys(valueOccurrenceMap)[i]),
+            width: 1 / Object.keys(valueOccurrenceMap).length,
+            labelSettings: { showCurved: true, showStraight: false, color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
+            edge: { color: "#000000", width: 1 },
+            backgroundImage: {},
+            backgroundColor: "#FFFFFF",
+            outerringBackgroundColor: "#FFFFFF"
+        };
+
+        viewpoint.template.ringConfiguration.rings.push(newRing);
+
+        ringVisualMap.valueMap[Object.keys(valueOccurrenceMap)[i]] = i;
+    }
+}
+
 function getValueOccurrenceMap(propertyPath, viewpoint, includeAllowableValues = false) {
     const model = getData().model
     const focusRatingTypeName = typeof (viewpoint.ratingType) == "object" ? viewpoint.ratingType.name : viewpoint.ratingType

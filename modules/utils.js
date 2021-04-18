@@ -3,8 +3,8 @@ export {
     , getRatingTypeProperties, getElementValue, showOrHideElement,toggleShowHideElement, getDateTimeString
     , populateSelect, getAllKeysMappedToValue, createAndPopulateDataListFromBlipProperties
     , populateFontsList, populateDataTypesList, populateShapesList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
-    , getDistinctTagValues, getPropertyValuesAndCounts, populateDatalistFromValueSet, getPropertyFromPropertyPath
-    , findDisplayProperty, getListOfSupportedShapes, getLabelForAllowableValue
+    , getPropertyValuesAndCounts, populateDatalistFromValueSet, getPropertyFromPropertyPath
+    , findDisplayProperty, getListOfSupportedShapes, getLabelForAllowableValue, getUniqueFieldValues
 }
 
 
@@ -33,16 +33,6 @@ const getLabelForAllowableValue = (value, allowableValues) => {
     return label
 }
 
-function addValuesForProperty(propertyPath, blips, distinctValues) {
-    const listOfDistinctPropertyValues = new Set()
-    for (let i = 0; i < blips.length; i++) {
-        const blip = blips[i]
-        listOfDistinctPropertyValues.add(getNestedPropertyValueFromObject(blip.rating, propertyPath)?.toLowerCase().trim())
-    }
-    distinctValues = new Set([...distinctValues, ...listOfDistinctPropertyValues])
-    return distinctValues
-}
-
 const getPropertyValuesAndCounts = (propertyPath, ratings, ratingTypeName = null) => { // filter on rating type!
     const valueOccurenceMap = {}
     for (let i = 0; i < Object.keys(ratings).length; i++) {
@@ -54,27 +44,6 @@ const getPropertyValuesAndCounts = (propertyPath, ratings, ratingTypeName = null
         }
     }
     return valueOccurenceMap
-}
-
-const getDistinctTagValues = (viewpoint, includeDiscreteProperties = false) => {
-    const listOfDistinctTagValues = new Set()
-    for (let i = 0; i < viewpoint.blips.length; i++) {
-        const blip = viewpoint.blips[i]
-        if (blip.rating.object?.tags != null && blip.rating.object?.tags.length > 0) {
-            for (let j = 0; j < blip.rating.object?.tags.length; j++) {
-                listOfDistinctTagValues.add(blip.rating.object.tags[j].toLowerCase().trim())
-            }
-        }
-    }
-    let distinctValues = listOfDistinctTagValues
-    // TODO replace hardcoded property paths with meta model driven derivation
-    const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
-    if (includeDiscreteProperties) {
-        for (let i = 0; i < discretePropertyPaths.length; i++) {
-            distinctValues = addValuesForProperty(discretePropertyPaths[i], viewpoint.blips, distinctValues)
-        }
-    }
-    return distinctValues
 }
 
 
@@ -126,6 +95,14 @@ const getPropertyFromPropertyPath = (propertyPath, ratingType, model) => {
         }
     }
     return property
+}
+
+function getUniqueFieldValues(objects, property) {
+    return objects.reduce((values, object) => {
+        const value = object[property];
+        if (value != null && value.length > 0) { values.add(value); }
+        return values;
+    }, new Set());
 }
 
 function getRatingTypeProperties(ratingType, model, includeObjectType = true) { // model = getData().model

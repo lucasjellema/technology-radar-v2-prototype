@@ -36,11 +36,11 @@ const launchDataExplorer = () => {
             const display = document.getElementById("detailPane")
             if (data.type == "object") {
                 objectViewer(data.id, display)
-            } 
-            else             if (data.type == "rating") {
+            }
+            else if (data.type == "rating") {
                 ratingViewer(data.id, display)
 
-            } 
+            }
             else {
                 display.innerHTML = `<div >${data.label}</div>${data.description ? `<div class="descr">${data.description}</div>` : ''}`;
             }
@@ -101,9 +101,9 @@ const ratingViewer = (ratingId, displayContainer) => {
     let html = ``
     const rating = getData().ratings[ratingId]
     const ratingType = typeof (rating.ratingType) == "string" ? getData().model.ratingTypes[rating.ratingType] : rating.ratingType
-//    const objectType = typeof (object.objectType) == "string" ? getData().model.objectTypes[object.objectType] : object.objectType
-    const properties = getRatingTypeProperties(ratingType, getData().model,true)
-    for (let i=0;i< properties.length;i++) {
+    //    const objectType = typeof (object.objectType) == "string" ? getData().model.objectTypes[object.objectType] : object.objectType
+    const properties = getRatingTypeProperties(ratingType, getData().model, true)
+    for (let i = 0; i < properties.length; i++) {
         const property = properties[i]
         html = writeProperty(rating, property.propertyPath, property.property, html);
     }
@@ -145,6 +145,14 @@ const mapRadarDataToTreeModel = (radarData) => {
 
 
     addRatings(data, radarData);
+    if (radarData.viewpoints != null && radarData.viewpoints.length > 0) {
+        data.viewpoints = { label: "Viewpoints", children: {} }
+        let i = 0
+        radarData.viewpoints.forEach((viewpoint) => {
+            data.viewpoints.children[viewpoint.name] =
+                { label: viewpoint.name, selectable: true, id: `viewpoint${i++}`, children: { blips: { label: `${viewpoint.blips.length} blips`, selectable: true } } }
+        })
+    }
 
 
     return data
@@ -322,7 +330,7 @@ function addObjectTypes(radarData, data) {
                     const property = objectType.properties[Object.keys(objectType.properties)[j]];
                     objectTypeNode.children.properties.children[Object.keys(objectType.properties)[j]] =
                     {
-                        label: property.label, propertyPath: `object.${Object.keys(objectType.properties)[j]}`,
+                        label: property.label==null?property.name:property.label, propertyPath: `object.${Object.keys(objectType.properties)[j]}`,
                         objectType: objectType.name, type: "objectType",
                         data: property
                     };
