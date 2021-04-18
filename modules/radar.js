@@ -406,15 +406,22 @@ const initializeSizesLegend = (viewpoint) => {
     sizesBox
         .style("background-color", "silver")
         .attr("width", "80%")
-        .attr("height", Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length * 55 + 20)
+        .attr("height", config.sizesConfiguration.sizes.length * 55 + 20)
     sizesBox.append('g').attr('class', 'sizesBox')
-    document.getElementById('sizesLegendTitle').innerText = config.sizesConfiguration.label;
+    const legendTitle = config.sizesConfiguration.label ?? viewpoint.propertyVisualMaps.size.property
+    document.getElementById('sizesLegendTitle').innerText = legendTitle;
     const circleIndent = 10
     const labelIndent = 70
-    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length; i++) {
-        const key = Object.keys(viewpoint.propertyVisualMaps.size.valueMap)[i]
-        const scaleFactor = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].size
-        const label = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].label
+
+    for (let i = 0; i < config.sizesConfiguration.sizes.length; i++) {
+        const scaleFactor = config.sizesConfiguration.sizes[i].size
+        const label = config.sizesConfiguration.sizes[i].label
+
+
+    // for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length; i++) {
+    //     const key = Object.keys(viewpoint.propertyVisualMaps.size.valueMap)[i]
+    //     const scaleFactor = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].size
+    //     const label = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].label
 
         const sizeEntry = sizesBox.append('g')
             .attr("transform", `translate(${circleIndent + 20}, ${30 + i * 55})`)
@@ -444,10 +451,28 @@ const initializeSizesLegend = (viewpoint) => {
 const initializeShapesLegend = (viewpoint) => {
 
     const config = viewpoint.template
-    document.getElementById('shapesLegendTitle').innerText = config.shapesConfiguration.label;
+    document.getElementById('shapesLegendTitle').innerText = "";
+
 
     const shapesBox = d3.select("svg#shapesLegend")
         .style("background-color", "silver")
+        .attr("width", "1%")
+        .attr("height", 1)
+
+    shapesBox.selectAll("*").remove(); // clean content (if there is any)
+
+    if (viewpoint.propertyVisualMaps.shape?.property == null
+        || viewpoint.propertyVisualMaps.shape.property == ""
+        || viewpoint.propertyVisualMaps.shape.valueMap == null
+        || Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length == 0) {
+        return
+    }
+
+
+    const legendTitle = config.shapesConfiguration.label ?? viewpoint.propertyVisualMaps.shape.property
+    document.getElementById('shapesLegendTitle').innerText = legendTitle;
+
+    shapesBox.style("background-color", "silver")
         .attr("width", "1%")
         .attr("height", 1)
 
@@ -461,16 +486,20 @@ const initializeShapesLegend = (viewpoint) => {
     shapesBox
         .style("background-color", "#FEE")
         .attr("width", "80%")
-        .attr("height", Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length * 45 + 20)
+        .attr("height", config.shapesConfiguration.shapes.length * 45 + 20)
 
     shapesBox.append('g').attr('class', 'shapesBox')
     const circleIndent = 5
     const labelIndent = 50
-    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
-        const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
-        const vm = viewpoint.propertyVisualMaps.shape.valueMap[key]
-        const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
-        const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
+    for (let i = 0; i < config.shapesConfiguration.shapes.length; i++) {
+        const shapeToDraw = config.shapesConfiguration.shapes[i].shape
+        const label = config.shapesConfiguration.shapes[i].label
+
+    // for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
+    //     const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
+    //     const vm = viewpoint.propertyVisualMaps.shape.valueMap[key]
+    //     const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
+    //     const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
 
         shapesBox.append("text")
             .attr("id", `shapeLabel${i}`)
@@ -530,7 +559,10 @@ const initializeShapesLegend = (viewpoint) => {
                 .attr('y', -15)
 
         }
-
+        if (shape==null) {
+           console.log(`handled exception in shapes legend - shape ${shapeToDraw} cannot be drawn`)            
+           continue
+        }
         shape.attr("fill", "#000");
         shape.attr("opacity", "0.9");
 
@@ -559,16 +591,14 @@ const initializeColorsLegend = (viewpoint) => {
     colorsBox
         .style("background-color", "#EFF")
         .attr("width", "80%")
-        .attr("height", Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length * 45 + 20)
+        .attr("height", config.colorsConfiguration.colors.length * 45 + 20)
     document.getElementById('colorLegendTitle').innerText = config.colorsConfiguration.label;
     colorsBox.append('g').attr('class', 'colorsBox')
     const circleIndent = 5
     const labelIndent = 50
-    for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length; i++) {
-        const key = Object.keys(viewpoint.propertyVisualMaps.color.valueMap)[i]
-        const colorToShow = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].color
-        const label = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].label
-
+    for (let i = 0; i < config.colorsConfiguration.colors.length; i++) {
+        const colorToShow = config.colorsConfiguration.colors[i].color
+        const label = config.colorsConfiguration.colors[i].label
         const colorEntry = colorsBox.append('g')
             .attr("transform", `translate(${circleIndent + 20}, ${30 + i * 45})`)
 
@@ -586,8 +616,6 @@ const initializeColorsLegend = (viewpoint) => {
             .style("font-family", "Arial, Helvetica")
             .style("font-size", "18px")
             .style("font-weight", "normal")
-
-
     }
 }
 

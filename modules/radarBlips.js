@@ -1,6 +1,6 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { launchBlipEditor } from './blipEditing.js'
-import { getViewpoint, getData, publishRefreshRadar ,getDistinctTagValues} from './data.js'
+import { getViewpoint, getData, publishRefreshRadar, getDistinctTagValues } from './data.js'
 import { getLabelForAllowableValue, getRatingTypeProperties, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
 export { drawRadarBlips }
 
@@ -25,7 +25,7 @@ const filterBlip = (blip, viewpoint) => {
                 try {
                     let blipHasFilter
                     if (filter.tag.startsWith('"')) {
-                        const labelProperty = viewpoint.propertyVisualMaps.blip?.label  
+                        const labelProperty = viewpoint.propertyVisualMaps.blip?.label
                         const blipLabel = getNestedPropertyValueFromObject(blip.rating, labelProperty).toLowerCase()
                         const filterTag = filter.tag.replace(/^"+|"+$/g, '').toLowerCase()
 
@@ -127,13 +127,13 @@ const drawRadarBlips = function (viewpoint) {
 
     // the blip.label property should be set in order to describe the label for the blips
     // this next section helps out when that property has not been set, by picking our own label property
-    if (viewpoint.propertyVisualMaps.blip?.label == null ||viewpoint.propertyVisualMaps.blip?.label.length == 0) {
+    if (viewpoint.propertyVisualMaps.blip?.label == null || viewpoint.propertyVisualMaps.blip?.label.length == 0) {
         // set blip.label to the first string type property for the object this blip is based on
         let blipProperties = getRatingTypeProperties(viewpoint.ratingType, getData().model, true)
-        for ( let i=0;i<blipProperties.length;i++) {
-            if (blipProperties[i].property.type=="string" && blipProperties[i].propertyScope=="object") {
+        for (let i = 0; i < blipProperties.length; i++) {
+            if (blipProperties[i].property.type == "string" && blipProperties[i].propertyScope == "object") {
                 viewpoint.propertyVisualMaps.blip.label = blipProperties[i].propertyPath
-            break
+                break
             }
         }
 
@@ -283,685 +283,701 @@ const drawRadarBlip = (blip, d, viewpoint) => {
         const blipShapeId = viewpoint.propertyVisualMaps.shape.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToShape)]
             ?? viewpoint.propertyVisualMaps.shape.valueMap["other"]
         blipShape = viewpoint.template.shapesConfiguration.shapes[blipShapeId].shape
-    } catch (e) { viewpoint.blipDisplaySettings.applyShapes = false; console.log(`draw radar blip fall back to no apply shape because of ${e}`) }
-
-
-    let blipColor
-    try {
-        // TODO cater for : no color property set; no color property value to map; no default color defined to fall back to
-        const propertyMappedToColor = viewpoint.propertyVisualMaps.color.property
-        const blipColorId = viewpoint.propertyVisualMaps.color.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToColor)]
-            ?? viewpoint.propertyVisualMaps.color.valueMap["other"]
-        blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
     } catch (e) {
-        viewpoint.blipDisplaySettings.applyColors = false;
-        console.log(`draw radar blip fall back to no apply color because of ${e}`)
+        blipShape = "circle"
+     
     }
 
-    let blipSize
-    try {
-        // TODO cater for : no size property set; no size property value to map; no default size defined to fall back to
-        const propertyMappedToSize = viewpoint.propertyVisualMaps.size.property
-        const blipSizeId = viewpoint.propertyVisualMaps.size.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSize)]
-            ?? viewpoint.propertyVisualMaps.size.valueMap["other"]
-        blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
-    } catch (e) {
-        viewpoint.blipDisplaySettings.applySizes = false;
-        console.log(`draw radar blip fall back to no apply size because of ${e}`)
-    }
+        let blipColor
+        try {
+            // TODO cater for : no color property set; no color property value to map; no default color defined to fall back to
+            const propertyMappedToColor = viewpoint.propertyVisualMaps.color.property
+            const blipColorId = viewpoint.propertyVisualMaps.color.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToColor)]
+                ?? viewpoint.propertyVisualMaps.color.valueMap["other"]
+            blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
+        } catch (e) {
+            blipColor = "blue"
+            //console.log(`draw radar blip fall back to no apply color because of ${e}`)
+        }
 
-    if (!viewpoint.blipDisplaySettings.applyShapes) {
-        blipShape = viewpoint.propertyVisualMaps.blip?.defaultShape ?? "circle"
-        if (blipShape == "") blipShape = "circle"
-    }
-    if (!viewpoint.blipDisplaySettings.applyColors) {
-        blipColor = viewpoint.propertyVisualMaps.blip?.defaultColor ?? "blue"
-        if (blipColor == "") blipColor = "blue"
-    }
-    if (!viewpoint.blipDisplaySettings.applySizes) {
-        blipSize = viewpoint.propertyVisualMaps.blip?.defaultSize ?? 1
-        if (blipSize == "") blipSize = 1
-    }
-    let xy
+        let blipSize
+        try {
+            // TODO cater for : no size property set; no size property value to map; no default size defined to fall back to
+            const propertyMappedToSize = viewpoint.propertyVisualMaps.size.property
+            const blipSizeId = viewpoint.propertyVisualMaps.size.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSize)]
+                ?? viewpoint.propertyVisualMaps.size.valueMap["other"]
+            blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
+        } catch (e) {
+            blipSize = 1
 
-    if (d.x != null && d.y != null
-        && blipInSegment(d, viewpoint, { sector: blipSector, ring: blipRing })
-    ) {
-        xy = { x: d.x, y: d.y }
-    } else {
-        xy = sectorRingToPosition(blipSector, blipRing, viewpoint.template)
-    }
-    blip.attr("transform", `translate(${xy.x},${xy.y}) scale(${blipSize * viewpoint.blipDisplaySettings.blipScaleFactor ?? 1})`)
-        .attr("id", `blip-${d.id}`)
-    if (!viewpoint.blipDisplaySettings.showLabels
-        || (!viewpoint.blipDisplaySettings.showImages && d.rating.object.image)
-    ) { // any content for the tooltip
-        blip
-            .on("mouseover", (e, d) => {
+            //console.log(`draw radar blip fall back to no apply size because of ${e}`)
+        }
 
-                addTooltip(
-                    (d) => {
-                        let content = `<div>     
+        if (!viewpoint.blipDisplaySettings.applyShapes) {
+            blipShape = viewpoint.propertyVisualMaps.blip?.defaultShape ?? "circle"
+            if (blipShape == "") blipShape = "circle"
+        }
+        if (!viewpoint.blipDisplaySettings.applyColors) {
+            blipColor = viewpoint.propertyVisualMaps.blip?.defaultColor ?? "blue"
+            if (blipColor == "") blipColor = "blue"
+        }
+        if (!viewpoint.blipDisplaySettings.applySizes) {
+            blipSize = viewpoint.propertyVisualMaps.blip?.defaultSize ?? 1
+            if (blipSize == "") blipSize = 1
+        }
+        let xy
+
+        if (d.x != null && d.y != null
+            && blipInSegment(d, viewpoint, { sector: blipSector, ring: blipRing })
+        ) {
+            xy = { x: d.x, y: d.y }
+        } else {
+            xy = sectorRingToPosition(blipSector, blipRing, viewpoint.template)
+        }
+        blip.attr("transform", `translate(${xy.x},${xy.y}) scale(${blipSize * viewpoint.blipDisplaySettings.blipScaleFactor ?? 1})`)
+            .attr("id", `blip-${d.id}`)
+        if (!viewpoint.blipDisplaySettings.showLabels
+            || (!viewpoint.blipDisplaySettings.showImages && d.rating.object.image)
+        ) { // any content for the tooltip
+            blip
+                .on("mouseover", (e, d) => {
+
+                    addTooltip(
+                        (d) => {
+                            let content = `<div>     
                     ${viewpoint.blipDisplaySettings.showLabels ? "" : getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.label)}
                     `
-                        if (!viewpoint.blipDisplaySettings.showImages && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image) != null) {
-                            content = `${content}<img src="${getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image)}" width="100px"></img>`
+                            if (!viewpoint.blipDisplaySettings.showImages && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image) != null) {
+                                content = `${content}<img src="${getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image)}" width="100px"></img>`
+                            }
+                            return `${content}</div>`
                         }
-                        return `${content}</div>`
-                    }
+                        , d, e.pageX, e.pageY);
+                })
+                .on("mouseout", () => {
+                    removeTooltip();
+                })
+        }
+        blip.on("dblclick", (e, d) => {
+            blipWindow(d, viewpoint)
+
+        })
+        // the blip can consist of:
+        // text/label (with color and text style?) and/or either an image or a shape
+        // the user determines which elements should be displayed for a blip 
+        // perhaps the user can also indicate whether colors, shapes and sizes should be visualized (or set to default values instead)
+        // and if text font size should decrease/increase with size?
+        // TODO: label consisting of two lines 
+        if (viewpoint.blipDisplaySettings.showLabels || (viewpoint.blipDisplaySettings.showImages && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image) == null)) {
+            const label = getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.label).trim()
+            // TODO find smarter ways than breaking on spaces to distribute label over multiple lines
+            let line = label
+            let line0
+            if (label.length > 11) {
+                line = label.trim().substring(label.trim().indexOf(" "))
+                line0 = label.split(" ")[0]
+            }
+            if (label.length > 11 && line != line0) { // if long label, show first part above second part of label
+                blip.append("text")
+                    .text(line0)
+                    .attr("x", 0) // if on left side, then move to the left, if on the right side then move to the right
+                    .attr("y", -45) // if on upper side, then move up, if on the down side then move down
+                    .attr("text-anchor", "middle")
+                    .attr("alignment-baseline", "before-edge")
+                    .style("fill", "#000")
+                    .style("font-family", "Arial, Helvetica")
+                    .style("font-stretch", "extra-condensed")
+                    .style("font-size", "14px")
+            }
+            blip.append("text")
+                .text(line)
+                .attr("x", 0) // if on left side, then move to the left, if on the right side then move to the right
+                .attr("y", -30) // if on upper side, then move up, if on the down side then move down
+                .attr("text-anchor", "middle")
+                .attr("alignment-baseline", "before-edge")
+                .style("fill", "#000")
+                .style("font-family", "Arial, Helvetica")
+                .style("font-stretch", "extra-condensed")
+                .style("font-size", function (d) { return label.length > 2 ? `${14}px` : "17px"; })
+        }
+
+        if (viewpoint.blipDisplaySettings.showShapes) {
+            let shape
+
+            if (blipShape == "circle") {
+                shape = blip.append("circle")
+                    .attr("r", 15)
+            }
+            if (blipShape == "diamond") {
+                const diamond = d3.symbol().type(d3.symbolDiamond).size(800);
+                shape = blip.append('path').attr("d", diamond)
+            }
+            if (blipShape == "square") {
+                const square = d3.symbol().type(d3.symbolSquare).size(800);
+                shape = blip.append('path').attr("d", square)
+            }
+
+            if (blipShape == "star") {
+                const star = d3.symbol().type(d3.symbolStar).size(720);
+                shape = blip.append('path').attr("d", star)
+            }
+            if (blipShape == "plus") {
+                const plus = d3.symbol().type(d3.symbolCross).size(720);
+                shape = blip.append('path').attr("d", plus)
+            }
+            if (blipShape == "triangle") {
+                const triangle = d3.symbol().type(d3.symbolTriangle).size(720);
+                shape = blip.append('path').attr("d", triangle)
+            }
+            if (blipShape == "rectangleHorizontal") {
+                shape = blip.append('rect').attr('width', 38)
+                    .attr('height', 10)
+                    .attr('x', -20)
+                    .attr('y', -4)
+            }
+            if (blipShape == "rectangleVertical") {
+                shape = blip.append('rect')
+                    .attr('width', 10)
+                    .attr('height', 38)
+                    .attr('x', -5)
+                    .attr('y', -15)
+            }
+            shape.attr("fill", blipColor);
+            shape.attr("opacity", "0.4");
+        }
+
+        if (viewpoint.blipDisplaySettings.showImages && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image) != null) {
+            let image = blip.append('image')
+                .attr('xlink:href', getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image))
+                .attr('width', 80)
+                .attr('height', 40)
+                .attr("x", "-40") // if on left side, then move to the left, if on the right side then move to the right
+                .attr("y", "-15")
+            //.attr("class","outlinedImage")
+            // to create a colored border around the image, use a rectangle
+            let border = blip.append('rect')
+                .attr('width', 80)
+                .attr('height', 40)
+                .attr('x', -40)
+                .attr('y', -15)
+                .style('fill', "none")
+                .style("stroke", "red") // TODO: use the blip color
+                .style("stroke-width", "0px") // TODO: when a color is derived properly, set a border width
+        }
+    }
+
+    const handleBlipScaleFactorChange = (event) => {
+        currentViewpoint.blipDisplaySettings.blipScaleFactor = event.target.value
+        console.log(`handle scale factor change ${currentViewpoint.blipDisplaySettings.blipScaleFactor}`)
+        drawRadarBlips(currentViewpoint)
+    }
+
+    const handleShowImagesChange = (event) => {
+        currentViewpoint.blipDisplaySettings.showImages = event.target.checked
+        drawRadarBlips(currentViewpoint)
+    }
+
+    const handleShowLabelsChange = (event) => {
+        currentViewpoint.blipDisplaySettings.showLabels = event.target.checked
+        drawRadarBlips(currentViewpoint)
+    }
+    const handleShowShapesChange = (event) => {
+        currentViewpoint.blipDisplaySettings.showShapes = event.target.checked
+        drawRadarBlips(currentViewpoint)
+    }
+    const handleTagFilterChange = (event) => {
+        const filterTagValue = document.getElementById("filterTagSelector").value
+        currentViewpoint.blipDisplaySettings.tagFilter.push({ type: "plus", tag: filterTagValue })
+        document.getElementById("filterTagSelector").value = ""
+        drawRadarBlips(currentViewpoint)
+    }
+
+    const handleApplyColorsChange = (event) => {
+        currentViewpoint.blipDisplaySettings.applyColors = event.target.checked
+        document.getElementById("colorsLegend").setAttribute("style", `display:${event.target.checked ? "block" : "none"}`)
+        drawRadarBlips(currentViewpoint)
+    }
+
+    const handleApplySizesChange = (event) => {
+        currentViewpoint.blipDisplaySettings.applySizes = event.target.checked
+        document.getElementById("sizesLegend").setAttribute("style", `display:${event.target.checked ? "block" : "none"}`)
+        drawRadarBlips(currentViewpoint)
+    }
+    const handleApplyShapesChange = (event) => {
+        currentViewpoint.blipDisplaySettings.applyShapes = event.target.checked
+        document.getElementById("shapesLegend").setAttribute("style", `display:${event.target.checked ? "block" : "none"}`)
+
+        drawRadarBlips(currentViewpoint)
+    }
+
+    const createContextMenu = (e, d, blip, viewpoint) => {
+        menu(e.pageX, e.pageY, d, blip, viewpoint);
+        e.preventDefault();
+    }
+
+    const menu = (x, y, d, blip, viewpoint) => {
+        const config = viewpoint.template
+        d3.select('.context-menu').remove(); // if already showing, get rid of it.
+        d3.select('body') // click anywhere outside the context menu to hide it TODO perhaps remove on mouse out?
+            .on('click', function () {
+                //  d3.select('.context-menu').remove();
+            });
+
+
+        // TODO dynamically adjust width and height with number of visual dimensions and max number of values
+
+        const entryHeight = 45 // number vertical pixel per context menu entry
+        let height = 30 + Math.max(0,
+            viewpoint.propertyVisualMaps.size?.valueMap == null ? 0 : config.sizesConfiguration?.sizes?.length ?? 0
+            , viewpoint.propertyVisualMaps.shape?.valueMap == null ? 0 : config.shapesConfiguration?.shapes?.length ?? 0
+            , viewpoint.propertyVisualMaps.color?.valueMap == null ? 0 : config.colorsConfiguration?.colors?.length ?? 0
+        )
+            * entryHeight // derive from maximum number of entries in each category
+        const circleRadius = 12
+        const initialColumnIndent = 30
+        const columnWidth = 70
+        let width = initialColumnIndent + 10 + 4 * columnWidth
+        const xShift = x > 500 ? -220 : 0
+        const yShift = y > 500 ? -250 : 0
+        const contextMenu = d3.select(`svg#${config.svg_id}`)
+            .append('g').attr('class', 'context-menu')
+            .attr('transform', `translate(${x + xShift},${y + yShift})`) // TODO if x and y are on the edge, then move context menu to the left and up
+
+        contextMenu.append('rect')
+            .attr('width', width)
+            .attr('height', height)
+            .attr('class', 'rect')
+            .attr("style", "fill:lightgray;")
+            .style("opacity", 0.8)
+            .on("mouseout", (e) => {
+                // check x and y - to see whether they are really outside context menu area (mouse out also fires when mouse is on elements inside context menu)
+                const deltaX = x - e.pageX + xShift
+                const deltaY = y - e.pageY + yShift
+                if (((deltaX > 0) || (deltaX <= - width + 20) || (deltaY > 0) || (deltaY <= - height))
+                ) {
+                    d3.select('.context-menu').remove();
+                }
+            })
+        const sizesBox = contextMenu.append('g')
+            .attr('class', 'sizesBox')
+            .attr("transform", `translate(${initialColumnIndent}, ${15})`)
+
+        sizesBox.append("text")
+            .text(config.sizesConfiguration.label)
+            .attr("x", -25)
+            .style("fill", "#000")
+            .style("font-family", "Arial, Helvetica")
+            .style("font-size", "12px")
+            .style("font-weight", "normal")
+            .attr("transform", "scale(0.7,1)")
+        if (viewpoint.propertyVisualMaps.size?.valueMap != null) {
+            for (let i = 0; i < config.sizesConfiguration?.sizes.length ?? 0; i++) {
+                const scaleFactor = config.sizesConfiguration.sizes[i].size
+                const label = config.sizesConfiguration.sizes[i].label
+                const sizeEntry = sizesBox.append('g')
+                    .attr("transform", `translate(0, ${30 + i * entryHeight})`)
+                    .append('circle')
+                    .attr("id", `templateSizes${i}`)
+                    .attr("r", circleRadius)
+                    .attr("fill", "black")
+                    .attr("transform", `scale(${scaleFactor})`)
+                const keyForValue = getKeyForValue(viewpoint.propertyVisualMaps.size?.valueMap, i)
+                decorateContextMenuEntry(sizeEntry, "size", keyForValue, d, viewpoint, label)
+            }
+        }
+        const shapesBox = contextMenu.append('g')
+            .attr('class', 'shapesBox')
+            .attr("transform", `translate(${initialColumnIndent + columnWidth}, ${15})`)
+
+        shapesBox.append("text")
+            .text(config.shapesConfiguration.label)
+            .attr("x", -25)
+            .style("fill", "#000")
+            .style("font-family", "Arial, Helvetica")
+            .style("font-size", "12px")
+            .style("font-weight", "normal")
+            .attr("transform", "scale(0.7,1)")
+
+        if (viewpoint.propertyVisualMaps.shape?.valueMap != null) {
+
+            for (let i = 0; i < config.shapesConfiguration?.shapes.length ?? 0; i++) {
+                const shapeToDraw = config.shapesConfiguration.shapes[i].shape
+                const label = config.shapesConfiguration.shapes[i].label
+
+                // for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
+                //     const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
+                //     const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
+                //     const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
+                const shapeEntry = shapesBox.append('g')
+                    .attr("transform", `translate(0, ${30 + i * entryHeight})`)
+                let shape
+
+                if (shapeToDraw == "circle") {
+                    shape = shapeEntry.append("circle")
+                        .attr("r", circleRadius)
+                }
+                if (shapeToDraw == "diamond") {
+                    const diamond = d3.symbol().type(d3.symbolDiamond).size(420);
+                    shape = shapeEntry.append('path').attr("d", diamond)
+                }
+                if (shapeToDraw == "square") {
+                    const square = d3.symbol().type(d3.symbolSquare).size(420);
+                    shape = shapeEntry.append('path').attr("d", square)
+                }
+                if (shapeToDraw == "star") {
+                    const star = d3.symbol().type(d3.symbolStar).size(420);
+                    shape = shapeEntry.append('path').attr("d", star)
+                }
+                if (shapeToDraw == "plus") {
+                    const plus = d3.symbol().type(d3.symbolCross).size(420);
+                    shape = shapeEntry.append('path').attr("d", plus)
+                }
+                if (shapeToDraw == "triangle") {
+                    const triangle = d3.symbol().type(d3.symbolTriangle).size(420);
+                    shape = shapeEntry.append('path').attr("d", triangle)
+                }
+                if (shapeToDraw == "rectangleHorizontal") {
+                    shape = shapeEntry.append('rect').attr('width', 38)
+                        .attr('height', 10)
+                        .attr('x', -20)
+                        .attr('y', -4)
+                }
+
+                if (shapeToDraw == "rectangleVertical") {
+                    shape = shapeEntry.append('rect')
+                        .attr('width', 10)
+                        .attr('height', 38)
+                        .attr('x', -5)
+                        .attr('y', -15)
+                }
+                if (shape != null) {
+                    shape
+                        .attr("id", `templateSizes${i}`)
+                        .attr("fill", "black")
+                    const keyForValue = getKeyForValue(viewpoint.propertyVisualMaps.shape?.valueMap, i)
+
+                    decorateContextMenuEntry(shapeEntry, "shape", keyForValue, d, viewpoint, label)
+                }
+            }
+        }
+        // draw color
+        const colorsBox = contextMenu.append('g')
+            .attr('class', 'colorsBox')
+            .attr("transform", `translate(${initialColumnIndent + 2 * columnWidth}, ${15})`)
+        colorsBox.append("text")
+            .text(config.colorsConfiguration.label)
+            .attr("x", -25)
+            .style("fill", "#000")
+            .style("font-family", "Arial, Helvetica")
+            .style("font-size", "12px")
+            .style("font-weight", "normal")
+            .attr("transform", "scale(0.7,1)")
+        if (viewpoint.propertyVisualMaps.color?.valueMap != null) {
+
+            for (let i = 0; i < config.colorsConfiguration?.colors.length ?? 0; i++) {
+                const colorToFill = config.colorsConfiguration.colors[i].color
+                const label = config.colorsConfiguration.colors[i].label
+
+                // for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length; i++) {
+                //     const key = Object.keys(viewpoint.propertyVisualMaps.color.valueMap)[i]
+                //     const colorToFill = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].color
+                //     const label = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].label
+                const colorEntry = colorsBox.append('g')
+                    .attr("transform", `translate(0, ${30 + i * entryHeight})`)
+                    .append('circle')
+                    .attr("id", `templateSizes${i}`)
+                    .attr("r", circleRadius)
+                    .attr("fill", colorToFill)
+
+                const keyForValue = getKeyForValue(viewpoint.propertyVisualMaps.color?.valueMap, i)
+
+                decorateContextMenuEntry(colorEntry, "color", keyForValue, d, viewpoint, label)
+            }
+        }
+        const iconsBox = contextMenu.append('g')
+            .attr('class', 'iconsBox')
+            .attr("transform", `translate(${initialColumnIndent + 3 * columnWidth - 35}, ${15})`)
+
+        // additional blip actions can be initiated    
+        iconsBox.append("text")
+            .text("Blip Actions")
+            .style("fill", "#000")
+            .style("font-family", "Arial, Helvetica")
+            .style("font-size", "12px")
+            .style("font-weight", "normal")
+            .attr("transform", "scale(0.7,1)")
+
+
+        const menuItemHeight = 18
+        // TODO: does clone blip mean clone rating (but for the same existing object?) it probably does; current implementation is full copy - object and rating
+        iconsBox.append("text")
+            .text("Clone Blip")
+            .attr("x", 0)
+            .style("fill", "#000")
+            .style("font-family", "Arial, Helvetica")
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .attr("transform", `translate(0, ${20 + 0 * menuItemHeight})`)
+            .attr("class", "clickableProperty")
+            .on("click", () => {
+                const newBlip = JSON.parse(JSON.stringify(d))
+                viewpoint.blips.push(newBlip)
+                newBlip.x = newBlip.x != null ? newBlip.x + 15 : null
+                newBlip.y = newBlip.y != null ? newBlip.y + 15 : null
+                newBlip.id = uuidv4()
+                drawRadarBlips(viewpoint)
+            })
+        iconsBox.append("text")
+            .text("Delete Blip")
+            .attr("x", 0)
+            .style("fill", "#000")
+            .style("font-family", "Arial, Helvetica")
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .attr("transform", `translate(0, ${20 + 1 * menuItemHeight})`)
+            .attr("class", "clickableProperty")
+            .on("click", () => {
+                const blipIndex = viewpoint.blips.indexOf(d)
+                viewpoint.blips.splice(blipIndex, 1)
+                d3.select('.context-menu').remove();
+                drawRadarBlips(viewpoint)
+            })
+
+        iconsBox.append("text")
+            .text("Show Similar Blips")
+            .attr("x", 0)
+            .style("fill", "#000")
+            .style("font-family", "Arial, Helvetica")
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .attr("transform", `translate(0, ${20 + 2 * menuItemHeight})`)
+            .attr("class", "clickableProperty")
+            .on("click", () => {
+                const blipIndex = viewpoint.blips.indexOf(d)
+                // create tag filters from tags on d
+                const tags = d.rating.object.tags
+                if (tags != null && tags.length != null) {
+                    tags.forEach((tag) => viewpoint.blipDisplaySettings.tagFilter.push({ type: "plus", tag: tag }))
+                }
+                drawRadarBlips(viewpoint)
+            })
+
+
+
+    }
+
+    function populateDatalistWithTags(includeDiscreteProperties = false) {
+        const distinctValues = getDistinctTagValues(getViewpoint(), includeDiscreteProperties)
+        const tagsList = document.getElementById('tagsList')
+        //remove current contents
+        tagsList.length = 0
+        tagsList.innerHTML = null
+        let option
+        for (let tagvalue of distinctValues) {
+            option = document.createElement('option')
+            option.value = tagvalue
+            tagsList.appendChild(option)
+        }
+    }
+
+    function decorateContextMenuEntry(menuEntry, dimension, value, blip, viewpoint, label) { // dimension = shape, size, color
+        menuEntry.attr("class", "clickableProperty")
+            .on("click", () => {
+                // if (dimension == "size") {
+                //     setNestedPropertyValueOnObject(blip.rating, viewpoint.propertyVisualMaps.size.property, value)
+                //     drawRadarBlips(viewpoint)
+                // }
+                // if (dimension == "shape") {
+                //     setNestedPropertyValueOnObject(blip.rating, viewpoint.propertyVisualMaps.shape.property, value)
+                //     drawRadarBlips(viewpoint)
+                // }
+                // if (dimension == "color") {
+                    setNestedPropertyValueOnObject(blip.rating, viewpoint.propertyVisualMaps[dimension].property, value)
+                    drawRadarBlips(viewpoint)
+//                }
+            })
+            .on("mouseover", (e, d) => {
+                addTooltip(
+                    (d) => {
+                        return `<div>     
+            <b>${label}</b>
+          </div>`}
                     , d, e.pageX, e.pageY);
             })
             .on("mouseout", () => {
                 removeTooltip();
             })
     }
-    blip.on("dblclick", (e, d) => {
-        blipWindow(d, viewpoint)
 
-    })
-    // the blip can consist of:
-    // text/label (with color and text style?) and/or either an image or a shape
-    // the user determines which elements should be displayed for a blip 
-    // perhaps the user can also indicate whether colors, shapes and sizes should be visualized (or set to default values instead)
-    // and if text font size should decrease/increase with size?
-    // TODO: label consisting of two lines 
-    if (viewpoint.blipDisplaySettings.showLabels || (viewpoint.blipDisplaySettings.showImages && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image) == null)) {
-        const label = getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.label).trim()
-        // TODO find smarter ways than breaking on spaces to distribute label over multiple lines
-        let line = label
-        let line0
-        if (label.length > 11) {
-            line = label.trim().substring(label.trim().indexOf(" "))
-            line0 = label.split(" ")[0]
-        }
-        if (label.length > 11 && line != line0) { // if long label, show first part above second part of label
-            blip.append("text")
-                .text(line0)
-                .attr("x", 0) // if on left side, then move to the left, if on the right side then move to the right
-                .attr("y", -45) // if on upper side, then move up, if on the down side then move down
-                .attr("text-anchor", "middle")
-                .attr("alignment-baseline", "before-edge")
-                .style("fill", "#000")
-                .style("font-family", "Arial, Helvetica")
-                .style("font-stretch", "extra-condensed")
-                .style("font-size", "14px")
-        }
-        blip.append("text")
-            .text(line)
-            .attr("x", 0) // if on left side, then move to the left, if on the right side then move to the right
-            .attr("y", -30) // if on upper side, then move up, if on the down side then move down
-            .attr("text-anchor", "middle")
-            .attr("alignment-baseline", "before-edge")
-            .style("fill", "#000")
-            .style("font-family", "Arial, Helvetica")
-            .style("font-stretch", "extra-condensed")
-            .style("font-size", function (d) { return label.length > 2 ? `${14}px` : "17px"; })
+    // Add the tooltip element to the radar
+    const tooltipElementId = "blip-tooltip"
+    const tooltip = document.querySelector(`#${tooltipElementId}`);
+    if (!tooltip) {
+        const tooltipDiv = document.createElement("div");
+        tooltipDiv.classList.add("tooltip"); // refers to div.tooltip CSS style definition
+        tooltipDiv.style.opacity = "0";
+        tooltipDiv.id = tooltipElementId;
+        document.body.appendChild(tooltipDiv);
+    }
+    const div = d3.select(`#${tooltipElementId}`);
+
+    const addTooltip = (hoverTooltip, d, x, y) => { // hoverToolTip is a function that returns the HTML to be displayed in the tooltip
+        div
+            .transition()
+            .duration(200)
+            .style("opacity", 0.8);
+        div
+            .html(hoverTooltip(d))
+            .style("left", `${x + 5}px`)
+            .style("top", `${y - 28}px`);
+    };
+
+    const removeTooltip = () => {
+        div
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+    };
+
+
+
+
+
+    const getKeyForValue = function (object, value) {
+        return Object.keys(object).find(key => object[key] === value);
     }
 
-    if (viewpoint.blipDisplaySettings.showShapes) {
-        let shape
+    document.getElementById('showImages').addEventListener("change", handleShowImagesChange);
+    document.getElementById('blipScaleFactorSlider').addEventListener("change", handleBlipScaleFactorChange);
 
-        if (blipShape == "circle") {
-            shape = blip.append("circle")
-                .attr("r", 15)
-        }
-        if (blipShape == "diamond") {
-            const diamond = d3.symbol().type(d3.symbolDiamond).size(800);
-            shape = blip.append('path').attr("d", diamond)
-        }
-        if (blipShape == "square") {
-            const square = d3.symbol().type(d3.symbolSquare).size(800);
-            shape = blip.append('path').attr("d", square)
-        }
+    document.getElementById('showLabels').addEventListener("change", handleShowLabelsChange);
+    document.getElementById('showShapes').addEventListener("change", handleShowShapesChange);
+    document.getElementById('addTagToFilter').addEventListener("click", handleTagFilterChange);
 
-        if (blipShape == "star") {
-            const star = d3.symbol().type(d3.symbolStar).size(720);
-            shape = blip.append('path').attr("d", star)
-        }
-        if (blipShape == "plus") {
-            const plus = d3.symbol().type(d3.symbolCross).size(720);
-            shape = blip.append('path').attr("d", plus)
-        }
-        if (blipShape == "triangle") {
-            const triangle = d3.symbol().type(d3.symbolTriangle).size(720);
-            shape = blip.append('path').attr("d", triangle)
-        }
-        if (blipShape == "rectangleHorizontal") {
-            shape = blip.append('rect').attr('width', 38)
-                .attr('height', 10)
-                .attr('x', -20)
-                .attr('y', -4)
-        }
-        if (blipShape == "rectangleVertical") {
-            shape = blip.append('rect')
-                .attr('width', 10)
-                .attr('height', 38)
-                .attr('x', -5)
-                .attr('y', -15)
-        }
-        shape.attr("fill", blipColor);
-        shape.attr("opacity", "0.4");
-    }
-
-    if (viewpoint.blipDisplaySettings.showImages && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image) != null) {
-        let image = blip.append('image')
-            .attr('xlink:href', getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image))
-            .attr('width', 80)
-            .attr('height', 40)
-            .attr("x", "-40") // if on left side, then move to the left, if on the right side then move to the right
-            .attr("y", "-15")
-        //.attr("class","outlinedImage")
-        // to create a colored border around the image, use a rectangle
-        let border = blip.append('rect')
-            .attr('width', 80)
-            .attr('height', 40)
-            .attr('x', -40)
-            .attr('y', -15)
-            .style('fill', "none")
-            .style("stroke", "red") // TODO: use the blip color
-            .style("stroke-width", "0px") // TODO: when a color is derived properly, set a border width
-    }
-}
-
-const handleBlipScaleFactorChange = (event) => {
-    currentViewpoint.blipDisplaySettings.blipScaleFactor = event.target.value
-    console.log(`handle scale factor change ${currentViewpoint.blipDisplaySettings.blipScaleFactor}`)
-    drawRadarBlips(currentViewpoint)
-}
-
-const handleShowImagesChange = (event) => {
-    currentViewpoint.blipDisplaySettings.showImages = event.target.checked
-    drawRadarBlips(currentViewpoint)
-}
-
-const handleShowLabelsChange = (event) => {
-    currentViewpoint.blipDisplaySettings.showLabels = event.target.checked
-    drawRadarBlips(currentViewpoint)
-}
-const handleShowShapesChange = (event) => {
-    currentViewpoint.blipDisplaySettings.showShapes = event.target.checked
-    drawRadarBlips(currentViewpoint)
-}
-const handleTagFilterChange = (event) => {
-    const filterTagValue = document.getElementById("filterTagSelector").value
-    currentViewpoint.blipDisplaySettings.tagFilter.push({ type: "plus", tag: filterTagValue })
-    document.getElementById("filterTagSelector").value = ""
-    drawRadarBlips(currentViewpoint)
-}
-
-const handleApplyColorsChange = (event) => {
-    currentViewpoint.blipDisplaySettings.applyColors = event.target.checked
-    document.getElementById("colorsLegend").setAttribute("style", `display:${event.target.checked ? "block" : "none"}`)
-    drawRadarBlips(currentViewpoint)
-}
-
-const handleApplySizesChange = (event) => {
-    currentViewpoint.blipDisplaySettings.applySizes = event.target.checked
-    document.getElementById("sizesLegend").setAttribute("style", `display:${event.target.checked ? "block" : "none"}`)
-    drawRadarBlips(currentViewpoint)
-}
-const handleApplyShapesChange = (event) => {
-    currentViewpoint.blipDisplaySettings.applyShapes = event.target.checked
-    document.getElementById("shapesLegend").setAttribute("style", `display:${event.target.checked ? "block" : "none"}`)
-
-    drawRadarBlips(currentViewpoint)
-}
-
-const createContextMenu = (e, d, blip, viewpoint) => {
-    menu(e.pageX, e.pageY, d, blip, viewpoint);
-    e.preventDefault();
-}
-
-const menu = (x, y, d, blip, viewpoint) => {
-    const config = viewpoint.template
-    d3.select('.context-menu').remove(); // if already showing, get rid of it.
-    d3.select('body') // click anywhere outside the context menu to hide it TODO perhaps remove on mouse out?
-        .on('click', function () {
-            //  d3.select('.context-menu').remove();
-        });
+    document.getElementById('applyColors').addEventListener("change", handleApplyColorsChange);
+    document.getElementById('applySizes').addEventListener("change", handleApplySizesChange);
+    document.getElementById('applyShapes').addEventListener("change", handleApplyShapesChange);
 
 
-        // TODO dynamically adjust width and height with number of visual dimensions and max number of values
-    
-    const entryHeight = 45 // number vertical pixel per context menu entry
-    let height = 30 + Math.max(0,
-        viewpoint.propertyVisualMaps.size?.valueMap == null ? 0 : Object.keys(viewpoint.propertyVisualMaps.size?.valueMap)?.length
-        , viewpoint.propertyVisualMaps.shape?.valueMap == null ? 0 : Object.keys(viewpoint.propertyVisualMaps.shape?.valueMap)?.length
-        , viewpoint.propertyVisualMaps.color?.valueMap == null ? 0 : Object.keys(viewpoint.propertyVisualMaps.color?.valueMap)?.length) * entryHeight // derive from maximum number of entries in each category
-    const circleRadius = 12
-    const initialColumnIndent = 30
-    const columnWidth = 70
-    let width = initialColumnIndent + 10 + 4 * columnWidth
-    const xShift = x > 500 ? -220 : 0
-    const yShift = y > 500 ? -250 : 0
-    const contextMenu = d3.select(`svg#${config.svg_id}`)
-        .append('g').attr('class', 'context-menu')
-        .attr('transform', `translate(${x + xShift},${y + yShift})`) // TODO if x and y are on the edge, then move context menu to the left and up
-
-    contextMenu.append('rect')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('class', 'rect')
-        .attr("style", "fill:lightgray;")
-        .style("opacity", 0.8)
-        .on("mouseout", (e) => {
-            // check x and y - to see whether they are really outside context menu area (mouse out also fires when mouse is on elements inside context menu)
-            const deltaX = x - e.pageX + xShift
-            const deltaY = y - e.pageY + yShift
-            if (((deltaX > 0) || (deltaX <= - width + 20) || (deltaY > 0) || (deltaY <= - height))
-            ) {
-                d3.select('.context-menu').remove();
-            }
-        })
-    const sizesBox = contextMenu.append('g')
-        .attr('class', 'sizesBox')
-        .attr("transform", `translate(${initialColumnIndent}, ${15})`)
-
-    sizesBox.append("text")
-        .text(config.sizesConfiguration.label)
-        .attr("x", -25)
-        .style("fill", "#000")
-        .style("font-family", "Arial, Helvetica")
-        .style("font-size", "12px")
-        .style("font-weight", "normal")
-        .attr("transform", "scale(0.7,1)")
-    if (viewpoint.propertyVisualMaps.size?.valueMap != null) {
-        for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length; i++) {
-            const key = Object.keys(viewpoint.propertyVisualMaps.size.valueMap)[i]
-            const scaleFactor = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].size
-            const label = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].label
-            const sizeEntry = sizesBox.append('g')
-                .attr("transform", `translate(0, ${30 + i * entryHeight})`)
-                .append('circle')
-                .attr("id", `templateSizes${i}`)
-                .attr("r", circleRadius)
-                .attr("fill", "black")
-                .attr("transform", `scale(${scaleFactor})`)
-            decorateContextMenuEntry(sizeEntry, "size", key, d, viewpoint, label)
+    const addProperty = (label, value, parent) => {
+        if (value != null && value.length > 0 && value != "undefined") {
+            let p = parent.append("p")
+                .html(`<b>${label}</b> ${value}`)
         }
     }
-    const shapesBox = contextMenu.append('g')
-        .attr('class', 'shapesBox')
-        .attr("transform", `translate(${initialColumnIndent + columnWidth}, ${15})`)
 
-    shapesBox.append("text")
-        .text(config.shapesConfiguration.label)
-        .attr("x", -25)
-        .style("fill", "#000")
-        .style("font-family", "Arial, Helvetica")
-        .style("font-size", "12px")
-        .style("font-weight", "normal")
-        .attr("transform", "scale(0.7,1)")
-
-    if (viewpoint.propertyVisualMaps.shape?.valueMap != null) {
-
-        for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
-            const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
-            const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
-            const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
-            const shapeEntry = shapesBox.append('g')
-                .attr("transform", `translate(0, ${30 + i * entryHeight})`)
-            let shape
-
-            if (shapeToDraw == "circle") {
-                shape = shapeEntry.append("circle")
-                    .attr("r", circleRadius)
-            }
-            if (shapeToDraw == "diamond") {
-                const diamond = d3.symbol().type(d3.symbolDiamond).size(420);
-                shape = shapeEntry.append('path').attr("d", diamond)
-            }
-            if (shapeToDraw == "square") {
-                const square = d3.symbol().type(d3.symbolSquare).size(420);
-                shape = shapeEntry.append('path').attr("d", square)
-            }
-            if (shapeToDraw == "star") {
-                const star = d3.symbol().type(d3.symbolStar).size(420);
-                shape = shapeEntry.append('path').attr("d", star)
-            }
-            if (shapeToDraw == "plus") {
-                const plus = d3.symbol().type(d3.symbolCross).size(420);
-                shape = shapeEntry.append('path').attr("d", plus)
-            }
-            if (shapeToDraw == "triangle") {
-                const triangle = d3.symbol().type(d3.symbolTriangle).size(420);
-                shape = shapeEntry.append('path').attr("d", triangle)
-            }
-            if (shapeToDraw == "rectangleHorizontal") {
-                shape = shapeEntry.append('rect').attr('width', 38)
-                    .attr('height', 10)
-                    .attr('x', -20)
-                    .attr('y', -4)
-            }
-
-            if (shapeToDraw == "rectangleVertical") {
-                shape = shapeEntry.append('rect')
-                    .attr('width', 10)
-                    .attr('height', 38)
-                    .attr('x', -5)
-                    .attr('y', -15)
-            }
-            if (shape) {
-                shape
-                    .attr("id", `templateSizes${i}`)
-                    .attr("fill", "black")
-
-                decorateContextMenuEntry(shapeEntry, "shape", key, d, viewpoint, label)
-            }
+    const addTags = (label, tags, parent) => {
+        let innerHTML = `<b>${label}</b> `
+        for (let i = 0; i < tags.length; i++) {
+            innerHTML = innerHTML + `<span class="extra tagfilter">${tags[i]}</span>`
         }
+        parent.append("div").html(innerHTML)
     }
-    // draw color
-    const colorsBox = contextMenu.append('g')
-        .attr('class', 'colorsBox')
-        .attr("transform", `translate(${initialColumnIndent + 2 * columnWidth}, ${15})`)
-    colorsBox.append("text")
-        .text(config.colorsConfiguration.label)
-        .attr("x", -25)
-        .style("fill", "#000")
-        .style("font-family", "Arial, Helvetica")
-        .style("font-size", "12px")
-        .style("font-weight", "normal")
-        .attr("transform", "scale(0.7,1)")
-    if (viewpoint.propertyVisualMaps.color?.valueMap != null) {
 
-        for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length; i++) {
-            const key = Object.keys(viewpoint.propertyVisualMaps.color.valueMap)[i]
-            const colorToFill = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].color
-            const label = config.colorsConfiguration.colors[viewpoint.propertyVisualMaps.color.valueMap[key]].label
-            const colorEntry = colorsBox.append('g')
-                .attr("transform", `translate(0, ${30 + i * entryHeight})`)
-                .append('circle')
-                .attr("id", `templateSizes${i}`)
-                .attr("r", circleRadius)
-                .attr("fill", colorToFill)
 
-            decorateContextMenuEntry(colorEntry, "color", key, d, viewpoint, label)
-        }
+    // copied from http://bl.ocks.org/GerHobbelt/2653660
+    function blipWindow(blip, viewpoint) {
+
+        const svgElementId = `svg#${viewpoint.template.svg_id}` //arguments[1][0]
+
+        // inject a HTML form to edit the content here...
+
+        const svg = d3.select(svgElementId)
+        const foreignObject = svg.append("foreignObject");
+
+        foreignObject
+            //   .attr("x", d.layerX) // use x and y coordinates from mouse event // TODO for use in size/color/shape - the location needs to be derived differently 
+            //   .attr("y", d.layerY)
+            .attr("x", 100) // use x and y coordinates from mouse event // TODO for use in size/color/shape - the location needs to be derived differently 
+            .attr("y", 100)
+
+            .attr("width", 800)
+            .attr("height", 600)
+
+        const body = foreignObject
+            .append("xhtml:body")
+            .attr("style", "background-color:#fff4b8; padding:6px; opacity:0.9")
+
+        body.append("h2").text(`Properties for ${getNestedPropertyValueFromObject(blip.rating, viewpoint.propertyVisualMaps.blip.label)}`)
+        // let model = getData().model
+        // let XXratingType = model?.ratingTypes[viewpoint.ratingType]
+        // let XXratingTypes  = model?.ratingTypes
+        // let key = viewpoint.ratingType
+        // let rt = XXratingTypes[key]
+        // let rt2 = XXratingTypes["technologyAdaption"]
+
+        let ratingType = (typeof (viewpoint.ratingType) == "string") ? getData().model?.ratingTypes[viewpoint.ratingType] : viewpoint.ratingType
+
+
+        try {
+            for (let propertyName in ratingType.objectType.properties) {
+                const property = ratingType.objectType.properties[propertyName]
+                let value = blip.rating.object[propertyName]
+                if (property.allowableValues != null && property.allowableValues.length > 0) {
+                    value = getLabelForAllowableValue(value, property.allowableValues)
+                }
+                if (property.type == "url" && value != null && value.length > 1 && value != "undefined") {
+                    let newLink = body.append("xlink:a")
+                        .attr("src", value)
+                        .text(`${property.label}: ${value}`)
+                    newLink.node().target = "_new"
+                    newLink.node().addEventListener("click", (e) => { window.open(value); })
+                } else if (property.type == "image" && value != null && value.length > 0 && value != "undefined") {
+                    let img = body.append("img")
+                        .attr("src", value)
+                        .attr("style", "width: 350px;float:right;padding:15px")
+                } else if (property.type == "tags" && value != null && value.length > 0) {
+                    addTags("Tags", value, body)
+                }
+
+                else {
+                    addProperty(property.label, value, body)
+                }
+            }
+
+
+            const ratingDiv = body.append("div")
+                .attr("id", "ratingDiv")
+
+
+
+            for (let propertyName in ratingType.properties) {
+                const property = ratingType.properties[propertyName]
+                let value = blip.rating[propertyName]
+                if (property.type == "time") {
+                    // rewrite value to nice date time format
+                    const date = new Date(value)
+                    value = date.toDateString()
+                }
+                if (property.allowableValues != null && property.allowableValues.length > 0) {
+                    value = getLabelForAllowableValue(value, property.allowableValues)
+                }
+                addProperty(property.label, value, ratingDiv)
+            }
+
+
+
+
+            let buttonDiv = body.append("div")
+                .attr("id", "buttonDiv")
+                .attr("style", "position: absolute; bottom: 30;left: 30;")
+            buttonDiv.append("button")
+                .attr("style", "float:left;padding:15px")
+                .on("click", () => {
+                    svg.select("foreignObject").remove();
+
+                    launchBlipEditor(blip, viewpoint, drawRadarBlips)
+                })
+                .html("Edit Blip")
+            buttonDiv.append("button")
+                .attr("style", "float:right;padding:15px")
+                .on("click", () => {
+                    svg.select("foreignObject").remove();
+
+                }).html("Close")
+                ;
+        } catch (e) { console.log(`blip window exception ${e}`) }
+
+
     }
-    const iconsBox = contextMenu.append('g')
-        .attr('class', 'iconsBox')
-        .attr("transform", `translate(${initialColumnIndent + 3 * columnWidth - 35}, ${15})`)
-
-    // additional blip actions can be initiated    
-    iconsBox.append("text")
-        .text("Blip Actions")
-        .style("fill", "#000")
-        .style("font-family", "Arial, Helvetica")
-        .style("font-size", "12px")
-        .style("font-weight", "normal")
-        .attr("transform", "scale(0.7,1)")
-
-
-    const menuItemHeight = 18
-    // TODO: does clone blip mean clone rating (but for the same existing object?) it probably does; current implementation is full copy - object and rating
-    iconsBox.append("text")
-        .text("Clone Blip")
-        .attr("x", 0)
-        .style("fill", "#000")
-        .style("font-family", "Arial, Helvetica")
-        .style("font-size", "12px")
-        .style("font-weight", "bold")
-        .attr("transform", `translate(0, ${20 + 0 * menuItemHeight})`)
-        .attr("class", "clickableProperty")
-        .on("click", () => {
-            const newBlip = JSON.parse(JSON.stringify(d))
-            viewpoint.blips.push(newBlip)
-            newBlip.x = newBlip.x != null ? newBlip.x + 15 : null
-            newBlip.y = newBlip.y != null ? newBlip.y + 15 : null
-            newBlip.id = uuidv4()
-            drawRadarBlips(viewpoint)
-        })
-    iconsBox.append("text")
-        .text("Delete Blip")
-        .attr("x", 0)
-        .style("fill", "#000")
-        .style("font-family", "Arial, Helvetica")
-        .style("font-size", "12px")
-        .style("font-weight", "bold")
-        .attr("transform", `translate(0, ${20 + 1 * menuItemHeight})`)
-        .attr("class", "clickableProperty")
-        .on("click", () => {
-            const blipIndex = viewpoint.blips.indexOf(d)
-            viewpoint.blips.splice(blipIndex, 1)
-            d3.select('.context-menu').remove();
-            drawRadarBlips(viewpoint)
-        })
-
-    iconsBox.append("text")
-        .text("Show Similar Blips")
-        .attr("x", 0)
-        .style("fill", "#000")
-        .style("font-family", "Arial, Helvetica")
-        .style("font-size", "12px")
-        .style("font-weight", "bold")
-        .attr("transform", `translate(0, ${20 + 2 * menuItemHeight})`)
-        .attr("class", "clickableProperty")
-        .on("click", () => {
-            const blipIndex = viewpoint.blips.indexOf(d)
-            // create tag filters from tags on d
-            const tags = d.rating.object.tags
-            if (tags != null && tags.length != null) {
-                tags.forEach((tag) => viewpoint.blipDisplaySettings.tagFilter.push({ type: "plus", tag: tag }))
-            }
-            drawRadarBlips(viewpoint)
-        })
-
-
-
-}
-
-function populateDatalistWithTags(includeDiscreteProperties = false) {
-    const distinctValues = getDistinctTagValues(getViewpoint(), includeDiscreteProperties)
-    const tagsList = document.getElementById('tagsList')
-    //remove current contents
-    tagsList.length = 0
-    tagsList.innerHTML = null
-    let option
-    for (let tagvalue of distinctValues) {
-        option = document.createElement('option')
-        option.value = tagvalue
-        tagsList.appendChild(option)
-    }
-}
-
-function decorateContextMenuEntry(menuEntry, dimension, value, blip, viewpoint, label) { // dimension = shape, size, color
-    menuEntry.attr("class", "clickableProperty")
-        .on("click", () => {
-            if (dimension == "size") {
-                setNestedPropertyValueOnObject(blip.rating, viewpoint.propertyVisualMaps.size.property, value)
-                drawRadarBlips(viewpoint)
-            }
-            if (dimension == "shape") {
-                setNestedPropertyValueOnObject(blip.rating, viewpoint.propertyVisualMaps.shape.property, value)
-                drawRadarBlips(viewpoint)
-            }
-            if (dimension == "color") {
-                setNestedPropertyValueOnObject(blip.rating, viewpoint.propertyVisualMaps.color.property, value)
-                drawRadarBlips(viewpoint)
-            }
-        })
-        .on("mouseover", (e, d) => {
-            addTooltip(
-                (d) => {
-                    return `<div>     
-            <b>${label}</b>
-          </div>`}
-                , d, e.pageX, e.pageY);
-        })
-        .on("mouseout", () => {
-            removeTooltip();
-        })
-}
-
-// Add the tooltip element to the radar
-const tooltipElementId = "blip-tooltip"
-const tooltip = document.querySelector(`#${tooltipElementId}`);
-if (!tooltip) {
-    const tooltipDiv = document.createElement("div");
-    tooltipDiv.classList.add("tooltip"); // refers to div.tooltip CSS style definition
-    tooltipDiv.style.opacity = "0";
-    tooltipDiv.id = tooltipElementId;
-    document.body.appendChild(tooltipDiv);
-}
-const div = d3.select(`#${tooltipElementId}`);
-
-const addTooltip = (hoverTooltip, d, x, y) => { // hoverToolTip is a function that returns the HTML to be displayed in the tooltip
-    div
-        .transition()
-        .duration(200)
-        .style("opacity", 0.8);
-    div
-        .html(hoverTooltip(d))
-        .style("left", `${x + 5}px`)
-        .style("top", `${y - 28}px`);
-};
-
-const removeTooltip = () => {
-    div
-        .transition()
-        .duration(200)
-        .style("opacity", 0);
-};
-
-
-
-
-
-const getKeyForValue = function (object, value) {
-    return Object.keys(object).find(key => object[key] === value);
-}
-
-document.getElementById('showImages').addEventListener("change", handleShowImagesChange);
-document.getElementById('blipScaleFactorSlider').addEventListener("change", handleBlipScaleFactorChange);
-
-document.getElementById('showLabels').addEventListener("change", handleShowLabelsChange);
-document.getElementById('showShapes').addEventListener("change", handleShowShapesChange);
-document.getElementById('addTagToFilter').addEventListener("click", handleTagFilterChange);
-
-document.getElementById('applyColors').addEventListener("change", handleApplyColorsChange);
-document.getElementById('applySizes').addEventListener("change", handleApplySizesChange);
-document.getElementById('applyShapes').addEventListener("change", handleApplyShapesChange);
-
-
-const addProperty = (label, value, parent) => {
-    if (value != null && value.length > 0 && value != "undefined") {
-        let p = parent.append("p")
-            .html(`<b>${label}</b> ${value}`)
-    }
-}
-
-const addTags = (label, tags, parent) => {
-    let innerHTML = `<b>${label}</b> `
-    for (let i = 0; i < tags.length; i++) {
-        innerHTML = innerHTML + `<span class="extra tagfilter">${tags[i]}</span>`
-    }
-    parent.append("div").html(innerHTML)
-}
-
-
-// copied from http://bl.ocks.org/GerHobbelt/2653660
-function blipWindow(blip, viewpoint) {
-
-    const svgElementId = `svg#${viewpoint.template.svg_id}` //arguments[1][0]
-
-    // inject a HTML form to edit the content here...
-
-    const svg = d3.select(svgElementId)
-    const foreignObject = svg.append("foreignObject");
-
-    foreignObject
-        //   .attr("x", d.layerX) // use x and y coordinates from mouse event // TODO for use in size/color/shape - the location needs to be derived differently 
-        //   .attr("y", d.layerY)
-        .attr("x", 100) // use x and y coordinates from mouse event // TODO for use in size/color/shape - the location needs to be derived differently 
-        .attr("y", 100)
-
-        .attr("width", 800)
-        .attr("height", 600)
-
-    const body = foreignObject
-        .append("xhtml:body")
-        .attr("style", "background-color:#fff4b8; padding:6px; opacity:0.9")
-
-    body.append("h2").text(`Properties for ${getNestedPropertyValueFromObject(blip.rating, viewpoint.propertyVisualMaps.blip.label)}`)
-    // let model = getData().model
-    // let XXratingType = model?.ratingTypes[viewpoint.ratingType]
-    // let XXratingTypes  = model?.ratingTypes
-    // let key = viewpoint.ratingType
-    // let rt = XXratingTypes[key]
-    // let rt2 = XXratingTypes["technologyAdaption"]
-
-    let ratingType = (typeof (viewpoint.ratingType) == "string") ? getData().model?.ratingTypes[viewpoint.ratingType] : viewpoint.ratingType
-
-
-    try {
-        for (let propertyName in ratingType.objectType.properties) {
-            const property = ratingType.objectType.properties[propertyName]
-            let value = blip.rating.object[propertyName]
-            if (property.allowableValues != null && property.allowableValues.length > 0) {
-                value = getLabelForAllowableValue(value, property.allowableValues)
-            }
-            if (property.type == "url" && value != null && value.length > 1 && value != "undefined") {
-                let newLink = body.append("xlink:a")
-                    .attr("src", value)
-                    .text(`${property.label}: ${value}`)
-                newLink.node().target = "_new"
-                newLink.node().addEventListener("click", (e) => { window.open(value); })
-            } else if (property.type == "image" && value != null && value.length > 0 && value != "undefined") {
-                let img = body.append("img")
-                    .attr("src", value)
-                    .attr("style", "width: 350px;float:right;padding:15px")
-            } else if (property.type == "tags" && value != null && value.length > 0) {
-                addTags("Tags", value, body)
-            }
-
-            else {
-                addProperty(property.label, value, body)
-            }
-        }
-
-
-        const ratingDiv = body.append("div")
-            .attr("id", "ratingDiv")
-
-
-
-        for (let propertyName in ratingType.properties) {
-            const property = ratingType.properties[propertyName]
-            let value = blip.rating[propertyName]
-            if (property.type == "time") {
-                // rewrite value to nice date time format
-                const date = new Date(value)
-                value = date.toDateString()
-            }
-            if (property.allowableValues != null && property.allowableValues.length > 0) {
-                value = getLabelForAllowableValue(value, property.allowableValues)
-            }
-            addProperty(property.label, value, ratingDiv)
-        }
-
-
-
-
-        let buttonDiv = body.append("div")
-            .attr("id", "buttonDiv")
-            .attr("style", "position: absolute; bottom: 30;left: 30;")
-        buttonDiv.append("button")
-            .attr("style", "float:left;padding:15px")
-            .on("click", () => {
-                svg.select("foreignObject").remove();
-
-                launchBlipEditor(blip, viewpoint, drawRadarBlips)
-            })
-            .html("Edit Blip")
-        buttonDiv.append("button")
-            .attr("style", "float:right;padding:15px")
-            .on("click", () => {
-                svg.select("foreignObject").remove();
-
-            }).html("Close")
-            ;
-    } catch (e) { console.log(`blip window exception ${e}`) }
-
-
-}
 

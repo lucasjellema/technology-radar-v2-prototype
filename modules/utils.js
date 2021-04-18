@@ -55,13 +55,16 @@ const uuidv4 = () => {
 
 // also see: https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arrays-by-string-path
 const getNestedPropertyValueFromObject = (object, propertyPath) => {
+    let value = null
+    try {
     const propertyPathSegments = propertyPath.split('.')
-    let value = object
+    value = object
     for (let i = 0; i < propertyPathSegments.length; i++) {
         if (value == null) break
         value = value[propertyPathSegments[i]]
     }
     if (typeof value == 'undefined') value = null
+} catch (e) {console.error(`handled exception in getNestedPropertyValueFromObject ${e} for ${propertyPath}`)}
     return value
 }
 
@@ -153,7 +156,11 @@ const findDisplayProperty = (properties) => {
 }
 
 const getAllKeysMappedToValue = (object, value) => {
-    return Object.keys(object).filter(key => object[key] === value);
+    let result = []
+    try {
+    result = Object.keys(object).filter(key => object[key] === value);
+    } catch (e) {console.log(`getAllKeysMappedToValue - handled exception ${e} `)}
+    return result
 }
 
 const showOrHideElement = (elementId, show) => {

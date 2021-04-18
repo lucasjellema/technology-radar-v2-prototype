@@ -147,6 +147,7 @@ const launchSizeConfigurator = (viewpoint, drawRadarBlips) => {
         (event) => {
             console.log(`save size  `)
             viewpoint.template.sizesConfiguration.label = getElementValue('sizesTitle')
+            
             showOrHideElement('modalMain', false)
             publishRefreshRadar()
             if (drawRadarBlips != null) drawRadarBlips(viewpoint)
