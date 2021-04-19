@@ -39,7 +39,7 @@ const launchSizeConfigurator = (viewpoint, drawRadarBlips) => {
 
     html += `<table id="sizes">`
     html += `<tr><th>Size</th><th>Size Label</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th>
-    <th>Others?</th><th>Delete?</th><th>v ^</th></tr>`
+    <th><input id="supportOthers" type="checkbox" checked} title="Support an 'others' size, to catch all orphaned blips"></input> Others?</th><th>Delete?</th><th>v ^</th></tr>`
     for (let i = 0; i < viewpoint.template.sizesConfiguration.sizes.length; i++) {
         const size = viewpoint.template.sizesConfiguration.sizes[i]
         const mappedSizePropertyValues = getAllKeysMappedToValue(sizeVisualMap.valueMap, i)
@@ -74,6 +74,16 @@ const launchSizeConfigurator = (viewpoint, drawRadarBlips) => {
     contentContainer.innerHTML = `${html}<br/> <br/><br/>`
 
     // add event listeners
+    document.getElementById(`supportOthers`).addEventListener("change", (e) => {
+        const supportOthers = e.target.checked
+        if (!supportOthers) {
+            viewpoint.template.sizesConfiguration.sizes.forEach((size) => size.others = false)        
+            for (let i = 0; i < viewpoint.template.sizesConfiguration.sizes.length; i++) {
+                document.getElementById(`othersSize${i}`).checked = false
+            }    
+            } // 
+    
+    })
     for (let i = 0; i < viewpoint.template.sizesConfiguration.sizes.length; i++) {
         document.getElementById(`othersSize${i}`).addEventListener("change", (e) => {
             viewpoint.template.sizesConfiguration.sizes.forEach((size) => size.others = false)

@@ -36,7 +36,7 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
 
     html += `<table id="sectors">`
     html += `<tr><th>Sector Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th>
-    <th>Others?</th><th>Delete?</th><th>v ^</th></tr>`
+    <th><input id="supportOthers" type="checkbox" checked} title="Support an 'others' sector, to catch all orphaned blips"></input>Others?</th><th>Delete?</th><th>v ^</th></tr>`
     for (let i = 0; i < viewpoint.template.sectorsConfiguration.sectors.length; i++) {
         const sector = viewpoint.template.sectorsConfiguration.sectors[i]
         // find all values mapped to the sectorToEdit
@@ -86,6 +86,16 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     document.getElementById('advancedSectorPropsToggle').addEventListener('click', () => { showOrHideElement('sectorAdvancedProps', true) })
 
     // add event listeners
+    document.getElementById(`supportOthers`).addEventListener("change", (e) => {
+        const supportOthers = e.target.checked
+        if (!supportOthers) {
+            viewpoint.template.sectorsConfiguration.sectors.forEach((sector) => sector.others = false)        
+            for (let i = 0; i < viewpoint.template.sectorsConfiguration.sectors.length; i++) {
+                document.getElementById(`othersSector${i}`).checked = false
+            }    
+            } // 
+    
+    })
     for (let i = 0; i < viewpoint.template.sectorsConfiguration.sectors.length; i++) {
         document.getElementById(`othersSector${i}`).addEventListener("change", (e) => {
             viewpoint.template.sectorsConfiguration.sectors.forEach((sector) => sector.others = false)

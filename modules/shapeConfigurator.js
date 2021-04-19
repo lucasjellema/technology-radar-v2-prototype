@@ -39,7 +39,7 @@ const launchShapeConfigurator = (viewpoint, drawRadarBlips) => {
 
     html += `<table id="shapes">`
     html += `<tr><th>Shape</th><th>Shape Label</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th>
-    <th>Others?</th>
+    <th><input id="supportOthers" type="checkbox" checked} title="Support an 'others' shape, to catch all orphaned blips"></input>Others?</th>
     <th>Delete?</th><th>v ^</th></tr>`
     for (let i = 0; i < viewpoint.template.shapesConfiguration.shapes.length; i++) {
         const shape = viewpoint.template.shapesConfiguration.shapes[i]
@@ -76,6 +76,16 @@ const launchShapeConfigurator = (viewpoint, drawRadarBlips) => {
     contentContainer.innerHTML = `${html}<br/> <br/><br/>`
 
     // add event listeners
+    document.getElementById(`supportOthers`).addEventListener("change", (e) => {
+        const supportOthers = e.target.checked
+        if (!supportOthers) {
+            viewpoint.template.shapesConfiguration.shapes.forEach((shape) => shape.others = false)        
+            for (let i = 0; i < viewpoint.template.shapesConfiguration.shapes.length; i++) {
+                document.getElementById(`othersShape${i}`).checked = false
+            }    
+            } // 
+    
+    })
     for (let i = 0; i < viewpoint.template.shapesConfiguration.shapes.length; i++) {
         document.getElementById(`othersShape${i}`).addEventListener("change", (e) => {
             viewpoint.template.shapesConfiguration.shapes.forEach((shape) => shape.others = false)

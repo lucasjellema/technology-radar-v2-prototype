@@ -39,7 +39,7 @@ const launchColorConfigurator = (viewpoint, drawRadarBlips) => {
 
     html += `<table id="colors">`
     html += `<tr><th>Color</th><th>Color Label</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th>
-    <th>Others?</th><th>Delete?</th><th>v ^</th></tr>`
+    <th><input id="supportOthers" type="checkbox" checked} title="Support an 'others' color, to catch all orphaned blips"></input>Others?</th><th>Delete?</th><th>v ^</th></tr>`
     for (let i = 0; i < viewpoint.template.colorsConfiguration.colors.length; i++) {
         const color = viewpoint.template.colorsConfiguration.colors[i]
         const mappedColorPropertyValues = getAllKeysMappedToValue(colorVisualMap.valueMap, i)
@@ -74,6 +74,16 @@ const launchColorConfigurator = (viewpoint, drawRadarBlips) => {
     contentContainer.innerHTML = `${html}<br/> <br/><br/>`
 
     // add event listeners
+    document.getElementById(`supportOthers`).addEventListener("change", (e) => {
+        const supportOthers = e.target.checked
+        if (!supportOthers) {
+            viewpoint.template.colorsConfiguration.colors.forEach((color) => color.others = false)        
+            for (let i = 0; i < viewpoint.template.colorsConfiguration.colors.length; i++) {
+                document.getElementById(`othersColor${i}`).checked = false
+            }    
+            } // 
+    
+    })
     for (let i = 0; i < viewpoint.template.colorsConfiguration.colors.length; i++) {
         document.getElementById(`othersColor${i}`).addEventListener("change", (e) => {
             viewpoint.template.colorsConfiguration.colors.forEach((color) => color.others = false)

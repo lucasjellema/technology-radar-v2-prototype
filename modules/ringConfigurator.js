@@ -36,7 +36,7 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
 
     html += `<table id="rings">`
     html += `<tr><th>Ring Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th>
-    <th>Others?</th><th>Delete?</th><th>v ^</th></tr>`
+    <th><input id="supportOthers" type="checkbox" checked} title="Support an 'others' ring, to catch all orphaned blips"></input> Others?</th><th>Delete?</th><th>v ^</th></tr>`
     for (let i = 0; i < viewpoint.template.ringsConfiguration.rings.length; i++) {
         const ring = viewpoint.template.ringsConfiguration.rings[i]
         // find all values mapped to the ringToEdit
@@ -73,6 +73,17 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
     contentContainer.innerHTML = `${html}</table>`
 
     // add event listeners
+    document.getElementById(`supportOthers`).addEventListener("change", (e) => {
+        const supportOthers = e.target.checked
+        if (!supportOthers) {
+            viewpoint.template.ringsConfiguration.rings.forEach((ring) => ring.others = false)        
+            for (let i = 0; i < viewpoint.template.ringsConfiguration.rings.length; i++) {
+                document.getElementById(`othersRing${i}`).checked = false
+            }    
+            } // 
+    
+    })
+
     for (let i = 0; i < viewpoint.template.ringsConfiguration.rings.length; i++) {
         document.getElementById(`othersRing${i}`).addEventListener("change", (e) => {
             viewpoint.template.ringsConfiguration.rings.forEach((ring) => ring.others = false)
