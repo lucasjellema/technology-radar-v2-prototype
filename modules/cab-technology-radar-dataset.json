@@ -9,28 +9,34 @@
                         "label": "Label",
                         "type": "string",
                         "defaultValue": "Some Technology",
-                        "displayLabel": true
+                        "displayLabel": true,
+                        "name": "label"
                     },
                     "description": {
                         "label": "Description",
-                        "type": "string"
+                        "type": "string",
+                        "name": "description"
                     },
                     "homepage": {
                         "label": "Homepage",
-                        "type": "url"
+                        "type": "url",
+                        "name": "homepage"
                     },
                     "image": {
                         "label": "Logo",
-                        "type": "image"
+                        "type": "image",
+                        "name": "image"
                     },
                     "vendor": {
                         "label": "Vendor",
                         "type": "string",
-                        "discrete": true
+                        "discrete": true,
+                        "name": "vendor"
                     },
                     "tags": {
                         "label": "Tags",
-                        "type": "tags"
+                        "type": "tags",
+                        "name": "tags"
                     },
                     "offering": {
                         "label": "Offering",
@@ -49,7 +55,8 @@
                                 "label": "Other type of offering"
                             }
                         ],
-                        "defaultValue": "oss"
+                        "defaultValue": "oss",
+                        "name": "offering"
                     },
                     "category": {
                         "label": "Category",
@@ -80,7 +87,8 @@
                                 "label": "Notification Services"
                             }
                         ],
-                        "defaultValue": "opsmanagement"
+                        "defaultValue": "opsmanagement",
+                        "name": "category"
                     }
                 }
             }
@@ -116,7 +124,8 @@
                                 "value": "adopt",
                                 "label": "In Productie"
                             }
-                        ]
+                        ],
+                        "name": "ambition"
                     },
                     "magnitude": {
                         "label": "Magnitude/Relevance",
@@ -135,7 +144,8 @@
                                 "value": "large",
                                 "label": "Large"
                             }
-                        ]
+                        ],
+                        "name": "magnitude"
                     },
                     "experience": {
                         "label": "Experience/Maturity",
@@ -154,30 +164,35 @@
                                 "value": "long",
                                 "label": "Very Mature"
                             }
-                        ]
+                        ],
+                        "name": "experience"
                     },
                     "scope": {
                         "label": "Scope",
                         "description": "The scope or context to which the rating applies",
                         "defaultValue": "Conclusion",
-                        "discrete": true
+                        "discrete": true,
+                        "name": "scope"
                     },
                     "author": {
                         "label": "Author/Evaluator",
                         "description": "The name of the person who made the judgement",
                         "defaultValue": "System Generated",
-                        "discrete": true
+                        "discrete": true,
+                        "name": "author"
                     },
                     "timestamp": {
                         "label": "Time of Evaluation",
                         "description": "When was this rating defined",
                         "type": "time",
-                        "readOnly": true
+                        "readOnly": true,
+                        "name": "timestamp"
                     },
                     "comment": {
                         "label": "Comment/Rationale",
                         "description": "Additional remark regarding this rating",
-                        "type": "text"
+                        "type": "text",
+                        "name": "comment"
                     }
                 }
             }
@@ -191,7 +206,7 @@
                 "svg_id": "radarSVGContainer",
                 "width": 1450,
                 "height": 1100,
-                "topLayer": "sectors",
+                "topLayer": "rings",
                 "selectedRing": 1,
                 "selectedSector": 2,
                 "rotation": 0,
@@ -236,19 +251,23 @@
                     "rings": [
                         {
                             "label": "Potentie",
-                            "width": 0.13
+                            "width": 0.13,
+                            "others": true
                         },
                         {
                             "label": "Verkennen",
-                            "width": 0.17
+                            "width": 0.17,
+                            "others": false
                         },
                         {
                             "label": "Toepassen",
-                            "width": 0.15
+                            "width": 0.15,
+                            "others": false
                         },
                         {
                             "label": "In Productie",
-                            "width": 0.55
+                            "width": 0.55,
+                            "others": false
                         }
                     ]
                 },
@@ -288,7 +307,8 @@
                                 "showCurved": true,
                                 "showStraight": false
                             },
-                            "visible": true
+                            "visible": true,
+                            "others": true
                         },
                         {
                             "label": "Deployment",
@@ -311,7 +331,8 @@
                                 "showCurved": true,
                                 "showStraight": false
                             },
-                            "visible": true
+                            "visible": true,
+                            "others": false
                         },
                         {
                             "label": "Orchestration",
@@ -337,7 +358,8 @@
                                 "showCurved": true,
                                 "showStraight": false
                             },
-                            "visible": true
+                            "visible": true,
+                            "others": false
                         },
                         {
                             "label": "Migration Services",
@@ -360,7 +382,8 @@
                                 "showCurved": true,
                                 "showStraight": false
                             },
-                            "visible": true
+                            "visible": true,
+                            "others": false
                         },
                         {
                             "label": "Monitoring",
@@ -383,7 +406,8 @@
                                 "showCurved": true,
                                 "showStraight": false
                             },
-                            "visible": true
+                            "visible": true,
+                            "others": false
                         }
                     ],
                     "showRegularSectorLabels": false
@@ -394,26 +418,26 @@
                         {
                             "label": "Fresh",
                             "color": "green",
-                            "enabled": true
+                            "enabled": true,
+                            "others": true
                         },
                         {
                             "label": "In Between",
                             "color": "pink",
-                            "enabled": true
+                            "enabled": true,
+                            "others": false
                         },
                         {
                             "label": "Very Mature",
                             "color": "blue",
-                            "enabled": true
+                            "enabled": true,
+                            "others": false
                         },
                         {
                             "label": "Other",
                             "color": "gray",
-                            "enabled": true
-                        },
-                        {
-                            "label": "Unassigned",
-                            "color": "white"
+                            "enabled": true,
+                            "others": false
                         }
                     ]
                 },
@@ -434,15 +458,6 @@
                             "label": "Very relevant",
                             "size": 1.05,
                             "enabled": true
-                        },
-                        {
-                            "label": "Crucial",
-                            "size": 1.3
-                        },
-                        {
-                            "label": "Regular",
-                            "size": 1.8,
-                            "enabled": false
                         }
                     ]
                 },
@@ -451,46 +466,26 @@
                     "shapes": [
                         {
                             "label": "Concept | Term",
-                            "shape": "square"
-                        },
-                        {
-                            "label": "Open Source",
-                            "shape": "diamond"
-                        },
-                        {
-                            "label": "PaaS",
-                            "shape": "rectangleHorizontal",
-                            "enabled": false
-                        },
-                        {
-                            "label": "Other",
-                            "shape": "circle",
-                            "enabled": false
+                            "shape": "square",
+                            "others": true
                         },
                         {
                             "label": "Open Source Software",
                             "shape": "star",
-                            "enabled": false
+                            "enabled": false,
+                            "others": false
                         },
                         {
                             "label": "Other",
                             "shape": "rectangleVertical",
-                            "enabled": false
+                            "enabled": false,
+                            "others": false
                         },
                         {
                             "label": "Commercial",
                             "shape": "triangle",
-                            "enabled": false
-                        },
-                        {
-                            "label": "Label",
-                            "shape": "ring",
-                            "enabled": false
-                        },
-                        {
-                            "label": "Label",
-                            "shape": "plus",
-                            "enabled": false
+                            "enabled": false,
+                            "others": false
                         }
                     ]
                 }
@@ -533,10 +528,10 @@
                 "shape": {
                     "property": "object.offering",
                     "valueMap": {
-                        "oss": 4,
-                        "commercial": 6,
+                        "oss": 1,
+                        "commercial": 3,
                         "concept": 0,
-                        "other": 5
+                        "other": 2
                     }
                 },
                 "color": {
@@ -563,398 +558,398 @@
                 {
                     "id": "0",
                     "rating": "64fe65bd-3ed2-40e5-92e6-e0478728e1eb",
-                    "x": 520,
-                    "y": -146
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "1",
                     "rating": "2a02b181-e970-4184-80bc-3adca9f78b6f",
-                    "x": 671,
-                    "y": 58
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "2",
                     "rating": "8ea50b5f-b6af-4c51-8e05-bd8ff9a20cc8",
-                    "x": 481,
-                    "y": 213
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "3",
                     "rating": "a2bed0ab-8593-4d50-9ea3-6c4832ff9275",
-                    "x": 621,
-                    "y": 221
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "4",
                     "rating": "6e4eda63-fcdd-4da3-a49f-81f083dda512",
-                    "x": 471,
-                    "y": 341
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "5",
                     "rating": "aaa31b33-0116-4f09-bff3-fa5d3e6a1090",
-                    "x": 541,
-                    "y": 62
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "6",
                     "rating": "f824ddfa-b79f-4da5-a151-2293547565c9",
-                    "x": 557,
-                    "y": 176
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "7",
                     "rating": "c6dc81ef-ae5d-4ff4-97d7-32d82bf91d59",
-                    "x": 204,
-                    "y": 466
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "9",
                     "rating": "37738b35-ac6d-48c6-95ef-e6199892ec4a",
-                    "x": 394,
-                    "y": 461
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "10",
                     "rating": "20ccc539-715b-4bb5-ba8f-3ccc56f6cfe3",
-                    "x": 458,
-                    "y": 292
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "11",
                     "rating": "b91a9a45-8545-4baf-9fb2-a373b00a2261",
-                    "x": 284,
-                    "y": 469
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "12",
                     "rating": "3436c9d9-e03e-4a77-a82a-fa286c2d840d",
-                    "x": 532,
-                    "y": 362
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "13",
                     "rating": "3ef618c2-0f42-4eb0-af3a-395d0200510a",
-                    "x": 467,
-                    "y": 125
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "14",
                     "rating": "3a36e2e1-9558-408e-a2d1-296e2303f17d",
-                    "x": 650,
-                    "y": 318
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "15",
                     "rating": "54e0a7f6-c297-4656-95c5-35f5e364b239",
-                    "x": 668,
-                    "y": 272
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "16",
                     "rating": "89a00dd4-d860-449c-8f74-bd87d2f6d390",
-                    "x": 530,
-                    "y": 270
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "17",
                     "rating": "02e8ca99-1ec4-43dc-828e-c977e014ab0d",
-                    "x": 666,
-                    "y": 142
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "18",
                     "rating": "17590f44-5511-43f4-9069-793dcc6c3ee0",
-                    "x": 482,
-                    "y": -318
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "19",
                     "rating": "f95d2617-6b08-4569-b247-1f9efdd5b05c",
-                    "x": 566,
-                    "y": -230
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "20",
                     "rating": "4e192735-d14e-4c2b-8775-3ff299d0ce21",
-                    "x": 281,
-                    "y": -407
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "21",
                     "rating": "84d9083c-d53c-43d4-ba46-e92249f9f1fb",
-                    "x": 380,
-                    "y": -456
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "22",
                     "rating": "431d2ba5-e437-4c4a-8c4d-1850f9b89434",
-                    "x": 378,
-                    "y": -378
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "23",
                     "rating": "fec2249c-a08b-4876-9692-7b40d569c810",
-                    "x": 656,
-                    "y": -345
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "24",
                     "rating": "a093f85c-1807-4488-8bed-ee3581030784",
-                    "x": 633,
-                    "y": -134
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "25",
                     "rating": "f377d1ea-310e-439a-8e08-fab56472b283",
-                    "x": 244,
-                    "y": -489
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "26",
                     "rating": "f5b27bca-447f-4265-afe2-546a214692fb",
-                    "x": 568,
-                    "y": -372
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "27",
                     "rating": "c5340bcc-e3a8-4ffe-99b4-32e24462d5b5",
-                    "x": 484,
-                    "y": -38
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "28",
                     "rating": "7b45ef7d-09bd-4e4a-b98f-75b6df27db32",
-                    "x": 491,
-                    "y": -259
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "29",
                     "rating": "891d86b0-b8fb-422b-b751-f33f91a9224f",
-                    "x": 626,
-                    "y": -271
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "30",
                     "rating": "e923bcfa-718f-4e60-8fea-7aed06a56256",
-                    "x": -566,
-                    "y": -205
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "31",
                     "rating": "3532b139-992e-47b6-b460-fa5ad2834403",
-                    "x": -584,
-                    "y": -41
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "32",
                     "rating": "b33fddb3-c8a6-4538-8d45-d337055b97ba",
-                    "x": -653,
-                    "y": -74
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "33",
                     "rating": "23db496b-0404-4448-a4a9-f31eb8626047",
-                    "x": -524,
-                    "y": -109
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "34",
                     "rating": "f7cfa406-9a57-4f3b-972c-b6db8ffd3967",
-                    "x": -617,
-                    "y": 230
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "35",
                     "rating": "1c061a28-1a80-430e-8caf-0c1913103e74",
-                    "x": -500,
-                    "y": 337
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "36",
                     "rating": "8b1ece8f-760b-49db-b821-32ad7e9219e8",
-                    "x": 143,
-                    "y": -452
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "37",
                     "rating": "eadadfce-7d9e-4ca2-a926-8d4b4a43a8ad",
-                    "x": -404,
-                    "y": -366
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "38",
                     "rating": "96b973f6-fb0d-4e16-ad24-2c8bf46db5b3",
-                    "x": -316,
-                    "y": -434
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "39",
                     "rating": "38ded420-f901-449d-9e5d-153f8ce7e2c1",
-                    "x": -28,
-                    "y": -470
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "40",
                     "rating": "3ee8961f-b443-49ea-9297-dc12f6729b18",
-                    "x": -276,
-                    "y": -383
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "41",
                     "rating": "7f6d842d-9b72-454b-86d9-48ca58ac8571",
-                    "x": -144,
-                    "y": -484
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "42",
                     "rating": "1b537855-239b-4ccf-98ea-233f7a09791b",
-                    "x": -343,
-                    "y": -344
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "43",
                     "rating": "c2ef0be3-a09a-450b-a848-929a4cb31a3e",
-                    "x": -422,
-                    "y": 259
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "44",
                     "rating": "dc874c40-6116-48ae-a6f3-70927d236500",
-                    "x": -653,
-                    "y": -172
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "45",
                     "rating": "470046da-fa5b-4abb-b712-4f2ddcc8ee37",
-                    "x": -478,
-                    "y": -139
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "46",
                     "rating": "01ca8db7-b54d-4290-a7dc-aa351c733291",
-                    "x": -476,
-                    "y": 176
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "47",
                     "rating": "bbce1b73-625b-4a75-b53f-d4b180447cb5",
-                    "x": -364,
-                    "y": 342
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "47",
                     "rating": "faed9fda-8789-4bc7-92dc-0380883135a5",
-                    "x": -377,
-                    "y": -438
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "48",
                     "rating": "94e3ed03-70e1-41b5-98c6-d8cb6ef75f6c",
-                    "x": -228,
-                    "y": -420
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "49",
                     "rating": "9f233a46-d43a-4ffe-adea-02f8ec9d0e57",
-                    "x": -264,
-                    "y": -470
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "50",
                     "rating": "3dc7bc8d-14ee-4091-b7a6-2b0237a0ce8c",
-                    "x": -411,
-                    "y": -413
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "51",
                     "rating": "6a2b88ad-4aed-4c9e-9699-3df83b9be150",
-                    "x": -337,
-                    "y": -489
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "52",
                     "rating": "04222b97-7398-48c4-b085-f5c3ed9b4155",
-                    "x": -456,
-                    "y": -398
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "53",
                     "rating": "5187711a-e565-43cb-acba-72cf75c56b35",
-                    "x": -435,
-                    "y": -478
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "54",
                     "rating": "17e58a73-92fd-48cc-babe-89810a4ded42",
-                    "x": -218,
-                    "y": -489
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "55",
                     "rating": "a149f338-e21b-4966-8359-5f924d0a9c73",
-                    "x": 59,
-                    "y": -478
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "56",
                     "rating": "46cb5a0f-9488-4246-86ba-c7e7b159aebc",
-                    "x": -504,
-                    "y": -447
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "57",
                     "rating": "c35fc882-2841-4378-b1f5-522f43f9aab5",
-                    "x": -674,
-                    "y": 136
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "58",
                     "rating": "41dae670-8edd-48d0-be7b-3510b5426568",
-                    "x": -647,
-                    "y": 19
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "59",
                     "rating": "2f6a2d75-ba2c-4d73-b712-c5d528a15964",
-                    "x": -438,
-                    "y": -220
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "60",
                     "rating": "7f4cda1d-a8eb-4724-8442-9b7355abc3ad",
-                    "x": -625,
-                    "y": -268
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "61",
                     "rating": "53fd3037-80ff-42cc-8c7e-fa0cd951cd63",
-                    "x": -572,
-                    "y": 66
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "62",
                     "rating": "63b672ee-ddfd-4919-951c-442a388a02b2",
-                    "x": -584,
-                    "y": -141
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "63",
                     "rating": "22b9227e-a575-4338-921b-6def35855471",
-                    "x": -602,
-                    "y": -365
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "64",
                     "rating": "230007d6-34a3-42ad-8ea9-249bceaa04d1",
-                    "x": -572,
-                    "y": 164
+                    "x": null,
+                    "y": null
                 },
                 {
                     "id": "65",
                     "rating": "afaadc78-362d-4876-872a-78e465142092",
-                    "x": -531,
-                    "y": -284
+                    "x": null,
+                    "y": null
                 }
             ]
         }
