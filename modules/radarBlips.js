@@ -307,7 +307,8 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
              blipRing = blipDrawingContext.othersDimensionValue["ring"] 
         }
         else {
-            return
+            blipRing = -1
+            // in case of rings we accept blips not associated with any "real ring" - directly or indirect through Others
         }
     }
     if (viewpoint.template.ringsConfiguration.rings[blipRing]?.visible == false) {
