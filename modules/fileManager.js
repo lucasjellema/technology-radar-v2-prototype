@@ -130,9 +130,7 @@ const handleUploadedFiles = (contents) => {
     for (let i = 0; i < Object.keys(uploadedData.ratings).length; i++) {
         const rating = uploadedData.ratings[Object.keys(uploadedData.ratings)[i]]
         rating.object = target.objects[rating.object]
-        if (rating.object.label == "DB2") {
-            console.log(`DB2!!`)
-        }
+
         let ratingTypeName
         if (typeof (rating.ratingType) == "string") ratingTypeName = rating.ratingType
         if (typeof (rating.ratingType) == "object") ratingTypeName = rating.ratingType.name
