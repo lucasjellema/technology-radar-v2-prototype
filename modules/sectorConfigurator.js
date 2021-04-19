@@ -35,7 +35,7 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     html += `<input type="button" id="addSectorButton"  value="Add Sector"  style="padding:6px;margin:10px"/>`
 
     html += `<table id="sectors">`
-    html += `<tr><th>Sector Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th><th>Delete?</th><th>v ^</th></tr>`
+    html += `<tr><th>Sector Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th><th>Others?</th><th>Delete?</th><th>v ^</th></tr>`
     for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
         const sector = viewpoint.template.sectorConfiguration.sectors[i]
         // find all values mapped to the sectorToEdit
@@ -57,6 +57,7 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
         html += `</td>
         <td>${valueCount} </td>
         <td><input id="showSector${i}" type="checkbox" ${sector?.visible == false ? "" : "checked"}></input></td> 
+        <td><input id="othersSector${i}" type="radio" name="others" value="${i}" ${sector?.others == true ? "checked":""}></input></td> 
         <td><span id="deleteSector${i}" class="clickableProperty">Delete</span></td> 
         <td><span id="downSector${i}" class="clickableProperty">${i < viewpoint.template.sectorConfiguration.sectors.length - 1 ? "v" : ""}</span>&nbsp;
         <span id="upSector${i}" class="clickableProperty">${i > 0 ? "^" : ""}</span></td> 
@@ -85,12 +86,18 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
 
     // add event listeners
     for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
+        document.getElementById(`othersSector${i}`).addEventListener("change", (e) => {
+            viewpoint.template.sectorConfiguration.sectors.forEach((sector) => sector.others = false)
+
+            viewpoint.template.sectorConfiguration.sectors[i].others = e.target.checked
+            publishRadarEvent({ type: "shuffleBlips" })
+            publishRefreshRadar()
+        })
         document.getElementById(`showSector${i}`).addEventListener("change", (e) => {
             viewpoint.template.sectorConfiguration.sectors[i].visible = e.target.checked
             publishRadarEvent({ type: "shuffleBlips" })
             publishRefreshRadar()
         })
-
         document.getElementById(`editSector${i}`).addEventListener("click", () => {
             launchSectorEditor(i, viewpoint, drawRadarBlips)
             // hideMe() // show the main editor?
