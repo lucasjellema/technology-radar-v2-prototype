@@ -430,12 +430,12 @@ const saveBlipEdit = (editObject) => {
 
 
 const getSectorExpansionFactor = (viewpoint) => {
-    const totalAvailableAngle = viewpoint.template.sectorConfiguration.totalAngle ?? 1
-    const initialAngle = parseFloat(viewpoint.template.sectorConfiguration.initialAngle ?? 0)
+    const totalAvailableAngle = viewpoint.template.sectorsConfiguration.totalAngle ?? 1
+    const initialAngle = parseFloat(viewpoint.template.sectorsConfiguration.initialAngle ?? 0)
     //  console.log(`totalAvailableAngle = ${totalAvailableAngle}`)
 
     // factor to multiply each angle with - derived from the sum of angles of all visible sectors , calibrated with the total available angle
-    const totalVisibleSectorsAngleSum = viewpoint.template.sectorConfiguration.sectors.reduce((sum, sector) =>
+    const totalVisibleSectorsAngleSum = viewpoint.template.sectorsConfiguration.sectors.reduce((sum, sector) =>
         sum + (sector?.visible != false ? sector.angle : 0), 0)
     //    return totalAvailableAngle * (totalVisibleSectorsAngleSum == 0 ? 1 : 1 / totalVisibleSectorsAngleSum)
     const expansionFactor = parseFloat((totalAvailableAngle - initialAngle) * (totalVisibleSectorsAngleSum == 0 ? 1 : (1 / totalVisibleSectorsAngleSum)))
@@ -446,7 +446,7 @@ const getSectorExpansionFactor = (viewpoint) => {
 
 const getRingExpansionFactor = (viewpoint) => {
     // factor to multiply each witdh with - derived from the sum of widths of all visible rings , calibrated with the total available ring width
-    const totalVisibleRingsWidthSum = viewpoint.template.ringConfiguration.rings.reduce((sum, ring) =>
+    const totalVisibleRingsWidthSum = viewpoint.template.ringsConfiguration.rings.reduce((sum, ring) =>
         sum + (ring?.visible != false ? ring.width : 0), 0)
     const expansionFactor = totalVisibleRingsWidthSum == 0 ? 1 : 1 / totalVisibleRingsWidthSum
     return expansionFactor
@@ -494,7 +494,7 @@ const getKeyForValue = function (object, value) {
 const handleSectorBackgroundImageDrag = (blipDragEvent, viewpoint) => {
     console.log(`OK, end sector background image drag`)
     const sectorId = blipDragEvent.blipId.substring(21)
-    const sector = viewpoint.template.sectorConfiguration.sectors[sectorId]
+    const sector = viewpoint.template.sectorsConfiguration.sectors[sectorId]
     sector.backgroundImage.x = blipDragEvent.newX // newCoordinates.x - config.width / 2
     sector.backgroundImage.y = blipDragEvent.newY // newCoordinates.y - config.height / 2
 }

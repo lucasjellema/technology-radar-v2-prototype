@@ -104,11 +104,11 @@ function initializeRadar(config) {
 
 
 const sectorExpansionFactor = (config) => {
-    const totalAvailableAngle = parseFloat(config.sectorConfiguration.totalAngle ?? 1)
-    const initialAngle = parseFloat(config.sectorConfiguration.initialAngle ?? 0)
+    const totalAvailableAngle = parseFloat(config.sectorsConfiguration.totalAngle ?? 1)
+    const initialAngle = parseFloat(config.sectorsConfiguration.initialAngle ?? 0)
 
     // factor to multiply each angle with - derived from the sum of angles of all visible sectors , calibrated with the total available angle
-    const totalVisibleSectorsAngleSum = config.sectorConfiguration.sectors.reduce((sum, sector) =>
+    const totalVisibleSectorsAngleSum = config.sectorsConfiguration.sectors.reduce((sum, sector) =>
         sum + (sector?.visible != false ? parseFloat(sector.angle) : 0), 0)
     const expansionFactor = parseFloat((totalAvailableAngle - initialAngle) * (totalVisibleSectorsAngleSum == 0 ? 1 : (1 / totalVisibleSectorsAngleSum)))
     console.log(`expansionFactor ${expansionFactor}`)
@@ -117,7 +117,7 @@ const sectorExpansionFactor = (config) => {
 
 const ringExpansionFactor = (config) => {
     // factor to multiply each witdh with - derived from the sum of widths of all visible rings , calibrated with the total available ring width
-    const totalVisibleRingsWidthSum = config.ringConfiguration.rings.reduce((sum, ring) =>
+    const totalVisibleRingsWidthSum = config.ringsConfiguration.rings.reduce((sum, ring) =>
         sum + (ring?.visible != false ? parseFloat(ring.width) : 0), 0)
     return totalVisibleRingsWidthSum == 0 ? 1 : 1 / totalVisibleRingsWidthSum
 }
@@ -132,12 +132,12 @@ const drawSectors = function (radar, config, elementDecorator = null) {
     //     .attr("y2", 0)
     //     .style("stroke", config.colors.grid)
     //     .style("stroke-width", 1);
-    const initialAngle = parseFloat(config.sectorConfiguration.initialAngle ?? 0)
+    const initialAngle = parseFloat(config.sectorsConfiguration.initialAngle ?? 0)
     const sectorExpansionFctr = sectorExpansionFactor(config)
     for (let layer = 0; layer < 2; layer++) { // TODO if not edit mode then only one layer
         let currentAnglePercentage = initialAngle
-        for (let i = 0; i < config.sectorConfiguration.sectors.length; i++) {
-            let sector = config.sectorConfiguration.sectors[i]
+        for (let i = 0; i < config.sectorsConfiguration.sectors.length; i++) {
+            let sector = config.sectorsConfiguration.sectors[i]
             if (sector?.visible == false) continue;
             const sectorAnglePercentage = sectorExpansionFctr * sector.angle
             // console.log(`sector ${i} sector.angle ${sector.angle} actually allotted ${sectorAnglePercentage}; current angle % = ${currentAnglePercentage}`)
@@ -172,11 +172,11 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                     .attr("opacity", sector.opacity != null ? sector.opacity : 0.6)
                     // define borders of sectors
                     .style("stroke", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "red"
-                        : sector?.edge?.color ?? config.sectorConfiguration?.stroke?.strokeColor ?? "#000")
+                        : sector?.edge?.color ?? config.sectorsConfiguration?.stroke?.strokeColor ?? "#000")
                     .style("stroke-width", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? 8
-                        : sector?.edge?.width ?? config.sectorConfiguration?.stroke?.strokeWidth ?? 3
+                        : sector?.edge?.width ?? config.sectorsConfiguration?.stroke?.strokeWidth ?? 3
                     )
-                    .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "" : config.sectorConfiguration?.stroke?.strokeArray ?? "#000")
+                    .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "" : config.sectorsConfiguration?.stroke?.strokeArray ?? "#000")
                     .on('click', () => { const sector = i; publishRadarEvent({ type: "sectorClick", sector: i }) })
                     .on('dblclick', () => { const sector = i; publishRadarEvent({ type: "sectorDblClick", sector: i }) })
                 // add color to the sector area outside the outer ring
@@ -192,7 +192,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
 
                     .on('dblclick', () => { const sector = i; publishRadarEvent({ type: "sectorDblClick", sector: i }) })
 
-                if (sector?.labelSettings?.showCurved ?? (config?.sectorConfiguration?.showEdgeSectorLabels)) {
+                if (sector?.labelSettings?.showCurved ?? (config?.sectorsConfiguration?.showEdgeSectorLabels)) {
                     // print sector label along the edge of the arc
                     displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sectorCanvas, i, sector, config, elementDecorator)
                 }
@@ -209,7 +209,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                         .attr("class", "draggable")
 
                 }
-                if (sector?.labelSettings?.showStraight ?? (config?.sectorConfiguration?.showRegularSectorLabels)) {
+                if (sector?.labelSettings?.showStraight ?? (config?.sectorsConfiguration?.showRegularSectorLabels)) {
                     // print horizontal sector label in the sector
                     const labelCoordinates = cartesianFromPolar({ phi: 2 * (1 - (currentAnglePercentage - 0.05)) * Math.PI, r: config.maxRingRadius * 1.2 })
                     const sectorLabel = sectorCanvas.append("text")
@@ -223,7 +223,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                         .on('dblclick', () => { console(`sector drilldown`); publishRadarEvent({ type: "sectorDrilldown", sector: i }) }) // facilitate drilldown on sector
                         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, sector.label, `sectorLabel${i}`])
 
-                    styleText(sectorLabel, sector.labelSettings, config, config.sectorConfiguration)
+                    styleText(sectorLabel, sector.labelSettings, config, config.sectorsConfiguration)
                 }
 
 
@@ -251,14 +251,14 @@ const drawSectors = function (radar, config, elementDecorator = null) {
 const drawRings = function (radar, config) {
 
     const ringCanvas = radar.append("g").attr("id", "ringCanvas")
-    const totalRingPercentage = config.ringConfiguration.rings.reduce((sum, ring) => { return sum + (ring?.visible != false ? ring.width : 0) }, 0)
-    const initialAngle = config.sectorConfiguration.initialAngle ?? 0
-    const totalRadarAngle = config.sectorConfiguration.totalAngle ?? 1
-    // const totalSectorPercentage =config.sectorConfiguration.sectors.reduce((sum, sector) => { return sum + ((sector?.visible != false) ? sector.angle : 0) }, initialAngle)  
+    const totalRingPercentage = config.ringsConfiguration.rings.reduce((sum, ring) => { return sum + (ring?.visible != false ? ring.width : 0) }, 0)
+    const initialAngle = config.sectorsConfiguration.initialAngle ?? 0
+    const totalRadarAngle = config.sectorsConfiguration.totalAngle ?? 1
+    // const totalSectorPercentage =config.sectorsConfiguration.sectors.reduce((sum, sector) => { return sum + ((sector?.visible != false) ? sector.angle : 0) }, initialAngle)  
     // 
     let currentRadiusPercentage = totalRingPercentage * ringExpansionFactor(config)
-    for (let i = 0; i < config.ringConfiguration.rings.length; i++) {
-        let ring = config.ringConfiguration.rings[i]
+    for (let i = 0; i < config.ringsConfiguration.rings.length; i++) {
+        let ring = config.ringsConfiguration.rings[i]
         if (ring?.visible == false) continue;
 
         let currentRadius = currentRadiusPercentage * config.maxRingRadius  //TODO cater for sector expansion / hidden sectors/ sectors total area
@@ -275,9 +275,9 @@ const drawRings = function (radar, config) {
             .style("fill", ring.backgroundColor != null ? ring.backgroundColor : color_white)
             .attr("opacity", ring.opacity != null ? ring.opacity : 0.6)
             // define borders of rings
-            .style("stroke", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "red" : config.ringConfiguration?.stroke?.strokeColor ?? "#000")
-            .style("stroke-width", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? 6 : config.ringConfiguration?.stroke?.strokeWidth ?? 2)
-            .style("stroke-dasharray", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "" : config.ringConfiguration?.stroke?.strokeArray ?? "9 1")
+            .style("stroke", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "red" : config.ringsConfiguration?.stroke?.strokeColor ?? "#000")
+            .style("stroke-width", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? 6 : config.ringsConfiguration?.stroke?.strokeWidth ?? 2)
+            .style("stroke-dasharray", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "" : config.ringsConfiguration?.stroke?.strokeArray ?? "9 1")
             .on('click', () => { const ring = i; publishRadarEvent({ type: "ringClick", ring: i }) })
             .on('dblclick', () => { console.log(`dbl click on ring`); const sectorring = i; publishRadarEvent({ type: "ringDblClick", ring: i }) })
 
@@ -311,10 +311,10 @@ const drawRings = function (radar, config) {
 
 
 const drawRingLabels = function (radar, config, elementDecorator) {
-    const totalRingPercentage = config.ringConfiguration.rings.reduce((sum, ring) => { return sum + (ring?.visible != false ? ring.width : 0) }, 0)
+    const totalRingPercentage = config.ringsConfiguration.rings.reduce((sum, ring) => { return sum + (ring?.visible != false ? ring.width : 0) }, 0)
     let currentRadiusPercentage = totalRingPercentage * ringExpansionFactor(config)
-    for (let i = 0; i < config.ringConfiguration.rings.length; i++) {
-        let ring = config.ringConfiguration.rings[i]
+    for (let i = 0; i < config.ringsConfiguration.rings.length; i++) {
+        let ring = config.ringsConfiguration.rings[i]
         if (ring?.visible == false) continue;
         let currentRadius = currentRadiusPercentage * config.maxRingRadius
         const ringlabel = radar.append("text")
@@ -328,7 +328,7 @@ const drawRingLabels = function (radar, config, elementDecorator) {
             .on('dblclick', () => { console.log(`dbl click on ring`); publishRadarEvent({ type: "ringDrilldown", ring: i }) })
 
             .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, ring.label, `ringLabel${i}`]);
-        styleText(ringlabel, ring.labelSettings, config, config.ringConfiguration)
+        styleText(ringlabel, ring.labelSettings, config, config.ringsConfiguration)
 
         currentRadiusPercentage = currentRadiusPercentage - ring.width * ringExpansionFactor(config)
     }
@@ -341,7 +341,7 @@ function displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sector
     let anticlockwise = sum < 0
     // if startAngle - endAngle < -6.20  => sector has entire circle 
     let fullCircle = startAngle - endAngle < -6.20
-    console.log(`full circle ${fullCircle}`)
+
     let textArc = d3.arc()
         .outerRadius(config.maxRingRadius + 20)
         .innerRadius(150)
@@ -371,7 +371,7 @@ function displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sector
         .attr("id", `sectorLabel${sectorIndex}`)
         .attr("dy", 10)
         .attr("dx", 45)
-    styleText(sectorLabel, sector.labelSettings, config, config.sectorConfiguration)
+    styleText(sectorLabel, sector.labelSettings, config, config.sectorsConfiguration)
 
     sectorLabel.append("textPath")
 

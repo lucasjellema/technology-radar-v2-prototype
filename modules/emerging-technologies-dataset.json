@@ -180,7 +180,7 @@
                     "grid": "#bbb",
                     "inactive": "#ddd"
                 },
-                "ringConfiguration": {
+                "ringsConfiguration": {
                     "outsideRingsAllowed": true,
                     "font": {
                         "color": "blacvk",
@@ -221,7 +221,7 @@
                         }
                     ]
                 },
-                "sectorConfiguration": {
+                "sectorsConfiguration": {
                     "outsideSectorsAllowed": true,
                     "font": {
                         "color": "#000",

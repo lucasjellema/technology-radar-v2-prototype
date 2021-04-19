@@ -44,7 +44,7 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
 
 
     showOrHideElement("modalEditor", true)
-    const sector = viewpoint.template.sectorConfiguration.sectors[sectorToEdit]
+    const sector = viewpoint.template.sectorsConfiguration.sectors[sectorToEdit]
     setTextOnElement('modalEditorTitle', `Edit Sector ${sector.label}`)
     console.log(`editing sector ${JSON.stringify(sector)}`)
     const contentContainer = document.getElementById("modalContentContainer")

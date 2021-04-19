@@ -25,37 +25,37 @@ export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian}
     let dropSector
     let angleSum = 0
     // iterate over sectors until sum of sector angles > anglePercentage    ; the last sector is the dropzone 
-    for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
+    for (let i = 0; i < viewpoint.template.sectorsConfiguration.sectors.length; i++) {
         angleSum = angleSum + 
-        ((viewpoint.template.sectorConfiguration.sectors[i]?.visible != false) ?  viewpoint.template.sectorConfiguration.sectors[i].angle:0)
+        ((viewpoint.template.sectorsConfiguration.sectors[i]?.visible != false) ?  viewpoint.template.sectorsConfiguration.sectors[i].angle:0)
         if (angleSum * sectorExpansionFactor > dropAnglePercentage) {
             dropSector = i
             break
         }
     }
     if (dropSector==null) {
-      dropSector = viewpoint.template.sectorConfiguration.sectors.length-1
+      dropSector = viewpoint.template.sectorsConfiguration.sectors.length-1
     }
     // iterate of rings until sum of ring widths > 1- radialPercentage; the last ring is the dropzone
 
     let dropRing
     let widthSum = 0
     // iterate over rings until sum of ring widths > dropRadialPercentage    ; the last ring is the dropzone 
-    for (let i = 0; i < viewpoint.template.ringConfiguration.rings.length; i++) {
+    for (let i = 0; i < viewpoint.template.ringsConfiguration.rings.length; i++) {
         widthSum = widthSum +
-        ((viewpoint.template.ringConfiguration.rings[i]?.visible != false) 
-        ?  viewpoint.template.ringConfiguration.rings[i].width:0)
+        ((viewpoint.template.ringsConfiguration.rings[i]?.visible != false) 
+        ?  viewpoint.template.ringsConfiguration.rings[i].width:0)
         if (widthSum * ringExpansionFactor > (1 - dropRadialPercentage)) {
             dropRing = i
             break
         }
     }
     if (dropRing==null) {
-      dropRing = viewpoint.template.ringConfiguration.rings.length-1
+      dropRing = viewpoint.template.ringsConfiguration.rings.length-1
     }
 
 
     if (dropRadialPercentage > 1) dropRing = -1
-   // console.log(`drop blip  ring ${dropRing} ${viewpoint.template.ringConfiguration.rings[dropRing]?.label}`)
+   // console.log(`drop blip  ring ${dropRing} ${viewpoint.template.ringsConfiguration.rings[dropRing]?.label}`)
     return {sector: dropSector, ring: dropRing}
 }

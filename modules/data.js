@@ -68,13 +68,17 @@ const serialize = (originalData) => {
 
     for (let i = 0; i < Object.keys(serializedData.ratings).length; i++) {
         const rating = serializedData.ratings[Object.keys(serializedData.ratings)[i]]
-        if (!serializedData.objects.hasOwnProperty(rating.object.id)) {  // save object in objects
-            serializedData.objects[rating.object.id] = rating.object
-        }
         let ratingTypeName = rating.ratingType
         if (typeof (ratingTypeName) == "object") ratingTypeName = ratingTypeName.name
         rating.ratingType = ratingTypeName
+
+        if (  rating.hasOwnProperty("object") ){
+            // TODO if rating does not have object - what can we possibly use it for? get rid of it!
+            if (!serializedData.objects.hasOwnProperty(rating.object.id)) {  // save object in objects
+            serializedData.objects[rating.object.id] = rating.object
+        }
         rating.object = rating.object.id
+    }
     }
 
     for (let i = 0; i < Object.keys(serializedData.objects).length; i++) {
@@ -123,6 +127,9 @@ const deserialize = (originalData) => {
         if (viewpoint.ratingType != null && typeof (viewpoint.ratingType) == "string") {
             viewpoint.ratingType = deserializedData.model.ratingTypes[viewpoint.ratingType]
         }
+        if (viewpoint.template.hasOwnProperty("ringConfiguration")){viewpoint.template.ringsConfiguration = viewpoint.template.ringConfiguration}
+        if (viewpoint.template.hasOwnProperty("sectorConfiguration")){viewpoint.template.sectorsConfiguration = viewpoint.template.sectorConfiguration}
+
         viewpoint.blips.forEach((blip) => {
             if (typeof (blip.rating) == "string") { // assume the rating is a reference to an UUID
                 blip.rating = deserializedData.ratings[blip.rating] // possibly check getData() as well
@@ -132,12 +139,26 @@ const deserialize = (originalData) => {
 
 
     })
+    const ratingsToRemove = []
     for (let i = 0; i < Object.keys(deserializedData.ratings).length; i++) {
         const rating = deserializedData.ratings[Object.keys(deserializedData.ratings)[i]]
         if (rating?.object != null && typeof (rating.object) == "string") {
             rating.object = deserializedData.objects[rating.object]
         }
+        if (rating.object == null ||rating.object === undefined) {
+            // remove rating and all blips referring to that rating
+            ratingsToRemove.push(rating.id)
+        }
     }
+    deserializedData.viewpoints.forEach((viewpoint) => {
+        const originalNumberOfBlips = viewpoint.blips.length
+        viewpoint.blips = viewpoint.blips.filter(blip => !ratingsToRemove.includes(blip.rating.id ));        
+        console.log(`Removed ${originalNumberOfBlips - viewpoint.blips.length} blips for not having a rating without proper object reference`)
+
+    })
+    const originalNumberOfRatings = Object.keys(deserializedData.ratings).length
+    ratingsToRemove.forEach((ratingIdToRemove) => delete deserializedData.ratings[ratingIdToRemove])
+console.log(`Removed ${originalNumberOfRatings - Object.keys(deserializedData.ratings).length} ratings for not having a proper object reference`)
 
     for (let i = 0; i < Object.keys(deserializedData.model.ratingTypes).length; i++) {
         const ratingType = deserializedData.model.ratingTypes[Object.keys(deserializedData.model.ratingTypes)[i]]
@@ -213,6 +234,9 @@ const normalizeDataSet = (dataset) => {
     dataset.viewpoints.forEach((viewpoint) => {
         if (typeof (viewpoint.ratingType) == "string") { viewpoint.ratingType = dataset.model.ratingTypes[viewpoint.ratingType] }
         // const objectType = viewpoint.ratingType.objectType
+        if (viewpoint.template.hasOwnProperty("ringConfiguration")){viewpoint.template.ringsConfiguration = viewpoint.template.ringConfiguration}
+        if (viewpoint.template.hasOwnProperty("sectorConfiguration")){viewpoint.template.sectorsConfiguration = viewpoint.template.sectorConfiguration}
+
         viewpoint.blips.forEach((blip) => {
             if (typeof (blip.rating) == "string") { // assume the rating is a reference to an UUID
                 blip.rating = dataset.ratings[blip.rating] // possibly check getData() as well
@@ -263,7 +287,7 @@ let freshTemplate =
         grid: "#bbb",
         inactive: "#ddd"
     },
-    ringConfiguration: {
+    ringsConfiguration: {
         outsideRingsAllowed: true,
         font: { color: "purple" },
         rings: [ // rings are defined from outside going in; the first one is the widest
@@ -271,7 +295,7 @@ let freshTemplate =
             { label: "Ring Two", width: 0.5 },
         ]
     },
-    sectorConfiguration: {
+    sectorsConfiguration: {
         outsideSectorsAllowed: true,
         font: { fontSize: "32px", fontFamily: "Arial, Helvetica" }
         , sectors: [ // starting from positive X-axis, listed anti-clockwise
@@ -763,16 +787,16 @@ const cloneViewpoint = () => {
 const resetTemplate = (template) => {
     template.colors.background = "#FFF"
     // all sectors same angle, all rings same width = adding to 1
-    for (let i = 0; i < template.ringConfiguration.rings.length; i++) {
-        const ring = template.ringConfiguration.rings[i]
-        ring.width = 1 / template.ringConfiguration.rings.length
+    for (let i = 0; i < template.ringsConfiguration.rings.length; i++) {
+        const ring = template.ringsConfiguration.rings[i]
+        ring.width = 1 / template.ringsConfiguration.rings.length
         ring.backgroundImage = {}
         ring.backgroundColor = "white"
     }
 
-    for (let i = 0; i < template.sectorConfiguration.sectors.length; i++) {
-        const sector = template.sectorConfiguration.sectors[i]
-        sector.angle = 1 / template.sectorConfiguration.sectors.length
+    for (let i = 0; i < template.sectorsConfiguration.sectors.length; i++) {
+        const sector = template.sectorsConfiguration.sectors[i]
+        sector.angle = 1 / template.sectorsConfiguration.sectors.length
         sector.backgroundImage = {}
         sector.backgroundColor = "white"
         sector.outerringBackgroundColor = "#FFF"
@@ -851,7 +875,7 @@ populateTemplateSelector()
 function addUUIDtoBlips(blips) {
     blips.forEach((blip) => {
         if (blip.rating?.id == null) { blip.rating.id = uuidv4() };
-        if (blip.rating?.object.id == null) { blip.rating.object.id = uuidv4() }
+        if (blip.rating !=null && blip.rating.object != null && blip.rating.object.id == null) { blip.rating.object.id = uuidv4() }
     })
 }
 

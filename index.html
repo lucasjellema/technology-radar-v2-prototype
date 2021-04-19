@@ -285,24 +285,24 @@
             }
             if (event.type == "sectorDrilldown") {
                 // if currently only one sector is visible, the drilldown is actually a drill up and all sectors should be made visible
-                const numberOfVisibleSectors = getViewpoint().template.sectorConfiguration.sectors.filter((sector) => sector.visible).length
+                const numberOfVisibleSectors = getViewpoint().template.sectorsConfiguration.sectors.filter((sector) => sector.visible).length
                 if (numberOfVisibleSectors == 1) {
                     // drill up: set visible to true for all sectors ; then redraw radar and blips
-                    getViewpoint().template.sectorConfiguration.sectors.forEach((sector, i) => sector.visible = true)
+                    getViewpoint().template.sectorsConfiguration.sectors.forEach((sector, i) => sector.visible = true)
                 } else {
                     // set visible to false for all sectors except for sector event.sector; then redraw radar and blips
-                    getViewpoint().template.sectorConfiguration.sectors.forEach((sector, i) => sector.visible = (i == event.sector))
+                    getViewpoint().template.sectorsConfiguration.sectors.forEach((sector, i) => sector.visible = (i == event.sector))
                 }
                 shuffleBlips()
             } if (event.type == "ringDrilldown") {
                 // if currently only one ring is visible, the drilldown is actually a drill up and all rings should be made visible
-                const numberOfVisibleRings = getViewpoint().template.ringConfiguration.rings.filter((ring) => ring.visible).length
+                const numberOfVisibleRings = getViewpoint().template.ringsConfiguration.rings.filter((ring) => ring.visible).length
                 if (numberOfVisibleRings == 1) {
                     // drill up: set visible to true for all ringfs except for sector event.sector; then redraw radar and blips
-                    getViewpoint().template.ringConfiguration.rings.forEach((ring, i) => ring.visible = true)
+                    getViewpoint().template.ringsConfiguration.rings.forEach((ring, i) => ring.visible = true)
                 } else {
                     // drill down: set visible to false for all rings except for ring event.ring; then redraw radar and blips
-                    getViewpoint().template.ringConfiguration.rings.forEach((ring, i) => ring.visible = (i == event.ring))
+                    getViewpoint().template.ringsConfiguration.rings.forEach((ring, i) => ring.visible = (i == event.ring))
                 }
                 shuffleBlips()
             }

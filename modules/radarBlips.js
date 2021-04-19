@@ -191,9 +191,9 @@ const prepareBlipDrawingContext = () => {
     // others: an object with for each visual dimension the value that is designated as others
     const visualDimensions = ["sector", "ring", "shape", "color", "size"]
     visualDimensions.forEach((dimension) => {
-        if (getViewpoint().template[`${dimension}Configuration`] != null) {
-            for (let i = 0; i < getViewpoint().template[`${dimension}Configuration`][`${dimension}s`].length; i++) {
-                const dimensionValue = getViewpoint().template[`${dimension}Configuration`][`${dimension}s`][i]
+        if (getViewpoint().template[`${dimension}sConfiguration`] != null) {
+            for (let i = 0; i < getViewpoint().template[`${dimension}sConfiguration`][`${dimension}s`].length; i++) {
+                const dimensionValue = getViewpoint().template[`${dimension}sConfiguration`][`${dimension}s`][i]
                 if (dimensionValue.others == true) {
                     blipDrawingContext.othersDimensionValue[dimension] = i
                 }
@@ -204,12 +204,12 @@ const prepareBlipDrawingContext = () => {
 }
 
 const sectorExpansionFactor = () => {
-    const totalAvailableAngle = currentViewpoint.template.sectorConfiguration.totalAngle ?? 1
-    const initialAngle = parseFloat(currentViewpoint.template.sectorConfiguration.initialAngle ?? 0)
+    const totalAvailableAngle = currentViewpoint.template.sectorsConfiguration.totalAngle ?? 1
+    const initialAngle = parseFloat(currentViewpoint.template.sectorsConfiguration.initialAngle ?? 0)
     //  console.log(`totalAvailableAngle = ${totalAvailableAngle}`)
 
     // factor to multiply each angle with - derived from the sum of angles of all visible sectors , calibrated with the total available angle
-    const totalVisibleSectorsAngleSum = currentViewpoint.template.sectorConfiguration.sectors.reduce((sum, sector) =>
+    const totalVisibleSectorsAngleSum = currentViewpoint.template.sectorsConfiguration.sectors.reduce((sum, sector) =>
         sum + (sector?.visible != false ? sector.angle : 0), 0)
     //    return totalAvailableAngle * (totalVisibleSectorsAngleSum == 0 ? 1 : 1 / totalVisibleSectorsAngleSum)
     const expansionFactor = parseFloat((totalAvailableAngle - initialAngle) * (totalVisibleSectorsAngleSum == 0 ? 1 : (1 / totalVisibleSectorsAngleSum)))
@@ -221,31 +221,31 @@ const sectorExpansionFactor = () => {
 
 
 
-const priorSectorsAnglePercentageSum = (sectorId, config) => config.sectorConfiguration.sectors.filter((sector, index) => index < sectorId)
+const priorSectorsAnglePercentageSum = (sectorId, config) => config.sectorsConfiguration.sectors.filter((sector, index) => index < sectorId)
     .reduce((sum, sector) =>
-        sum + (sector?.visible != false ? sector.angle : 0), 0) * sectorExpansionFactor() + parseFloat(currentViewpoint.template.sectorConfiguration.initialAngle ?? 0)
+        sum + (sector?.visible != false ? sector.angle : 0), 0) * sectorExpansionFactor() + parseFloat(currentViewpoint.template.sectorsConfiguration.initialAngle ?? 0)
 
 
 
 const ringExpansionFactor = () => {
     // factor to multiply each witdh with - derived from the sum of widths of all visible rings , calibrated with the total available ring width
-    const totalVisibleRingsWidthSum = currentViewpoint.template.ringConfiguration.rings.reduce((sum, ring) =>
+    const totalVisibleRingsWidthSum = currentViewpoint.template.ringsConfiguration.rings.reduce((sum, ring) =>
         sum + (ring?.visible != false ? ring.width : 0), 0)
     const expansionFactor = totalVisibleRingsWidthSum == 0 ? 1 : 1 / totalVisibleRingsWidthSum
     return expansionFactor
 }
-const priorRingsWidthPercentageSum = (ringId, config) => config.ringConfiguration.rings.filter((ring, index) => index < ringId)
+const priorRingsWidthPercentageSum = (ringId, config) => config.ringsConfiguration.rings.filter((ring, index) => index < ringId)
     .reduce((sum, ring) => sum + (ring?.visible != false ? ring.width : 0), 0) * ringExpansionFactor()
 
 const sectorRingToPosition = (sector, ring, config) => { // return randomized X,Y coordinates in segment corresponding to the sector and ring 
     try {
         const phi = priorSectorsAnglePercentageSum(sector, config) +
-            (0.1 + Math.random() * 0.8) * config.sectorConfiguration.sectors[sector].angle * sectorExpansionFactor()
+            (0.1 + Math.random() * 0.8) * config.sectorsConfiguration.sectors[sector].angle * sectorExpansionFactor()
         // ring can be undefined (== the so called -1 ring, outside the real rings)
         let r
         if (ring != null && ring > -1) {
             let rFactor = (1 - priorRingsWidthPercentageSum(ring, config) -
-                (0.1 + Math.random() * 0.8) * config.ringConfiguration.rings[ring].width * ringExpansionFactor())  // 0.1 to not position the on the outer edge of the segment
+                (0.1 + Math.random() * 0.8) * config.ringsConfiguration.rings[ring].width * ringExpansionFactor())  // 0.1 to not position the on the outer edge of the segment
             r = config.maxRingRadius * rFactor
         }
         else {
@@ -288,60 +288,99 @@ const findSectorForRating = (rating, viewpoint) => {
 const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
 
     let blipSector = findSectorForRating(d.rating, viewpoint)
-    //   viewpoint.propertyVisualMaps.sector.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSector)]
-    if (blipSector == null || viewpoint.template.sectorConfiguration.sectors[blipSector]?.visible == false) {
-        if (blipDrawingContext.othersDimensionValue["sector"] != null) { blipSector = blipDrawingContext.othersDimensionValue["sector"] }
+    if (blipSector == null) {
+        if (blipDrawingContext.othersDimensionValue["sector"] != null) {
+             blipSector = blipDrawingContext.othersDimensionValue["sector"] 
+        }
         else {
             return
         }
     }
-
-    const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
-    const blipRing = viewpoint.propertyVisualMaps.ring.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToRing)]
-    if (blipRing == null || viewpoint.template.ringConfiguration.rings[blipRing]?.visible == false) {
-        //do NOT draw blip at all
+    if (viewpoint.template.sectorsConfiguration.sectors[blipSector]?.visible == false) {
         return
     }
+
+    const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
+    let blipRing = viewpoint.propertyVisualMaps.ring.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToRing)]
+    if (blipRing == null) {
+        if (blipDrawingContext.othersDimensionValue["ring"] != null) {
+             blipRing = blipDrawingContext.othersDimensionValue["ring"] 
+        }
+        else {
+            return
+        }
+    }
+    if (viewpoint.template.ringsConfiguration.rings[blipRing]?.visible == false) {
+        return
+    }
+
     let blipShape
     try {
-        // TODO cater for : no shape property set; no shape property value to map; no default shape defined to fall back to
+        
         const propertyMappedToShape = viewpoint.propertyVisualMaps.shape.property
-        const blipShapeId = viewpoint.propertyVisualMaps.shape.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToShape)]
-            ?? viewpoint.propertyVisualMaps.shape.valueMap["other"]
+        let blipShapeId = viewpoint.propertyVisualMaps.shape.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToShape)]
+        if (blipShapeId == null) {
+            if (blipDrawingContext.othersDimensionValue["shape"] != null) {
+                 blipShapeId = blipDrawingContext.othersDimensionValue["shape"] 
+            }
+            else {
+                return
+            }
+        }
+        if (viewpoint.template.shapesConfiguration.shapes[blipShapeId]?.visible == false) {
+            return
+        }        
         blipShape = viewpoint.template.shapesConfiguration.shapes[blipShapeId].shape
-
-        if (viewpoint.template.shapesConfiguration.shapes[blipShapeId]?.visible == false) return
     } catch (e) {
         blipShape = "circle"
+        console.log(`draw radar blip fall back to circle because of ${e}`)
 
     }
 
     let blipColor
     try {
-        // TODO cater for : no color property set; no color property value to map; no default color defined to fall back to
         const propertyMappedToColor = viewpoint.propertyVisualMaps.color.property
-        const blipColorId = viewpoint.propertyVisualMaps.color.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToColor)]
-            ?? viewpoint.propertyVisualMaps.color.valueMap["other"]
+        let blipColorId = viewpoint.propertyVisualMaps.color.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToColor)]
+        if (blipColorId == null) {
+            if (blipDrawingContext.othersDimensionValue["color"] != null) {
+                 blipColorId = blipDrawingContext.othersDimensionValue["color"] 
+            }
+            else {
+                return
+            }
+        }
+        if (viewpoint.template.colorsConfiguration.colors[blipColorId]?.visible == false) {
+            return
+        }        
+
         blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
-        if (viewpoint.template.colorsConfiguration.colors[blipColorId]?.visible == false) return
     } catch (e) {
         blipColor = "blue"
-        //console.log(`draw radar blip fall back to no apply color because of ${e}`)
+        console.log(`draw radar blip fall back to no apply color because of ${e}`)
     }
 
     let blipSize
     try {
-        // TODO cater for : no size property set; no size property value to map; no default size defined to fall back to
+        
         const propertyMappedToSize = viewpoint.propertyVisualMaps.size.property
-        const blipSizeId = viewpoint.propertyVisualMaps.size.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSize)]
-            ?? viewpoint.propertyVisualMaps.size.valueMap["other"]
+        let blipSizeId = viewpoint.propertyVisualMaps.size.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSize)]
+        if (blipSizeId == null) {
+            if (blipDrawingContext.othersDimensionValue["size"] != null) {
+                 blipSizeId = blipDrawingContext.othersDimensionValue["size"] 
+            }
+            else {
+                return
+            }
+        }
+        if (viewpoint.template.sizesConfiguration.sizes[blipSizeId]?.visible == false) {
+            return
+        }        
         blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
-        if (viewpoint.template.sizesConfiguration.sizes[blipSizeId]?.visible == false) return
 
     } catch (e) {
         blipSize = 1
 
-        //console.log(`draw radar blip fall back to no apply size because of ${e}`)
+        console.log(`draw radar blip fall back to no apply size because of ${e}`)
     }
 
     if (!viewpoint.blipDisplaySettings.applyShapes) {

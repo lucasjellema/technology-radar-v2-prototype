@@ -38,9 +38,9 @@ const switchboard = {
     handleInsideRingBackgroundColorSelection: (event) => {
         const color = event.target.value;
         if ("sectors" == config.topLayer)
-            config.sectorConfiguration.sectors[getState().selectedSector].backgroundColor = color
+            config.sectorsConfiguration.sectors[getState().selectedSector].backgroundColor = color
         if ("rings" == config.topLayer)
-            config.ringConfiguration.rings[getState().selectedRing].backgroundColor = color
+            config.ringsConfiguration.rings[getState().selectedRing].backgroundColor = color
 
         publishRefreshRadar()
     },
@@ -49,17 +49,17 @@ const switchboard = {
         console.log(`color ${color} selected sector ${getState().selectedSector}`)
 
         if ("sectors" == config.topLayer)
-            config.sectorConfiguration.sectors[getState().selectedSector].outerringBackgroundColor = color
+            config.sectorsConfiguration.sectors[getState().selectedSector].outerringBackgroundColor = color
         publishRefreshRadar()
-        console.log(`outerring bg color ${config.sectorConfiguration.sectors[getState().selectedSector].outerringBackgroundColor}`)
+        console.log(`outerring bg color ${config.sectorsConfiguration.sectors[getState().selectedSector].outerringBackgroundColor}`)
     },
     handleOpacitySlider: (sliderValue) => {
         getSelectedObject().opacity = sliderValue
         //  console.log(`new slidervalue ${sliderValue} for ${JSON.stringify(getSelectedObject())}`)
         // if ("sectors" == config.topLayer)
-        //     config.sectorConfiguration.sectors[getState().selectedSector].opacity = sliderValue
+        //     config.sectorsConfiguration.sectors[getState().selectedSector].opacity = sliderValue
         // if ("rings" == config.topLayer)
-        //     config.ringConfiguration.rings[getState().selectedRing].opacity = sliderValue
+        //     config.ringsConfiguration.rings[getState().selectedRing].opacity = sliderValue
         publishRefreshRadar()
     },
     handleImageScaleFactor: (event) => {
@@ -93,20 +93,20 @@ const switchboard = {
 
             let deltaWidth = newCoordinates.deltaX / config.maxRingRadius
             if (ringId > 0) {
-                deltaWidth = Math.min(deltaWidth, config.ringConfiguration.rings[ringId - 1].width - knobBuffer)
+                deltaWidth = Math.min(deltaWidth, config.ringsConfiguration.rings[ringId - 1].width - knobBuffer)
                 if (deltaWidth < 0) { // current ring is decreased in width
-                    deltaWidth = Math.max(deltaWidth, - config.ringConfiguration.rings[ringId].width + knobBuffer)
+                    deltaWidth = Math.max(deltaWidth, - config.ringsConfiguration.rings[ringId].width + knobBuffer)
                 }
-                config.ringConfiguration.rings[ringId - 1].width = config.ringConfiguration.rings[ringId - 1].width - deltaWidth
+                config.ringsConfiguration.rings[ringId - 1].width = config.ringsConfiguration.rings[ringId - 1].width - deltaWidth
             }
             // TODO make sure that ring 0 is not decreased beyond its width
             if (ringId == 0 && deltaWidth < 0) { // outer ring is decreased in width
-                deltaWidth = Math.max(deltaWidth, -config.ringConfiguration.rings[0].width + knobBuffer)
+                deltaWidth = Math.max(deltaWidth, -config.ringsConfiguration.rings[0].width + knobBuffer)
             }
 
             // TODO make sure that sum of ring width <=1
             if (deltaWidth > 0.8) deltaWidth = 0.8 // bit lazy, capping individual delta width instead of capping the sum 
-            config.ringConfiguration.rings[ringId].width = config.ringConfiguration.rings[ringId].width + deltaWidth
+            config.ringsConfiguration.rings[ringId].width = config.ringsConfiguration.rings[ringId].width + deltaWidth
             publishRefreshRadar()
 
         }
@@ -118,10 +118,10 @@ const switchboard = {
             const dragAnglePercentage = newPolarCoordinates.phi < 0 ? - newPolarCoordinates.phi / (2 * Math.PI) : 1 - newPolarCoordinates.phi / (2 * Math.PI)
 
             // aggregate total angle for current and earlier sectors  
-            const currentAnglePercentage = config.sectorConfiguration.sectors.filter((sector, index) => index <= sectorId)
+            const currentAnglePercentage = config.sectorsConfiguration.sectors.filter((sector, index) => index <= sectorId)
                 .reduce((sum, sector) => sum + sector.angle, 0)
             const deltaAngle = dragAnglePercentage - currentAnglePercentage // the change in angle as a result of the drag action
-            config.sectorConfiguration.sectors[sectorId].angle = config.sectorConfiguration.sectors[sectorId].angle + deltaAngle;
+            config.sectorsConfiguration.sectors[sectorId].angle = config.sectorsConfiguration.sectors[sectorId].angle + deltaAngle;
             // TODO cater for sum of angle percentages > 1 ?  
             publishRefreshRadar()
             // derive new x and y from polar phi and maximumradiun
@@ -133,19 +133,19 @@ const switchboard = {
         return newCoordinates
     },
     handleDecreaseRingOrSector: (event) => {
-        if (config.topLayer == "rings" && getState().selectedRing < config.ringConfiguration.rings.length - 1) {
+        if (config.topLayer == "rings" && getState().selectedRing < config.ringsConfiguration.rings.length - 1) {
             //swap selectedRing and selectedRing+1 and set selectedRing++; redraw
-            const tmp = config.ringConfiguration.rings[getState().selectedRing]
-            config.ringConfiguration.rings[getState().selectedRing] = config.ringConfiguration.rings[getState().selectedRing + 1]
-            config.ringConfiguration.rings[getState().selectedRing + 1] = tmp
+            const tmp = config.ringsConfiguration.rings[getState().selectedRing]
+            config.ringsConfiguration.rings[getState().selectedRing] = config.ringsConfiguration.rings[getState().selectedRing + 1]
+            config.ringsConfiguration.rings[getState().selectedRing + 1] = tmp
             getState().selectedRing++
             publishRefreshRadar()
         }
 
-        if (config.topLayer == "sectors" && getState().selectedSector < config.sectorConfiguration.sectors.length - 1) {
-            const tmp = config.sectorConfiguration.sectors[getState().selectedSector]
-            config.sectorConfiguration.sectors[getState().selectedSector] = config.sectorConfiguration.sectors[getState().selectedSector + 1]
-            config.sectorConfiguration.sectors[getState().selectedSector + 1] = tmp
+        if (config.topLayer == "sectors" && getState().selectedSector < config.sectorsConfiguration.sectors.length - 1) {
+            const tmp = config.sectorsConfiguration.sectors[getState().selectedSector]
+            config.sectorsConfiguration.sectors[getState().selectedSector] = config.sectorsConfiguration.sectors[getState().selectedSector + 1]
+            config.sectorsConfiguration.sectors[getState().selectedSector + 1] = tmp
             getState().selectedSector++
             publishRefreshRadar()
         }
@@ -154,37 +154,37 @@ const switchboard = {
     handleIncreaseRingOrSector: (event) => {
         if (config.topLayer == "rings" && getState().selectedRing > 0) {
             //swap selectedRing and selectedRing-1 and set selectedRing--; redraw
-            const tmp = config.ringConfiguration.rings[getState().selectedRing]
-            config.ringConfiguration.rings[getState().selectedRing] = config.ringConfiguration.rings[getState().selectedRing - 1]
-            config.ringConfiguration.rings[getState().selectedRing - 1] = tmp
+            const tmp = config.ringsConfiguration.rings[getState().selectedRing]
+            config.ringsConfiguration.rings[getState().selectedRing] = config.ringsConfiguration.rings[getState().selectedRing - 1]
+            config.ringsConfiguration.rings[getState().selectedRing - 1] = tmp
             getState().selectedRing--
             publishRefreshRadar()
         }
         if (config.topLayer == "sectors" && getState().selectedSector > 0) {
-            const tmp = config.sectorConfiguration.sectors[getState().selectedSector]
-            config.sectorConfiguration.sectors[getState().selectedSector] = config.sectorConfiguration.sectors[getState().selectedSector - 1]
-            config.sectorConfiguration.sectors[getState().selectedSector - 1] = tmp
+            const tmp = config.sectorsConfiguration.sectors[getState().selectedSector]
+            config.sectorsConfiguration.sectors[getState().selectedSector] = config.sectorsConfiguration.sectors[getState().selectedSector - 1]
+            config.sectorsConfiguration.sectors[getState().selectedSector - 1] = tmp
             getState().selectedSector--
             publishRefreshRadar()
         }
     },
     handleRemoveRingOrSector: (event) => {
         if (config.topLayer == "rings") {
-            if (config.ringConfiguration.rings.length > 1) { // do not remove last ring
-                const freedUpWidth = config.ringConfiguration.rings[getState().selectedRing].width
-                config.ringConfiguration.rings.splice(getState().selectedRing, 1)
-                const ringToGain = Math.min(getState().selectedRing, config.ringConfiguration.rings.length - 1)
+            if (config.ringsConfiguration.rings.length > 1) { // do not remove last ring
+                const freedUpWidth = config.ringsConfiguration.rings[getState().selectedRing].width
+                config.ringsConfiguration.rings.splice(getState().selectedRing, 1)
+                const ringToGain = Math.min(getState().selectedRing, config.ringsConfiguration.rings.length - 1)
                 getState().selectedRing = ringToGain
-                config.ringConfiguration.rings[getState().selectedRing].width = config.ringConfiguration.rings[getState().selectedRing].width + freedUpWidth
+                config.ringsConfiguration.rings[getState().selectedRing].width = config.ringsConfiguration.rings[getState().selectedRing].width + freedUpWidth
             }
         }
         if (config.topLayer == "sectors") {
-            if (config.sectorConfiguration.sectors.length > 1) { // do not remove last sector
-                const freedUpAngle = config.sectorConfiguration.sectors[getState().selectedSector].angle
-                config.sectorConfiguration.sectors.splice(getState().selectedSector, 1)
-                const sectorToGain = Math.min(getState().selectedSector, config.sectorConfiguration.sectors.length - 1)
+            if (config.sectorsConfiguration.sectors.length > 1) { // do not remove last sector
+                const freedUpAngle = config.sectorsConfiguration.sectors[getState().selectedSector].angle
+                config.sectorsConfiguration.sectors.splice(getState().selectedSector, 1)
+                const sectorToGain = Math.min(getState().selectedSector, config.sectorsConfiguration.sectors.length - 1)
                 getState().selectedSector = sectorToGain
-                config.sectorConfiguration.sectors[sectorToGain].angle = config.sectorConfiguration.sectors[sectorToGain].angle + freedUpAngle
+                config.sectorsConfiguration.sectors[sectorToGain].angle = config.sectorsConfiguration.sectors[sectorToGain].angle + freedUpAngle
             }
         }
         publishRefreshRadar()
@@ -192,20 +192,20 @@ const switchboard = {
     },
     handleAddRingOrSector: (event) => {
         if (config.topLayer == "rings") {
-            const halfWidth = config.ringConfiguration.rings[getState().selectedRing].width != null ? config.ringConfiguration.rings[getState().selectedRing].width / 2 : 0.1
-            config.ringConfiguration.rings[getState().selectedRing].width = halfWidth
-            config.ringConfiguration.rings.splice(getState().selectedRing, 0, { label: "NEW!!", width: halfWidth })
+            const halfWidth = config.ringsConfiguration.rings[getState().selectedRing].width != null ? config.ringsConfiguration.rings[getState().selectedRing].width / 2 : 0.1
+            config.ringsConfiguration.rings[getState().selectedRing].width = halfWidth
+            config.ringsConfiguration.rings.splice(getState().selectedRing, 0, { label: "NEW!!", width: halfWidth })
 
         }
         if (config.topLayer == "sectors") {
-            if (config.sectorConfiguration.sectors.length == 0) {
-                config.sectorConfiguration.sectors.push({ label: "NEW!!", angle: 1 })
+            if (config.sectorsConfiguration.sectors.length == 0) {
+                config.sectorsConfiguration.sectors.push({ label: "NEW!!", angle: 1 })
                 getState().selectedSector() = 0
             } else {
                 getState().selectedSector = getState().selectedSector ?? 0
-                const halfAngle = config.sectorConfiguration.sectors[getState().selectedSector].angle != null ? config.sectorConfiguration.sectors[getState().selectedSector].angle / 2 : 0.3
-                if (config.sectorConfiguration.sectors[getState().selectedSector] != null) config.sectorConfiguration.sectors[getState().selectedSector].angle = halfAngle
-                config.sectorConfiguration.sectors.splice(getState().selectedSector, 0, { label: "NEW!!", angle: halfAngle })
+                const halfAngle = config.sectorsConfiguration.sectors[getState().selectedSector].angle != null ? config.sectorsConfiguration.sectors[getState().selectedSector].angle / 2 : 0.3
+                if (config.sectorsConfiguration.sectors[getState().selectedSector] != null) config.sectorsConfiguration.sectors[getState().selectedSector].angle = halfAngle
+                config.sectorsConfiguration.sectors.splice(getState().selectedSector, 0, { label: "NEW!!", angle: halfAngle })
             }
         }
         publishRefreshRadar()
@@ -222,19 +222,19 @@ const switchboard = {
 }
 
 const handleRegularSectorLabelsChange = (e) => {
-    config.sectorConfiguration.showRegularSectorLabels = e.currentTarget.checked
+    config.sectorsConfiguration.showRegularSectorLabels = e.currentTarget.checked
     publishRefreshRadar()
 }
 
 const handleSectorLabelsOnSectorEdgeChange = (e) => {
-    config.sectorConfiguration.showEdgeSectorLabels = e.currentTarget.checked
+    config.sectorsConfiguration.showEdgeSectorLabels = e.currentTarget.checked
     publishRefreshRadar()
 }
 
 
 const initializeSectorConfiguration = () => {
-    document.getElementById('sectorLabelsOnSectorEdge').checked = config.sectorConfiguration.showEdgeSectorLabels
-    document.getElementById('regularSectorLabels').checked = config.sectorConfiguration.showRegularSectorLabels
+    document.getElementById('sectorLabelsOnSectorEdge').checked = config.sectorsConfiguration.showEdgeSectorLabels
+    document.getElementById('regularSectorLabels').checked = config.sectorsConfiguration.showRegularSectorLabels
     document.getElementById('extendedSectorBoundaries').checked = config.sectorBoundariesExtended
     document.getElementById('noExtendedSectorBoundaries').checked = !config.sectorBoundariesExtended
 }
@@ -274,7 +274,7 @@ const viewpointEditor = function (configuration) {
 }
 
 const getSelectedObject = () => {
-    return getConfiguration().topLayer == "rings" ? getConfiguration().ringConfiguration.rings[getState().selectedRing] : getConfiguration().sectorConfiguration.sectors[getState().selectedSector]
+    return getConfiguration().topLayer == "rings" ? getConfiguration().ringsConfiguration.rings[getState().selectedRing] : getConfiguration().sectorsConfiguration.sectors[getState().selectedSector]
 }
 
 
@@ -421,8 +421,8 @@ const initializeConfigurationJSONContainers = () => {
         document.getElementById('vpModel').value = JSON.stringify(getViewpoint().ratingType, null, 2)
         // TODO extract objects from blips document.getElementById('vpData').value = JSON.stringify(getViewpoint().ratingType, null, 2)
     }
-    document.getElementById('ringConfiguration').value = JSON.stringify(getConfiguration().ringConfiguration, null, 2)
-    document.getElementById('sectorConfiguration').value = JSON.stringify(getConfiguration().sectorConfiguration, null, 2)
+    document.getElementById('ringsConfiguration').value = JSON.stringify(getConfiguration().ringsConfiguration, null, 2)
+    document.getElementById('sectorsConfiguration').value = JSON.stringify(getConfiguration().sectorsConfiguration, null, 2)
 
     const mainProperties = { defaultFont: getConfiguration().defaultFont, title: getConfiguration().title, colors: getConfiguration().colors }
     document.getElementById('mainConfig').value = JSON.stringify(mainProperties, null, 2)
@@ -441,14 +441,14 @@ const handleSaveJSON = () => {
             console.log(`propertyVisualMaps or vpModel does not contain valid JSON`)
         }
     } try {
-        getConfiguration().ringConfiguration = JSON.parse(document.getElementById('ringConfiguration').value)
+        getConfiguration().ringsConfiguration = JSON.parse(document.getElementById('ringsConfiguration').value)
     } catch (e) {
-        console.log(`ringConfiguration does not contain valid JSON`)
+        console.log(`ringsConfiguration does not contain valid JSON`)
     }
     try {
-        getConfiguration().sectorConfiguration = JSON.parse(document.getElementById('sectorConfiguration').value)
+        getConfiguration().sectorsConfiguration = JSON.parse(document.getElementById('sectorsConfiguration').value)
     } catch (e) {
-        console.log(`sectorConfiguration does not contain valid JSON`)
+        console.log(`sectorsConfiguration does not contain valid JSON`)
     }
     try {
         const mainConfig = JSON.parse(document.getElementById('mainConfig').value)
@@ -560,12 +560,12 @@ const handleInputChange = function (fieldIdentifier, newValue) {
     const ringLabelStringLength = 9
     if (fieldIdentifier.startsWith("sectorLabel")) {
         const sectorIndex = fieldIdentifier.substring(sectorLabelStringLength)
-        config.sectorConfiguration.sectors[sectorIndex].label = newValue
+        config.sectorsConfiguration.sectors[sectorIndex].label = newValue
         publishRefreshRadar()
     }
     if (fieldIdentifier.startsWith("ringLabel")) {
         const ringIndex = fieldIdentifier.substring(ringLabelStringLength)
-        config.ringConfiguration.rings[ringIndex].label = newValue
+        config.ringsConfiguration.rings[ringIndex].label = newValue
         publishRefreshRadar()
     }
     if (fieldIdentifier.startsWith("title")) {
@@ -596,7 +596,7 @@ const handleInputChange = function (fieldIdentifier, newValue) {
 
 const handleDragSectorBackgroundImage = function (sectorId, newCoordinates) {
     //    console.log(`handle drag background image for sector ${sectorId} coordinates: ${JSON.stringify({ x: newCoordinates.x - config.width / 2, y: newCoordinates.y - config.height / 2 })} `)
-    const selectedObject = config.sectorConfiguration.sectors[sectorId]
+    const selectedObject = config.sectorsConfiguration.sectors[sectorId]
 
     if (selectedObject.backgroundImage == null) selectedObject.backgroundImage = {} //very unlikely
     selectedObject.backgroundImage.x = newCoordinates.x - config.width / 2
@@ -605,7 +605,7 @@ const handleDragSectorBackgroundImage = function (sectorId, newCoordinates) {
 }
 
 const handleDragSectorLabel = function (sectorId, newCoordinates) {
-    const selectedObject = config.sectorConfiguration.sectors[sectorId]
+    const selectedObject = config.sectorsConfiguration.sectors[sectorId]
     selectedObject.x = newCoordinates.x - config.width / 2
     selectedObject.y = newCoordinates.y - config.height / 2
 }
@@ -617,8 +617,8 @@ const handleDragTitle = function (titleId, newCoordinates) {
 }
 
 const handleDragRingLabel = function (ringId, newCoordinates) {
-    config.ringConfiguration.rings[ringId].x = newCoordinates.x - config.width / 2
-    config.ringConfiguration.rings[ringId].y = newCoordinates.y - config.height / 2
+    config.ringsConfiguration.rings[ringId].x = newCoordinates.x - config.width / 2
+    config.ringsConfiguration.rings[ringId].y = newCoordinates.y - config.height / 2
 }
 
 

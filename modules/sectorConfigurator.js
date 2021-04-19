@@ -13,7 +13,7 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     const valueOccurrenceMap = (sectorVisualMap==null ||sectorVisualMap["property"]==null)?null:getValueOccurrenceMap(sectorVisualMap["property"], viewpoint, true);
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator - Sectors")
-    document.getElementById("sectorConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
+    document.getElementById("sectorsConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
     const contentContainer = document.getElementById("modalMainContentContainer")
 
     let ratingType = viewpoint.ratingType
@@ -35,9 +35,10 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     html += `<input type="button" id="addSectorButton"  value="Add Sector"  style="padding:6px;margin:10px"/>`
 
     html += `<table id="sectors">`
-    html += `<tr><th>Sector Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th><th>Others?</th><th>Delete?</th><th>v ^</th></tr>`
-    for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
-        const sector = viewpoint.template.sectorConfiguration.sectors[i]
+    html += `<tr><th>Sector Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th>
+    <th>Others?</th><th>Delete?</th><th>v ^</th></tr>`
+    for (let i = 0; i < viewpoint.template.sectorsConfiguration.sectors.length; i++) {
+        const sector = viewpoint.template.sectorsConfiguration.sectors[i]
         // find all values mapped to the sectorToEdit
         const mappedSectorPropertyValues = getAllKeysMappedToValue(sectorVisualMap.valueMap, i)
         // find out how many occurrences of this value exist? 
@@ -59,7 +60,7 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
         <td><input id="showSector${i}" type="checkbox" ${sector?.visible == false ? "" : "checked"}></input></td> 
         <td><input id="othersSector${i}" type="radio" name="others" value="${i}" ${sector?.others == true ? "checked":""}></input></td> 
         <td><span id="deleteSector${i}" class="clickableProperty">Delete</span></td> 
-        <td><span id="downSector${i}" class="clickableProperty">${i < viewpoint.template.sectorConfiguration.sectors.length - 1 ? "v" : ""}</span>&nbsp;
+        <td><span id="downSector${i}" class="clickableProperty">${i < viewpoint.template.sectorsConfiguration.sectors.length - 1 ? "v" : ""}</span>&nbsp;
         <span id="upSector${i}" class="clickableProperty">${i > 0 ? "^" : ""}</span></td> 
         </tr> `
 
@@ -73,9 +74,9 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     <br />
     <div id="sectorAdvancedProps">
     <label for="totalAngle">Total % of full circle available for all sectors combined</label>
-    <input id="totalAngle" type="text" value="${ undefinedToDefined(viewpoint.template.sectorConfiguration.totalAngle,1)}"></input>
+    <input id="totalAngle" type="text" value="${ undefinedToDefined(viewpoint.template.sectorsConfiguration.totalAngle,1)}"></input>
     <label for="initialAngle">Initial or Tilt angle</label>
-    <input id="initialAngle" type="text" value="${ undefinedToDefined(viewpoint.template.sectorConfiguration.initialAngle,0)}"></input> 
+    <input id="initialAngle" type="text" value="${ undefinedToDefined(viewpoint.template.sectorsConfiguration.initialAngle,0)}"></input> 
     <p>Default Font & background color & edge Settings</p>
     </div>
     <br/><br/> `
@@ -85,16 +86,16 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     document.getElementById('advancedSectorPropsToggle').addEventListener('click', () => { showOrHideElement('sectorAdvancedProps', true) })
 
     // add event listeners
-    for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
+    for (let i = 0; i < viewpoint.template.sectorsConfiguration.sectors.length; i++) {
         document.getElementById(`othersSector${i}`).addEventListener("change", (e) => {
-            viewpoint.template.sectorConfiguration.sectors.forEach((sector) => sector.others = false)
+            viewpoint.template.sectorsConfiguration.sectors.forEach((sector) => sector.others = false)
 
-            viewpoint.template.sectorConfiguration.sectors[i].others = e.target.checked
+            viewpoint.template.sectorsConfiguration.sectors[i].others = e.target.checked
             publishRadarEvent({ type: "shuffleBlips" })
             publishRefreshRadar()
         })
         document.getElementById(`showSector${i}`).addEventListener("change", (e) => {
-            viewpoint.template.sectorConfiguration.sectors[i].visible = e.target.checked
+            viewpoint.template.sectorsConfiguration.sectors[i].visible = e.target.checked
             publishRadarEvent({ type: "shuffleBlips" })
             publishRefreshRadar()
         })
@@ -109,7 +110,7 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
             upSector(i, viewpoint)
         })
         document.getElementById(`deleteSector${i}`).addEventListener("click", () => {
-            viewpoint.template.sectorConfiguration.sectors.splice(i, 1)
+            viewpoint.template.sectorsConfiguration.sectors.splice(i, 1)
             // remove from propertyVisualMap all value mappings to this sector and decrease the sector reference for any entry  higher than i
             const valueMap = sectorVisualMap.valueMap
             for (let j = 0; j < Object.keys(valueMap).length; j++) {
@@ -137,7 +138,7 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     document.getElementById(`refreshSectors`).addEventListener("click", () => { refreshSectorConfiguration(viewpoint) })
 
     document.getElementById(`showAll`).addEventListener("click", (e) => {
-        viewpoint.template.sectorConfiguration.sectors.forEach((sector, i) => {
+        viewpoint.template.sectorsConfiguration.sectors.forEach((sector, i) => {
             sector.visible = true;
             document.getElementById(`showSector${i}`).checked = true
         })
@@ -157,10 +158,10 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
             backgroundColor: "#FFFFFF",
             outerringBackgroundColor: "#FFFFFF"
         }
-        viewpoint.template.sectorConfiguration.sectors.push(newSector)
+        viewpoint.template.sectorsConfiguration.sectors.push(newSector)
         launchSectorConfigurator(viewpoint)
 
-        launchSectorEditor(viewpoint.template.sectorConfiguration.sectors.length - 1, viewpoint, drawRadarBlips)
+        launchSectorEditor(viewpoint.template.sectorsConfiguration.sectors.length - 1, viewpoint, drawRadarBlips)
 
     })
 
@@ -177,15 +178,15 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
 }
 
 const saveSettings = ( viewpoint) => {
-    viewpoint.template.sectorConfiguration.totalAngle = getElementValue("totalAngle")
-    viewpoint.template.sectorConfiguration.initialAngle = getElementValue("initialAngle")
+    viewpoint.template.sectorsConfiguration.totalAngle = getElementValue("totalAngle")
+    viewpoint.template.sectorsConfiguration.initialAngle = getElementValue("initialAngle")
 
 }
 
 const backSector = (sectorToMoveBack, viewpoint) => {
-    const sectorToMove = viewpoint.template.sectorConfiguration.sectors[sectorToMoveBack]
-    viewpoint.template.sectorConfiguration.sectors[sectorToMoveBack] = viewpoint.template.sectorConfiguration.sectors[sectorToMoveBack + 1]
-    viewpoint.template.sectorConfiguration.sectors[sectorToMoveBack + 1] = sectorToMove
+    const sectorToMove = viewpoint.template.sectorsConfiguration.sectors[sectorToMoveBack]
+    viewpoint.template.sectorsConfiguration.sectors[sectorToMoveBack] = viewpoint.template.sectorsConfiguration.sectors[sectorToMoveBack + 1]
+    viewpoint.template.sectorsConfiguration.sectors[sectorToMoveBack + 1] = sectorToMove
     const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
     // update in propertyVisualMap all value mappings to either of these sectors
     const valueMap = sectorVisualMap.valueMap
@@ -202,9 +203,9 @@ const backSector = (sectorToMoveBack, viewpoint) => {
 }
 
 const upSector = (sectorToMoveUp, viewpoint) => {
-    const sectorToMove = viewpoint.template.sectorConfiguration.sectors[sectorToMoveUp]
-    viewpoint.template.sectorConfiguration.sectors[sectorToMoveUp] = viewpoint.template.sectorConfiguration.sectors[sectorToMoveUp - 1]
-    viewpoint.template.sectorConfiguration.sectors[sectorToMoveUp + -1] = sectorToMove
+    const sectorToMove = viewpoint.template.sectorsConfiguration.sectors[sectorToMoveUp]
+    viewpoint.template.sectorsConfiguration.sectors[sectorToMoveUp] = viewpoint.template.sectorsConfiguration.sectors[sectorToMoveUp - 1]
+    viewpoint.template.sectorsConfiguration.sectors[sectorToMoveUp + -1] = sectorToMove
     const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
     // update in propertyVisualMap all value mappings to either of these sectors
     const valueMap = sectorVisualMap.valueMap
@@ -221,8 +222,8 @@ const upSector = (sectorToMoveUp, viewpoint) => {
 }
 
 const distributeEvenly = (viewpoint) => {
-    for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
-        viewpoint.template.sectorConfiguration.sectors[i].angle = 1 / viewpoint.template.sectorConfiguration.sectors.length
+    for (let i = 0; i < viewpoint.template.sectorsConfiguration.sectors.length; i++) {
+        viewpoint.template.sectorsConfiguration.sectors[i].angle = 1 / viewpoint.template.sectorsConfiguration.sectors.length
     }
     launchSectorConfigurator(viewpoint)
     publishRadarEvent({ type: "shuffleBlips" })
@@ -238,8 +239,8 @@ const distributeValueOccurrenceBased = (viewpoint) => {
     const valueCountPerSector = []
     let total = 0
 
-    for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
-        const sector = viewpoint.template.sectorConfiguration.sectors[i]
+    for (let i = 0; i < viewpoint.template.sectorsConfiguration.sectors.length; i++) {
+        const sector = viewpoint.template.sectorsConfiguration.sectors[i]
         const mappedSectorPropertyValues = getAllKeysMappedToValue(sectorVisualMap.valueMap, i)
         // find out how many occurrences of this value exist? 
         let valueCount = 0
@@ -251,8 +252,8 @@ const distributeValueOccurrenceBased = (viewpoint) => {
         total += valueCount
     }
     console.log(`value count per sector ${JSON.stringify(valueCountPerSector)}; total ${total}; minimum number ${0.03 * total}`)
-    for (let i = 0; i < viewpoint.template.sectorConfiguration.sectors.length; i++) {
-        viewpoint.template.sectorConfiguration.sectors[i].angle = valueCountPerSector[i] / total
+    for (let i = 0; i < viewpoint.template.sectorsConfiguration.sectors.length; i++) {
+        viewpoint.template.sectorsConfiguration.sectors[i].angle = valueCountPerSector[i] / total
     }
 
     launchSectorConfigurator(viewpoint)
@@ -299,7 +300,7 @@ function reconfigureSectorsFromPropertyPath( propertyPath,viewpoint) {
     // TODO cater for tags in getPropertyValuesAndCounts
     // remove entries from valueMap
     sectorVisualMap.valueMap = {};
-    viewpoint.template.sectorConfiguration.sectors = [];
+    viewpoint.template.sectorsConfiguration.sectors = [];
     // create new entries for values in valueOccurrenceMap
     for (let i = 0; i < Object.keys(valueOccurrenceMap).length; i++) {
         const allowableLabel = getLabelForAllowableValue(Object.keys(valueOccurrenceMap)[i], viewpoint.propertyVisualMaps["sector"].property, viewpoint);
@@ -313,7 +314,7 @@ function reconfigureSectorsFromPropertyPath( propertyPath,viewpoint) {
             outerringBackgroundColor: "#FFFFFF"
         };
 
-        viewpoint.template.sectorConfiguration.sectors.push(newSector);
+        viewpoint.template.sectorsConfiguration.sectors.push(newSector);
 
         sectorVisualMap.valueMap[Object.keys(valueOccurrenceMap)[i]] = i;
     }

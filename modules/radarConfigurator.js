@@ -115,8 +115,8 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
     const html = `            
             <span id="radarConfigurationTab" class="extra tagfilter ">Radar</span>
             <span id="datamodelConfigurationTab" class="extra tagfilter">Data Model</span>
-            <span id="sectorConfigurationTab" class="extra  tagfilter">Sector</span>
-            <span id="ringConfigurationTab" class="extra tagfilter">Rings</span>
+            <span id="sectorsConfigurationTab" class="extra  tagfilter">Sector</span>
+            <span id="ringsConfigurationTab" class="extra tagfilter">Rings</span>
             <span id="shapeConfigurationTab" class="extra tagfilter">Shapes</span>
             <span id="colorConfigurationTab" class="extra tagfilter">Colors</span>
             <span id="sizeConfigurationTab" class="extra tagfilter">Sizes</span>
@@ -130,9 +130,9 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
     if (selectedTab != null) selectedTab.classList.add("warning")
 
     // add tab event listeners
-    document.getElementById(`sectorConfigurationTab`).addEventListener("click"
+    document.getElementById(`sectorsConfigurationTab`).addEventListener("click"
         , () => { launchSectorConfigurator(viewpoint, drawRadarBlips) })
-    document.getElementById(`ringConfigurationTab`).addEventListener("click"
+    document.getElementById(`ringsConfigurationTab`).addEventListener("click"
         , () => { launchRingConfigurator(viewpoint, drawRadarBlips) })
     document.getElementById(`shapeConfigurationTab`).addEventListener("click"
         , () => { launchShapeConfigurator(viewpoint, drawRadarBlips) })

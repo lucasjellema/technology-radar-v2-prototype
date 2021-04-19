@@ -282,7 +282,7 @@
                     "grid": "#bbb",
                     "inactive": "#ddd"
                 },
-                "ringConfiguration": {
+                "ringsConfiguration": {
                     "outsideRingsAllowed": true,
                     "font": {
                         "color": "purple",
@@ -315,7 +315,7 @@
                         }
                     ]
                 },
-                "sectorConfiguration": {
+                "sectorsConfiguration": {
                     "outsideSectorsAllowed": true,
                     "font": {
                         "color": "#000",
@@ -2763,7 +2763,7 @@
                 "grid": "#bbb",
                 "inactive": "#ddd"
             },
-            "ringConfiguration": {
+            "ringsConfiguration": {
                 "outsideRingsAllowed": true,
                 "font": {
                     "color": "purple",
@@ -2796,7 +2796,7 @@
                     }
                 ]
             },
-            "sectorConfiguration": {
+            "sectorsConfiguration": {
                 "outsideSectorsAllowed": true,
                 "font": {
                     "color": "#000",

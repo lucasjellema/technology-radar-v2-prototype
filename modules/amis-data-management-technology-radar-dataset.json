@@ -440,7 +440,7 @@
                     "grid": "#bbb",
                     "inactive": "#ddd"
                 },
-                "ringConfiguration": {
+                "ringsConfiguration": {
                     "outsideRingsAllowed": true,
                     "font": {
                         "color": "purple",
@@ -482,7 +482,7 @@
                         }
                     ]
                 },
-                "sectorConfiguration": {
+                "sectorsConfiguration": {
                     "outsideSectorsAllowed": true,
                     "totalAngle": 1,
                     "initialAngle": 0,
@@ -1222,7 +1222,7 @@
                 },
                 "backgroundImage": {},
                 "colors": {},
-                "ringConfiguration": {
+                "ringsConfiguration": {
                     "rings": [
                         {
                             "label": "New",
@@ -1302,7 +1302,7 @@
                         }
                     ]
                 },
-                "sectorConfiguration": {
+                "sectorsConfiguration": {
                     "sectors": [
                         {
                             "label": "NoSQL",
@@ -1623,7 +1623,7 @@
                     "image": ""
                 },
                 "colors": {},
-                "ringConfiguration": {
+                "ringsConfiguration": {
                     "rings": [
                         {
                             "label": "Idea",
@@ -1715,7 +1715,7 @@
                         }
                     ]
                 },
-                "sectorConfiguration": {
+                "sectorsConfiguration": {
                     "sectors": [
                         {
                             "label": "Navigation & Drill",
@@ -2157,7 +2157,7 @@
                 "grid": "#bbb",
                 "inactive": "#ddd"
             },
-            "ringConfiguration": {
+            "ringsConfiguration": {
                 "outsideRingsAllowed": true,
                 "font": {
                     "color": "purple",
@@ -2190,7 +2190,7 @@
                     }
                 ]
             },
-            "sectorConfiguration": {
+            "sectorsConfiguration": {
                 "outsideSectorsAllowed": true,
                 "font": {
                     "color": "#000",

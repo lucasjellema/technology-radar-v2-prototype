@@ -38,7 +38,8 @@ const launchColorConfigurator = (viewpoint, drawRadarBlips) => {
     html += `<input type="button" id="addColorButton"  value="Add Color"  style="padding:6px;margin:10px"/>`
 
     html += `<table id="colors">`
-    html += `<tr><th>Color</th><th>Color Label</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th><th>Delete?</th><th>v ^</th></tr>`
+    html += `<tr><th>Color</th><th>Color Label</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th>
+    <th>Others?</th><th>Delete?</th><th>v ^</th></tr>`
     for (let i = 0; i < viewpoint.template.colorsConfiguration.colors.length; i++) {
         const color = viewpoint.template.colorsConfiguration.colors[i]
         const mappedColorPropertyValues = getAllKeysMappedToValue(colorVisualMap.valueMap, i)
@@ -59,6 +60,8 @@ const launchColorConfigurator = (viewpoint, drawRadarBlips) => {
         html += `</td>
         <td>${valueCount} </td>
         <td><input id="showColor${i}" type="checkbox" ${color?.visible == false ? "" : "checked"}></input></td> 
+        <td><input id="othersColor${i}" type="radio" name="others" value="${i}" ${color?.others == true ? "checked":""}></input></td> 
+
         <td><span id="deleteColor${i}" class="clickableProperty">Delete</span></td> 
         <td><span id="downColor${i}" class="clickableProperty">${i < viewpoint.template.colorsConfiguration.colors.length - 1 ? "v" : ""}</span>&nbsp;
         <span id="upColor${i}" class="clickableProperty">${i > 0 ? "^" : ""}</span></td> 
@@ -72,6 +75,14 @@ const launchColorConfigurator = (viewpoint, drawRadarBlips) => {
 
     // add event listeners
     for (let i = 0; i < viewpoint.template.colorsConfiguration.colors.length; i++) {
+        document.getElementById(`othersColor${i}`).addEventListener("change", (e) => {
+            viewpoint.template.colorsConfiguration.colors.forEach((color) => color.others = false)
+
+            viewpoint.template.colorsConfiguration.colors[i].others = e.target.checked
+            publishRadarEvent({ type: "shuffleBlips" })
+            publishRefreshRadar()
+        })
+
         document.getElementById(`showColor${i}`).addEventListener("change", (e) => {
             viewpoint.template.colorsConfiguration.colors[i].visible = e.target.checked
             publishRadarEvent({ type: "shuffleBlips" })

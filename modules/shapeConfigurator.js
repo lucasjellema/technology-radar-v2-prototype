@@ -38,7 +38,9 @@ const launchShapeConfigurator = (viewpoint, drawRadarBlips) => {
     html += `<input type="button" id="addShapeButton"  value="Add Shape"  style="padding:6px;margin:10px"/>`
 
     html += `<table id="shapes">`
-    html += `<tr><th>Shape</th><th>Shape Label</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th><th>Delete?</th><th>v ^</th></tr>`
+    html += `<tr><th>Shape</th><th>Shape Label</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th>
+    <th>Others?</th>
+    <th>Delete?</th><th>v ^</th></tr>`
     for (let i = 0; i < viewpoint.template.shapesConfiguration.shapes.length; i++) {
         const shape = viewpoint.template.shapesConfiguration.shapes[i]
         const mappedShapePropertyValues = getAllKeysMappedToValue(shapeVisualMap.valueMap, i)
@@ -59,6 +61,7 @@ const launchShapeConfigurator = (viewpoint, drawRadarBlips) => {
         html += `</td>
         <td>${valueCount} </td>
         <td><input id="showShape${i}" type="checkbox" ${shape?.visible == false ? "" : "checked"}></input></td> 
+        <td><input id="othersShape${i}" type="radio" name="others" value="${i}" ${shape?.others == true ? "checked":""}></input></td> 
         <td><span id="deleteShape${i}" class="clickableProperty">Delete</span></td> 
         <td><span id="downShape${i}" class="clickableProperty">${i < viewpoint.template.shapesConfiguration.shapes.length - 1 ? "v" : ""}</span>&nbsp;
         <span id="upShape${i}" class="clickableProperty">${i > 0 ? "^" : ""}</span></td> 
@@ -72,6 +75,15 @@ const launchShapeConfigurator = (viewpoint, drawRadarBlips) => {
 
     // add event listeners
     for (let i = 0; i < viewpoint.template.shapesConfiguration.shapes.length; i++) {
+        document.getElementById(`othersShape${i}`).addEventListener("change", (e) => {
+            viewpoint.template.shapesConfiguration.shapes.forEach((shape) => shape.others = false)
+
+            viewpoint.template.shapesConfiguration.shapes[i].others = e.target.checked
+            publishRadarEvent({ type: "shuffleBlips" })
+            publishRefreshRadar()
+        })
+
+
         document.getElementById(`showShape${i}`).addEventListener("change", (e) => {
             viewpoint.template.shapesConfiguration.shapes[i].visible = e.target.checked
             publishRadarEvent({ type: "shuffleBlips" })

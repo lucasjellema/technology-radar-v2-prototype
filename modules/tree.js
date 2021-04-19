@@ -147,7 +147,7 @@ const mapRadarDataToTreeModel = (radarData) => {
         data.templates = { label: "Templates", children: {} }
         radarData.templates.forEach((template) => {
             data.templates.children[template.title.text] =
-                { label: template.title.text, selectable: true, id: `template${i++}`, children: { details: { label: `${template.sectorConfiguration.sectors.length} sectors, ${template.ringConfiguration.rings.length} rings` } } }
+                { label: template.title.text, selectable: true, id: `template${i++}`, children: { details: { label: `${template.sectorsConfiguration.sectors.length} sectors, ${template.ringsConfiguration.rings.length} rings` } } }
         })
     }
     if (radarData.viewpoints != null && radarData.viewpoints.length > 0) {

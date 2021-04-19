@@ -14,7 +14,7 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
     const valueOccurrenceMap = (ringVisualMap == null || ringVisualMap["property"] == null) ? null : getValueOccurrenceMap(ringVisualMap["property"], viewpoint, true);
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator - Rings")
-    document.getElementById("ringConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
+    document.getElementById("ringsConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
     const contentContainer = document.getElementById("modalMainContentContainer")
 
     let ratingType = viewpoint.ratingType
@@ -35,9 +35,10 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
     html += `<input type="button" id="addRingButton"  value="Add Ring"  style="padding:6px;margin:10px"/>`
 
     html += `<table id="rings">`
-    html += `<tr><th>Ring Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th><th>Delete?</th><th>v ^</th></tr>`
-    for (let i = 0; i < viewpoint.template.ringConfiguration.rings.length; i++) {
-        const ring = viewpoint.template.ringConfiguration.rings[i]
+    html += `<tr><th>Ring Label</th><th>%</th><th>Mapped Values</th><th>Current Count</th><th><span id="showAll" >Visible</span></th>
+    <th>Others?</th><th>Delete?</th><th>v ^</th></tr>`
+    for (let i = 0; i < viewpoint.template.ringsConfiguration.rings.length; i++) {
+        const ring = viewpoint.template.ringsConfiguration.rings[i]
         // find all values mapped to the ringToEdit
         const mappedRingPropertyValues = getAllKeysMappedToValue(ringVisualMap.valueMap, i)
         // find out how many occurrences of this value exist? 
@@ -57,8 +58,10 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
         html += `</td>
         <td>${valueCount} </td>
         <td><input id="showRing${i}" type="checkbox" ${ring?.visible == false ? "" : "checked"}></input></td> 
+        <td><input id="othersRing${i}" type="radio" name="others" value="${i}" ${ring?.others == true ? "checked":""}></input></td> 
+
         <td><span id="deleteRing${i}" class="clickableProperty">Delete</span></td> 
-        <td><span id="downRing${i}" class="clickableProperty">${i < viewpoint.template.ringConfiguration.rings.length - 1 ? "v" : ""}</span>&nbsp;
+        <td><span id="downRing${i}" class="clickableProperty">${i < viewpoint.template.ringsConfiguration.rings.length - 1 ? "v" : ""}</span>&nbsp;
         <span id="upRing${i}" class="clickableProperty">${i > 0 ? "^" : ""}</span></td> 
         </tr> `
 
@@ -70,9 +73,16 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
     contentContainer.innerHTML = `${html}</table>`
 
     // add event listeners
-    for (let i = 0; i < viewpoint.template.ringConfiguration.rings.length; i++) {
+    for (let i = 0; i < viewpoint.template.ringsConfiguration.rings.length; i++) {
+        document.getElementById(`othersRing${i}`).addEventListener("change", (e) => {
+            viewpoint.template.ringsConfiguration.rings.forEach((ring) => ring.others = false)
+
+            viewpoint.template.ringsConfiguration.rings[i].others = e.target.checked
+            publishRadarEvent({ type: "shuffleBlips" })
+            publishRefreshRadar()
+        })
         document.getElementById(`showRing${i}`).addEventListener("change", (e) => {
-            viewpoint.template.ringConfiguration.rings[i].visible = e.target.checked
+            viewpoint.template.ringsConfiguration.rings[i].visible = e.target.checked
             publishRadarEvent({ type: "shuffleBlips" })
             publishRefreshRadar()
         })
@@ -88,7 +98,7 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
             upRing(i, viewpoint)
         })
         document.getElementById(`deleteRing${i}`).addEventListener("click", () => {
-            viewpoint.template.ringConfiguration.rings.splice(i, 1)
+            viewpoint.template.ringsConfiguration.rings.splice(i, 1)
             // remove from propertyVisualMap all value mappings to this ring and decrease the ring reference for any entry  higher than i
             const valueMap = ringVisualMap.valueMap
             for (let j = 0; j < Object.keys(valueMap).length; j++) {
@@ -116,7 +126,7 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
     document.getElementById(`refreshRings`).addEventListener("click", () => { refreshRingConfiguration(viewpoint) })
 
     document.getElementById(`showAll`).addEventListener("click", (e) => {
-        viewpoint.template.ringConfiguration.rings.forEach((ring, i) => {
+        viewpoint.template.ringsConfiguration.rings.forEach((ring, i) => {
             ring.visible = true;
             document.getElementById(`showRing${i}`).checked = true
         })
@@ -136,10 +146,10 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
             backgroundColor: "#FFFFFF",
             outerringBackgroundColor: "#FFFFFF"
         }
-        viewpoint.template.ringConfiguration.rings.push(newRing)
+        viewpoint.template.ringsConfiguration.rings.push(newRing)
         launchRingConfigurator(viewpoint)
 
-        launchRingEditor(viewpoint.template.ringConfiguration.rings.length - 1, viewpoint, drawRadarBlips)
+        launchRingEditor(viewpoint.template.ringsConfiguration.rings.length - 1, viewpoint, drawRadarBlips)
 
     })
 
@@ -149,9 +159,9 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
 }
 
 const backRing = (ringToMoveBack, viewpoint) => {
-    const ringToMove = viewpoint.template.ringConfiguration.rings[ringToMoveBack]
-    viewpoint.template.ringConfiguration.rings[ringToMoveBack] = viewpoint.template.ringConfiguration.rings[ringToMoveBack + 1]
-    viewpoint.template.ringConfiguration.rings[ringToMoveBack + 1] = ringToMove
+    const ringToMove = viewpoint.template.ringsConfiguration.rings[ringToMoveBack]
+    viewpoint.template.ringsConfiguration.rings[ringToMoveBack] = viewpoint.template.ringsConfiguration.rings[ringToMoveBack + 1]
+    viewpoint.template.ringsConfiguration.rings[ringToMoveBack + 1] = ringToMove
     const ringVisualMap = viewpoint.propertyVisualMaps["ring"]
     // update in propertyVisualMap all value mappings to either of these rings
     const valueMap = ringVisualMap.valueMap
@@ -168,9 +178,9 @@ const backRing = (ringToMoveBack, viewpoint) => {
 }
 
 const upRing = (ringToMoveUp, viewpoint) => {
-    const ringToMove = viewpoint.template.ringConfiguration.rings[ringToMoveUp]
-    viewpoint.template.ringConfiguration.rings[ringToMoveUp] = viewpoint.template.ringConfiguration.rings[ringToMoveUp - 1]
-    viewpoint.template.ringConfiguration.rings[ringToMoveUp + -1] = ringToMove
+    const ringToMove = viewpoint.template.ringsConfiguration.rings[ringToMoveUp]
+    viewpoint.template.ringsConfiguration.rings[ringToMoveUp] = viewpoint.template.ringsConfiguration.rings[ringToMoveUp - 1]
+    viewpoint.template.ringsConfiguration.rings[ringToMoveUp + -1] = ringToMove
     const ringVisualMap = viewpoint.propertyVisualMaps["ring"]
     // update in propertyVisualMap all value mappings to either of these rings
     const valueMap = ringVisualMap.valueMap
@@ -187,8 +197,8 @@ const upRing = (ringToMoveUp, viewpoint) => {
 }
 
 const distributeEvenly = (viewpoint) => {
-    for (let i = 0; i < viewpoint.template.ringConfiguration.rings.length; i++) {
-        viewpoint.template.ringConfiguration.rings[i].width = 1 / viewpoint.template.ringConfiguration.rings.length
+    for (let i = 0; i < viewpoint.template.ringsConfiguration.rings.length; i++) {
+        viewpoint.template.ringsConfiguration.rings[i].width = 1 / viewpoint.template.ringsConfiguration.rings.length
     }
     launchRingConfigurator(viewpoint)
     publishRadarEvent({ type: "shuffleBlips" })
@@ -204,8 +214,8 @@ const distributeValueOccurrenceBased = (viewpoint) => {
     const valueCountPerRing = []
     let total = 0
 
-    for (let i = 0; i < viewpoint.template.ringConfiguration.rings.length; i++) {
-        const ring = viewpoint.template.ringConfiguration.rings[i]
+    for (let i = 0; i < viewpoint.template.ringsConfiguration.rings.length; i++) {
+        const ring = viewpoint.template.ringsConfiguration.rings[i]
         const mappedRingPropertyValues = getAllKeysMappedToValue(ringVisualMap.valueMap, i)
         // find out how many occurrences of this value exist? 
         let valueCount = 0
@@ -217,8 +227,8 @@ const distributeValueOccurrenceBased = (viewpoint) => {
         total += valueCount
     }
     console.log(`value count per ring ${JSON.stringify(valueCountPerRing)}; total ${total}; minimum number ${0.03 * total}`)
-    for (let i = 0; i < viewpoint.template.ringConfiguration.rings.length; i++) {
-        viewpoint.template.ringConfiguration.rings[i].width = valueCountPerRing[i] / total
+    for (let i = 0; i < viewpoint.template.ringsConfiguration.rings.length; i++) {
+        viewpoint.template.ringsConfiguration.rings[i].width = valueCountPerRing[i] / total
     }
 
     launchRingConfigurator(viewpoint)
@@ -265,7 +275,7 @@ function reconfigureRingsFromPropertyPath( propertyPath,viewpoint) {
     // TODO cater for tags in getPropertyValuesAndCounts
     // remove entries from valueMap
     ringVisualMap.valueMap = {};
-    viewpoint.template.ringConfiguration.rings = [];
+    viewpoint.template.ringsConfiguration.rings = [];
     // create new entries for values in valueOccurrenceMap
     for (let i = 0; i < Object.keys(valueOccurrenceMap).length; i++) {
         const allowableLabel = getLabelForAllowableValue(Object.keys(valueOccurrenceMap)[i], viewpoint.propertyVisualMaps["ring"].property, viewpoint);
@@ -279,7 +289,7 @@ function reconfigureRingsFromPropertyPath( propertyPath,viewpoint) {
             outerringBackgroundColor: "#FFFFFF"
         };
 
-        viewpoint.template.ringConfiguration.rings.push(newRing);
+        viewpoint.template.ringsConfiguration.rings.push(newRing);
 
         ringVisualMap.valueMap[Object.keys(valueOccurrenceMap)[i]] = i;
     }

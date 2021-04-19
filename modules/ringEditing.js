@@ -44,7 +44,7 @@ const launchRingEditor = (ringToEdit, viewpoint, drawRadarBlips) => {
 
 
     showOrHideElement("modalEditor", true)
-    const ring = viewpoint.template.ringConfiguration.rings[ringToEdit]
+    const ring = viewpoint.template.ringsConfiguration.rings[ringToEdit]
     setTextOnElement('modalEditorTitle', `Edit Ring ${ring.label}`)
     console.log(`editing ring ${JSON.stringify(ring)}`)
     const contentContainer = document.getElementById("modalContentContainer")
