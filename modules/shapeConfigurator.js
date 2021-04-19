@@ -53,11 +53,13 @@ const launchShapeConfigurator = (viewpoint, drawRadarBlips) => {
         <td><span id="editShape${i}" class="clickableProperty">${shape.label}</span> </td>
         <td>`
         let valueCount = 0
+        if (valueOccurrenceMap!=null) {
         for (let j = 0; j < mappedShapePropertyValues.length; j++) {
             html += `
         <span id="tag0" class="extra tagfilter dropbtn">${mappedShapePropertyValues[j]} (${undefinedToDefined(valueOccurrenceMap[mappedShapePropertyValues[j]], 0)})</span>`
             valueCount += undefinedToDefined(valueOccurrenceMap[mappedShapePropertyValues[j]], 0)
         }
+    }
         html += `</td>
         <td>${valueCount} </td>
         <td><input id="showShape${i}" type="checkbox" ${shape?.visible == false ? "" : "checked"}></input></td> 
@@ -273,7 +275,9 @@ function getValueOccurrenceMap(propertyPath, viewpoint, includeAllowableValues =
     const focusRatingTypeName = typeof (viewpoint.ratingType) == "object" ? viewpoint.ratingType.name : viewpoint.ratingType
     let shapeProperty = getPropertyFromPropertyPath(propertyPath, viewpoint.ratingType, model)
     let valueOccurrenceMap
-    if (shapeProperty.type == "tags") {
+    if (shapeProperty== null) return;
+
+    if (shapeProperty?.type == "tags") {
         valueOccurrenceMap = {}
         for (let i = 0; i < Object.keys(getData().ratings).length; i++) {
             const rating = getData().ratings[Object.keys(getData().ratings)[i]]
