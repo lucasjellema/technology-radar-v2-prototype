@@ -403,28 +403,25 @@ const initializeSizesLegend = (viewpoint) => {
         return
     }
 
+    const numberOfVisibleSizes = config.sizesConfiguration.sizes.filter((size) => !(size.visible == false)).length
     sizesBox
         .style("background-color", "silver")
         .attr("width", "80%")
-        .attr("height", config.sizesConfiguration.sizes.length * 55 + 20)
+        .attr("height", numberOfVisibleSizes * 55 + 20) 
     sizesBox.append('g').attr('class', 'sizesBox')
     const legendTitle = config.sizesConfiguration.label ?? viewpoint.propertyVisualMaps.size.property
     document.getElementById('sizesLegendTitle').innerText = legendTitle;
     const circleIndent = 10
     const labelIndent = 70
 
+    let displayedSizesCounter = 0
     for (let i = 0; i < config.sizesConfiguration.sizes.length; i++) {
+        if (config.sizesConfiguration.sizes[i].visible == false) continue // skip invisible sizes
         const scaleFactor = config.sizesConfiguration.sizes[i].size
         const label = config.sizesConfiguration.sizes[i].label
 
-
-    // for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.size.valueMap).length; i++) {
-    //     const key = Object.keys(viewpoint.propertyVisualMaps.size.valueMap)[i]
-    //     const scaleFactor = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].size
-    //     const label = config.sizesConfiguration.sizes[viewpoint.propertyVisualMaps.size.valueMap[key]].label
-
         const sizeEntry = sizesBox.append('g')
-            .attr("transform", `translate(${circleIndent + 20}, ${30 + i * 55})`)
+            .attr("transform", `translate(${circleIndent + 20}, ${30 + displayedSizesCounter * 55})`)
 
             .append('circle')
             .attr("id", `templateSizes${i}`)
@@ -436,13 +433,13 @@ const initializeSizesLegend = (viewpoint) => {
             .attr("id", `sizeLabel${i}`)
             .text(label)
             .attr("x", labelIndent)
-            .attr("y", 42 + i * 55)
+            .attr("y", 42 + displayedSizesCounter * 55)
             .style("fill", "#e5e5e5")
             .style("font-family", "Arial, Helvetica")
             .style("font-size", "25px")
             .style("font-weight", "bold")
 
-
+            displayedSizesCounter++
     }
 }
 
@@ -461,37 +458,26 @@ const initializeShapesLegend = (viewpoint) => {
 
     shapesBox.selectAll("*").remove(); // clean content (if there is any)
 
+    
     if (viewpoint.propertyVisualMaps.shape?.property == null
         || viewpoint.propertyVisualMaps.shape.property == ""
         || viewpoint.propertyVisualMaps.shape.valueMap == null
         || Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length == 0) {
         return
     }
+    const numberOfVisibleShapes = config.shapesConfiguration.shapes.filter((shape) => !(shape.visible == false)).length
 
-
-    const legendTitle = config.shapesConfiguration.label ?? viewpoint.propertyVisualMaps.shape.property
-    document.getElementById('shapesLegendTitle').innerText = legendTitle;
-
-    shapesBox.style("background-color", "silver")
-        .attr("width", "1%")
-        .attr("height", 1)
-
-    shapesBox.selectAll("*").remove(); // clean content (if there is any)
-    if (viewpoint.propertyVisualMaps.shape?.property == null
-        || viewpoint.propertyVisualMaps.shape.property == ""
-        || viewpoint.propertyVisualMaps.shape.valueMap == null
-        || Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length == 0) {
-        return
-    }
     shapesBox
         .style("background-color", "#FEE")
         .attr("width", "80%")
-        .attr("height", config.shapesConfiguration.shapes.length * 45 + 20)
+        .attr("height", numberOfVisibleShapes * 45 + 20)
 
     shapesBox.append('g').attr('class', 'shapesBox')
     const circleIndent = 5
     const labelIndent = 50
+    let displayedShapesCounter = 0
     for (let i = 0; i < config.shapesConfiguration.shapes.length; i++) {
+        if (config.shapesConfiguration.shapes[i].visible == false) continue // skip invisible shapes
         const shapeToDraw = config.shapesConfiguration.shapes[i].shape
         const label = config.shapesConfiguration.shapes[i].label
 
@@ -505,14 +491,14 @@ const initializeShapesLegend = (viewpoint) => {
             .attr("id", `shapeLabel${i}`)
             .text(label)
             .attr("x", labelIndent)
-            .attr("y", 38 + i * 45)
+            .attr("y", 38 + displayedShapesCounter * 45)
             .style("fill", "#000")
             .style("font-family", "Arial, Helvetica")
             .style("font-size", "18px")
             .style("font-weight", "normal")
 
         const shapeEntry = shapesBox.append('g')
-            .attr("transform", `translate(${circleIndent + 20}, ${30 + i * 45})`)
+            .attr("transform", `translate(${circleIndent + 20}, ${30 + displayedShapesCounter * 45})`)
             .attr("id", `templateShapes${i}`)
         // .append('circle')
         // .attr("r", 12)
@@ -565,6 +551,7 @@ const initializeShapesLegend = (viewpoint) => {
         }
         shape.attr("fill", "#000");
         shape.attr("opacity", "0.9");
+        displayedShapesCounter++
 
     }
 }
@@ -588,19 +575,24 @@ const initializeColorsLegend = (viewpoint) => {
         || Object.keys(viewpoint.propertyVisualMaps.color.valueMap).length == 0) {
         return
     }
+    const numberOfVisibleColors = config.colorsConfiguration.colors.filter((color) => !(color.visible == false)).length
+
     colorsBox
         .style("background-color", "#EFF")
         .attr("width", "80%")
-        .attr("height", config.colorsConfiguration.colors.length * 45 + 20)
+        .attr("height", numberOfVisibleColors * 45 + 20)
     document.getElementById('colorLegendTitle').innerText = config.colorsConfiguration.label;
     colorsBox.append('g').attr('class', 'colorsBox')
     const circleIndent = 5
     const labelIndent = 50
+    let displayedColorsCounter = 0
+
     for (let i = 0; i < config.colorsConfiguration.colors.length; i++) {
+        if (config.colorsConfiguration.colors[i].visible == false) continue // skip invisible colors
         const colorToShow = config.colorsConfiguration.colors[i].color
         const label = config.colorsConfiguration.colors[i].label
         const colorEntry = colorsBox.append('g')
-            .attr("transform", `translate(${circleIndent + 20}, ${30 + i * 45})`)
+            .attr("transform", `translate(${circleIndent + 20}, ${30 + displayedColorsCounter * 45})`)
 
             .append('circle')
             .attr("id", `templatecolors${i}`)
@@ -611,11 +603,12 @@ const initializeColorsLegend = (viewpoint) => {
             .attr("id", `colorLabel${i}`)
             .text(label)
             .attr("x", labelIndent)
-            .attr("y", 38 + i * 45)
+            .attr("y", 38 + displayedColorsCounter * 45)
             .style("fill", "#000")
             .style("font-family", "Arial, Helvetica")
             .style("font-size", "18px")
             .style("font-weight", "normal")
+            displayedColorsCounter++
     }
 }
 

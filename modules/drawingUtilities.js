@@ -21,12 +21,7 @@ export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian}
     const polar = polarFromCartesian({ x: cartesian.x, y: cartesian.y })
     const dropAnglePercentage = (polar.phi < 0) ? - polar.phi / (2 * Math.PI) : 1 - polar.phi / (2 * Math.PI)
     const dropRadialPercentage = polar.r / viewpoint.template.maxRingRadius
-   console.log(`polar drop zone ${JSON.stringify(polar)} 
-   anglepercentage ${dropAnglePercentage} 
-   ring/radial percentage = ${dropRadialPercentage} 
-   ring expansion factor = ${ringExpansionFactor}
    
-   `)
     let dropSector
     let angleSum = 0
     // iterate over sectors until sum of sector angles > anglePercentage    ; the last sector is the dropzone 
