@@ -113,6 +113,8 @@ const saveColor = (colorToEdit, color, viewpoint) => {
 
     color.visible = document.getElementById("showColor").checked
     color.color = getElementValue('actualColor')
+    color.label = getElementValue("colorLabel")
+
 
     const valueMap = viewpoint.propertyVisualMaps["color"].valueMap
     // remove all entries from valueMap with value color (sequence)

@@ -153,7 +153,7 @@ const launchSizeConfigurator = (viewpoint, drawRadarBlips) => {
     })
     document.getElementById(`addSizeButton`).addEventListener("click", (e) => {
         const newSize = {
-            label: "NEW SHape",
+            label: "NEW SIZE",
             labelSettings: { size: "#000000", fontSize: 18, fontFamily: "Helvetica" },
         }
         viewpoint.template.sizesConfiguration.sizes.push(newSize)

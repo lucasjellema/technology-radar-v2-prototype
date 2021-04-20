@@ -79,11 +79,13 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
     <input id="sectorAngle" type="range" min="5" max="95" value="${Math.round(sector.angle * 100)}"></input></td>
     </tr>`
     html += `<tr><td><label for="sectorColor">Color</label></td>
-    <td><label for="sectorColorInside">Color (inside rings)</label><input id="sectorColorInside" type="color" 
-    value="${sector?.backgroundColor ?? '#FFFFFF'}"></input>
+    <td>
+    <label for="sectorColorInside">Color (inside rings)</label>
+        <input id="sectorColorInside" type="color" value="${sector?.backgroundColor ?? '#FFFFFF'}"></input>
     
     </td>`
-        + `<td><label for="sectorColorOutside">Color (outside rings)</label></td><td><input id="sectorColorOutside" type="color" value="${sector?.outerringBackgroundColor ?? "#FFFFFF"}"></input>
+        + `<td><label for="sectorColorOutside">Color (outside rings)</label></td><td>
+        <input id="sectorColorOutside" type="color" value="${sector?.outerringBackgroundColor ?? "#FFFFFF"}"></input>
       
         </td></tr>`
     html += `<tr><td>  <label for="sectorOpacity">Opacity</label></td>

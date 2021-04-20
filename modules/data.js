@@ -41,10 +41,10 @@ const getDistinctTagValues = (viewpoint, includeDiscreteProperties = false) => {
     let distinctValues = listOfDistinctTagValues
     // TODO replace hardcoded property paths with meta model driven derivation
     const discretePropertyPaths = getRatingTypeProperties(viewpoint.ratingType, getData().model, true)
-    .filter((property) => property.property.discrete || property.property.allowableValues!=null)
-    .map((property) => property.propertyPath)
-console.log(`getDistinctTagValues paths ${JSON.stringify(discretePropertyPaths)}`)
-  //  const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
+        .filter((property) => property.property.discrete || property.property.allowableValues != null)
+        .map((property) => property.propertyPath)
+    console.log(`getDistinctTagValues paths ${JSON.stringify(discretePropertyPaths)}`)
+    //  const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
     if (includeDiscreteProperties) {
         for (let i = 0; i < discretePropertyPaths.length; i++) {
             distinctValues = addValuesForProperty(discretePropertyPaths[i], viewpoint.blips, distinctValues)
@@ -72,13 +72,13 @@ const serialize = (originalData) => {
         if (typeof (ratingTypeName) == "object") ratingTypeName = ratingTypeName.name
         rating.ratingType = ratingTypeName
 
-        if (  rating.hasOwnProperty("object") ){
+        if (rating.hasOwnProperty("object")) {
             // TODO if rating does not have object - what can we possibly use it for? get rid of it!
             if (!serializedData.objects.hasOwnProperty(rating.object.id)) {  // save object in objects
-            serializedData.objects[rating.object.id] = rating.object
+                serializedData.objects[rating.object.id] = rating.object
+            }
+            rating.object = rating.object.id
         }
-        rating.object = rating.object.id
-    }
     }
 
     for (let i = 0; i < Object.keys(serializedData.objects).length; i++) {
@@ -127,8 +127,8 @@ const deserialize = (originalData) => {
         if (viewpoint.ratingType != null && typeof (viewpoint.ratingType) == "string") {
             viewpoint.ratingType = deserializedData.model.ratingTypes[viewpoint.ratingType]
         }
-        if (viewpoint.template.hasOwnProperty("ringConfiguration")){viewpoint.template.ringsConfiguration = viewpoint.template.ringConfiguration}
-        if (viewpoint.template.hasOwnProperty("sectorConfiguration")){viewpoint.template.sectorsConfiguration = viewpoint.template.sectorConfiguration}
+        if (viewpoint.template.hasOwnProperty("ringConfiguration")) { viewpoint.template.ringsConfiguration = viewpoint.template.ringConfiguration }
+        if (viewpoint.template.hasOwnProperty("sectorConfiguration")) { viewpoint.template.sectorsConfiguration = viewpoint.template.sectorConfiguration }
 
         viewpoint.blips.forEach((blip) => {
             if (typeof (blip.rating) == "string") { // assume the rating is a reference to an UUID
@@ -145,20 +145,20 @@ const deserialize = (originalData) => {
         if (rating?.object != null && typeof (rating.object) == "string") {
             rating.object = deserializedData.objects[rating.object]
         }
-        if (rating.object == null ||rating.object === undefined) {
+        if (rating.object == null || rating.object === undefined) {
             // remove rating and all blips referring to that rating
             ratingsToRemove.push(rating.id)
         }
     }
     deserializedData.viewpoints.forEach((viewpoint) => {
         const originalNumberOfBlips = viewpoint.blips.length
-        viewpoint.blips = viewpoint.blips.filter(blip => !ratingsToRemove.includes(blip.rating.id ));        
+        viewpoint.blips = viewpoint.blips.filter(blip => !ratingsToRemove.includes(blip.rating.id));
         console.log(`Removed ${originalNumberOfBlips - viewpoint.blips.length} blips for not having a rating without proper object reference`)
 
     })
     const originalNumberOfRatings = Object.keys(deserializedData.ratings).length
     ratingsToRemove.forEach((ratingIdToRemove) => delete deserializedData.ratings[ratingIdToRemove])
-console.log(`Removed ${originalNumberOfRatings - Object.keys(deserializedData.ratings).length} ratings for not having a proper object reference`)
+    console.log(`Removed ${originalNumberOfRatings - Object.keys(deserializedData.ratings).length} ratings for not having a proper object reference`)
 
     for (let i = 0; i < Object.keys(deserializedData.model.ratingTypes).length; i++) {
         const ratingType = deserializedData.model.ratingTypes[Object.keys(deserializedData.model.ratingTypes)[i]]
@@ -173,13 +173,13 @@ console.log(`Removed ${originalNumberOfRatings - Object.keys(deserializedData.ra
     }
     for (let i = 0; i < Object.keys(deserializedData.model.objectTypes).length; i++) {
         const objectType = deserializedData.model.objectTypes[Object.keys(deserializedData.model.objectTypes)[i]]
-        if (objectType.properties != null ) {
-        for (let j = 0; j < Object.keys(objectType.properties).length; j++) {
-            const property = objectType.properties[Object.keys(objectType.properties)[j]]
-            // if objectType property does not have a property called name, then assign one based on key of property
-            property.name = Object.keys(objectType.properties)[j]
+        if (objectType.properties != null) {
+            for (let j = 0; j < Object.keys(objectType.properties).length; j++) {
+                const property = objectType.properties[Object.keys(objectType.properties)[j]]
+                // if objectType property does not have a property called name, then assign one based on key of property
+                property.name = Object.keys(objectType.properties)[j]
+            }
         }
-    }
     }
 
 
@@ -222,20 +222,20 @@ const normalizeDataSet = (dataset) => {
 
     for (let i = 0; i < Object.keys(dataset.model.objectTypes).length; i++) {
         const objectType = dataset.model.objectTypes[Object.keys(dataset.model.objectTypes)[i]]
-        if (objectType.properties != null ) {
-        for (let j = 0; j < Object.keys(objectType?.properties).length; j++) {
-            const property = objectType.properties[Object.keys(objectType.properties)[j]]
-            // if objectType property does not have a property called name, then assign one based on key of property
-            property.name = Object.keys(objectType.properties)[j]
+        if (objectType.properties != null) {
+            for (let j = 0; j < Object.keys(objectType?.properties).length; j++) {
+                const property = objectType.properties[Object.keys(objectType.properties)[j]]
+                // if objectType property does not have a property called name, then assign one based on key of property
+                property.name = Object.keys(objectType.properties)[j]
+            }
         }
-    }
     }
 
     dataset.viewpoints.forEach((viewpoint) => {
         if (typeof (viewpoint.ratingType) == "string") { viewpoint.ratingType = dataset.model.ratingTypes[viewpoint.ratingType] }
         // const objectType = viewpoint.ratingType.objectType
-        if (viewpoint.template.hasOwnProperty("ringConfiguration")){viewpoint.template.ringsConfiguration = viewpoint.template.ringConfiguration}
-        if (viewpoint.template.hasOwnProperty("sectorConfiguration")){viewpoint.template.sectorsConfiguration = viewpoint.template.sectorConfiguration}
+        if (viewpoint.template.hasOwnProperty("ringConfiguration")) { viewpoint.template.ringsConfiguration = viewpoint.template.ringConfiguration }
+        if (viewpoint.template.hasOwnProperty("sectorConfiguration")) { viewpoint.template.sectorsConfiguration = viewpoint.template.sectorConfiguration }
 
         viewpoint.blips.forEach((blip) => {
             if (typeof (blip.rating) == "string") { // assume the rating is a reference to an UUID
@@ -488,9 +488,8 @@ const createRating = (ratingTypeName, object) => {
     return rating
 }
 
-// TODO use default values for all properties as defined in the meta-model
 // create blip from meta-data and from default blip
-const createBlip = (objectId, objectNewLabel, ratingId = null, viewpoint = getState().currentViewpoint) => {
+const createBlip = (objectId, objectNewLabel, ratingId = null, viewpoint = getState().currentViewpoint, segment = null) => {
     const focusRatingTypeName = typeof (viewpoint.ratingType) == "object" ? viewpoint.ratingType.name : viewpoint.ratingType
     let object = objectId != null ? getObjectById(objectId)
         : createObject(viewpoint.ratingType.objectType.name)
@@ -509,9 +508,25 @@ const createBlip = (objectId, objectNewLabel, ratingId = null, viewpoint = getSt
     rating.timestamp = Date.now()
     // TODO: blip id set as uuid?
     let blip = { id: `${getViewpoint().blips.length}`, rating: rating, pending: true }
+
+    if (segment != null) {
+        // derive values for properties used for sector and ring dimensions from the segment (sector/ring combination)
+        const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
+        const propertyValueDerivedFromSector = getKeyForValue(viewpoint.propertyVisualMaps.sector.valueMap, segment.sector) // "find category value mapped to the sector value of dropSector" 
+        setNestedPropertyValueOnObject(blip.rating, propertyMappedToSector, propertyValueDerivedFromSector)
+
+        const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
+        const propertyValueDerivedFromRing = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, segment.ring) // "find category value mapped to the sector value of dropSector" 
+        setNestedPropertyValueOnObject(blip.rating, propertyMappedToRing, propertyValueDerivedFromRing)
+    }
+
     return blip
 }
 
+// find in an object the (first) key or property name for a given value 
+const getKeyForValue = function (object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+}
 
 const shuffleBlips = () => {
     console.log(`shuffleblips`)
@@ -875,7 +890,7 @@ populateTemplateSelector()
 function addUUIDtoBlips(blips) {
     blips.forEach((blip) => {
         if (blip.rating?.id == null) { blip.rating.id = uuidv4() };
-        if (blip.rating !=null && blip.rating.object != null && blip.rating.object.id == null) { blip.rating.object.id = uuidv4() }
+        if (blip.rating != null && blip.rating.object != null && blip.rating.object.id == null) { blip.rating.object.id = uuidv4() }
     })
 }
 

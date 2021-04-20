@@ -154,7 +154,7 @@ const launchColorConfigurator = (viewpoint, drawRadarBlips) => {
     })
     document.getElementById(`addColorButton`).addEventListener("click", (e) => {
         const newColor = {
-            label: "NEW SHape",
+            label: "NEW COLOR",
             labelSettings: { color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
         }
         viewpoint.template.colorsConfiguration.colors.push(newColor)
@@ -164,9 +164,20 @@ const launchColorConfigurator = (viewpoint, drawRadarBlips) => {
     })
     const buttonBar = document.getElementById("modalMainButtonBar")
     buttonBar.innerHTML = ` <input id="saveColorEdits" type="button" value="Save Changes"></input>`
+    +` <input id="saveSizeEdits" type="button" value="Save Changes" ></input>`
+    document.getElementById("saveSizeEdits").addEventListener("click",
+        (event) => {
+            console.log(`save color 1 `)
+            viewpoint.template.colorsConfiguration.label = getElementValue('colorsTitle')
+            showOrHideElement('modalMain', false)
+            publishRefreshRadar()
+            if (drawRadarBlips != null) drawRadarBlips(viewpoint)
+
+        })
+
     document.getElementById("saveColorEdits").addEventListener("click",
         (event) => {
-            console.log(`save color  `)
+            console.log(`save color 2 `)
             viewpoint.template.colorsConfiguration.label = getElementValue('colorsTitle')
             showOrHideElement('modalMain', false)
             publishRefreshRadar()

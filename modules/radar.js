@@ -1,5 +1,6 @@
 import { cartesianFromPolar, polarFromCartesian } from './drawingUtilities.js'
 import { getState, getConfiguration } from './data.js'
+import {prepareBlipDrawingContext} from './radarblips.js'
 export { drawRadar, subscribeToRadarEvents, publishRadarEvent }
 
 const color_white = "#FFF"
@@ -125,6 +126,10 @@ const ringExpansionFactor = (config) => {
 const drawSectors = function (radar, config, elementDecorator = null) {
 
     const sectorCanvas = radar.append("g").attr("id", "sectorCanvas")
+    .on('contextmenu', (e) => {
+        console.log(`${e.pageX}, ${e.pageY}`);
+        e.preventDefault();    
+    })
 
     // sectorCanvas.append("line") //horizontal sector boundary
     //     .attr("x1", 0).attr("y1", 0)
@@ -179,7 +184,15 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                     .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "" : config.sectorsConfiguration?.stroke?.strokeArray ?? "#000")
                     .on('click', () => { const sector = i; publishRadarEvent({ type: "sectorClick", sector: i }) })
                     .on('dblclick', () => { const sector = i; publishRadarEvent({ type: "sectorDblClick", sector: i }) })
-                // add color to the sector area outside the outer ring
+
+                    .on('contextmenu', (e) => {
+                        console.log(`context menu on sector sector${i}`)
+                        e.preventDefault()
+                        sectorAndRingMenu(e.pageX, e.pageY, i, null, config);
+        
+                    })
+
+                    // add color to the sector area outside the outer ring
                 const outerringArc = d3.arc()
                     .outerRadius(config.maxRingRadius * 4)
                     .innerRadius(config.maxRingRadius)
@@ -280,7 +293,12 @@ const drawRings = function (radar, config) {
             .style("stroke-dasharray", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "" : config.ringsConfiguration?.stroke?.strokeArray ?? "9 1")
             .on('click', () => { const ring = i; publishRadarEvent({ type: "ringClick", ring: i }) })
             .on('dblclick', () => { console.log(`dbl click on ring`); const sectorring = i; publishRadarEvent({ type: "ringDblClick", ring: i }) })
-
+            .on('contextmenu', (e) => {
+                console.log(`context menu on ring ring${i}`)
+                e.preventDefault()
+                sectorAndRingMenu(e.pageX, e.pageY, null, i,config);
+                
+            })
 
         if (ring.backgroundImage && ring.backgroundImage.image) {
             ringCanvas.append('image')
@@ -380,6 +398,8 @@ function displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sector
         .attr("xlink:href", `#pieText${sectorIndex}`)
         .text(`${sector.label}`)
         .on('dblclick', () => { console.log(`sector drilldown on sector${sectorIndex}`); publishRadarEvent({ type: "sectorDrilldown", sector: sectorIndex }) }) // facilitate drilldown on sector
+
+     
         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, sector.label, `sectorLabel${sectorIndex}`]);
 
 }
@@ -408,6 +428,10 @@ const initializeSizesLegend = (viewpoint) => {
         .style("background-color", "silver")
         .attr("width", "80%")
         .attr("height", numberOfVisibleSizes * 55 + 20) 
+        .on("dblclick", (e) => {
+            publishRadarEvent({ type: "mainRadarConfigurator", tab:"size" })
+        })
+
     sizesBox.append('g').attr('class', 'sizesBox')
     const legendTitle = config.sizesConfiguration.label ?? viewpoint.propertyVisualMaps.size.property
     document.getElementById('sizesLegendTitle').innerText = legendTitle;
@@ -471,8 +495,17 @@ const initializeShapesLegend = (viewpoint) => {
         .style("background-color", "#FEE")
         .attr("width", "80%")
         .attr("height", numberOfVisibleShapes * 45 + 20)
+        .on("dblclick", (e) => {
+            console.log(`shapesBox was clicked`)
+            publishRadarEvent({ type: "mainRadarConfigurator", tab:"shape" })
+        })
+        
 
     shapesBox.append('g').attr('class', 'shapesBox')
+
+    const legendTitle = config.shapesConfiguration.label ?? viewpoint.propertyVisualMaps.shape.property
+    document.getElementById('shapesLegendTitle').innerText = legendTitle;
+
     const circleIndent = 5
     const labelIndent = 50
     let displayedShapesCounter = 0
@@ -581,6 +614,10 @@ const initializeColorsLegend = (viewpoint) => {
         .style("background-color", "#EFF")
         .attr("width", "80%")
         .attr("height", numberOfVisibleColors * 45 + 20)
+        .on("dblclick", (e) => {
+            publishRadarEvent({ type: "mainRadarConfigurator", tab:"color" })
+        })
+
     document.getElementById('colorLegendTitle').innerText = config.colorsConfiguration.label;
     colorsBox.append('g').attr('class', 'colorsBox')
     const circleIndent = 5
@@ -616,6 +653,7 @@ const createRadarContextMenu = (e, d, blip, viewpoint) => {
     radarMenu(e.pageX, e.pageY, d, blip, viewpoint);
     e.preventDefault();
 }
+
 
 const radarMenu = (x, y, d, blip, viewpoint) => {
     const config = viewpoint.template
@@ -702,5 +740,117 @@ const radarMenu = (x, y, d, blip, viewpoint) => {
             // create blip
             publishRadarEvent({ type: "mainRadarConfigurator" })
         })
+
+}
+
+
+const sectorAndRingMenu = (x, y, sector, ring, config ) => {
+    d3.select('.radar-context-menu').remove(); // if already showing, get rid of it.
+
+    const contextMenu = d3.select(`svg#radarSVGContainer`)
+        .append('g').attr('class', 'radar-context-menu')
+        .attr('transform', `translate(${x},${y + 30})`)
+
+
+    const width = 170
+    const height = 130
+    contextMenu.append('rect')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('class', 'rect')
+        .attr("style", "fill:lightgray;")
+        .style("opacity", 0.8)
+        .on("mouseout", (e) => {
+
+            // check x and y - to see whether they are really outside context menu area (mouse out also fires when mouse is on elements inside context menu)
+            const deltaX = x - e.pageX
+            const deltaY = y - e.pageY
+            if (((deltaX > 0) || (deltaX <= - width) || (deltaY > 0) || (deltaY <= - height))
+            ) {
+                d3.select('.radar-context-menu').remove();
+            }
+        })
+
+    const initialColumnIndent = 10
+    const menuOptions = contextMenu.append('g')
+        .attr('class', 'sizesBox')
+        .attr("transform", `translate(${initialColumnIndent}, ${20})`)
+
+    menuOptions.append("text")
+        .text(`Create Blip`)
+        .style("fill", "blue")
+        .style("font-family", "Arial, Helvetica")
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
+        .on("click", (e) => {
+            console.log(`Create Blip was clicked`)
+            d3.select('.radar-context-menu').remove();
+            // create blip
+            // TODO turn x,y position into segment and pass sector and ring to blip editor
+            const polar = polarFromCartesian({x:x - config.width / 2,y:y - config.height/2})
+            if (polar.phi < 0 ) {polar.phi += 2* Math.PI}
+            const blipDrawingContext = prepareBlipDrawingContext()
+            // find segment for polar coordinates; note: if polar.phi < 0, then add 2*Math.PI??
+            let clickSector = -1
+            let clickRing = -1
+            for (let s=0;s<blipDrawingContext.segmentMatrix.length; s++) {
+                 let polarPhi = polar.phi
+                 let endPhi = blipDrawingContext.segmentMatrix[s][0].endPhi
+                 if ( polarPhi > endPhi ) {
+                    clickSector = s
+                    break
+                 }
+            }
+            for (let r=0;r<blipDrawingContext.segmentMatrix[0].length; r++) {
+                let polarR = polar.r
+                let endR = blipDrawingContext.segmentMatrix[0][r].endR
+                if ( polarR > endR ) {
+                   clickRing = r
+                   break
+                }
+           }
+
+            publishRadarEvent({ type: "blipCreation",segment:{sector:clickSector, ring:clickRing} })
+        })
+    menuOptions.append("text")
+        .text(`Drill Down Segment`)
+        .attr("transform", `translate(0, ${25})`)
+        .style("fill", "blue")
+        .style("font-family", "Arial, Helvetica")
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
+        .on("click", (e) => {
+            console.log(`Drill down on segment`)
+            d3.select('.radar-context-menu').remove();
+            // create blip
+            publishRadarEvent({ type: "drillDownSegment" })
+        })
+    // menuOptions.append("text")
+    //     .text(`Shuffle Blips`)
+    //     .attr("transform", `translate(0, ${50})`)
+    //     .style("fill", "blue")
+    //     .style("font-family", "Arial, Helvetica")
+    //     .style("font-size", "15px")
+    //     .style("font-weight", "bold")
+    //     .on("click", (e) => {
+    //         console.log(`Shuffle Blips`)
+    //         d3.select('.radar-context-menu').remove();
+    //         // create blip
+    //         publishRadarEvent({ type: "shuffleBlips" })
+    //     })
+
+    // menuOptions.append("text")
+    //     .text(`Radar Configurator`)
+    //     .attr("transform", `translate(0, ${75})`)
+    //     .style("fill", "blue")
+    //     .style("font-family", "Arial, Helvetica")
+    //     .style("font-size", "15px")
+    //     .style("font-weight", "bold")
+    //     .on("click", (e) => {
+    //         console.log(`Radar Config`)
+    //         d3.select('.radar-context-menu').remove();
+    //         // create blip
+    //         publishRadarEvent({ type: "mainRadarConfigurator" })
+    //     })
 
 }

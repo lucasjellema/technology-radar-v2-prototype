@@ -153,7 +153,7 @@ const launchShapeConfigurator = (viewpoint, drawRadarBlips) => {
     })
     document.getElementById(`addShapeButton`).addEventListener("click", (e) => {
         const newShape = {
-            label: "NEW SHape",
+            label: "NEW SHAPE",
             labelSettings: { color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
         }
         viewpoint.template.shapesConfiguration.shapes.push(newShape)

@@ -113,6 +113,8 @@ const saveSize = (sizeToEdit, size, viewpoint) => {
 
     size.visible = document.getElementById("showSize").checked
     size.size = getElementValue('actualSize')
+    size.label = getElementValue("sizeLabel")
+
 
     const valueMap = viewpoint.propertyVisualMaps["size"].valueMap
     // remove all entries from valueMap with value size (sequence)

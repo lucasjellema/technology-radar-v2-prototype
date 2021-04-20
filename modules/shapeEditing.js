@@ -113,6 +113,7 @@ const saveShape = (shapeToEdit, shape, viewpoint) => {
 
     shape.visible = document.getElementById("showShape").checked
     shape.shape = getElementValue('actualShape')
+    shape.label = getElementValue("shapeLabel")
 
     const valueMap = viewpoint.propertyVisualMaps["shape"].valueMap
     // remove all entries from valueMap with value shape (sequence)

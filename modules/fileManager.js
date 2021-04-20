@@ -622,7 +622,6 @@ const exportRadarDataToCSVFile = (exportableProperties) => {
         let row = ``
         if (rating.ratingType == getViewpoint().ratingType.name || rating.ratingType.name == getViewpoint().ratingType.name) {
             for (let j = 0; j < exportableProperties.length; j++) {
-                console.log(`prop path ${exportableProperties[j].radarProperty.propertyPath}`)
                 row += (j > 0 ? ',' : '') + `"${getNestedPropertyValueFromObject(rating, exportableProperties[j].radarProperty.propertyPath)}"`
             }
             csv += `${row}\n`

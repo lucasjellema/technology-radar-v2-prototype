@@ -48,11 +48,12 @@ const getCurrentContext = (viewpoint) => {
 }
 
 
-const launchNewBlipWizard = (viewpoint, drawRadarBlips) => {
+const launchNewBlipWizard = (viewpoint, drawRadarBlips, segment=null) => {
     showOrHideElement("modalBlipEditor", true)
     showOrHideElement("newBlip", true)
 
-    setTextOnElement('blipEditorTitle', "Create New Blip - for new or existing object or rating")
+    // TODO use labels for sector and ring
+    setTextOnElement('blipEditorTitle', `Create New Blip - for new or existing object or rating`)
     let currentContext = getCurrentContext(viewpoint)
     const objectForNewBlipSelectionContainer = document.getElementById('newBlip')
     const html = `                <div class="column1_3">
@@ -116,7 +117,7 @@ ${currentContext.reduce((sum, contextEntry, index) => { return sum + (index == 0
         const selectedRatingId = (ratingId != null && ratingId != "-1") ? ratingId : null
         const labelForNewObject = (objectNewLabel != null && objectNewLabel.length > 0) ? objectNewLabel : null
         if ((selectedObjectId ?? labelForNewObject) != null) {
-            const blip = createBlip(selectedObjectId, labelForNewObject, selectedRatingId, viewpoint)
+            const blip = createBlip(selectedObjectId, labelForNewObject, selectedRatingId, viewpoint, segment)
             launchBlipEditor(blip, getViewpoint(), drawRadarBlips, selectedObjectId == null)
         }
     })
