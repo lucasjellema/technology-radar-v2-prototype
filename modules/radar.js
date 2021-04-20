@@ -51,6 +51,8 @@ function drawRadar(viewpoint, elementDecorator = null) {
         .on('contextmenu', (e, d) => {
             createRadarContextMenu(e, d, this, viewpoint);
         })
+        // TODO temporary workaround for Mac users - how to engage context menu?
+        .on('dblclick',  () => {publishRadarEvent({ type: "blipCreation" })})
         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, config.title.text, `title`])
     styleText(titleElement, config.title, config)
 
