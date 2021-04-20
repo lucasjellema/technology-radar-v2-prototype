@@ -17,10 +17,10 @@ const filterBlip = (blip, viewpoint) => {
 
         let ratingTypeProperties = getRatingTypeProperties(viewpoint.ratingType, getData().model)
 
-    // populate list with all discrete properties plus properties of type tag
-    const discretePropertyPaths = ratingTypeProperties
-        .filter((property) => property.property?.discrete )
-        .map((property) => { return property.propertyPath })
+        // populate list with all discrete properties plus properties of type tag
+        const discretePropertyPaths = ratingTypeProperties
+            .filter((property) => property.property?.discrete) || property.property?.allowableValues?.length>0
+            .map((property) => { return property.propertyPath })
 
         //if all tags are minus filter, then are starting assumption is that the blip is ok
         const minusFiltercount = viewpoint.blipDisplaySettings.tagFilter.reduce(
@@ -43,7 +43,7 @@ const filterBlip = (blip, viewpoint) => {
 
                         // TODO derive discrete properties dynamically from data.model instead of hard coded
 
-                      //  const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
+                        //  const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
                         for (let j = 0; !blipHasFilter && j < discretePropertyPaths.length; j++) {
                             blipHasFilter = getNestedPropertyValueFromObject(blip.rating, discretePropertyPaths[j])?.toLowerCase().trim() == filter.tag
                         }
@@ -235,7 +235,7 @@ const prepareBlipDrawingContext = () => {
         sectorAngleSum += currentSectorAngle
 
     }
-    console.log(`segment matrix = ${JSON.stringify(segmentMatrix)}`)
+    // console.log(`segment matrix = ${JSON.stringify(segmentMatrix)}`)
     blipDrawingContext.segmentMatrix = segmentMatrix
     // others: an object with for each visual dimension the value that is designated as others
     blipDrawingContext.othersDimensionValue = {}
@@ -600,7 +600,7 @@ const handleShowShapesChange = (event) => {
     drawRadarBlips(currentViewpoint)
 }
 const handleTagFilterChange = (event) => {
-    
+
     const filterTagValue = document.getElementById("filterTagSelector").value
     if (filterTagValue != null && filterTagValue.length > 0) {
         getViewpoint().blipDisplaySettings.tagFilter.push({ type: "plus", tag: filterTagValue })
