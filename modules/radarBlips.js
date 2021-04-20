@@ -187,30 +187,24 @@ const drawRadarBlips = function (viewpoint) {
         blipsLayer.selectAll("*").remove();
     }
     const filteredBlips = viewpoint.blips.filter((blip) => filterBlip(blip, viewpoint))
-    // if aggregate 
-    // go through blips and aggregate
 
     // go through blips and assign blips to segment
     filteredBlips.forEach((blip) => {
         const segment = findSegmentForRating(blip.rating, viewpoint, blipDrawingContext)
-        if (segment.ring != -1) {
+//        if (segment.ring != -1) {
             blipDrawingContext.segmentMatrix[segment.sector][segment.ring].blips.push(blip)
-        }
+  //      }
     })
 
     // compose new set of blips
     // eliminate [blips in] invisible segments 
     let visibleBlips = []
     for (let s = 0; s < getViewpoint().template.sectorsConfiguration.sectors.length; s++) {
-        for (let r = 0; r < getViewpoint().template.ringsConfiguration.rings.length; r++) {
+        for (let r = -1; r < getViewpoint().template.ringsConfiguration.rings.length; r++) {
             const segment = blipDrawingContext.segmentMatrix[s][r]
             if (segment.visible) {
 
                 if (currentViewpoint.blipDisplaySettings.aggregationMode == true) {
-
-                    // add extra blip - just for fun
-                    // TODO aggregration
-                    // organize for this segment the blips per object 
                     const blipsPerObject = {}
                     segment.blips.forEach((blip) => {
                         if (!blipsPerObject.hasOwnProperty(blip.rating.object.id)) { blipsPerObject[blip.rating.object.id] = [] }
@@ -292,7 +286,7 @@ const prepareBlipDrawingContext = () => {
     let sectorAngleSum = parseFloat(getViewpoint().template.sectorsConfiguration.initialAngle ?? 0)
 
     for (let s = 0; s < getViewpoint().template.sectorsConfiguration.sectors.length; s++) {
-        segmentMatrix.push([])
+        segmentMatrix.push({})
         const sector = getViewpoint().template.sectorsConfiguration.sectors[s]
         let currentSectorAngle =
             (sector?.visible != false ? sector.angle : 0) * blipDrawingContext['sectorExpansionFactor']
@@ -314,12 +308,17 @@ const prepareBlipDrawingContext = () => {
                 , endR: Math.round((1 - ringWidthSum - currentRingWidth) * getViewpoint().template.maxRingRadius)
                 , blips: []
             }
-            segmentMatrix[s].push(segment)
+            segmentMatrix[s][r]= segment
             segment.visible = !(ring.visible == false || sector.visible == false)
 
             ringWidthSum += currentRingWidth
 
         }
+        // add ring -1 (the outer zone)
+        segmentMatrix[s][-1]= segmentMatrix[s][0]
+        segmentMatrix[s][-1].startR = 3000
+        segmentMatrix[s][-1].endR = segmentMatrix[s][0].startR        
+        
         sectorAngleSum += currentSectorAngle
 
     }
@@ -383,7 +382,8 @@ const sectorRingToPosition = (sector, ring, config) => { // return randomized X,
         else {
             r = config.maxRingRadius * (1.01 + Math.random() * 0.33)  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
         }
-        return cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
+        const cartesian =  cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
+        return {...{r:r, phi:phi}, ...cartesian}
     } catch (e) {
         console.log(`radarblips,.sectorRingToPosition ${e} ${sector}${ring}`)
     }
@@ -417,7 +417,7 @@ const findSectorForRating = (rating, viewpoint) => {
 }
 
 const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
-
+    
     let blipSector = findSectorForRating(d.rating, viewpoint)
     if (blipSector == null) {
         if (blipDrawingContext.othersDimensionValue["sector"] != null) {
@@ -534,12 +534,15 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     }
     let xy
 
+    // TODO if d.r and d.phi are != null AND d.r, d.phi maps to the sector and blipRing
+    //      then derive x,y from d.r and d.phi using sectorExpansionFactor and ringExpansionFactor 
     if (d.x != null && d.y != null
         && blipInSegment(d, viewpoint, { sector: blipSector, ring: blipRing })
     ) {
         xy = { x: d.x, y: d.y }
     } else {
         xy = sectorRingToPosition(blipSector, blipRing, viewpoint.template)
+
     }
     let scaleFactor = blipSize * viewpoint.blipDisplaySettings.blipScaleFactor ?? 1
     if (d.artificial == true) { scaleFactor = scaleFactor * (1 + (d.aggregation.count - 1) / 3) }
@@ -708,6 +711,7 @@ const handleShowLabelsChange = (event) => {
 const handleAggregationModeChange = (event) => {
     currentViewpoint.blipDisplaySettings.aggregationMode = event.target.checked
     drawRadarBlips(currentViewpoint)
+    publishRefreshRadar();
 }
 
 const handleShowShapesChange = (event) => {

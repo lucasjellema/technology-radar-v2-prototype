@@ -615,7 +615,7 @@ const initializeColorsLegend = (viewpoint) => {
     colorsBox
         .style("background-color", "#EFF")
         .attr("width", "80%")
-        .attr("height", numberOfVisibleColors * 45 + 20)
+        .attr("height", ((viewpoint.blipDisplaySettings.aggregationMode==true?1:0) +  numberOfVisibleColors) * 45 + 20)
         .on("dblclick", (e) => {
             publishRadarEvent({ type: "mainRadarConfigurator", tab: "color" })
         })
@@ -627,9 +627,10 @@ const initializeColorsLegend = (viewpoint) => {
     let displayedColorsCounter = 0
 
     for (let i = 0; i < config.colorsConfiguration.colors.length; i++) {
-        if (config.colorsConfiguration.colors[i].visible == false) continue // skip invisible colors
-        const colorToShow = config.colorsConfiguration.colors[i].color
-        const label = config.colorsConfiguration.colors[i].label
+        const color = config.colorsConfiguration.colors[i]
+        if (color.visible == false) continue // skip invisible colors
+        const colorToShow = color.color
+        const label = color.label
         const colorEntry = colorsBox.append('g')
             .attr("transform", `translate(${circleIndent + 20}, ${30 + displayedColorsCounter * 45})`)
 
@@ -648,6 +649,28 @@ const initializeColorsLegend = (viewpoint) => {
             .style("font-size", "18px")
             .style("font-weight", "normal")
         displayedColorsCounter++
+    }
+    if (viewpoint.blipDisplaySettings.aggregationMode==true) {
+        const colorToShow = "#800040"
+        const label = "Aggregated"
+        const colorEntry = colorsBox.append('g')
+            .attr("transform", `translate(${circleIndent + 20}, ${30 + (numberOfVisibleColors) * 45})`)
+
+            .append('circle')
+            .attr("id", `aggregationColor`)
+            .attr("r", 12)
+            .attr("fill", colorToShow)
+
+        colorsBox.append("text")
+            .attr("id", `colorLabelAggregation`)
+            .text(label)
+            .attr("x", labelIndent)
+            .attr("y", 38 + (numberOfVisibleColors) * 45)
+            .style("fill", "#000")
+            .style("font-family", "Arial, Helvetica")
+            .style("font-size", "18px")
+            .style("font-weight", "normal")
+
     }
 }
 
