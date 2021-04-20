@@ -1,6 +1,6 @@
 import { cartesianFromPolar, polarFromCartesian } from './drawingUtilities.js'
 import { getState, getConfiguration } from './data.js'
-import {prepareBlipDrawingContext} from './radarblips.js'
+import {prepareBlipDrawingContext} from './radarBlips.js'
 export { drawRadar, subscribeToRadarEvents, publishRadarEvent }
 
 const color_white = "#FFF"
