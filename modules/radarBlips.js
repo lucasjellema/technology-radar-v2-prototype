@@ -19,7 +19,7 @@ const filterBlip = (blip, viewpoint) => {
 
         // populate list with all discrete properties plus properties of type tag
         const discretePropertyPaths = ratingTypeProperties
-            .filter((property) => property.property?.discrete) || property.property?.allowableValues?.length>0
+            .filter((property) => (property.property?.discrete || property.property?.allowableValues?.length>0))
             .map((property) => { return property.propertyPath })
 
         //if all tags are minus filter, then are starting assumption is that the blip is ok
