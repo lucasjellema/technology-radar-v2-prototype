@@ -1,6 +1,6 @@
 import { cartesianFromPolar, polarFromCartesian } from './drawingUtilities.js'
-import { getState, getConfiguration } from './data.js'
-import {prepareBlipDrawingContext} from './radarBlips.js'
+import { getState, getConfiguration, getViewpoint } from './data.js'
+import { prepareBlipDrawingContext } from './radarBlips.js'
 export { drawRadar, subscribeToRadarEvents, publishRadarEvent }
 
 const color_white = "#FFF"
@@ -126,10 +126,10 @@ const ringExpansionFactor = (config) => {
 const drawSectors = function (radar, config, elementDecorator = null) {
 
     const sectorCanvas = radar.append("g").attr("id", "sectorCanvas")
-    .on('contextmenu', (e) => {
-        console.log(`${e.pageX}, ${e.pageY}`);
-        e.preventDefault();    
-    })
+        .on('contextmenu', (e) => {
+            console.log(`${e.pageX}, ${e.pageY}`);
+            e.preventDefault();
+        })
 
     // sectorCanvas.append("line") //horizontal sector boundary
     //     .attr("x1", 0).attr("y1", 0)
@@ -189,10 +189,10 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                         console.log(`context menu on sector sector${i}`)
                         e.preventDefault()
                         sectorAndRingMenu(e.pageX, e.pageY, i, null, config);
-        
+
                     })
 
-                    // add color to the sector area outside the outer ring
+                // add color to the sector area outside the outer ring
                 const outerringArc = d3.arc()
                     .outerRadius(config.maxRingRadius * 4)
                     .innerRadius(config.maxRingRadius)
@@ -296,8 +296,8 @@ const drawRings = function (radar, config) {
             .on('contextmenu', (e) => {
                 console.log(`context menu on ring ring${i}`)
                 e.preventDefault()
-                sectorAndRingMenu(e.pageX, e.pageY, null, i,config);
-                
+                sectorAndRingMenu(e.pageX, e.pageY, null, i, config);
+
             })
 
         if (ring.backgroundImage && ring.backgroundImage.image) {
@@ -399,7 +399,7 @@ function displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sector
         .text(`${sector.label}`)
         .on('dblclick', () => { console.log(`sector drilldown on sector${sectorIndex}`); publishRadarEvent({ type: "sectorDrilldown", sector: sectorIndex }) }) // facilitate drilldown on sector
 
-     
+
         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, sector.label, `sectorLabel${sectorIndex}`]);
 
 }
@@ -427,9 +427,9 @@ const initializeSizesLegend = (viewpoint) => {
     sizesBox
         .style("background-color", "silver")
         .attr("width", "80%")
-        .attr("height", numberOfVisibleSizes * 55 + 20) 
+        .attr("height", numberOfVisibleSizes * 55 + 20)
         .on("dblclick", (e) => {
-            publishRadarEvent({ type: "mainRadarConfigurator", tab:"size" })
+            publishRadarEvent({ type: "mainRadarConfigurator", tab: "size" })
         })
 
     sizesBox.append('g').attr('class', 'sizesBox')
@@ -463,7 +463,7 @@ const initializeSizesLegend = (viewpoint) => {
             .style("font-size", "25px")
             .style("font-weight", "bold")
 
-            displayedSizesCounter++
+        displayedSizesCounter++
     }
 }
 
@@ -482,7 +482,7 @@ const initializeShapesLegend = (viewpoint) => {
 
     shapesBox.selectAll("*").remove(); // clean content (if there is any)
 
-    
+
     if (viewpoint.propertyVisualMaps.shape?.property == null
         || viewpoint.propertyVisualMaps.shape.property == ""
         || viewpoint.propertyVisualMaps.shape.valueMap == null
@@ -497,9 +497,9 @@ const initializeShapesLegend = (viewpoint) => {
         .attr("height", numberOfVisibleShapes * 45 + 20)
         .on("dblclick", (e) => {
             console.log(`shapesBox was clicked`)
-            publishRadarEvent({ type: "mainRadarConfigurator", tab:"shape" })
+            publishRadarEvent({ type: "mainRadarConfigurator", tab: "shape" })
         })
-        
+
 
     shapesBox.append('g').attr('class', 'shapesBox')
 
@@ -514,11 +514,11 @@ const initializeShapesLegend = (viewpoint) => {
         const shapeToDraw = config.shapesConfiguration.shapes[i].shape
         const label = config.shapesConfiguration.shapes[i].label
 
-    // for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
-    //     const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
-    //     const vm = viewpoint.propertyVisualMaps.shape.valueMap[key]
-    //     const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
-    //     const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
+        // for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
+        //     const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
+        //     const vm = viewpoint.propertyVisualMaps.shape.valueMap[key]
+        //     const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
+        //     const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
 
         shapesBox.append("text")
             .attr("id", `shapeLabel${i}`)
@@ -578,9 +578,9 @@ const initializeShapesLegend = (viewpoint) => {
                 .attr('y', -15)
 
         }
-        if (shape==null) {
-           console.log(`handled exception in shapes legend - shape ${shapeToDraw} cannot be drawn`)            
-           continue
+        if (shape == null) {
+            console.log(`handled exception in shapes legend - shape ${shapeToDraw} cannot be drawn`)
+            continue
         }
         shape.attr("fill", "#000");
         shape.attr("opacity", "0.9");
@@ -615,7 +615,7 @@ const initializeColorsLegend = (viewpoint) => {
         .attr("width", "80%")
         .attr("height", numberOfVisibleColors * 45 + 20)
         .on("dblclick", (e) => {
-            publishRadarEvent({ type: "mainRadarConfigurator", tab:"color" })
+            publishRadarEvent({ type: "mainRadarConfigurator", tab: "color" })
         })
 
     document.getElementById('colorLegendTitle').innerText = config.colorsConfiguration.label;
@@ -645,7 +645,7 @@ const initializeColorsLegend = (viewpoint) => {
             .style("font-family", "Arial, Helvetica")
             .style("font-size", "18px")
             .style("font-weight", "normal")
-            displayedColorsCounter++
+        displayedColorsCounter++
     }
 }
 
@@ -744,7 +744,7 @@ const radarMenu = (x, y, d, blip, viewpoint) => {
 }
 
 
-const sectorAndRingMenu = (x, y, sector, ring, config ) => {
+const sectorAndRingMenu = (x, y, sector, ring, config) => {
     d3.select('.radar-context-menu').remove(); // if already showing, get rid of it.
 
     const contextMenu = d3.select(`svg#radarSVGContainer`)
@@ -786,31 +786,7 @@ const sectorAndRingMenu = (x, y, sector, ring, config ) => {
             console.log(`Create Blip was clicked`)
             d3.select('.radar-context-menu').remove();
             // create blip
-            // TODO turn x,y position into segment and pass sector and ring to blip editor
-            const polar = polarFromCartesian({x:x - config.width / 2,y:y - config.height/2})
-            if (polar.phi < 0 ) {polar.phi += 2* Math.PI}
-            const blipDrawingContext = prepareBlipDrawingContext()
-            // find segment for polar coordinates; note: if polar.phi < 0, then add 2*Math.PI??
-            let clickSector = -1
-            let clickRing = -1
-            for (let s=0;s<blipDrawingContext.segmentMatrix.length; s++) {
-                 let polarPhi = polar.phi
-                 let endPhi = blipDrawingContext.segmentMatrix[s][0].endPhi
-                 if ( polarPhi > endPhi ) {
-                    clickSector = s
-                    break
-                 }
-            }
-            for (let r=0;r<blipDrawingContext.segmentMatrix[0].length; r++) {
-                let polarR = polar.r
-                let endR = blipDrawingContext.segmentMatrix[0][r].endR
-                if ( polarR > endR ) {
-                   clickRing = r
-                   break
-                }
-           }
-
-            publishRadarEvent({ type: "blipCreation",segment:{sector:clickSector, ring:clickRing} })
+            publishRadarEvent({ type: "blipCreation", segment: getSegment(x,y, config) })
         })
     menuOptions.append("text")
         .text(`Drill Down Segment`)
@@ -822,8 +798,7 @@ const sectorAndRingMenu = (x, y, sector, ring, config ) => {
         .on("click", (e) => {
             console.log(`Drill down on segment`)
             d3.select('.radar-context-menu').remove();
-            // create blip
-            publishRadarEvent({ type: "drillDownSegment" })
+            publishRadarEvent({ type: "segmentDrilldown", segment: getSegment(x,y, config) })
         })
     // menuOptions.append("text")
     //     .text(`Shuffle Blips`)
@@ -853,4 +828,32 @@ const sectorAndRingMenu = (x, y, sector, ring, config ) => {
     //         publishRadarEvent({ type: "mainRadarConfigurator" })
     //     })
 
+}
+
+
+const getSegment = (x, y, config = getViewpoint().template) => {
+    const polar = polarFromCartesian({ x: x - config.width / 2, y: y - config.height / 2 })
+    if (polar.phi < 0) { polar.phi += 2 * Math.PI }
+    const blipDrawingContext = prepareBlipDrawingContext()
+    // find segment for polar coordinates; note: if polar.phi < 0, then add 2*Math.PI??
+    let clickSector = -1
+    let clickRing = -1
+    for (let s = 0; s < blipDrawingContext.segmentMatrix.length; s++) {
+        let polarPhi = polar.phi
+        let endPhi = blipDrawingContext.segmentMatrix[s][0].endPhi
+        if (polarPhi > endPhi) {
+            clickSector = s
+            break
+        }
+    }
+    for (let r = 0; r < blipDrawingContext.segmentMatrix[0].length; r++) {
+        let polarR = polar.r
+        let endR = blipDrawingContext.segmentMatrix[0][r].endR
+        if (polarR > endR) {
+            clickRing = r
+            break
+        }
+    }
+    const clickSegment = { sector: clickSector, ring: clickRing }
+    return clickSegment
 }

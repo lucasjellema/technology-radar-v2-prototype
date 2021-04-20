@@ -266,7 +266,7 @@
         })
         subscribeToRadarEvents((event) => {
             if (event.type == "blipCreation") {
-                launchNewBlipWizard(getViewpoint(), drawRadarBlips)
+                launchNewBlipWizard(getViewpoint(), drawRadarBlips, event.segment)
             }
 
             if (event.type == "editBlipDefaults") {
@@ -294,7 +294,23 @@
                     getViewpoint().template.sectorsConfiguration.sectors.forEach((sector, i) => sector.visible = (i == event.sector))
                 }
                 shuffleBlips()
-            } if (event.type == "ringDrilldown") {
+            } 
+            if (event.type == "segmentDrilldown") {
+                // if currently only one segment is visible, the drilldown is actually a drill up and all sectors should be made visible
+                const numberOfVisibleSectors = getViewpoint().template.sectorsConfiguration.sectors.filter((sector) => sector.visible).length
+                const numberOfVisibleRings = getViewpoint().template.ringsConfiguration.rings.filter((ring) => ring.visible).length
+                if (numberOfVisibleSectors == 1 && numberOfVisibleRings==1) {
+                    // drill up: set visible to true for all sectors ; then redraw radar and blips
+                    getViewpoint().template.sectorsConfiguration.sectors.forEach((sector, i) => sector.visible = true)
+                    getViewpoint().template.ringsConfiguration.rings.forEach((ring, i) => ring.visible = true)
+                } else {
+                    // set visible to false for all sectors except for sector event.sector; then redraw radar and blips
+                    getViewpoint().template.sectorsConfiguration.sectors.forEach((sector, i) => sector.visible = (i == event.segment.sector))
+                    getViewpoint().template.ringsConfiguration.rings.forEach((ring, i) => ring.visible = (i == event.segment.ring))
+                }
+                shuffleBlips()
+            } 
+            if (event.type == "ringDrilldown") {
                 // if currently only one ring is visible, the drilldown is actually a drill up and all rings should be made visible
                 const numberOfVisibleRings = getViewpoint().template.ringsConfiguration.rings.filter((ring) => ring.visible).length
                 if (numberOfVisibleRings == 1) {
