@@ -466,10 +466,11 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
         let ringExpansionFactor = getRingExpansionFactor(viewpoint)
         const dropSegment = segmentFromCartesian({ x: blipDragEvent.newX, y: blipDragEvent.newY }, viewpoint, sectorExpansionFactor, ringExpansionFactor)
 
-// TODO: only visible rings and sectors are counted; the real ring or sector could be a different one!
         console.log(`dropsegment ${JSON.stringify(dropSegment)}`)
         const blipId = blipDragEvent.blipId.substring(5)
         let blip
+        // artificial blips are not found in viewpoints.blips collection ; these cannot be updated through dragging
+        try {
         blip = viewpoint.blips.filter((blip) => blip.id == blipId ? blip : null)[0]
         console.log(`dragged element ${blipDragEvent.blipId}${blip.rating.object.label}`)
 
@@ -484,7 +485,9 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
         const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
         const propertyValueDerivedFromRing = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring) // "find category value mapped to the sector value of dropSector" 
         setNestedPropertyValueOnObject(blip.rating, propertyMappedToRing, propertyValueDerivedFromRing)
-    }
+        } catch (e){// blip not found ; for artificial blips, that is not a problem
+        } 
+     }
 }
 
 // find in an object the (first) key or property name for a given value 

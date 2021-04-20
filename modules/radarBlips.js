@@ -19,7 +19,7 @@ const filterBlip = (blip, viewpoint) => {
 
         // populate list with all discrete properties plus properties of type tag
         const discretePropertyPaths = ratingTypeProperties
-            .filter((property) => (property.property?.discrete || property.property?.allowableValues?.length>0))
+            .filter((property) => (property.property?.discrete || property.property?.allowableValues?.length > 0))
             .map((property) => { return property.propertyPath })
 
         //if all tags are minus filter, then are starting assumption is that the blip is ok
@@ -111,6 +111,30 @@ const initializeTagsFilter = () => {
 
 }
 
+const findSegmentForRating = (rating, viewpoint, blipDrawingContext) => {
+    let blipSector = findSectorForRating(rating, viewpoint)
+    if (blipSector == null) {
+        if (blipDrawingContext.othersDimensionValue["sector"] != null) {
+            blipSector = blipDrawingContext.othersDimensionValue["sector"]
+        }
+        else {
+            //
+        }
+    }
+    const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
+    let blipRing = viewpoint.propertyVisualMaps.ring.valueMap[getNestedPropertyValueFromObject(rating, propertyMappedToRing)]
+    if (blipRing == null) {
+        if (blipDrawingContext.othersDimensionValue["ring"] != null) {
+            blipRing = blipDrawingContext.othersDimensionValue["ring"]
+        }
+        else {
+            blipRing = -1
+            // in case of rings we accept blips not associated with any "real ring" - directly or indirect through Others
+        }
+    }
+    return { sector: blipSector, ring: blipRing }
+}
+
 const drawRadarBlips = function (viewpoint) {
     currentViewpoint = viewpoint
     document.getElementById('showImages').checked = currentViewpoint.blipDisplaySettings.showImages
@@ -162,8 +186,71 @@ const drawRadarBlips = function (viewpoint) {
     else {
         blipsLayer.selectAll("*").remove();
     }
+    const filteredBlips = viewpoint.blips.filter((blip) => filterBlip(blip, viewpoint))
+    // if aggregate 
+    // go through blips and aggregate
+
+    // go through blips and assign blips to segment
+    filteredBlips.forEach((blip) => {
+        const segment = findSegmentForRating(blip.rating, viewpoint, blipDrawingContext)
+        if (segment.ring != -1) {
+            blipDrawingContext.segmentMatrix[segment.sector][segment.ring].blips.push(blip)
+        }
+    })
+
+    // compose new set of blips
+    // eliminate [blips in] invisible segments 
+    let visibleBlips = []
+    for (let s = 0; s < getViewpoint().template.sectorsConfiguration.sectors.length; s++) {
+        for (let r = 0; r < getViewpoint().template.ringsConfiguration.rings.length; r++) {
+            const segment = blipDrawingContext.segmentMatrix[s][r]
+            if (segment.visible) {
+
+                if (currentViewpoint.blipDisplaySettings.aggregationMode == true) {
+
+                    // add extra blip - just for fun
+                    // TODO aggregration
+                    // organize for this segment the blips per object 
+                    const blipsPerObject = {}
+                    segment.blips.forEach((blip) => {
+                        if (!blipsPerObject.hasOwnProperty(blip.rating.object.id)) { blipsPerObject[blip.rating.object.id] = [] }
+                        blipsPerObject[blip.rating.object.id].push(blip)
+                    })
+                    // blipsPerObject has zero, one or more properties for each of the objects for which blips are in this segment
+                    // if the number of objects > 1 - aggregation time!
+                    for (let i = 0; i < Object.keys(blipsPerObject).length; i++) {
+                        const objectId = Object.keys(blipsPerObject)[i]
+                        if (blipsPerObject[objectId].length > 1) {
+                            console.log(`${blipsPerObject[objectId].length} blips in segment for ${blipsPerObject[objectId][0].rating.object.label}   object ${objectId}`)
+                            const blip = {
+                                id: `${uuidv4()}`
+                                , rating: blipsPerObject[objectId][0].rating
+                                , artificial: true
+                                // TODO AGGREGATION hardcoded property names
+                                , aggregation: {
+                                    count: blipsPerObject[objectId].length
+                                    , label: blipsPerObject[objectId].reduce((label, b, index) => { return label + ((index == 0) ? "" : ",") + b.rating.scope }, "")
+                                    , authors: blipsPerObject[objectId].reduce((authors, b, index) => { return authors + ((index == 0) ? "" : ",") + b.rating.author }, "")
+                                }
+                            }
+                            visibleBlips.push(blip)
+                        }
+                        else {
+
+                            visibleBlips = visibleBlips.concat(blipsPerObject[objectId])
+                        }
+                    }
+                } else {
+                    visibleBlips = visibleBlips.concat(segment.blips)
+                }
+            }
+        }
+    }
+
+
+
     const blipElements = blipsLayer.selectAll(".blip")
-        .data(viewpoint.blips.filter((blip) => filterBlip(blip, viewpoint)))
+        .data(visibleBlips)
         .enter()
         .append("g")
         .attr("class", "blip")
@@ -191,7 +278,7 @@ const drawRadarBlips = function (viewpoint) {
 
 // prepare data that during blip drawing can be used (for every blip)
 // this should improve performance and save on the number of calculations/derivations
-// - TODO segment matrix - with details for each sector/ring combination 
+// - segment matrix - with details for each sector/ring combination 
 // - others sector/ring/shape/color/size
 // - ring and sector expansion factor
 const prepareBlipDrawingContext = () => {
@@ -225,6 +312,7 @@ const prepareBlipDrawingContext = () => {
                 , endWidth: ringWidthSum + currentRingWidth
                 , startR: Math.round((1 - ringWidthSum) * getViewpoint().template.maxRingRadius)
                 , endR: Math.round((1 - ringWidthSum - currentRingWidth) * getViewpoint().template.maxRingRadius)
+                , blips: []
             }
             segmentMatrix[s].push(segment)
             segment.visible = !(ring.visible == false || sector.visible == false)
@@ -398,6 +486,11 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
         }
 
         blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
+        //TODO AGGREGATION hard coded aggregated color
+        if (d.artificial==true && viewpoint.blipDisplaySettings.aggregationMode) {
+            blipColor = "#800040"  // color to indicate aggregation
+
+        }
     } catch (e) {
         blipColor = "blue"
         console.log(`draw radar blip fall back to no apply color because of ${e}`)
@@ -448,10 +541,14 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     } else {
         xy = sectorRingToPosition(blipSector, blipRing, viewpoint.template)
     }
-    blip.attr("transform", `translate(${xy.x},${xy.y}) scale(${blipSize * viewpoint.blipDisplaySettings.blipScaleFactor ?? 1})`)
+    let scaleFactor = blipSize * viewpoint.blipDisplaySettings.blipScaleFactor ?? 1
+    if (d.artificial == true) { scaleFactor = scaleFactor * (1 + (d.aggregation.count - 1) / 3) }
+    blip.attr("transform", `translate(${xy.x},${xy.y}) scale(${scaleFactor})`)
         .attr("id", `blip-${d.id}`)
     if (!viewpoint.blipDisplaySettings.showLabels
-        || (!viewpoint.blipDisplaySettings.showImages && d.rating.object.image)
+        || (!viewpoint.blipDisplaySettings.showImages && d.rating.object.image
+            || d.artificial == true
+        )
     ) { // any content for the tooltip
         blip
             .on("mouseover", (e, d) => {
@@ -464,6 +561,10 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
                         if (!viewpoint.blipDisplaySettings.showImages && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image) != null) {
                             content = `${content}<img src="${getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image)}" width="100px"></img>`
                         }
+                        if (d.artificial == true) {
+                            content += ` by ${d.aggregation.label}`
+                        }
+
                         return `${content}</div>`
                     }
                     , d, e.pageX, e.pageY);
@@ -472,6 +573,10 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
                 removeTooltip();
             })
     }
+
+
+
+
     blip.on("dblclick", (e, d) => {
         blipWindow(d, viewpoint)
 
@@ -483,7 +588,11 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     // and if text font size should decrease/increase with size?
     // TODO: label consisting of two lines 
     if (viewpoint.blipDisplaySettings.showLabels || (viewpoint.blipDisplaySettings.showImages && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image) == null)) {
-        const label = getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.label).trim()
+        let label = getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.label).trim()
+
+        if (d.artificial == true) {
+            label += ` (# ${d.aggregation.count})`
+        }
         // TODO find smarter ways than breaking on spaces to distribute label over multiple lines
         let line = label
         let line0
@@ -595,6 +704,12 @@ const handleShowLabelsChange = (event) => {
     currentViewpoint.blipDisplaySettings.showLabels = event.target.checked
     drawRadarBlips(currentViewpoint)
 }
+
+const handleAggregationModeChange = (event) => {
+    currentViewpoint.blipDisplaySettings.aggregationMode = event.target.checked
+    drawRadarBlips(currentViewpoint)
+}
+
 const handleShowShapesChange = (event) => {
     currentViewpoint.blipDisplaySettings.showShapes = event.target.checked
     drawRadarBlips(currentViewpoint)
@@ -969,6 +1084,9 @@ document.getElementById('blipScaleFactorSlider').addEventListener("change", hand
 
 document.getElementById('showLabels').addEventListener("change", handleShowLabelsChange);
 document.getElementById('showShapes').addEventListener("change", handleShowShapesChange);
+document.getElementById('aggregationMode').addEventListener("change", handleAggregationModeChange);
+
+
 document.getElementById('addTagToFilter').addEventListener("click", handleTagFilterChange);
 
 document.getElementById('applyColors').addEventListener("change", handleApplyColorsChange);
@@ -1016,15 +1134,8 @@ function blipWindow(blip, viewpoint) {
         .attr("style", "background-color:#fff4b8; padding:6px; opacity:0.9")
 
     body.append("h2").text(`Properties for ${getNestedPropertyValueFromObject(blip.rating, viewpoint.propertyVisualMaps.blip.label)}`)
-    // let model = getData().model
-    // let XXratingType = model?.ratingTypes[viewpoint.ratingType]
-    // let XXratingTypes  = model?.ratingTypes
-    // let key = viewpoint.ratingType
-    // let rt = XXratingTypes[key]
-    // let rt2 = XXratingTypes["technologyAdaption"]
 
     let ratingType = (typeof (viewpoint.ratingType) == "string") ? getData().model?.ratingTypes[viewpoint.ratingType] : viewpoint.ratingType
-
 
     try {
         for (let propertyName in ratingType.objectType.properties) {
@@ -1048,6 +1159,7 @@ function blipWindow(blip, viewpoint) {
             }
 
             else {
+
                 addProperty(property.label, value, body)
             }
         }
@@ -1069,7 +1181,16 @@ function blipWindow(blip, viewpoint) {
             if (property.allowableValues != null && property.allowableValues.length > 0) {
                 value = getLabelForAllowableValue(value, property.allowableValues)
             }
-            addProperty(property.label, value, ratingDiv)
+            
+            // TODO AGGREGATION hard coded property name
+            if (blip.artificial == true && propertyName == "scope") {
+                addProperty(property.label, blip.aggregation.label, ratingDiv)
+            } else             if (blip.artificial == true && propertyName == "author") {
+                addProperty(property.label, blip.aggregation.authors, ratingDiv)
+            } else {
+                addProperty(property.label, value, ratingDiv)
+            }
+
         }
 
 
@@ -1078,14 +1199,15 @@ function blipWindow(blip, viewpoint) {
         let buttonDiv = body.append("div")
             .attr("id", "buttonDiv")
             .attr("style", "position: absolute; bottom: 30;left: 30;")
-        buttonDiv.append("button")
-            .attr("style", "float:left;padding:15px")
-            .on("click", () => {
-                svg.select("foreignObject").remove();
-
-                launchBlipEditor(blip, viewpoint, drawRadarBlips)
-            })
-            .html("Edit Blip")
+        if (!blip.artificial == true) {
+            buttonDiv.append("button")
+                .attr("style", "float:left;padding:15px")
+                .on("click", () => {
+                    svg.select("foreignObject").remove();
+                    launchBlipEditor(blip, viewpoint, drawRadarBlips)
+                })
+                .html("Edit Blip")
+        }
         buttonDiv.append("button")
             .attr("style", "float:right;padding:15px")
             .on("click", () => {
