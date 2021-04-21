@@ -302,8 +302,10 @@ const prepareBlipDrawingContext = () => {
                 , endPhi: 2 * (1 - (sectorAngleSum + currentSectorAngle)) * Math.PI
                 , startAngle: sectorAngleSum
                 , endAngle: sectorAngleSum + currentSectorAngle
+                , anglePercentage : currentSectorAngle
                 , startWidth: ringWidthSum
                 , endWidth: ringWidthSum + currentRingWidth
+                , widthPercentage : currentRingWidth
                 , startR: Math.round((1 - ringWidthSum) * getViewpoint().template.maxRingRadius)
                 , endR: Math.round((1 - ringWidthSum - currentRingWidth) * getViewpoint().template.maxRingRadius)
                 , blips: []
@@ -446,6 +448,7 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
         return
     }
 
+    const segment = blipDrawingContext.segmentMatrix[blipSector][blipRing]
     let blipShape
     try {
 
@@ -536,6 +539,17 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
 
     // TODO if d.r and d.phi are != null AND d.r, d.phi maps to the sector and blipRing
     //      then derive x,y from d.r and d.phi using sectorExpansionFactor and ringExpansionFactor 
+    if (d.segmentWidthPercentage!= null && d.segmentAnglePercentage != null) {
+         const anglePercentage = segment.startAngle + d.segmentAnglePercentage* segment.anglePercentage
+         const widthPercentage = segment.startWidth + d.segmentWidthPercentage* segment.widthPercentage
+
+         const phi = 2 * (1 - anglePercentage ) * Math.PI
+         const r = (1-widthPercentage)  *viewpoint.template.maxRingRadius
+         xy =  cartesianFromPolar({ r: r, phi: phi })
+
+
+         
+    } else{
     if (d.x != null && d.y != null
         && blipInSegment(d, viewpoint, { sector: blipSector, ring: blipRing })
     ) {
@@ -544,6 +558,7 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
         xy = sectorRingToPosition(blipSector, blipRing, viewpoint.template)
 
     }
+}
     let scaleFactor = blipSize * viewpoint.blipDisplaySettings.blipScaleFactor ?? 1
     if (d.artificial == true) { scaleFactor = scaleFactor * (1 + (d.aggregation.count - 1) / 3) }
     blip.attr("transform", `translate(${xy.x},${xy.y}) scale(${scaleFactor})`)

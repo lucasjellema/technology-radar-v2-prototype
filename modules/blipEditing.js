@@ -48,7 +48,7 @@ const getCurrentContext = (viewpoint) => {
 }
 
 
-const launchNewBlipWizard = (viewpoint, drawRadarBlips, segment=null) => {
+const launchNewBlipWizard = (viewpoint, drawRadarBlips, segment = null) => {
     showOrHideElement("modalBlipEditor", true)
     showOrHideElement("newBlip", true)
 
@@ -140,7 +140,7 @@ ${currentContext.reduce((sum, contextEntry, index) => { return sum + (index == 0
 const generateBlipsForRatings = (viewpoint) => {
     const ratingTypeName = viewpoint.ratingType.name
     const blippedRatingsSet = new Set()
-    const allRatings = getData().ratings    
+    const allRatings = getData().ratings
     console.log(`allratings # ${Object.keys(allRatings).length}`)
     console.log(`blips # ${viewpoint.blips.length}`)
     viewpoint.blips.forEach((blip) => blippedRatingsSet.add(blip.rating.id))
@@ -321,7 +321,7 @@ const launchBlipEditor = (blip, viewpoint, drawRadarBlips, editObject = true) =>
         }
         if (blipProperty.property.type == "time") {
             let value = getNestedPropertyValueFromObject(blip.rating, blipProperty.propertyPath)
-            document.getElementById(inputElementId).valueAsNumber= value
+            document.getElementById(inputElementId).valueAsNumber = value
         }
         if (blipProperty.property.type == "image") {
             initializeImagePaster((imageURL) => {
@@ -396,7 +396,7 @@ const saveBlipEdit = (editObject) => {
         else {
             const inputElementId = `blip${blipProperty.propertyPath}`
             let value = document.getElementById(inputElementId).value
-            if (blipProperty.property.type == "time") {value = document.getElementById(inputElementId).valueAsNumber}
+            if (blipProperty.property.type == "time") { value = document.getElementById(inputElementId).valueAsNumber }
             setNestedPropertyValueOnObject(blip.rating, blipProperty.propertyPath, value)
         }
     }
@@ -421,8 +421,8 @@ const saveBlipEdit = (editObject) => {
     // close modal editor
 
     showOrHideElement("modalBlipEditor", false)
-    if (drawRadarBlipsToCall!=null){ 
-    drawRadarBlipsToCall(viewpointToReuse)
+    if (drawRadarBlipsToCall != null) {
+        drawRadarBlipsToCall(viewpointToReuse)
     }
 }
 
@@ -460,9 +460,9 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
     if (blipDragEvent.blipId.startsWith("sectorBackgroundImage")) { handleSectorBackgroundImageDrag(blipDragEvent, viewpoint) }
     else if (blipDragEvent.blipId.startsWith("radarBackgroundImage")) { handleRadarBackgroundImageDrag(blipDragEvent, viewpoint) }
     else {
-        // TODO use the real sector expansion factor!!!
+        // TODO use the real sector expansion factor function !!!
         let sectorExpansionFactor = getSectorExpansionFactor(viewpoint)
-        // TODO use the real sector expansion factor!!!
+        // TODO use the real ring expansion factor function!!!
         let ringExpansionFactor = getRingExpansionFactor(viewpoint)
         const dropSegment = segmentFromCartesian({ x: blipDragEvent.newX, y: blipDragEvent.newY }, viewpoint, sectorExpansionFactor, ringExpansionFactor)
 
@@ -471,23 +471,25 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
         let blip
         // artificial blips are not found in viewpoints.blips collection ; these cannot be updated through dragging
         try {
-        blip = viewpoint.blips.filter((blip) => blip.id == blipId ? blip : null)[0]
-        console.log(`dragged element ${blipDragEvent.blipId}${blip.rating.object.label}`)
+            blip = viewpoint.blips.filter((blip) => blip.id == blipId ? blip : null)[0]
+            console.log(`dragged element ${blipDragEvent.blipId}${blip.rating.object.label}`)
 
+            // store the segmentAnglePercentage and the segmentRadiusPercentage to indicate the relative blip position within the segment
+            blip.x = blipDragEvent.newX
+            blip.y = blipDragEvent.newY
+            blip.segmentAnglePercentage = dropSegment.segmentAnglePercentage
+            blip.segmentWidthPercentage = dropSegment.segmentWidthPercentage
 
-        blip.x = blipDragEvent.newX
-        blip.y = blipDragEvent.newY
+            const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
+            const propertyValueDerivedFromSector = getKeyForValue(viewpoint.propertyVisualMaps.sector.valueMap, dropSegment.sector) // "find category value mapped to the sector value of dropSector" 
+            setNestedPropertyValueOnObject(blip.rating, propertyMappedToSector, propertyValueDerivedFromSector)
 
-        const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
-        const propertyValueDerivedFromSector = getKeyForValue(viewpoint.propertyVisualMaps.sector.valueMap, dropSegment.sector) // "find category value mapped to the sector value of dropSector" 
-        setNestedPropertyValueOnObject(blip.rating, propertyMappedToSector, propertyValueDerivedFromSector)
-
-        const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
-        const propertyValueDerivedFromRing = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring) // "find category value mapped to the sector value of dropSector" 
-        setNestedPropertyValueOnObject(blip.rating, propertyMappedToRing, propertyValueDerivedFromRing)
-        } catch (e){// blip not found ; for artificial blips, that is not a problem
-        } 
-     }
+            const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
+            const propertyValueDerivedFromRing = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring) // "find category value mapped to the sector value of dropSector" 
+            setNestedPropertyValueOnObject(blip.rating, propertyMappedToRing, propertyValueDerivedFromRing)
+        } catch (e) {// blip not found ; for artificial blips, that is not a problem
+        }
+    }
 }
 
 // find in an object the (first) key or property name for a given value 
