@@ -142,7 +142,7 @@ const drawRadarBlips = function (viewpoint) {
     document.getElementById('showLabels').checked = currentViewpoint.blipDisplaySettings.showLabels
 
     document.getElementById('showShapes').checked = currentViewpoint.blipDisplaySettings.showShapes
-    document.getElementById('showRingMinusOne').checked = !(currentViewpoint.blipDisplaySettings.showRingMinusOne== false)
+    document.getElementById('showRingMinusOne').checked = !(currentViewpoint.blipDisplaySettings.showRingMinusOne == false)
     document.getElementById('aggregationMode').checked = currentViewpoint.blipDisplaySettings.aggregationMode
     document.getElementById('sectors').checked = currentViewpoint.template.topLayer == "sectors"
     document.getElementById('rings').checked = currentViewpoint.template.topLayer == "rings"
@@ -193,10 +193,10 @@ const drawRadarBlips = function (viewpoint) {
     // go through blips and assign blips to segment
     filteredBlips.forEach((blip) => {
         const segment = findSegmentForRating(blip.rating, viewpoint, blipDrawingContext)
-        if ( segment.sector!=null 
-             && 
-             (segment.ring >= 0  || (segment.ring == -1 && currentViewpoint.blipDisplaySettings.showRingMinusOne!= false))
-            ) {
+        if (segment.sector != null
+            &&
+            (segment.ring >= 0 || (segment.ring == -1 && currentViewpoint.blipDisplaySettings.showRingMinusOne != false))
+        ) {
             blipDrawingContext.segmentMatrix[segment.sector][segment.ring].blips.push(blip)
         }
     })
@@ -306,25 +306,26 @@ const prepareBlipDrawingContext = () => {
                 , endPhi: 2 * (1 - (sectorAngleSum + currentSectorAngle)) * Math.PI
                 , startAngle: sectorAngleSum
                 , endAngle: sectorAngleSum + currentSectorAngle
-                , anglePercentage : currentSectorAngle
+                , anglePercentage: currentSectorAngle
                 , startWidth: ringWidthSum
                 , endWidth: ringWidthSum + currentRingWidth
-                , widthPercentage : currentRingWidth
+                , widthPercentage: currentRingWidth
                 , startR: Math.round((1 - ringWidthSum) * getViewpoint().template.maxRingRadius)
                 , endR: Math.round((1 - ringWidthSum - currentRingWidth) * getViewpoint().template.maxRingRadius)
                 , blips: []
             }
-            segmentMatrix[s][r]= segment
+            segmentMatrix[s][r] = segment
             segment.visible = !(ring.visible == false || sector.visible == false)
 
             ringWidthSum += currentRingWidth
 
         }
         // add ring -1 (the outer zone)
-        segmentMatrix[s][-1]= segmentMatrix[s][0]
+        segmentMatrix[s][-1] = {...segmentMatrix[s][0]}
+        segmentMatrix[s][-1].blips = []
         segmentMatrix[s][-1].startR = 3000
-        segmentMatrix[s][-1].endR = segmentMatrix[s][0].startR        
-        
+        segmentMatrix[s][-1].endR = segmentMatrix[s][0].startR
+
         sectorAngleSum += currentSectorAngle
 
     }
@@ -376,9 +377,9 @@ const priorRingsWidthPercentageSum = (ringId, config) => config.ringsConfigurati
 
 const sectorRingToPosition = (sector, ring, config) => { // return randomized X,Y coordinates in segment corresponding to the sector and ring 
     try {
-        const segmentAnglePercentage = (0.1 + Math.random() * 0.8) 
+        const segmentAnglePercentage = (0.1 + Math.random() * 0.8)
         const phi = priorSectorsAnglePercentageSum(sector, config) +
-        segmentAnglePercentage * config.sectorsConfiguration.sectors[sector].angle * sectorExpansionFactor()
+            segmentAnglePercentage * config.sectorsConfiguration.sectors[sector].angle * sectorExpansionFactor()
         // ring can be undefined (== the so called -1 ring, outside the real rings)
         let r
         let segmentWidthPercentage
@@ -392,8 +393,8 @@ const sectorRingToPosition = (sector, ring, config) => { // return randomized X,
             segmentWidthPercentage = -(1.01 + Math.random() * 0.39)
             r = config.maxRingRadius * (- segmentWidthPercentage)  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
         }
-        const cartesian =  cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
-        return {...{r:r, phi:phi}, ...cartesian, ...{segmentAnglePercentage, segmentWidthPercentage}}
+        const cartesian = cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
+        return { ...{ r: r, phi: phi }, ...cartesian, ...{ segmentAnglePercentage, segmentWidthPercentage } }
     } catch (e) {
         console.log(`radarblips,.sectorRingToPosition ${e} ${sector}${ring}`)
     }
@@ -427,7 +428,7 @@ const findSectorForRating = (rating, viewpoint) => {
 }
 
 const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
-    
+
     let blipSector = findSectorForRating(d.rating, viewpoint)
     if (blipSector == null) {
         if (blipDrawingContext.othersDimensionValue["sector"] != null) {
@@ -460,7 +461,8 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     let blipShape
     try {
 
-        const propertyMappedToShape = viewpoint.propertyVisualMaps.shape.property
+        const propertyMappedToShape = viewpoint.propertyVisualMaps.shape?.property
+        if (propertyMappedToShape!=null) {
         let blipShapeId = viewpoint.propertyVisualMaps.shape.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToShape)]
         if (blipShapeId == null) {
             if (blipDrawingContext.othersDimensionValue["shape"] != null) {
@@ -474,6 +476,7 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
             return
         }
         blipShape = viewpoint.template.shapesConfiguration.shapes[blipShapeId].shape
+    } else {blipShape = "circle"}
     } catch (e) {
         blipShape = "circle"
         console.log(`draw radar blip fall back to circle because of ${e}`)
@@ -482,23 +485,29 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
 
     let blipColor
     try {
-        const propertyMappedToColor = viewpoint.propertyVisualMaps.color.property
-        let blipColorId = viewpoint.propertyVisualMaps.color.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToColor)]
-        if (blipColorId == null) {
-            if (blipDrawingContext.othersDimensionValue["color"] != null) {
-                blipColorId = blipDrawingContext.othersDimensionValue["color"]
+        const propertyMappedToColor = viewpoint.propertyVisualMaps?.color?.property
+        if (propertyMappedToColor != null) {
+            let blipColorId = viewpoint.propertyVisualMaps.color.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToColor)]
+            if (blipColorId == null) {
+                if (blipDrawingContext.othersDimensionValue["color"] != null) {
+                    blipColorId = blipDrawingContext.othersDimensionValue["color"]
+                }
+                else {
+                    return
+                }
             }
-            else {
+            if (viewpoint.template.colorsConfiguration.colors[blipColorId]?.visible == false) {
                 return
             }
-        }
-        if (viewpoint.template.colorsConfiguration.colors[blipColorId]?.visible == false) {
-            return
-        }
+        
 
         blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
+        } else {
+            blipColor = "blue"
+
+        }
         //TODO AGGREGATION hard coded aggregated color
-        if (d.artificial==true && viewpoint.blipDisplaySettings.aggregationMode) {
+        if (d.artificial == true && viewpoint.blipDisplaySettings.aggregationMode) {
             blipColor = "#800040"  // color to indicate aggregation
 
         }
@@ -510,7 +519,8 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     let blipSize
     try {
 
-        const propertyMappedToSize = viewpoint.propertyVisualMaps.size.property
+        const propertyMappedToSize = viewpoint.propertyVisualMaps.size?.property
+        if (propertyMappedToSize!=null) {
         let blipSizeId = viewpoint.propertyVisualMaps.size.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSize)]
         if (blipSizeId == null) {
             if (blipDrawingContext.othersDimensionValue["size"] != null) {
@@ -523,8 +533,11 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
         if (viewpoint.template.sizesConfiguration.sizes[blipSizeId]?.visible == false) {
             return
         }
-        blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
 
+        blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
+    } else {
+        blipSize = 1
+    }
     } catch (e) {
         blipSize = 1
 
@@ -545,27 +558,27 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     }
     let xy
 
-    if (d.segmentWidthPercentage!= null && d.segmentAnglePercentage != null) {
-         const anglePercentage = segment.startAngle + d.segmentAnglePercentage* segment.anglePercentage
-         const widthPercentage = segment.startWidth + d.segmentWidthPercentage* segment.widthPercentage
+    if (d.segmentWidthPercentage != null && d.segmentAnglePercentage != null) {
+        const anglePercentage = segment.startAngle + d.segmentAnglePercentage * segment.anglePercentage
+        let widthPercentage = segment.startWidth + d.segmentWidthPercentage * segment.widthPercentage
+        if (blipRing == -1 ) { widthPercentage = -1 * d.segmentWidthPercentage }
+        const phi = 2 * (1 - anglePercentage) * Math.PI
+        const r = (1 - widthPercentage) * viewpoint.template.maxRingRadius
+        xy = cartesianFromPolar({ r: r, phi: phi })
 
-         const phi = 2 * (1 - anglePercentage ) * Math.PI
-         const r = (1-widthPercentage)  *viewpoint.template.maxRingRadius
-         xy =  cartesianFromPolar({ r: r, phi: phi })
 
 
-         
-    } else{
-    if (d.x != null && d.y != null
-        && blipInSegment(d, viewpoint, { sector: blipSector, ring: blipRing })
-    ) {
-        xy = { x: d.x, y: d.y }
     } else {
-        xy = sectorRingToPosition(blipSector, blipRing, viewpoint.template)
-        d.segmentAnglePercentage = xy.segmentAnglePercentage
-        d.segmentWidthPercentage = xy.segmentWidthPercentage
+        if (d.x != null && d.y != null
+            && blipInSegment(d, viewpoint, { sector: blipSector, ring: blipRing })
+        ) {
+            xy = { x: d.x, y: d.y }
+        } else {
+            xy = sectorRingToPosition(blipSector, blipRing, viewpoint.template)
+            d.segmentAnglePercentage = xy.segmentAnglePercentage
+            d.segmentWidthPercentage = xy.segmentWidthPercentage
+        }
     }
-}
     let scaleFactor = blipSize * viewpoint.blipDisplaySettings.blipScaleFactor ?? 1
     if (d.artificial == true) { scaleFactor = scaleFactor * (1 + (d.aggregation.count - 1) / 3) }
     blip.attr("transform", `translate(${xy.x},${xy.y}) scale(${scaleFactor})`)
@@ -716,7 +729,7 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
 
 const handleBlipScaleFactorChange = (event) => {
     currentViewpoint.blipDisplaySettings.blipScaleFactor = event.target.value
-  //  console.log(`handle scale factor change ${currentViewpoint.blipDisplaySettings.blipScaleFactor}`)
+    //  console.log(`handle scale factor change ${currentViewpoint.blipDisplaySettings.blipScaleFactor}`)
     drawRadarBlips(currentViewpoint)
 }
 
@@ -1119,7 +1132,7 @@ document.getElementById('showLabels').addEventListener("change", handleShowLabel
 document.getElementById('showShapes').addEventListener("change", handleShowShapesChange);
 document.getElementById('aggregationMode').addEventListener("change", handleAggregationModeChange);
 document.getElementById('showRingMinusOne').addEventListener("change", handleShowRingMinusOneChange);
-document.getElementById('displaySettings').addEventListener("click", () => {toggleShowHideElement('displaySettingsPanel')});
+document.getElementById('displaySettings').addEventListener("click", () => { toggleShowHideElement('displaySettingsPanel') });
 
 
 document.getElementById('addTagToFilter').addEventListener("click", handleTagFilterChange);
@@ -1216,11 +1229,11 @@ function blipWindow(blip, viewpoint) {
             if (property.allowableValues != null && property.allowableValues.length > 0) {
                 value = getLabelForAllowableValue(value, property.allowableValues)
             }
-            
+
             // TODO AGGREGATION hard coded property name
             if (blip.artificial == true && propertyName == "scope") {
                 addProperty(property.label, blip.aggregation.label, ratingDiv)
-            } else             if (blip.artificial == true && propertyName == "author") {
+            } else if (blip.artificial == true && propertyName == "author") {
                 addProperty(property.label, blip.aggregation.authors, ratingDiv)
             } else {
                 addProperty(property.label, value, ratingDiv)
