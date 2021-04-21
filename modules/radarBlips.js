@@ -390,8 +390,8 @@ const sectorRingToPosition = (sector, ring, config) => { // return randomized X,
             r = config.maxRingRadius * rFactor
         }
         else {
-            segmentWidthPercentage = -(1.01 + Math.random() * 0.39)
-            r = config.maxRingRadius * (- segmentWidthPercentage)  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
+            segmentWidthPercentage = - ( Math.random() * 0.39)
+            r = config.maxRingRadius * (1 - segmentWidthPercentage)  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
         }
         const cartesian = cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
         return { ...{ r: r, phi: phi }, ...cartesian, ...{ segmentAnglePercentage, segmentWidthPercentage } }
@@ -561,7 +561,10 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     if (d.segmentWidthPercentage != null && d.segmentAnglePercentage != null) {
         const anglePercentage = segment.startAngle + d.segmentAnglePercentage * segment.anglePercentage
         let widthPercentage = segment.startWidth + d.segmentWidthPercentage * segment.widthPercentage
-        if (blipRing == -1 ) { widthPercentage = -1 * d.segmentWidthPercentage }
+        if (blipRing == -1 ) { 
+            widthPercentage = -1 * Math.abs(d.segmentWidthPercentage )
+            widthPercentage = Math.max(-0.5, widthPercentage) // TODO this should not be necessary, but widthPercentage is getting too big
+        }
         const phi = 2 * (1 - anglePercentage) * Math.PI
         const r = (1 - widthPercentage) * viewpoint.template.maxRingRadius
         xy = cartesianFromPolar({ r: r, phi: phi })

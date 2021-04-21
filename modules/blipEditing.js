@@ -485,7 +485,15 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
             setNestedPropertyValueOnObject(blip.rating, propertyMappedToSector, propertyValueDerivedFromSector)
 
             const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
-            const propertyValueDerivedFromRing = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring) // "find category value mapped to the sector value of dropSector" 
+            // cater for ring = -1. Which value should be assigned when the blip is dropped in ring minus one?
+            // the ring value designated others? or simply null?
+
+            let propertyValueDerivedFromRing
+            if (dropSegment.ring==-1) {
+                propertyValueDerivedFromRing=null
+            } else {
+            propertyValueDerivedFromRing = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring) // "find value mapped to the ring value of dropRing" 
+            }
             setNestedPropertyValueOnObject(blip.rating, propertyMappedToRing, propertyValueDerivedFromRing)
         } catch (e) {// blip not found ; for artificial blips, that is not a problem
         }
