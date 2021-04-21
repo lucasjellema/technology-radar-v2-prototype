@@ -1,0 +1,3902 @@
+{
+    "model": {
+        "objectTypes": {
+            "technology": {
+                "name": "technology",
+                "label": "Technology",
+                "properties": {
+                    "label": {
+                        "label": "Label",
+                        "type": "string",
+                        "defaultValue": "Some Technology",
+                        "displayLabel": true,
+                        "key": "label",
+                        "name": "label"
+                    },
+                    "description": {
+                        "label": "Description",
+                        "type": "string",
+                        "name": "description"
+                    },
+                    "homepage": {
+                        "label": "Homepage",
+                        "type": "url",
+                        "name": "homepage"
+                    },
+                    "image": {
+                        "label": "Logo",
+                        "type": "image",
+                        "name": "image"
+                    },
+                    "vendor": {
+                        "label": "Vendor",
+                        "type": "string",
+                        "discrete": true,
+                        "name": "vendor"
+                    },
+                    "tags": {
+                        "label": "Tags",
+                        "type": "tags",
+                        "name": "tags"
+                    },
+                    "offering": {
+                        "label": "Offering",
+                        "type": "string",
+                        "allowableValues": [
+                            {
+                                "value": "oss",
+                                "label": "Open Source Software"
+                            },
+                            {
+                                "value": "commercial",
+                                "label": "Commercial Software"
+                            },
+                            {
+                                "value": "other",
+                                "label": "Other type of offering"
+                            }
+                        ],
+                        "defaultValue": "oss",
+                        "name": "offering"
+                    },
+                    "category": {
+                        "label": "Category",
+                        "type": "string",
+                        "allowableValues": [
+                            {
+                                "value": "rdbms",
+                                "label": "RDBMS"
+                            },
+                            {
+                                "value": "nosql",
+                                "label": "NoSQL"
+                            },
+                            {
+                                "value": "graph",
+                                "label": "Graph"
+                            },
+                            {
+                                "value": "timeseries",
+                                "label": "Time Series"
+                            },
+                            {
+                                "value": "blobstore",
+                                "label": "Blob Storage"
+                            },
+                            {
+                                "value": "cache",
+                                "label": "Memory Cache"
+                            },
+                            {
+                                "value": "events",
+                                "label": "Event Store/Message Hub"
+                            },
+                            {
+                                "value": "lake",
+                                "label": "Big Data Lake"
+                            }
+                        ],
+                        "defaultValue": "rdbms",
+                        "name": "category"
+                    }
+                }
+            },
+            "workitem": {
+                "id": "17ce4769-5583-4c21-b751-69e7f43484ba",
+                "name": "workitem",
+                "label": "workitem",
+                "properties": {
+                    "title": {
+                        "name": "title",
+                        "label": "Title",
+                        "description": "short label for work item",
+                        "type": "string",
+                        "defaultValue": "",
+                        "discrete": false,
+                        "key": "title"
+                    },
+                    "description": {
+                        "name": "description",
+                        "label": "Description",
+                        "description": "Longer description of work item - intended functionality | deliverables | results",
+                        "type": "text",
+                        "defaultValue": "",
+                        "discrete": false
+                    },
+                    "area": {
+                        "name": "area",
+                        "label": "Functional Area",
+                        "description": "",
+                        "type": "string",
+                        "defaultValue": "",
+                        "discrete": false,
+                        "allowableValues": [
+                            {
+                                "value": "navigation",
+                                "label": "Navigation & Drill"
+                            },
+                            {
+                                "value": "quickstart",
+                                "label": "Quick Starts"
+                            },
+                            {
+                                "value": "backend",
+                                "label": "Multiuser & Backend"
+                            },
+                            {
+                                "value": "files",
+                                "label": "File Management"
+                            },
+                            {
+                                "value": "metadata",
+                                "label": "Meta Data Model"
+                            },
+                            {
+                                "value": "datamanagement",
+                                "label": "Data Management"
+                            },
+                            {
+                                "value": "ui",
+                                "label": "UI"
+                            }
+                        ]
+                    },
+                    "type": {
+                        "name": "type",
+                        "label": "Type",
+                        "allowableValues": [
+                            {
+                                "value": "fix",
+                                "label": "Fix"
+                            },
+                            {
+                                "value": "doc",
+                                "label": "Documentation"
+                            },
+                            {
+                                "value": "test",
+                                "label": "Test"
+                            },
+                            {
+                                "value": "refactor",
+                                "label": "Refactor"
+                            },
+                            {
+                                "value": "functionality",
+                                "label": "Functionality"
+                            }
+                        ],
+                        "description": "",
+                        "type": "string",
+                        "defaultValue": "",
+                        "discrete": false
+                    }
+                },
+                "timestamp": 1618392852893
+            }
+        },
+        "ratingTypes": {
+            "technologyAdoption": {
+                "name": "technologyAdoption",
+                "label": "Technology Adoption",
+                "objectType": "technology",
+                "properties": {
+                    "ambition": {
+                        "label": "Ambition",
+                        "description": "The current outlook or intent regarding this technology",
+                        "defaultValue": "identified",
+                        "allowableValues": [
+                            {
+                                "value": "identified",
+                                "label": "Waargenomen"
+                            },
+                            {
+                                "value": "hold",
+                                "label": "Geen Waarde"
+                            },
+                            {
+                                "value": "interesting",
+                                "label": "Potentie"
+                            },
+                            {
+                                "value": "assess",
+                                "label": "Verkennen"
+                            },
+                            {
+                                "value": "trial",
+                                "label": "Toepassen"
+                            },
+                            {
+                                "value": "adopt",
+                                "label": "In Productie"
+                            }
+                        ],
+                        "name": "ambition"
+                    },
+                    "magnitude": {
+                        "label": "Magnitude/Relevance",
+                        "description": "The relative size of the technology (in terms of investment, people involved, percentage of revenue)",
+                        "defaultValue": "medium",
+                        "allowableValues": [
+                            {
+                                "value": "tiny",
+                                "label": "Tiny or Niche"
+                            },
+                            {
+                                "value": "medium",
+                                "label": "Medium"
+                            },
+                            {
+                                "value": "large",
+                                "label": "Large"
+                            }
+                        ],
+                        "name": "magnitude"
+                    },
+                    "experience": {
+                        "label": "Experience/Maturity",
+                        "description": "The relative time this technology has been around (for us)",
+                        "defaultValue": "medium",
+                        "allowableValues": [
+                            {
+                                "value": "short",
+                                "label": "Fresh"
+                            },
+                            {
+                                "value": "medium",
+                                "label": "Intermediate"
+                            },
+                            {
+                                "value": "long",
+                                "label": "Very Mature"
+                            }
+                        ],
+                        "name": "experience"
+                    },
+                    "scope": {
+                        "label": "Scope",
+                        "description": "The scope or context to which the rating applies",
+                        "defaultValue": "AMIS",
+                        "discrete": true,
+                        "context": true,
+                        "name": "scope"
+                    },
+                    "author": {
+                        "label": "Author/Evaluator",
+                        "description": "The name of the person who made the judgement",
+                        "defaultValue": "System Generated",
+                        "discrete": true,
+                        "context": true,
+                        "name": "author"
+                    },
+                    "timestamp": {
+                        "label": "Time of Evaluation",
+                        "description": "When was this rating defined",
+                        "type": "time",
+                        "readOnly": true,
+                        "name": "timestamp"
+                    },
+                    "comment": {
+                        "label": "Comment/Rationale",
+                        "description": "Additional remark regarding this rating",
+                        "type": "text",
+                        "name": "comment"
+                    }
+                }
+            },
+            "CVAssessment": {
+                "id": "3f860305-2e2a-45dd-9842-98574a435fa6",
+                "name": "CVAssessment",
+                "label": "CVAssessment",
+                "properties": {
+                    "skill": {
+                        "name": "skill",
+                        "label": "Skill",
+                        "allowableValues": [
+                            {
+                                "value": "0",
+                                "label": "New"
+                            },
+                            {
+                                "value": "1",
+                                "label": "Novice"
+                            },
+                            {
+                                "value": "2",
+                                "label": "Medium"
+                            },
+                            {
+                                "value": "3",
+                                "label": "Specialist"
+                            }
+                        ],
+                        "description": "",
+                        "type": "string",
+                        "defaultValue": "",
+                        "discrete": false
+                    }
+                },
+                "timestamp": 1618390616221,
+                "objectType": "technology"
+            },
+            "workitemStatus": {
+                "id": "0373866a-7610-4b41-9d5a-8432f893ae00",
+                "name": "workitemStatus",
+                "label": "workitemStatus",
+                "properties": {
+                    "status": {
+                        "name": "status",
+                        "label": "Status",
+                        "allowableValues": [
+                            {
+                                "value": "idea",
+                                "label": "Idea"
+                            },
+                            {
+                                "value": "design",
+                                "label": "Design"
+                            },
+                            {
+                                "value": "implement",
+                                "label": "Implementation"
+                            },
+                            {
+                                "value": "done",
+                                "label": "Done"
+                            }
+                        ],
+                        "description": "",
+                        "type": "string",
+                        "defaultValue": "idea",
+                        "discrete": false
+                    },
+                    "scope": {
+                        "label": "Scope",
+                        "description": "The scope or context to which the rating applies",
+                        "defaultValue": "AMIS",
+                        "discrete": true,
+                        "context": true,
+                        "name": "scope"
+                    },
+                    "author": {
+                        "label": "Author/Evaluator",
+                        "description": "The name of the person who made the judgement",
+                        "defaultValue": "System Generated",
+                        "discrete": true,
+                        "context": true,
+                        "name": "author"
+                    },
+                    "remainingEffort": {
+                        "name": "remainingEffort",
+                        "label": "Remaining Effort",
+                        "allowableValues": [
+                            {
+                                "value": "small",
+                                "label": "Small (< 1 hour)"
+                            },
+                            {
+                                "value": "medium",
+                                "label": "Medium (< 1 day)"
+                            },
+                            {
+                                "value": "large",
+                                "label": "Large (> 1 day)"
+                            }
+                        ],
+                        "description": "",
+                        "type": "string",
+                        "defaultValue": "",
+                        "discrete": false
+                    }
+                },
+                "timestamp": 1618392852893,
+                "objectType": "workitem"
+            }
+        }
+    },
+    "viewpoints": [
+        {
+            "name": "AMIS Data Management Technology Radar 2021",
+            "id": "amis-datamanagement-tech-radar-2021",
+            "template": {
+                "svg_id": "radarSVGContainer",
+                "width": 1450,
+                "height": 1100,
+                "topLayer": "sectors",
+                "selectedRing": null,
+                "selectedSector": null,
+                "rotation": 0,
+                "maxRingRadius": 450,
+                "sectorBoundariesExtended": true,
+                "editMode": false,
+                "defaultFont": {
+                    "color": "black",
+                    "fontSize": "38px",
+                    "fontFamily": "Arial, Helvetica",
+                    "fontStyle": "italic",
+                    "fontWeight": "bold"
+                },
+                "title": {
+                    "text": "Radar Data Management - Spring 2021",
+                    "x": -700,
+                    "y": -520,
+                    "font": {
+                        "fontSize": "34px",
+                        "fontFamily": "Courier"
+                    }
+                },
+                "backgroundImage": {
+                    "image": "https://conclusionjaarverslag.nl/wp-content/uploads/2019/06/AMIS-_-conclusion-logo.png",
+                    "scaleFactor": "4",
+                    "x": 322,
+                    "y": -537
+                },
+                "colors": {
+                    "background": "#FFF",
+                    "grid": "#bbb",
+                    "inactive": "#ddd"
+                },
+                "ringsConfiguration": {
+                    "outsideRingsAllowed": true,
+                    "font": {
+                        "color": "purple",
+                        "fontSize": "24px",
+                        "fontFamily": "Arial, Helvetica",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal"
+                    },
+                    "stroke": {
+                        "strokeWidth": 2,
+                        "strokeColor": "gray",
+                        "strokeArray": "100 1"
+                    },
+                    "rings": [
+                        {
+                            "label": "Geen Tijd in Stoppen",
+                            "width": 0.1,
+                            "visible": true
+                        },
+                        {
+                            "label": "Potentie",
+                            "width": 0.1,
+                            "visible": true
+                        },
+                        {
+                            "label": "Verkennen",
+                            "width": 0.14,
+                            "visible": true
+                        },
+                        {
+                            "label": "Toepassen",
+                            "width": 0.15,
+                            "visible": true
+                        },
+                        {
+                            "label": "In Productie",
+                            "width": 0.52,
+                            "visible": true
+                        }
+                    ]
+                },
+                "sectorsConfiguration": {
+                    "outsideSectorsAllowed": true,
+                    "totalAngle": 1,
+                    "initialAngle": 0,
+                    "font": {
+                        "color": "#000",
+                        "fontSize": "28px",
+                        "fontFamily": "Arial, Helvetica",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal"
+                    },
+                    "stroke": {
+                        "strokeWidth": 2,
+                        "strokeColor": "gray",
+                        "strokeArray": "100 1"
+                    },
+                    "sectors": [
+                        {
+                            "label": "NoSQL",
+                            "angle": 0.29,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#a12121",
+                                "fontSize": "28",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundColor": "#ffffff",
+                            "outerringBackgroundColor": "#ffffff",
+                            "opacity": "0.5",
+                            "opacityOutsideRings": "0.5",
+                            "visible": true,
+                            "others": false
+                        },
+                        {
+                            "label": "Event Store/Message Hub",
+                            "angle": 0.13,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#a12121",
+                                "fontSize": "28",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#ffffff",
+                            "outerringBackgroundColor": "#ffffff",
+                            "opacity": "0.5",
+                            "opacityOutsideRings": "0.5",
+                            "visible": true,
+                            "others": true
+                        },
+                        {
+                            "label": "RDBMS",
+                            "angle": 0.18,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#a12121",
+                                "fontSize": "28",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#ffffff",
+                            "outerringBackgroundColor": "#ffffff",
+                            "opacity": "0.5",
+                            "opacityOutsideRings": "0.5",
+                            "visible": true,
+                            "others": false
+                        },
+                        {
+                            "label": "Memory Cache",
+                            "angle": 0.058823529411764705,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#a12121",
+                                "fontSize": "28",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true,
+                            "others": false
+                        },
+                        {
+                            "label": "Time Series",
+                            "angle": 0.11,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#a12121",
+                                "fontSize": "28",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#ffffff",
+                            "outerringBackgroundColor": "#ffffff",
+                            "opacity": "0.5",
+                            "opacityOutsideRings": "0.5",
+                            "visible": true,
+                            "others": false
+                        },
+                        {
+                            "label": "Graph",
+                            "angle": 0.09803921568627451,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#a12121",
+                                "fontSize": "28",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true,
+                            "others": false
+                        },
+                        {
+                            "label": "Blob Storage",
+                            "angle": 0.0784313725490196,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#a12121",
+                                "fontSize": "28",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true,
+                            "others": false
+                        },
+                        {
+                            "label": "Data Lake",
+                            "angle": 0.05,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#a12121",
+                                "fontSize": "28",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#ffffff",
+                            "outerringBackgroundColor": "#ffffff",
+                            "opacity": "0.5",
+                            "opacityOutsideRings": "0.5",
+                            "visible": true,
+                            "others": false
+                        }
+                    ],
+                    "showRegularSectorLabels": false
+                },
+                "colorsConfiguration": {
+                    "label": "Maturity",
+                    "colors": [
+                        {
+                            "label": "Fresh",
+                            "color": "green",
+                            "enabled": true,
+                            "others": false
+                        },
+                        {
+                            "label": "In Between",
+                            "color": "pink",
+                            "enabled": true,
+                            "others": false
+                        },
+                        {
+                            "label": "Very Mature",
+                            "color": "blue",
+                            "enabled": true,
+                            "others": false
+                        },
+                        {
+                            "label": "Other",
+                            "color": "gray",
+                            "enabled": true,
+                            "others": true
+                        }
+                    ]
+                },
+                "sizesConfiguration": {
+                    "label": "Relevance",
+                    "sizes": [
+                        {
+                            "label": "Niche",
+                            "size": 0.55,
+                            "enabled": true,
+                            "others": false
+                        },
+                        {
+                            "label": "Medium",
+                            "size": 0.8,
+                            "enabled": true,
+                            "others": true
+                        },
+                        {
+                            "label": "Very relevant",
+                            "size": 1.05,
+                            "enabled": true,
+                            "others": false
+                        }
+                    ]
+                },
+                "shapesConfiguration": {
+                    "label": "Offering",
+                    "shapes": [
+                        {
+                            "label": "Concept | Term",
+                            "shape": "square",
+                            "others": false
+                        },
+                        {
+                            "label": "Open Source Software",
+                            "shape": "star",
+                            "enabled": false,
+                            "others": false
+                        },
+                        {
+                            "label": "Other",
+                            "shape": "rectangleVertical",
+                            "enabled": false,
+                            "others": true
+                        },
+                        {
+                            "label": "Commercial",
+                            "shape": "triangle",
+                            "enabled": false,
+                            "others": false
+                        }
+                    ]
+                },
+                "blip": {
+                    "labelProperty": "object.label",
+                    "imageProperty": "object.image",
+                    "defaultShape": "square",
+                    "defaultColor": "#c216c5",
+                    "defaultSize": ""
+                }
+            },
+            "ratingType": "technologyAdoption",
+            "propertyVisualMaps": {
+                "blip": {
+                    "label": "object.label",
+                    "image": "object.image"
+                },
+                "size": {
+                    "property": "magnitude",
+                    "valueMap": {
+                        "tiny": 0,
+                        "medium": 1,
+                        "large": 2
+                    }
+                },
+                "sector": {
+                    "property": "object.category",
+                    "valueMap": {
+                        "cache": 3,
+                        "graph": 5,
+                        "blobstore": 6,
+                        "timeseries": 4,
+                        "rdbms": 2,
+                        "events": 1,
+                        "nosql": 0,
+                        "lake": 7
+                    }
+                },
+                "ring": {
+                    "property": "ambition",
+                    "valueMap": {
+                        "identified": -1,
+                        "potentie": 1,
+                        "interesting": 1,
+                        "hold": 0,
+                        "assess": 2,
+                        "trial": 3,
+                        "adopt": 4,
+                        "production": 4
+                    }
+                },
+                "shape": {
+                    "property": "object.offering",
+                    "valueMap": {
+                        "oss": 1,
+                        "commercial": 3,
+                        "concept": 0,
+                        "other": 2
+                    }
+                },
+                "color": {
+                    "property": "experience",
+                    "valueMap": {
+                        "short": 0,
+                        "intermediate": 1,
+                        "long": 2,
+                        "other": 3
+                    }
+                }
+            },
+            "blipDisplaySettings": {
+                "showImages": true,
+                "showShapes": true,
+                "showLabels": true,
+                "applyShapes": false,
+                "applySizes": true,
+                "applyColors": true,
+                "tagFilter": [],
+                "blipScaleFactor": 1
+            },
+            "blips": [
+                {
+                    "id": "0",
+                    "rating": "9ed7f7cc-bc8d-4585-84d4-8aabcf397eb0",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "1",
+                    "rating": "a20f011c-964a-48f7-92e0-f7fc52161c8c",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "2",
+                    "rating": "fae47773-b37f-48bc-9fd2-486c495a161c",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "3",
+                    "rating": "26e02ede-17ed-40b0-b6d7-0ce86c24a7f4",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "4",
+                    "rating": "8c94467b-1a79-4267-a591-1404c9b38776",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "5",
+                    "rating": "8299c5c2-d0d0-43f5-ba52-c885943f06e9",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "6",
+                    "rating": "dd8836fa-0b8f-40ca-808e-b3f82d1cb80a",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "7",
+                    "rating": "6637ea01-d856-4f05-bc6d-cc194347fe3d",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "8",
+                    "rating": "2ffcd5de-6ab7-4bd7-b343-fe7ad785f600",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "9",
+                    "rating": "f883299d-64fe-4fcf-b564-4e605520f132",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "10",
+                    "rating": "05218183-c430-44eb-b9d9-98a7666703ca",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "11",
+                    "rating": "6a8f1495-d650-46c3-955b-55a1ca3a9521",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "12",
+                    "rating": "5c610f89-b28a-48a2-8b62-3f25e2f4c094",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "13",
+                    "rating": "132cd37b-27fe-4301-b6ee-a26c6a7a514c",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "14",
+                    "rating": "17bf492e-eb9d-41d2-b468-2aad009ff997",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "15",
+                    "rating": "219536b8-ba5e-4220-8cbb-0da443bff83d",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "16",
+                    "rating": "4a4b6542-d7d5-4049-b8b0-f22b3b5fc09e",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "17",
+                    "rating": "6ae276de-010b-4f4a-8c65-62b3d2d7fe45",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "18",
+                    "rating": "f3c3cc99-3b69-426a-86c6-294d840483b7",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "19",
+                    "rating": "9bc9976e-4d5b-467c-a076-4202ef593159",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "20",
+                    "rating": "cf58cfec-95a8-456c-ba01-ff13e760a6d7",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "21",
+                    "rating": "12e9c1f4-9e55-455d-851c-a5841c040464",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "22",
+                    "rating": "aef5ea07-9d98-4501-a2c0-b1310339cadf",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "23",
+                    "rating": "d5a4c463-59e0-4100-b032-a7334750690a",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "24",
+                    "rating": "26d414ab-abe4-4125-b02b-1960a62e7ceb",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "25",
+                    "rating": "491d2386-c9df-43ef-af7c-768dae8eb690",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "26",
+                    "rating": "e5e8c3d8-adc4-4264-a6f2-2f18abbf6357",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "27",
+                    "rating": "2bb0851b-85c9-48bd-8e55-c0ff07c1c68e",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "28",
+                    "rating": "290feb27-89b7-4d64-9c6b-7ea01fcebf78",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "29",
+                    "rating": "9871293d-9c51-4730-a134-d03dffdfd5ca",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "30",
+                    "rating": "c4a7e838-d2f5-4a19-8f52-bb496922f672",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "31",
+                    "rating": "3dadddde-c4a8-4f2b-b363-183abe358dc5",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "32",
+                    "rating": "404e8bd3-abde-40a8-af11-b84d65b3faa2",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "33",
+                    "rating": "65c118e4-a0db-4314-b737-2ffb5108077c",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "34",
+                    "rating": "e59ab6f1-36a4-472f-838f-b6838c177ef2",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "35",
+                    "rating": "e9681782-045f-4a35-8974-b9bc3baab3df",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "36",
+                    "rating": "c695427e-5b82-411c-9a9e-d3464e497960",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "37",
+                    "rating": "0868415b-17f5-40c7-bb08-daca5b5f2376",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "38",
+                    "rating": "10757ca4-6d6d-4d09-9e1b-9b5c1eb24e3f",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "39",
+                    "rating": "1c8d9aee-0a49-4e10-9368-93e379905b0d",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "40",
+                    "rating": "e641d973-6a95-4d44-b906-f29fa92b8abd",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "41",
+                    "rating": "18f8805b-338b-494a-ac0a-fc1c55d71ab4",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "42",
+                    "rating": "35147101-d6b2-41ae-8e70-c0e65b51a650",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "43",
+                    "rating": "9695235f-0a9f-44cb-8cd4-990ffc687d38",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "44",
+                    "rating": "307e205e-ae84-4d34-82d8-79ab00602d14",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "45",
+                    "rating": "e18c1f6c-ab29-4bd5-891d-181ee754cf6c",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "46",
+                    "rating": "2aea2f5f-cc91-4412-a419-a5a73b3cc6aa",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "47",
+                    "rating": "7294c4cb-da85-4272-86ed-ec859a2a6270",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "48",
+                    "rating": "3a264eca-0e8e-42f1-87e5-5133e7eef148",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "49",
+                    "rating": "7e75769e-57c4-48a5-ab0d-24066d21d205",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "50",
+                    "rating": "3ff22d3a-160e-43e5-820c-40d7e82c38b5",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "51",
+                    "rating": "d2f27561-449a-47b6-96bf-3c176521de14",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "52",
+                    "rating": "eb82f804-19b8-4cc8-ad41-d1cba493284e",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "53",
+                    "rating": "d4b6c276-3ddf-4f7e-8382-6be894af38fe",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "54",
+                    "rating": "5bcb0b3b-cd40-42b4-b502-d12e64fa3f83",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "55",
+                    "rating": "bf24eca9-4278-46cf-b765-8a6fce681c59",
+                    "x": null,
+                    "y": null
+                }
+            ]
+        },
+        {
+            "id": "ef5bd718-f2ce-4516-843e-10bf864c395f",
+            "name": "CV",
+            "template": {
+                "svg_id": "radarSVGContainer",
+                "width": 1450,
+                "height": 1100,
+                "topLayer": "rings",
+                "maxRingRadius": 450,
+                "sectorBoundariesExtended": true,
+                "ditMode": false,
+                "defaultFont": {
+                    "color": "black",
+                    "fontSize": "38px",
+                    "fontFamily": "Arial, Helvetica",
+                    "fontStyle": "italic",
+                    "fontWeight": "bold"
+                },
+                "title": {
+                    "text": "New Radar",
+                    "x": -700,
+                    "y": -520,
+                    "font": {
+                        "fontSize": "34px",
+                        "fontFamily": "Arial, Helvetica"
+                    }
+                },
+                "backgroundImage": {},
+                "colors": {},
+                "ringsConfiguration": {
+                    "rings": [
+                        {
+                            "label": "New",
+                            "width": 0.25,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "Novice",
+                            "width": 0.25,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": "18",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#47971c",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "opacity": "0.5",
+                            "visible": true
+                        },
+                        {
+                            "label": "Medium",
+                            "width": 0.25,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "Specialist",
+                            "width": 0.25,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        }
+                    ]
+                },
+                "sectorsConfiguration": {
+                    "sectors": [
+                        {
+                            "label": "NoSQL",
+                            "angle": 0.125,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true
+                        },
+                        {
+                            "label": "Event Store/Message Hub",
+                            "angle": 0.125,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true
+                        },
+                        {
+                            "label": "RDBMS",
+                            "angle": 0.125,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true
+                        },
+                        {
+                            "label": "Memory Cache",
+                            "angle": 0.125,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true
+                        },
+                        {
+                            "label": "Time Series",
+                            "angle": 0.125,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true
+                        },
+                        {
+                            "label": "Graph",
+                            "angle": 0.125,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true
+                        },
+                        {
+                            "label": "Blob Storage",
+                            "angle": 0.125,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true
+                        },
+                        {
+                            "label": "Big Data Lake",
+                            "angle": 0.125,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true
+                        }
+                    ],
+                    "totalAngle": "1",
+                    "initialAngle": "0"
+                },
+                "shapesConfiguration": {
+                    "shapes": [
+                        {
+                            "label": "Open Source Software",
+                            "width": 0.3333333333333333,
+                            "labelSettings": {
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outershapeBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "Commercial Software",
+                            "width": 0.3333333333333333,
+                            "labelSettings": {
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outershapeBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "Other type of offering",
+                            "width": 0.3333333333333333,
+                            "labelSettings": {
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outershapeBackgroundColor": "#FFFFFF"
+                        }
+                    ]
+                },
+                "sizesConfiguration": {
+                    "sizes": []
+                },
+                "colorsConfiguration": {
+                    "colors": []
+                },
+                "blip": "",
+                "editMode": false
+            },
+            "propertyVisualMaps": {
+                "blip": {
+                    "label": "object.label",
+                    "image": "-1",
+                    "defaultShape": "circle",
+                    "defaultColor": "#cd1818",
+                    "defaultSize": "1"
+                },
+                "size": {},
+                "sector": {
+                    "property": "object.category",
+                    "valueMap": {
+                        "nosql": 0,
+                        "events": 1,
+                        "rdbms": 2,
+                        "cache": 3,
+                        "timeseries": 4,
+                        "graph": 5,
+                        "blobstore": 6,
+                        "lake": 7
+                    }
+                },
+                "ring": {
+                    "property": "skill",
+                    "valueMap": {
+                        "0": 0,
+                        "1": 1,
+                        "2": 2,
+                        "3": 3
+                    }
+                },
+                "shape": {
+                    "property": "object.offering",
+                    "valueMap": {
+                        "oss": 0,
+                        "commercial": 1,
+                        "other": 2
+                    }
+                },
+                "color": {}
+            },
+            "blipDisplaySettings": {
+                "showImages": true,
+                "showShapes": true,
+                "showLabels": true,
+                "applyShapes": false,
+                "applySizes": false,
+                "applyColors": false,
+                "tagFilter": [],
+                "blipScaleFactor": 1
+            },
+            "blips": [
+                {
+                    "id": "0",
+                    "rating": "fe3b466b-faf8-4d55-a99b-b28604bd0370",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "1",
+                    "rating": "7d320da9-8805-4a2d-9b06-9a88a75af47c",
+                    "x": null,
+                    "y": null
+                }
+            ],
+            "timestamp": 1618390616220,
+            "ratingType": "CVAssessment"
+        },
+        {
+            "id": "6732a820-2a3c-4bc2-af6a-ac73938b6404",
+            "name": "Radar Backlog",
+            "template": {
+                "svg_id": "radarSVGContainer",
+                "width": 1450,
+                "height": 1100,
+                "topLayer": "rings",
+                "maxRingRadius": 450,
+                "sectorBoundariesExtended": true,
+                "ditMode": false,
+                "defaultFont": {
+                    "color": "black",
+                    "fontSize": "38px",
+                    "fontFamily": "Arial, Helvetica",
+                    "fontStyle": "italic",
+                    "fontWeight": "bold"
+                },
+                "title": {
+                    "text": "Radar Backlog Overview",
+                    "x": -700,
+                    "y": -520,
+                    "font": {
+                        "fontSize": "34px",
+                        "fontFamily": "Arial, Helvetica"
+                    },
+                    "fontFamily": "Helvetica",
+                    "fontSize": "28px",
+                    "color": "#000000"
+                },
+                "backgroundImage": {
+                    "image": ""
+                },
+                "colors": {},
+                "ringsConfiguration": {
+                    "rings": [
+                        {
+                            "label": "Idea",
+                            "width": 0.2,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#00FF00",
+                                "fontSize": "12",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#c1f2c0",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true,
+                            "opacity": "0.5"
+                        },
+                        {
+                            "label": "Design",
+                            "width": 0.1,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": "12",
+                                "fontFamily": "Calibri"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#ffffff",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true,
+                            "opacity": "0.5"
+                        },
+                        {
+                            "label": "Implementation",
+                            "width": 0.14,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": "18",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#ffffff",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true,
+                            "opacity": "0.5"
+                        },
+                        {
+                            "label": "Done",
+                            "width": 0.39,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": "18",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#e4da53",
+                            "outerringBackgroundColor": "#FFFFFF",
+                            "visible": true,
+                            "opacity": "0.5"
+                        }
+                    ]
+                },
+                "sectorsConfiguration": {
+                    "sectors": [
+                        {
+                            "label": "Navigation & Drill",
+                            "angle": 0.14285714285714285,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "Quick Starts",
+                            "angle": 0.14285714285714285,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "Multiuser & Backend",
+                            "angle": 0.14285714285714285,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "File Management",
+                            "angle": 0.14285714285714285,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "Meta Data Model",
+                            "angle": 0.14285714285714285,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "Data Management",
+                            "angle": 0.14285714285714285,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "UI",
+                            "angle": 0.14285714285714285,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": "18",
+                                "fontFamily": "Helvetica"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#ffffff",
+                            "outerringBackgroundColor": "#ffffff",
+                            "opacity": "0.5",
+                            "opacityOutsideRings": "0.5",
+                            "edge": {
+                                "color": "#ffffff",
+                                "width": "8"
+                            },
+                            "visible": true
+                        }
+                    ],
+                    "totalAngle": "1",
+                    "initialAngle": "0"
+                },
+                "shapesConfiguration": {
+                    "shapes": [
+                        {
+                            "label": "Functionality",
+                            "width": 0.2,
+                            "labelSettings": {
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outershapeBackgroundColor": "#FFFFFF",
+                            "shape": "circle"
+                        },
+                        {
+                            "label": "Fix",
+                            "width": 0.2,
+                            "labelSettings": {
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outershapeBackgroundColor": "#FFFFFF",
+                            "shape": "diamond"
+                        },
+                        {
+                            "label": "Documentation",
+                            "width": 0.2,
+                            "labelSettings": {
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outershapeBackgroundColor": "#FFFFFF",
+                            "shape": "square"
+                        },
+                        {
+                            "label": "Test",
+                            "width": 0.2,
+                            "labelSettings": {
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outershapeBackgroundColor": "#FFFFFF",
+                            "shape": "triangle"
+                        },
+                        {
+                            "label": "Refactor",
+                            "width": 0.2,
+                            "labelSettings": {
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outershapeBackgroundColor": "#FFFFFF",
+                            "shape": "rectangleHorizontal",
+                            "visible": true
+                        }
+                    ],
+                    "label": "Type of Work"
+                },
+                "sizesConfiguration": {
+                    "sizes": []
+                },
+                "colorsConfiguration": {
+                    "colors": []
+                },
+                "blip": "",
+                "editMode": false
+            },
+            "propertyVisualMaps": {
+                "blip": {
+                    "label": "object.title",
+                    "image": "-1",
+                    "defaultShape": "circle",
+                    "defaultColor": "#2bbfe3",
+                    "defaultSize": "1"
+                },
+                "size": {},
+                "sector": {
+                    "property": "object.area",
+                    "valueMap": {
+                        "navigation": 0,
+                        "quickstart": 1,
+                        "backend": 2,
+                        "files": 3,
+                        "metadata": 4,
+                        "datamanagement": 5,
+                        "ui": 6
+                    }
+                },
+                "ring": {
+                    "property": "status",
+                    "valueMap": {
+                        "idea": 0,
+                        "done": 3,
+                        "implement": 2,
+                        "design": 1
+                    }
+                },
+                "shape": {
+                    "property": "object.type",
+                    "valueMap": {
+                        "functionality": 0,
+                        "fix": 1,
+                        "doc": 2,
+                        "test": 3,
+                        "refactor": 4
+                    }
+                },
+                "color": {}
+            },
+            "blipDisplaySettings": {
+                "showImages": true,
+                "showShapes": true,
+                "showLabels": true,
+                "applyShapes": true,
+                "applySizes": false,
+                "applyColors": false,
+                "tagFilter": [],
+                "blipScaleFactor": 1
+            },
+            "blips": [
+                {
+                    "id": "0",
+                    "rating": "f83e70e1-8404-41e6-804b-1afd10301963",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "1",
+                    "rating": "a397de5f-3ace-418b-bdf6-b431b67f6a88",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "3",
+                    "rating": "e264ba9a-73c5-4947-86e0-67c203087d96",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "4",
+                    "rating": "57955e5e-118c-471c-9fe4-47c8445bb6da",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "5",
+                    "rating": "ad65a8f7-6e86-4ec2-830d-eda0b1afe7af",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "5",
+                    "rating": "81d49277-044f-45ac-b7b0-fc2ee9cd230c",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "6",
+                    "rating": "1a087ebe-222f-4936-a16b-640d3abec4ce",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "7",
+                    "rating": "91e63cc8-3f59-4865-af49-1a4fb8f09613",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "8",
+                    "rating": "325b9d80-f44d-4070-af6d-ef02a44e1cef",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "9",
+                    "rating": "ae38930a-91c0-42ff-bde9-3612ec409792",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "10",
+                    "rating": "c0f31905-3e99-4f8f-9513-7242f427a8d8",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "11",
+                    "rating": "d5a71b69-5d30-4faf-8fc5-f260143e972b",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "12",
+                    "rating": "0aaff6cc-e5b2-46d7-bd82-ee6f19873edd",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "13",
+                    "rating": "e684ef44-c02e-4a2d-b9ff-94a3adc428cb",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "14",
+                    "rating": "f733e809-f764-4ee6-aa13-73c8d3aca82f",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "15",
+                    "rating": "09c4a9e3-fc62-40d9-90d7-a20619a95a4b",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "16",
+                    "rating": "9744aaf8-aae8-450f-a4e6-eb98b2b7b0b2",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "17",
+                    "rating": "8447ce45-6ef9-4316-9628-0e6a48e963fc",
+                    "x": null,
+                    "y": null
+                }
+            ],
+            "timestamp": 1618392852893,
+            "ratingType": "workitemStatus"
+        }
+    ],
+    "templates": [
+        {
+            "svg_id": "radarSVGContainer",
+            "width": 1450,
+            "height": 1100,
+            "topLayer": "sectors",
+            "selectedRing": 1,
+            "selectedSector": 2,
+            "rotation": 0,
+            "maxRingRadius": 450,
+            "sectorBoundariesExtended": true,
+            "editMode": false,
+            "defaultFont": {
+                "color": "black",
+                "fontSize": "38px",
+                "fontFamily": "Arial, Helvetica",
+                "fontStyle": "italic",
+                "fontWeight": "bold"
+            },
+            "title": {
+                "text": "Conclusion Technology Radar",
+                "x": -700,
+                "y": -520,
+                "font": {
+                    "fontSize": "34px",
+                    "fontFamily": "Courier"
+                }
+            },
+            "backgroundImage": {
+                "image": "https://conclusionjaarverslag.nl/wp-content/uploads/2019/06/AMIS-_-conclusion-logo.png",
+                "scaleFactor": "4",
+                "x": 322,
+                "y": -537
+            },
+            "colors": {
+                "background": "#fFf",
+                "grid": "#bbb",
+                "inactive": "#ddd"
+            },
+            "ringsConfiguration": {
+                "outsideRingsAllowed": true,
+                "font": {
+                    "color": "purple",
+                    "fontSize": "24px",
+                    "fontFamily": "Arial, Helvetica",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal"
+                },
+                "stroke": {
+                    "strokeWidth": 4,
+                    "strokeColor": "blue",
+                    "strokeArray": "100 1"
+                },
+                "rings": [
+                    {
+                        "label": "Hold",
+                        "width": 0.13
+                    },
+                    {
+                        "label": "Assess",
+                        "width": 0.17
+                    },
+                    {
+                        "label": "Trial",
+                        "width": 0.15
+                    },
+                    {
+                        "label": "Adopt",
+                        "width": 0.55
+                    }
+                ]
+            },
+            "sectorsConfiguration": {
+                "outsideSectorsAllowed": true,
+                "font": {
+                    "color": "#000",
+                    "fontSize": "28px",
+                    "fontFamily": "Arial, Helvetica",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal"
+                },
+                "stroke": {
+                    "strokeWidth": 2,
+                    "strokeColor": "gray",
+                    "strokeArray": "100 1"
+                },
+                "sectors": [
+                    {
+                        "label": "Data Management",
+                        "angle": 0.2,
+                        "backgroundImage": {}
+                    },
+                    {
+                        "label": "Libraries & Frameworks",
+                        "angle": 0.2,
+                        "backgroundImage": {}
+                    },
+                    {
+                        "label": "Infrastructure",
+                        "angle": 0.25
+                    },
+                    {
+                        "label": "Languages",
+                        "angle": 0.2
+                    },
+                    {
+                        "label": "Concepts & Methodology",
+                        "angle": 0.15
+                    }
+                ]
+            },
+            "colorsConfiguration": {
+                "label": "Maturity",
+                "colors": [
+                    {
+                        "label": "Fresh",
+                        "color": "green",
+                        "enabled": true
+                    },
+                    {
+                        "label": "Been Around",
+                        "color": "blue",
+                        "enabled": true
+                    },
+                    {
+                        "label": "Very Mature",
+                        "color": "gray",
+                        "enabled": true
+                    },
+                    {
+                        "label": "Intermediate",
+                        "color": "pink",
+                        "enabled": true
+                    },
+                    {
+                        "label": "Unassigned",
+                        "color": "white"
+                    }
+                ]
+            },
+            "sizesConfiguration": {
+                "label": "Relevance",
+                "sizes": [
+                    {
+                        "label": "Niche",
+                        "size": 0.55,
+                        "enabled": true
+                    },
+                    {
+                        "label": "Medium    ",
+                        "size": 0.8,
+                        "enabled": false
+                    },
+                    {
+                        "label": "Very relevant",
+                        "size": 1.05,
+                        "enabled": true
+                    },
+                    {
+                        "label": "Regular",
+                        "size": 4
+                    },
+                    {
+                        "label": "Regular",
+                        "size": 5,
+                        "enabled": false
+                    }
+                ]
+            },
+            "shapesConfiguration": {
+                "label": "Offering",
+                "shapes": [
+                    {
+                        "label": "Commercial",
+                        "shape": "square"
+                    },
+                    {
+                        "label": "Open Source",
+                        "shape": "diamond"
+                    },
+                    {
+                        "label": "Label",
+                        "shape": "rectangleHorizontal",
+                        "enabled": false
+                    },
+                    {
+                        "label": "Other",
+                        "shape": "circle",
+                        "enabled": false
+                    },
+                    {
+                        "label": "Label",
+                        "shape": "star",
+                        "enabled": false
+                    },
+                    {
+                        "label": "Label",
+                        "shape": "rectangleVertical",
+                        "enabled": false
+                    },
+                    {
+                        "label": "Label",
+                        "shape": "triangle",
+                        "enabled": false
+                    },
+                    {
+                        "label": "Label",
+                        "shape": "ring",
+                        "enabled": false
+                    },
+                    {
+                        "label": "Label",
+                        "shape": "plus",
+                        "enabled": false
+                    }
+                ]
+            }
+        }
+    ],
+    "objects": {
+        "61250995-4bdb-4c15-97e8-3d4ce11bd4b3": {
+            "label": "ElasticSearch",
+            "category": "nosql",
+            "offering": "oss",
+            "vendor": "Elastic",
+            "id": "61250995-4bdb-4c15-97e8-3d4ce11bd4b3",
+            "tags": [
+                "elastic",
+                "nosql"
+            ],
+            "description": "",
+            "homepage": "",
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPo8zQTXkJjjRRIbkSql_8A53TMMgu-htt7Wd6_h5kzBTPviNiVaB3-CP83fln4Gav96M&usqp=CAU",
+            "objectType": "technology"
+        },
+        "bd3dd320-1263-4f4e-9fac-57696b362578": {
+            "label": "MongoDB",
+            "category": "nosql",
+            "offering": "oss",
+            "vendor": "MongoDB",
+            "id": "bd3dd320-1263-4f4e-9fac-57696b362578",
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "https://banner2.cleanpng.com/20180702/bgt/kisspng-mongodb-database-nosql-postgresql-mongo-5b39f9e3445fa6.5652746415305261792801.jpg",
+            "objectType": "technology"
+        },
+        "dcfb645f-947f-4036-b5a4-23cf6ca690b6": {
+            "label": "Apache Kafka",
+            "category": "events",
+            "offering": "oss",
+            "vendor": "Apache Software Foundation",
+            "id": "dcfb645f-947f-4036-b5a4-23cf6ca690b6",
+            "tags": [],
+            "objectType": "technology",
+            "description": "",
+            "homepage": "",
+            "image": ""
+        },
+        "ec2ae004-d384-42d0-b7e6-1fbd43a4c077": {
+            "label": "RIAK",
+            "category": "nosql",
+            "offering": "oss",
+            "id": "ec2ae004-d384-42d0-b7e6-1fbd43a4c077",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "d87c5d1d-e10a-42b5-8b20-35565f68afd3": {
+            "label": "ArrangoDB",
+            "category": "nosql",
+            "offering": "oss",
+            "id": "d87c5d1d-e10a-42b5-8b20-35565f68afd3",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "91088f45-d595-443f-8428-62dc7ad5da0c": {
+            "label": "CosmosDB",
+            "category": "nosql",
+            "offering": "commercial",
+            "vendor": "Microsoft",
+            "id": "91088f45-d595-443f-8428-62dc7ad5da0c",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "2e6922d6-f9ce-469e-90c7-ebc50484c86a": {
+            "label": "SQL Server",
+            "category": "rdbms",
+            "offering": "commercial",
+            "vendor": "Microsoft",
+            "id": "2e6922d6-f9ce-469e-90c7-ebc50484c86a",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "f7cfdafb-5f19-44a3-b246-f7806f0b3bc6": {
+            "label": "PostgreSQL",
+            "category": "rdbms",
+            "offering": "oss",
+            "id": "f7cfdafb-5f19-44a3-b246-f7806f0b3bc6",
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "https://w7.pngwing.com/pngs/582/361/png-transparent-postgre-sql-logo-postgresql-relational-database-management-system-object-relational-database-database-blue-text-logo.png",
+            "vendor": "",
+            "objectType": "technology"
+        },
+        "866626a2-291a-4bae-aab5-89da3fefadc3": {
+            "label": "MySQL",
+            "category": "rdbms",
+            "offering": "oss",
+            "vendor": "Oracle",
+            "id": "866626a2-291a-4bae-aab5-89da3fefadc3",
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "https://1000logos.net/wp-content/uploads/2020/08/MySQL-Logo.png",
+            "objectType": "technology"
+        },
+        "1024652e-702c-4ab5-9c9a-80772464a877": {
+            "label": "DB2",
+            "category": "rdbms",
+            "offering": "commercial",
+            "vendor": "IBM",
+            "id": "1024652e-702c-4ab5-9c9a-80772464a877",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "ff7c6ebd-3a71-4b52-9012-67ba37786a21": {
+            "label": "Cassandra",
+            "category": "nosql",
+            "offering": "oss",
+            "vendor": "Apache Software Foundation",
+            "id": "ff7c6ebd-3a71-4b52-9012-67ba37786a21",
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "https://www.logo.wine/a/logo/Apache_Cassandra/Apache_Cassandra-Logo.wine.svg",
+            "objectType": "technology"
+        },
+        "f1365afd-89e3-41d6-8cbc-bde43deb1f15": {
+            "label": "CouchDB",
+            "category": "nosql",
+            "offering": "oss",
+            "vendor": "Apache Software Foundation",
+            "id": "f1365afd-89e3-41d6-8cbc-bde43deb1f15",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "0b55181a-0a49-4b1d-820e-b0aa404d5613": {
+            "label": "Oracle Database",
+            "category": "rdbms",
+            "offering": "commercial",
+            "vendor": "Oracle",
+            "id": "0b55181a-0a49-4b1d-820e-b0aa404d5613",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "f1b2f641-6f9c-413c-ae5f-931fd2b10aa3": {
+            "label": "Oracle NoSQL",
+            "category": "nosql",
+            "offering": "commercial",
+            "vendor": "Oracle",
+            "id": "f1b2f641-6f9c-413c-ae5f-931fd2b10aa3",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "8812a79c-c8f3-45b9-bf25-688be60fa221": {
+            "label": "Bigtable",
+            "category": "nosql",
+            "offering": "commercial",
+            "vendor": "Google",
+            "id": "8812a79c-c8f3-45b9-bf25-688be60fa221",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "fe2938c3-233b-4b66-8735-c0bd6ed05100": {
+            "label": "HazelCast",
+            "category": "cache",
+            "offering": "oss",
+            "id": "fe2938c3-233b-4b66-8735-c0bd6ed05100",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "9380aff9-7d00-406e-86dc-8ccfcad78a43": {
+            "label": "InfluxDB",
+            "category": "timeseries",
+            "offering": "other",
+            "id": "9380aff9-7d00-406e-86dc-8ccfcad78a43",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "5538b6ae-3c7f-41c6-9c4f-0853adc359c9": {
+            "label": "Azure DataXplorer",
+            "category": "timeseries",
+            "offering": "other",
+            "id": "5538b6ae-3c7f-41c6-9c4f-0853adc359c9",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "0f509c42-26ad-4c46-bc41-09445e3d7bd0": {
+            "label": "TimescaleDB",
+            "category": "timeseries",
+            "offering": "other",
+            "id": "0f509c42-26ad-4c46-bc41-09445e3d7bd0",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "01b5f8a6-248e-4435-86b6-6bd88c3cae5c": {
+            "label": "OpenTSDB",
+            "category": "timeseries",
+            "offering": "other",
+            "id": "01b5f8a6-248e-4435-86b6-6bd88c3cae5c",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "ab74bc67-cef8-48b4-8a58-dfdb67402b74": {
+            "label": "Graphite",
+            "category": "timeseries",
+            "offering": "other",
+            "id": "ab74bc67-cef8-48b4-8a58-dfdb67402b74",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "d3ec43d5-ebb5-4eb8-b1aa-7ad01731f9e1": {
+            "label": "Neo4J",
+            "category": "graph",
+            "offering": "other",
+            "id": "d3ec43d5-ebb5-4eb8-b1aa-7ad01731f9e1",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "1f26c870-5919-49a6-80f3-d1c40c243df3": {
+            "label": "Prometheus",
+            "category": "timeseries",
+            "offering": "other",
+            "id": "1f26c870-5919-49a6-80f3-d1c40c243df3",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "d1c0f7da-1803-4fbe-bac8-0e84c3476de4": {
+            "label": "AWS Timestream",
+            "category": "timeseries",
+            "offering": "other",
+            "vendor": "AWS",
+            "id": "d1c0f7da-1803-4fbe-bac8-0e84c3476de4",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "34fa44ec-f939-4bfa-957e-516b372c6144": {
+            "label": "QuestDB",
+            "category": "timeseries",
+            "offering": "other",
+            "id": "34fa44ec-f939-4bfa-957e-516b372c6144",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "1c681347-a1cb-4f40-8554-99590e701b7b": {
+            "label": "AWS Neptune",
+            "category": "graph",
+            "offering": "other",
+            "vendor": "AWS",
+            "id": "1c681347-a1cb-4f40-8554-99590e701b7b",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "fb5c96ec-9c6d-4cf5-9c30-7c9c0607e387": {
+            "label": "JanusGraph",
+            "category": "graph",
+            "offering": "other",
+            "vendor": "Linux Foundation",
+            "id": "fb5c96ec-9c6d-4cf5-9c30-7c9c0607e387",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "247d5a16-311e-4e1c-8c27-9f613834afc6": {
+            "label": "Dgraph",
+            "category": "graph",
+            "offering": "other",
+            "id": "247d5a16-311e-4e1c-8c27-9f613834afc6",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "52c5fb96-1adc-4f84-83ca-6d9fe9aca388": {
+            "label": "TigerGraph",
+            "category": "graph",
+            "offering": "other",
+            "id": "52c5fb96-1adc-4f84-83ca-6d9fe9aca388",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "3bb6d11f-1de1-444c-9f30-33a33ee3cdd2": {
+            "label": "Azure SQL Database",
+            "category": "rdbms",
+            "offering": "other",
+            "id": "3bb6d11f-1de1-444c-9f30-33a33ee3cdd2",
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "data:image/png;base64,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",
+            "vendor": "",
+            "objectType": "technology"
+        },
+        "25920d17-7ad1-4297-b665-d8061cf650f4": {
+            "label": "AWS RDS",
+            "category": "rdbms",
+            "offering": "commercial",
+            "vendor": "AWS",
+            "id": "25920d17-7ad1-4297-b665-d8061cf650f4",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "55005518-603d-44bd-8c15-7d5a631707bd": {
+            "label": "Cloud SQL",
+            "category": "rdbms",
+            "offering": "commercial",
+            "vendor": "Google",
+            "id": "55005518-603d-44bd-8c15-7d5a631707bd",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "4d5eb6ca-7ad6-476c-8f52-11829a4b1456": {
+            "label": "OCI Autonomous Database",
+            "category": "rdbms",
+            "offering": "commercial",
+            "vendor": "Oracle",
+            "id": "4d5eb6ca-7ad6-476c-8f52-11829a4b1456",
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "",
+            "objectType": "technology"
+        },
+        "bf6924a1-a2a9-4e46-86e8-2b1780c9c5a7": {
+            "label": "OCI Autonomous DWH",
+            "category": "rdbms",
+            "offering": "commercial",
+            "vendor": "Oracle",
+            "id": "bf6924a1-a2a9-4e46-86e8-2b1780c9c5a7",
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "",
+            "objectType": "technology"
+        },
+        "ecab4806-d4c6-4787-abc4-15a9fa87a837": {
+            "label": "Redis",
+            "category": "cache",
+            "offering": "oss",
+            "id": "ecab4806-d4c6-4787-abc4-15a9fa87a837",
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAA/1BMVEX///+kHhHYLCBjZGZZWlyhHRCtIRV6DABdXmBgYWOfAAD6+vpmZ2nOzs9WV1nw8fHb3Ny+vr/m5ub26+rv397csK2lpqfRKh7NKR3Gx8jYKRy+JRm1IxbWFgDXJBbcLSG7JBjXHQtwcXOiFQCGh4j65eSzs7ScnZ59foCdnp+Oj5Dp6enf3+D43NrWGgX21NLrnZncSD/icGrgYFnaOS/usK3mg37njIfxvbq8ZmDnysjhaGLeUUjqm5f0yMbqnJjtqaaNEwncRTvOko7CdnHHgn21U0zZrKjfWlJzCQDmiIOoAADkenSvPjXjwb6/Mye3WFGwRDyqLSGqMijKioYEg3l3AAAVHklEQVR4nO1dCVPbyrL2IohkeTcxXpCNF2xjswcICcvhQBJILjn35Ob9/9/yZmTLmq1n2kiOIZWuSqoipNF80z3dX/e0SCLxR/7IQlI5vD0/uTw5P7qprHoqy5D926uWd9BpEel4rau/dlY9oXhl//rUO2ikQml0vOPb30aTO0dXXoeFNwPpeScX7qonF13ci3etAxneVFre6fv9Vc8wmhw+eV4LgBdY69XZq1XkzvWdHl5grQfnh6ue6zPEvbg8AK1TlFfodvbPU5z6VJ4mxflWr3V5s+pZo6Vye8ojapwevj8VDLbR6dzxF1pe4/o1BEn35qnjiQo7uCbXT7z5depfrnfOOqJSD7zLlx4/IOfi0V22c0t+2KA47v6iMeJKYbk0frxgRV48Kvcbkc636R2H5x3v7mgK4dBT3kr0+3ixQhCw7L/vaGJDJ1BMZR7hT8C7W5737aURgcotqL4ZwifxkR21CoP7vcezFxQ/bp5SRuZyJ873vehnJEWmnl4GEagcpaj/0MBTs8+Wke/QB1dOBGgM0DMXqgplKK9cXMphRQLpeU83K4wf+ybiSQLDyQWshZ1bZVolLtHdqojAxeOBYXoNc9qw/75lVuRB592vjx/73w4wecPp8eX59e3ZzX6l4kJgL96ZCXrL6/xSRVbO3pmta7r8jVarc+AR6ZxeXT6dMWPs7B+eHX17urw6xQxE3fG7X8XoDs8NsQEE2/Fme/Lm6vi0QWF3Wq2GtFTtdls5AnGtvyCRlPIGHoQBZetkOspVpwHfu9lM/t1MKUHSuLrU+OHSooSipNTqdKhCSFRsEcJFS4bQ9D0/cOyDdKadqm2trye/fn2TrKkVucz4sXN0rLBOEhBaj+dHF4c7RCrkz/7F7fvLFFCeaV3Rkb5BdGazuU4l+ebNm69f/95WK5LGj2XUr24uFSUzmufdHipW1N0hzkgVBrxbYumbahVT9c0RUpBv1mrqLdnoHMRcv9pR5g0N7/RasyncsysZY6NVSZypjHSmPhYhBfn3FqBIWm2Ny+24F+rY0Grdmpbx4k6yR5JkSJlvO1SfgNBXJOB2iLU+xmGslWuxwhKMf4UIwe6JpC/v9kCjPgmhr8j1TQjjmXkOBrnuALGhcYzbB5fS8nAX2qnm1rooAkKqyL+b6g3pRWQ6lWOQNHaQm6Cizaxq2xI8FUIf5JZqAC/iXnwHZqmNU+wYcLEiVVPBUyIksWNrUzXEwUYkgJpCQywINxUWqkIIho126j/REG6IPoFdPGSFuqIvVkheRkL41Y8Yak9TS2YiIvwPPLWGVHhRi+xppGlKikwi1Edley0ywsy60vh9aR0j3FjlUmMGgbRFRc4R0t0HwUs1k2vJ6AiTSbWX9iF2jkwDnJ0aCmoBRl6RSbP6pvhiQbiWrAGUgpDuA13iXblNGQsULMgmi5BEQIiv+fjWfHyxICQY15vQi2gF/vpQsSEr+0eXSuatxRhEx6SfPEH42pvbyRm+mBBSPULUkNqql7o6ub64Odyn+dP+4c3F0dPjqXeg9zAk4z/wFMFoGj806mvXtkJ8sSGkGLdhn+PXJ2hJojNPhWHtTW/uNI6fbm8OVbdtNuE3ETWvM/DiREgwrm3VwDejpOHXpE6vLt+TdNkfX0MG1NJM8vhiRTjbkPDm12Mjqj29/HZ0s8NsWmWeCAq3/ZaEcGqsC2Ccma93enJ9dlgRc5GKsXDFwGvX1hX44kdIjXUdZaw+tsbp4/nZDRRQ3i1go7J5Lg2hr0iNLwgA3tHilJbX3aJtVGmey0RIMW5p2MYUoek0Xn9AOhfKdmB8S0OY1NKAKUTTafwjzkab6xp4RHrR6sMahH740Btry2v9Bb7/GqFCtffkVfg2EkA9QoTXaRx4wEE1XPWew2vrzdNXYFSAicQHPcSp19FuyJa69fDOGCgIeTHgS2a+R9uEOIhTrqMD2fA6ktd5b1IhGB0YfL2H6PiIPPSMGDFe55I7TLnRA6xtGdWXTP68j6uqX/mc6Zkx0vChm3SLba90tTaKME+6OY7P4jsTrnzqmZd0LWnyOl7raVaDPwcT/zbGPP1kjhp/bO2a7tkV5r1Gr9MgiqTn1KCNtjcx5hnuiZZ3F8fZzM60WcIUeacvN2VYDS91vQ8RbpR58n6tQQ/rIsr7VnBugZmAOcNqqLuE2qgllPPw6OcWd+x8UD5OXw4AZNMY3JOz7SdK1HOLK94n4FYanWEFg2JWDhqzFY2XHirKuUhjNXGdUHDmCWzwzfVoCN+qCtYIPhxMSp9hTfHhzFO9XO1aMhkRIXRugTJWI9dJpTBrpTH5rbXICKFzCwzxn66+xutsbmPIC0yWpuqPijAJ14I3kTRAPcU2xn3CC9Seqz86Ql29G+V1qBcUBmjj8IFG3mbMOzpCIA4FmkB6Ha52tYnYxpTnAo6KJ3dxINRuJ3yI3K7VNonUttWFTwEfVJeVomc8CLU7HhexKci1+d+GOzU+WFrPuBDOSIXpvDIG0b5H8Zr4ECb1pWBk+DDi0xwbqE0lVoQz9gTOAOV1tPg0iQnkt2NG6BuRhqjguA4ADyYvOncWO8Kk1pJMNXgNviTYdaFP/ZeBUJ/LtzHRThrwGea5VITTOcHpES58MGM9xzx96f2MVlPUINTaFZbr+MPAFeVfcG7xj/HcIqrX0ZIXI+uNfm7hfjGfW2j4nNHr6Fg9YoEyX6KfW1R+mM8tdKVgbYYF40MZea8X+eDJl3tUTR9OPkBdgA/R7BqTGv83rqr+xiczRK27UO4nsoOhIg6uMtVMNbyTuKr6Z6hips7rCHwO5n44Hxy8quU9xlHVv3lstTEVFUOzTXOLJk6+bEGRFMfe2dwjhq8Rdq5mH1tELwW3N2vNZrNG0KnVJ7WsqVeRD8KRq/o34cck6OqartkGrp+i6loKK4lY1ef7suItBXPAkeap2OmNaLxUPunDGqupFMzCQx6rKVP/zajMW6rqL1IKxp5boMxTyYHbzaVU9ZHpEa4fFR0dVPh81xS9qq/URDynpaiNDflnWlSmEjk/XAN2FOpMU2+smFN7ap76h+Op6ivXkHodDNdR8xdUVwLEzdmHY6nqA8aGLcrIZoY89gXMk384vqo+wCMX6ENpzyaIclV+56NyXYWHY6vqg8kD1IAtTji51aTnFrXmNq7nCTAbaUVjrESBYbyNKwUHxDvCuYXqRTFX9UHPGKUULC4E4JqAxHgJVX0oM1isggjhA+s+0IaPv15KC6VqY8V5HS0+wDx11GA5VX0wecBxHQAeZJ5681hWVR9MHvClYGFIcI8btvjyqvqxep3nmKcvve/LrOpDycOiB1B+s8bi5ulL5mMkgImPhnownDzgvQ6cZZltodeLCDCR+Ndc1QeOZ3CZO2jsmHboXubfGH6hEuZrBKi+Zm4LAvIWVHDtZb7/Ex0fkYck4msEDTHXWBrokBGuqpf5Ec+pBZHKfQaDEWy3Ac8t1E0lqG792PQXYPyM+KpEkykrNqSi120qmLy4l/kS2cGI4j78xBxBQRmWH9WYiYMaxzinTO/DUn49rfvPFxRGkOvUttZnydP6Vk1ZGUSV8DLJ++X9Qrr9D4gNqeM6mzUqEG1HkIRe5n8Py/3NiZX7/+EUueCH+7jYmVnC9lPIW4yxwhmWWnDm+TmGjw1RsvEZZ6yGrxJD88Qc2Wd+LnH7yeI+II3VfDyD3H4/Yo1+KPn4ARciDcczmOiX6X1azS8v38B5Hd2Xl7WtF2eevOBCZBJK/hBn2tQ8V/w/JWx86j2z3QaBL5NZDnlZUCoPP5DGGmoP00xMgvsKzVOQjxiuM63qU/HbToz4vrx9Uf+RR+UeY6xJbFGfmOevIC8LCvE6iPCBEBKF/u/FmCcvG5+TGEWa8P1YMreOJJWH79Ewvkzz5AXldSD1ZT6/UPPkpXKPKQco8L1o8+TF/effRRXZy3z49dw6ktAMC6/ITObTr0r9YhQX63V6S628LFcwXudVbT+FVO71IZKQs1e2/WRx38LGuozC7koEMNZe5t+XkBvFIxufJWJO3Ofvob9AKg8/w/BByEvy/hWGB5Ps3/8g0Ij0vt//XupjZePjx48a5eV2++PBRLy6Vx2Pq8VlTutXyWSUtx3bsgfcVXdo2Y5j58eFFU0rPnHTdtqXfJW93LemV+3RqiYWm/RnAAnEvfBqKR9ctarws69C9qwAStoeh5ezTnj5NbM7IqUQYdqeX53Y4VXrlXubKotlrq0iezW3yvlFFwCh9Qfh6xE1wr3f3koLDnO1vMr5RRc1wsR4ftnprnB2cQiAsDyP+PlXbqQQwkQu7xuqkx/Az74OgRAmyn3HsuzRKw/3CQ1C4m6KRSmleoWiQfibyB+Er1/+IHz98gdhVCnncnvSxUK5mKsXoRrXpFgfVKuDQalYXnRC/sC5XHHCPKhBuKeaHDcVckc9VyzD5bi9kW1ZVrbEXHJzw26aXrXSQxmAWx93KdOgYllOdlxC1/rCgemDo0HAVUCEua40OW7ug1HWmQ5np7u7avJaD6jfMLhSHOctO0hc7KwAkfupL46dH9UxmswJj5IH7WpZh3AgTY6RwiCdF4azduUkazLPo2fsNjfKM68jEPvcJEd5Dl0wuJUdmDDWu6pHbWtcBBEWw9xC0mKhatuK4fJjkcMOw9sc8s/yyBKnYYXbYNKXfhpi7GoTnKI8cIjRBRCO5o84WXG9sgp804mMOR7rdsP35ouJqmIaYaG9ZAGjBkPDahwqVR+8ITtis/kwx2dx76HHsy021ypkmUHqw7zqgVm52R2rfsrPFCg1TLqW/kl2uog6jdvXj2d1Q1NlETpdpYpmOnRHOgXORnCUiVwxrVGgPD1zrW1smooT7lsWITCPabW5oIYvjmwrNmPRXgQgAmHVYBFU5mUPDqFSpsc+Lgpg2t/MIkCTcQtirHnvYQZ0ui4SoeP44bwvAXRowJeVM7s/lLKzkAYRCLuoAYOl1iF06NnkyHe9u4JdkFDd3x0MquNsXkTp8Ed9Lm4+jJisNIew0XQYAkCEjpXv9oPz5RxvF7Y1LAbTKA+yQoThj/pkp+DMWBsUH0067PPPUdKWzpIxhaU2IHSsfi4MbgXOBzl2lTfEosAD1GecwYttwkYnBbdQLI3FtUEhnAiMcVTyQ5RbrHa54ay6DqHd5fwFyzjIz2Sqn+P8EGOnblZYcHvIhMzCQEVMDFbKGSlXZ3TrbNi1JhqE1i5HTsocwL6KuLgcVwj9aZVHIK1OQcExDDocMBfZ82J/GqU5V7UCrq5CKLJcdivxPJyRAbN8cyUWeICWIkOoSxANCFkiLfcvFMa+qZJdFoyiQGgJACfMHBRjBsLuOHumKl6FlrI0nxMN1WClDEJxptPx+lnb6YY/kRFau8Ij7DQdTfl5EEK0p2O43CaE2inqgvc36HA3vGiLU51hmrCzlBDOucBcWG6uPSBhz8Jcae6w+gUSZtAhuw/18wEQ2qKnZF5jOMQrhI5z6mu4yGXDpQ6eFBh0yPlSkpSaEm8RobwqjJHahiUrzW/1My6X8+uaZ3nmakBY4OOhla3mtGUiAaFCS0xymjeslzsfzKEul6dXummM1PmhmrUJnIYwrOxIg1JAKGcGBRb+pKyVyTisOiSEyKUqJc2lxFmegbUpeCnJApzuUG2wPEIxggrr6OQNwqi7zC+2vpWCi5vG/HCkJLSE7uZHiromj1DRWiX6cqTQCbEORMypBFHXaYDsqQxOybFsqdTG5/gKhz5QMEcMwrpQINECZMM4IseX6DwjtjXizYVDGNBxVnafh5C4zgnzTwcie4p1RPS1lXSG5VgjtiDG61CxVYfP1GGJ6yxUbHBO2CljOvfq2tIP17rBIlT6O2NZSy3E05TRrpTf7ai+tvJIW6zJhyvK10sV736eDumOXkiHi3df1h2w/k5vn7/QiPBZ+9BOk53A7UNDn/az+ksHXbFywUIMWLkRIedLZwdZRvFPDrgtLh47CDJWRwtT92VxtytVwgIJCqZGhKwPcMYljORmyQsbD21t1w9XkLPmoRPRI+zuDcZp8bhvOtkuEuEeh1A3TUk4TgOdcfrCxfCFEPoyyVVHjoRyBseIsMA9tdCJNpc6awMiVwtgEC7SIyzW2gIlGhHyhEp5ByR8VUxzGO/ya7+wDuf380dS0wM5M0JOEwt9ulLgEGosfMBP7Hk69KXOVnanKakZYZHbIwspkUsC4B7YglDFeLYOBTxTt2FGmOAzyEU+seLpI5heCNmQEWGhVK2C7R9MdJtaHAIhHxEXsVOXYwvOSO2nRNZkstJS2rJtKw1URZhVRSMscAwQLAnTXtecEPX4eqmthDgU8wRrPoi65j2bjqXe2EyIQiMUiJs9UhtIrpu3rHyW2y4TXj12VzrnL4ykREiPMGxut7OKrVmSwjcGIX/aQ0ZW3OfuBr09XI4tsFrHFrpuSmmZ9jIIFVbKFvXzY3HF6twRSxWLUPDmNMUUV680P3zis3meL9B3dMMPYQslZYuGXoe8PfFFiyJvENNHUAilc2XaAjWP4G5umGbYBF/rkQoOjm13h4N6vbQ7stXpT/h1jAqhMJ5tZXdzEzfhEuYmHUcm8AjLUrpJW9JG493dYT+b5/uIhNKv3ABAQdK+PyjxYRAqrFROfG3Lr/NJvHTWB4RDyJ66cDNVzFNAWMjq6g0GhAodqkuJKskXFkEotSpoJijs0b3FumlMOtTV2fhhqsESM9d0lGyMhCjXDZG9E+E0tDpMIFqzuHmgESIhOmk51c0t2BM192Hqkxk5gqrm4QTrhEeYULb1CWJ3Vbl8caGmIQahOrfY1fU5ziQMywsgJHzBNHIe6L+cmHrGuLOnuZVCvYk5BU/gh2NDFttfqu8YJ0FD30Rpp+FSxVC3Oo7dZxGavyF1d1X9weG9HDsMybHUhquQAbx6tjXUZVZwj7CTHxWZhWZT5ZBGi5PbG4PdvLZd5SypMHcDeUx2W6gqu7UcyxqavqED+rzzfvd02HSSZ8YJuxDlye2NVYVEwkSkiRStGWVG/uYJt07olj33HbS9z7JHJVyvvs0yD/qkM5ztmOqMufPhtJTXTI7wWmm87kBhSOU+baXrLlCfKNR3R/SzCcrXuqPxAPzuRH4yNxxlyXNE8nZ3VC2GC1Pv0o8m+oIvIMatm9ykFI7ndPsDyJNMcvW9Rb98cQuTcnkyKSz+CU9hUszV67m9ibAu7l49p+gTL5sm54+Xy5Uni0/ld5D/B03efPNXk//HAAAAAElFTkSuQmCC",
+            "vendor": "",
+            "objectType": "technology"
+        },
+        "d8d09c71-9d99-4b37-be60-5569d83c4c79": {
+            "label": "Apache Ignite",
+            "category": "cache",
+            "offering": "oss",
+            "id": "d8d09c71-9d99-4b37-be60-5569d83c4c79",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "a0b4ea28-3935-4304-b5c0-70b650f66723": {
+            "label": "AWS DynamoDB",
+            "category": "nosql",
+            "offering": "commercial",
+            "id": "a0b4ea28-3935-4304-b5c0-70b650f66723",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "55c416e7-77be-4108-bfbf-bb8e6d2ccf18": {
+            "label": "Couchbase",
+            "category": "nosql",
+            "offering": "other",
+            "id": "55c416e7-77be-4108-bfbf-bb8e6d2ccf18",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "f0e25026-aac3-4eb9-b7ac-8947528df0be": {
+            "label": "RavenDB",
+            "category": "nosql",
+            "offering": "other",
+            "id": "f0e25026-aac3-4eb9-b7ac-8947528df0be",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "b37cef35-99f1-4d85-ab8f-4861867e8f8b": {
+            "label": "Cloud Datastore",
+            "category": "nosql",
+            "offering": "commercial",
+            "vendor": "Google",
+            "id": "b37cef35-99f1-4d85-ab8f-4861867e8f8b",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "6e3a3f56-61d7-43ff-95be-e0ae43f86946": {
+            "label": "Apache Drill",
+            "category": "nosql",
+            "offering": "oss",
+            "vendor": "Apache Software Foundation",
+            "id": "6e3a3f56-61d7-43ff-95be-e0ae43f86946",
+            "tags": [],
+            "objectType": "technology",
+            "description": "",
+            "homepage": "",
+            "image": ""
+        },
+        "2d70bd6b-cdf9-4065-88f6-5b517b25c8b8": {
+            "label": "OrientDB",
+            "category": "graph",
+            "offering": "oss",
+            "id": "2d70bd6b-cdf9-4065-88f6-5b517b25c8b8",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "07838412-ada3-4794-8991-f67b7bb7b070": {
+            "label": "Azure Blob Storage",
+            "category": "blobstore",
+            "offering": "commercial",
+            "vendor": "Microsoft",
+            "id": "07838412-ada3-4794-8991-f67b7bb7b070",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "b8806e3b-dd01-48e0-b773-f9b4a4d6f0dd": {
+            "label": "AWS S3",
+            "category": "blobstore",
+            "offering": "commercial",
+            "vendor": "AWS",
+            "id": "b8806e3b-dd01-48e0-b773-f9b4a4d6f0dd",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "adc3747e-7788-47fb-ad1c-152c0a0f83c9": {
+            "label": "OCI Object Store",
+            "category": "blobstore",
+            "offering": "commercial",
+            "vendor": "Oracle",
+            "id": "adc3747e-7788-47fb-ad1c-152c0a0f83c9",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "dd73abc9-aa6c-41af-b994-95de38c50021": {
+            "label": "Google CloudStorage",
+            "category": "blobstore",
+            "offering": "commercial",
+            "vendor": "Google",
+            "id": "dd73abc9-aa6c-41af-b994-95de38c50021",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "1dfcd5e4-d81d-4734-9c45-ae8137c19b8b": {
+            "label": "Azure Event Hub",
+            "category": "events",
+            "offering": "commercial",
+            "vendor": "Microsoft",
+            "id": "1dfcd5e4-d81d-4734-9c45-ae8137c19b8b",
+            "tags": [],
+            "description": "",
+            "homepage": "",
+            "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAnFBMVEX///8Acca61jAAa8SgvOIAZ8PN2+8AbsUxic+41Sa31B3j7rm92D36/PLo8cJmmdTw9tvV5ZIAdcfn8/rQ5H/B2lC00wTw99fR44O/2kX9/vj1/P4he8nG3PEAbMS50uv1+eXa6vauzeqAsN5xptpJktGVu+Iifst7rd3g7fiewubi7bDN4XHG3WD4++zb6Z7s88zL4Gne7KcAYsEZn2kiAAAEDklEQVR4nO3d61biMBSG4Uqt0ICchIKgtCCgA3L0/u9tnBlA7CHJipTs3fne3xzyCDNrsUmJ4/xtPLktWpOxc9aL5xYvb/oFDL2bIuZNTsLpyPZicmnUOAkrZduLyaVyBULuQcg/CPkHIf8g5B+E/IOQfxDyD0L+Qcg/CPkHIf+0ha5HN/cSwnZ4R7ewfQnhg0O3BwgPQUg3CI9BSDcIj0FINwiPQUg3CI9BSDcIjxVf2JDtTXwaWhSoGj5JXpzy7HS7uWR/6agieQL7zSQvjvtyutmw4o0yct2x5PHt99DOXLr3evbuG84bGb39Sj7qIGrKigbXA34ufTHNWPrc+J/XsuaL7ALh11pXNV68elBSJd5tL/JHrXylsBREtlf5gwaPamBJ1G0v8wfd1yCEkHoQQkg/CCGkH4QQ0g9CCOkHIYT0Mxfey7q6IztDYW8lmUB+5r+vbWjSMhM2A9WEzvetcFIyE3bUI0ixtOJJqasj3MbupDGC9PtWOCn1hcZq42N9jb+K37HCSem+K3x5QlTjd2IldAbLlrxNM3EfXkKTIISQfhBCSD8IIaQfhBDSD0JiwqhelbWNknfhJewH8rGZCFaJuZmZsLfvyNokPmhfpr3Gzr3uRYStQD5NEKKby5xVa+de/FO+ibCnHgiJVg5As2mixp0Ss7aNxsgr8WaxJjSZl/Y13iyPOezVNRP2NGbe8cXyEjrbbiBN7KL4XZgJDYIQQtMghFA/CCE0DUII9YMQQtMg/H+Fg3VPVspIiZlwWVPMILs93sKtcgTpi/jLyEv4rjGJ2hMR6s1L4285nWlifF66V08T/VUOQKel8cS1S+zca2pMhDd5CJ2d6nsL4cc3X5pN9ffKL0h2Of20QU/61VO1Wk8+r5HQWSueKPHfr8XMhJyCEEL6QQgh/SCEkH4QQkg/ZsL6RnrZ0/5in54sNdgpt5s9Jj64sRJebYphLZ1rSBOTKE5Cs2kip6tkzYQas8/khaeWMhNGwi8pLq2tWeGkZPi9RdTpyqPzm6f4XQwI6QchhPSDEEL6QQgh/SCEkH4QQki/4gvNrnRm1VJ9tbqfxwXIV6zlC8WWulVke43Jwrf0M5NewpQbr6XHPTWb0bVXP0zr+02mnptxZJf3SvlguT+Fs9entCrTs5WHH5LDy2bZD06h+ceonJ5b/iK+uZKz89qUz85zhpKln50sJzuAjvb5h85YIjw7HZDvCY/Os0xYhDMsITwGIeEgPAQh4SA8BCHhIDwEIeEgPAQh4S4iDO8It5CMJ3SFN65HONmESVvINgj5ByH/IOQfhPyDkH8Q8g9C/kHIPwj5ByH/IOQfhPw7EzZkk2O+jb527k0824vJJW/hfL2Inlu8vG97f58Xt4Xr+R/tN8b7+sOgdcxdAAAAAElFTkSuQmCC",
+            "objectType": "technology"
+        },
+        "956eb3a0-7406-4f1c-acb9-1cec42ff3121": {
+            "label": "OCI Streaming",
+            "category": "events",
+            "offering": "commercial",
+            "vendor": "Oracle",
+            "id": "956eb3a0-7406-4f1c-acb9-1cec42ff3121",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "22fec7d4-2b7a-4cae-bd51-f14a28e06606": {
+            "label": "AWS Kinesis",
+            "category": "events",
+            "offering": "commercial",
+            "vendor": "AWS",
+            "id": "22fec7d4-2b7a-4cae-bd51-f14a28e06606",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "5e1e2516-fb0a-48cb-9e0d-3fe7bb6cf91d": {
+            "label": "AWS MKS",
+            "category": "events",
+            "offering": "commercial",
+            "vendor": "AWS",
+            "id": "5e1e2516-fb0a-48cb-9e0d-3fe7bb6cf91d",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "9485df92-a56f-486d-94be-eb19fc07daf1": {
+            "label": "Confluent",
+            "category": "events",
+            "offering": "commercial",
+            "vendor": "Confluent",
+            "id": "9485df92-a56f-486d-94be-eb19fc07daf1",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "020128a9-5397-4bd4-b5d4-aeaabe09e199": {
+            "label": "AWS SQS",
+            "category": "events",
+            "offering": "commercial",
+            "vendor": "AWS",
+            "id": "020128a9-5397-4bd4-b5d4-aeaabe09e199",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "8baf555d-3d5d-406d-aeaa-b3a8d8780ce0": {
+            "label": "GCP Pub/Sub",
+            "category": "events",
+            "offering": "commercial",
+            "vendor": "Google",
+            "id": "8baf555d-3d5d-406d-aeaa-b3a8d8780ce0",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "b7e5841b-c6b7-48f1-8252-ced1f189838e": {
+            "label": "Azure Data Lake",
+            "category": "lake",
+            "offering": "commercial",
+            "vendor": "Microsoft",
+            "id": "b7e5841b-c6b7-48f1-8252-ced1f189838e",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "3d698db7-ec17-415c-9dae-df276500ac70": {
+            "label": "GCP BigQuery",
+            "category": "lake",
+            "offering": "commercial",
+            "vendor": "Google",
+            "id": "3d698db7-ec17-415c-9dae-df276500ac70",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "83a9f0d6-848e-43ff-912b-7d894572fd71": {
+            "label": "Snowflake",
+            "category": "lake",
+            "offering": "commercial",
+            "vendor": "Snowflake",
+            "id": "83a9f0d6-848e-43ff-912b-7d894572fd71",
+            "tags": [],
+            "objectType": "technology"
+        },
+        "6b72c74e-b270-498e-82d0-170e7a21d3e5": {
+            "id": "6b72c74e-b270-498e-82d0-170e7a21d3e5",
+            "label": "Drill Up from Ring",
+            "tags": [
+                "rollup"
+            ],
+            "title": "Drill Up from Ring",
+            "description": "",
+            "area": "navigation",
+            "type": "functionality",
+            "objectType": "workitem"
+        },
+        "cf3e0d48-5ea0-4329-8276-92cdaff6dadd": {
+            "id": "cf3e0d48-5ea0-4329-8276-92cdaff6dadd",
+            "label": "Define Ring Value Mapping by Range",
+            "tags": [
+                "range",
+                "ring"
+            ],
+            "title": "Define Ring Value Mapping by Range",
+            "description": "Define Ring Value Mapping by Range\nfor properties of type number or date/time allow a ring to be derived on a range:\nif property value is between X and Y then this Ring is allocated\n\nfor example: if date is > 12 months in the past, is between 6-12 months in the past, is less than 6 months ago\nor:\nif effort > 10 then ring = HUGE\nelse if 5 < effort < 10 then ring = Substantial\n...\n\n",
+            "area": "metadata",
+            "type": "functionality",
+            "objectType": "workitem"
+        },
+        "ae5e22e7-7890-49e0-894a-ab16038ad53d": {
+            "id": "ae5e22e7-7890-49e0-894a-ab16038ad53d",
+            "label": "Shape Configurator",
+            "tags": [
+                "shape"
+            ],
+            "title": "Fix Shape Configurator",
+            "description": "",
+            "type": "fix",
+            "objectType": "workitem",
+            "area": "ui"
+        },
+        "a9f4615c-7afc-4e31-a2ad-8ab5b371c9d7": {
+            "id": "a9f4615c-7afc-4e31-a2ad-8ab5b371c9d7",
+            "label": "Define Ring Value Mapping using Expression",
+            "tags": [
+                "ring",
+                "value mapping"
+            ],
+            "title": "Define Ring Value Mapping from Expression",
+            "description": "Allow an expression to be defined that turns the value(s) of  one or more properties into a ring\n\nFor example: $type==\"ui\"?\"ui\":($status==\"done\"?\"extra\":\"black\")\n",
+            "area": "metadata",
+            "type": "functionality",
+            "objectType": "workitem"
+        },
+        "e3ebcf9a-f54d-4e11-9ed9-99e313b7d579": {
+            "id": "e3ebcf9a-f54d-4e11-9ed9-99e313b7d579",
+            "label": "Sector Label Font Defaults",
+            "tags": [
+                "sector",
+                "label",
+                "font",
+                "default"
+            ],
+            "title": "Default font settings Sector Label",
+            "description": "Define and apply font defaults for sector labels",
+            "area": "quickstart",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "202521e5-e1db-44e4-a066-421c47993c59": {
+            "id": "202521e5-e1db-44e4-a066-421c47993c59",
+            "label": "Generate Ratings for Objects",
+            "tags": [
+                "rating",
+                "generate"
+            ],
+            "title": "Generate Ratings for Objects",
+            "description": "Generate ratings (with default values) for all objects of the type required by the rating type for the current radar",
+            "area": "quickstart",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "c9d22ba0-cf91-4a01-a156-6fc3b0c55bb5": {
+            "id": "c9d22ba0-cf91-4a01-a156-6fc3b0c55bb5",
+            "label": "Load & Merge Files",
+            "tags": [
+                "file",
+                "upload"
+            ],
+            "title": "Load & Merge Files",
+            "description": "Upload previously Downloaded files \n\n- handle upload data: \n  - overwrite\n  - add new (object type, rating type, template, objects, ratings, viewpoint) - no updating existing \n  - merge: create new blips and ratings for uploaded ones when colliding (AND some form of change between rating objects?)\n          - update existing objects with uploaded ones\n          - take the most recently changed object",
+            "area": "files",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "34ae2a96-17de-4cc3-b065-7a075e5d5fac": {
+            "id": "34ae2a96-17de-4cc3-b065-7a075e5d5fac",
+            "label": "Show curved sector label after drilldown",
+            "tags": [
+                "drill down",
+                "sector",
+                "label"
+            ],
+            "title": "Show curved sector label after drilldown",
+            "description": "Show curved sector label after drilldown",
+            "area": "navigation",
+            "type": "fix",
+            "objectType": "technology"
+        },
+        "1cc6e081-8f0b-4ad8-ab07-75b262444090": {
+            "id": "1cc6e081-8f0b-4ad8-ab07-75b262444090",
+            "label": "Sector drill up from label",
+            "tags": [
+                "sector",
+                "drill down",
+                "rollup"
+            ],
+            "title": "Sector drill up from label",
+            "description": "double click on sector label in drilled down state makes all sectors visible",
+            "area": "navigation",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "7aefc5e9-b21c-4dd5-aa00-d99dabb2efa1": {
+            "id": "7aefc5e9-b21c-4dd5-aa00-d99dabb2efa1",
+            "label": "New Blip: Set object name from new object labek",
+            "tags": [
+                "new blip",
+                "",
+                "new object"
+            ],
+            "title": "New Blip: Set object name from new object labek",
+            "description": "upon create new blip - nothing seems done with the new object label entered",
+            "area": "ui",
+            "type": "fix",
+            "objectType": "technology"
+        },
+        "18f7ebab-b739-49c4-9ad9-6abe89c9b8a3": {
+            "id": "18f7ebab-b739-49c4-9ad9-6abe89c9b8a3",
+            "label": "Load file & embrace new model & objects",
+            "tags": [
+                "file",
+                "upload"
+            ],
+            "title": "Load file & embrace new model & objects",
+            "description": "Load file & embrace new model & objects:\n- load file\n- create new object types and rating types\n- create new objects\n\nNew tab un Main Configurator",
+            "area": "files",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "d5c58ecf-321e-468a-a281-8f1e390db7d8": {
+            "id": "d5c58ecf-321e-468a-a281-8f1e390db7d8",
+            "label": "Use d3 force to repel blips",
+            "tags": [
+                "d3",
+                "force",
+                "blip",
+                "shuffle"
+            ],
+            "title": "Use d3 force to repel blips",
+            "description": "Use d3 force to repel blips - make blips not overlap when shuffled/assigned",
+            "area": "ui",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "f2235f35-97ea-4561-9bd7-bc4f1dc7c5f9": {
+            "id": "f2235f35-97ea-4561-9bd7-bc4f1dc7c5f9",
+            "label": "Generate Ratings for Object Type of current Radar",
+            "tags": [
+                "generate",
+                "blip",
+                "rating"
+            ],
+            "title": "Generate Ratings for Object Type of current Radar",
+            "description": "Generate Ratings for Object Type of current Radar\n\nIn create blip(s) dialog, allow user to specify \ngenerate ratings & blips for all objects of appropriate type for which currently no ratings exist",
+            "area": "quickstart",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "b5d64706-518b-464b-90b7-f5a32fe2d4e1": {
+            "id": "b5d64706-518b-464b-90b7-f5a32fe2d4e1",
+            "label": "Define Blip Opacity",
+            "tags": [
+                "opacity",
+                "blip"
+            ],
+            "title": "Define Blip Opacity",
+            "description": "Define Blip Opacity in Blip tab in Main Menu",
+            "area": "metadata",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "e102e11e-1bb2-486d-a343-db693510ce87": {
+            "id": "e102e11e-1bb2-486d-a343-db693510ce87",
+            "label": "Show Data Model iin Tree",
+            "tags": [
+                "tree",
+                "data",
+                "data management"
+            ],
+            "title": "Show Data Model iin Tree",
+            "description": "Show Data Model iin Tree\n- new tab Data Management in main menu\n- show tree with all objects per object type\n- all ratings per rating type\n",
+            "area": "datamanagement",
+            "type": "functionality",
+            "objectType": "technology"
+        },
+        "dbaa4400-7aad-4809-9394-534604900a35": {
+            "id": "dbaa4400-7aad-4809-9394-534604900a35",
+            "objectType": "workitem",
+            "title": "Size Configurator like Shape Configurator",
+            "tags": [
+                "size",
+                "configurator",
+                "visual dimension"
+            ],
+            "description": "Size Configurator like Shape Configurator\n\nClone Shape Configurator and modify to manage Size visual dimension",
+            "area": "metadata",
+            "type": "functionality"
+        },
+        "d6e5065e-e9f0-4973-a917-4a730082b738": {
+            "id": "d6e5065e-e9f0-4973-a917-4a730082b738",
+            "objectType": "workitem",
+            "title": "Color configurator like Shape Configurator",
+            "tags": [
+                "color",
+                "visual dimension",
+                "configurator"
+            ],
+            "description": "Color configurator to map colors to values for a specific property - similar to Shape configurator",
+            "area": "metadata",
+            "type": "functionality"
+        },
+        "b8fc9777-61a2-4b48-8e27-fe479182489f": {
+            "id": "b8fc9777-61a2-4b48-8e27-fe479182489f",
+            "objectType": "workitem",
+            "title": "Use ring font for ring label",
+            "tags": [
+                "ring",
+                "font",
+                "label"
+            ],
+            "description": "when printing the ring label, make sure to apply the ring font or the rings default font or the radar default tont",
+            "area": "ui",
+            "type": "fix"
+        }
+    },
+    "ratings": {
+        "9ed7f7cc-bc8d-4585-84d4-8aabcf397eb0": {
+            "id": "9ed7f7cc-bc8d-4585-84d4-8aabcf397eb0",
+            "timestamp": "1617704638919",
+            "object": "61250995-4bdb-4c15-97e8-3d4ce11bd4b3",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "a20f011c-964a-48f7-92e0-f7fc52161c8c": {
+            "id": "a20f011c-964a-48f7-92e0-f7fc52161c8c",
+            "timestamp": "1617704638919",
+            "object": "bd3dd320-1263-4f4e-9fac-57696b362578",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "fae47773-b37f-48bc-9fd2-486c495a161c": {
+            "id": "fae47773-b37f-48bc-9fd2-486c495a161c",
+            "timestamp": 1617704638919,
+            "object": "dcfb645f-947f-4036-b5a4-23cf6ca690b6",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "26e02ede-17ed-40b0-b6d7-0ce86c24a7f4": {
+            "id": "26e02ede-17ed-40b0-b6d7-0ce86c24a7f4",
+            "timestamp": 1617704638920,
+            "object": "ec2ae004-d384-42d0-b7e6-1fbd43a4c077",
+            "ambition": "hold",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "8c94467b-1a79-4267-a591-1404c9b38776": {
+            "id": "8c94467b-1a79-4267-a591-1404c9b38776",
+            "timestamp": 1617704638920,
+            "object": "d87c5d1d-e10a-42b5-8b20-35565f68afd3",
+            "ambition": "potentie",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "8299c5c2-d0d0-43f5-ba52-c885943f06e9": {
+            "id": "8299c5c2-d0d0-43f5-ba52-c885943f06e9",
+            "timestamp": 1617704638920,
+            "object": "91088f45-d595-443f-8428-62dc7ad5da0c",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "dd8836fa-0b8f-40ca-808e-b3f82d1cb80a": {
+            "id": "dd8836fa-0b8f-40ca-808e-b3f82d1cb80a",
+            "timestamp": 1617704638920,
+            "object": "2e6922d6-f9ce-469e-90c7-ebc50484c86a",
+            "ambition": "trial",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "6637ea01-d856-4f05-bc6d-cc194347fe3d": {
+            "id": "6637ea01-d856-4f05-bc6d-cc194347fe3d",
+            "timestamp": "1617704638920",
+            "object": "f7cfdafb-5f19-44a3-b246-f7806f0b3bc6",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "2ffcd5de-6ab7-4bd7-b343-fe7ad785f600": {
+            "id": "2ffcd5de-6ab7-4bd7-b343-fe7ad785f600",
+            "timestamp": "1617704638920",
+            "object": "866626a2-291a-4bae-aab5-89da3fefadc3",
+            "ambition": "trial",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "comment": "",
+            "ratingType": "technologyAdoption"
+        },
+        "f883299d-64fe-4fcf-b564-4e605520f132": {
+            "id": "f883299d-64fe-4fcf-b564-4e605520f132",
+            "timestamp": 1617704638920,
+            "object": "1024652e-702c-4ab5-9c9a-80772464a877",
+            "ambition": "hold",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "05218183-c430-44eb-b9d9-98a7666703ca": {
+            "id": "05218183-c430-44eb-b9d9-98a7666703ca",
+            "timestamp": "1617704638920",
+            "object": "ff7c6ebd-3a71-4b52-9012-67ba37786a21",
+            "ambition": "trial",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "comment": "",
+            "ratingType": "technologyAdoption"
+        },
+        "6a8f1495-d650-46c3-955b-55a1ca3a9521": {
+            "id": "6a8f1495-d650-46c3-955b-55a1ca3a9521",
+            "timestamp": 1617704638921,
+            "object": "f1365afd-89e3-41d6-8cbc-bde43deb1f15",
+            "ambition": "potentie",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "5c610f89-b28a-48a2-8b62-3f25e2f4c094": {
+            "id": "5c610f89-b28a-48a2-8b62-3f25e2f4c094",
+            "timestamp": 1617704638921,
+            "object": "0b55181a-0a49-4b1d-820e-b0aa404d5613",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "132cd37b-27fe-4301-b6ee-a26c6a7a514c": {
+            "id": "132cd37b-27fe-4301-b6ee-a26c6a7a514c",
+            "timestamp": 1617704638921,
+            "object": "f1b2f641-6f9c-413c-ae5f-931fd2b10aa3",
+            "ambition": "assess",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "17bf492e-eb9d-41d2-b468-2aad009ff997": {
+            "id": "17bf492e-eb9d-41d2-b468-2aad009ff997",
+            "timestamp": 1617704638921,
+            "object": "8812a79c-c8f3-45b9-bf25-688be60fa221",
+            "ambition": "identified",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "219536b8-ba5e-4220-8cbb-0da443bff83d": {
+            "id": "219536b8-ba5e-4220-8cbb-0da443bff83d",
+            "timestamp": 1617704638921,
+            "object": "fe2938c3-233b-4b66-8735-c0bd6ed05100",
+            "ambition": "identified",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "4a4b6542-d7d5-4049-b8b0-f22b3b5fc09e": {
+            "id": "4a4b6542-d7d5-4049-b8b0-f22b3b5fc09e",
+            "timestamp": 1617704638921,
+            "object": "9380aff9-7d00-406e-86dc-8ccfcad78a43",
+            "ambition": "trial",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "6ae276de-010b-4f4a-8c65-62b3d2d7fe45": {
+            "id": "6ae276de-010b-4f4a-8c65-62b3d2d7fe45",
+            "timestamp": 1617704638922,
+            "object": "5538b6ae-3c7f-41c6-9c4f-0853adc359c9",
+            "ambition": "assess",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "f3c3cc99-3b69-426a-86c6-294d840483b7": {
+            "id": "f3c3cc99-3b69-426a-86c6-294d840483b7",
+            "timestamp": 1617704638922,
+            "object": "0f509c42-26ad-4c46-bc41-09445e3d7bd0",
+            "ambition": "potentie",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "9bc9976e-4d5b-467c-a076-4202ef593159": {
+            "id": "9bc9976e-4d5b-467c-a076-4202ef593159",
+            "timestamp": 1617704638922,
+            "object": "01b5f8a6-248e-4435-86b6-6bd88c3cae5c",
+            "ambition": "hold",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "cf58cfec-95a8-456c-ba01-ff13e760a6d7": {
+            "id": "cf58cfec-95a8-456c-ba01-ff13e760a6d7",
+            "timestamp": 1617704638922,
+            "object": "ab74bc67-cef8-48b4-8a58-dfdb67402b74",
+            "ambition": "hold",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "12e9c1f4-9e55-455d-851c-a5841c040464": {
+            "id": "12e9c1f4-9e55-455d-851c-a5841c040464",
+            "timestamp": 1617704638923,
+            "object": "d3ec43d5-ebb5-4eb8-b1aa-7ad01731f9e1",
+            "ambition": "trial",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "aef5ea07-9d98-4501-a2c0-b1310339cadf": {
+            "id": "aef5ea07-9d98-4501-a2c0-b1310339cadf",
+            "timestamp": 1617704638923,
+            "object": "1f26c870-5919-49a6-80f3-d1c40c243df3",
+            "ambition": "assess",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "d5a4c463-59e0-4100-b032-a7334750690a": {
+            "id": "d5a4c463-59e0-4100-b032-a7334750690a",
+            "timestamp": 1617704638923,
+            "object": "d1c0f7da-1803-4fbe-bac8-0e84c3476de4",
+            "ambition": "potentie",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "26d414ab-abe4-4125-b02b-1960a62e7ceb": {
+            "id": "26d414ab-abe4-4125-b02b-1960a62e7ceb",
+            "timestamp": 1617704638923,
+            "object": "34fa44ec-f939-4bfa-957e-516b372c6144",
+            "ambition": "potentie",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "491d2386-c9df-43ef-af7c-768dae8eb690": {
+            "id": "491d2386-c9df-43ef-af7c-768dae8eb690",
+            "timestamp": 1617704638924,
+            "object": "1c681347-a1cb-4f40-8554-99590e701b7b",
+            "ambition": "assess",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "e5e8c3d8-adc4-4264-a6f2-2f18abbf6357": {
+            "id": "e5e8c3d8-adc4-4264-a6f2-2f18abbf6357",
+            "timestamp": 1617707198334,
+            "object": "fb5c96ec-9c6d-4cf5-9c30-7c9c0607e387",
+            "ambition": "hold",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "2bb0851b-85c9-48bd-8e55-c0ff07c1c68e": {
+            "id": "2bb0851b-85c9-48bd-8e55-c0ff07c1c68e",
+            "timestamp": 1617707198334,
+            "object": "247d5a16-311e-4e1c-8c27-9f613834afc6",
+            "ambition": "trial",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "290feb27-89b7-4d64-9c6b-7ea01fcebf78": {
+            "id": "290feb27-89b7-4d64-9c6b-7ea01fcebf78",
+            "timestamp": 1617707198334,
+            "object": "52c5fb96-1adc-4f84-83ca-6d9fe9aca388",
+            "ambition": "hold",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "9871293d-9c51-4730-a134-d03dffdfd5ca": {
+            "id": "9871293d-9c51-4730-a134-d03dffdfd5ca",
+            "timestamp": "1617707198334",
+            "object": "3bb6d11f-1de1-444c-9f30-33a33ee3cdd2",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "c4a7e838-d2f5-4a19-8f52-bb496922f672": {
+            "id": "c4a7e838-d2f5-4a19-8f52-bb496922f672",
+            "timestamp": 1617707198334,
+            "object": "25920d17-7ad1-4297-b665-d8061cf650f4",
+            "ambition": "potentie",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "3dadddde-c4a8-4f2b-b363-183abe358dc5": {
+            "id": "3dadddde-c4a8-4f2b-b363-183abe358dc5",
+            "timestamp": 1617707198334,
+            "object": "55005518-603d-44bd-8c15-7d5a631707bd",
+            "ambition": "identified",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "404e8bd3-abde-40a8-af11-b84d65b3faa2": {
+            "id": "404e8bd3-abde-40a8-af11-b84d65b3faa2",
+            "timestamp": "1617707198334",
+            "object": "4d5eb6ca-7ad6-476c-8f52-11829a4b1456",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "65c118e4-a0db-4314-b737-2ffb5108077c": {
+            "id": "65c118e4-a0db-4314-b737-2ffb5108077c",
+            "timestamp": "1617707198335",
+            "object": "bf6924a1-a2a9-4e46-86e8-2b1780c9c5a7",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "e59ab6f1-36a4-472f-838f-b6838c177ef2": {
+            "id": "e59ab6f1-36a4-472f-838f-b6838c177ef2",
+            "timestamp": "1617707198335",
+            "object": "ecab4806-d4c6-4787-abc4-15a9fa87a837",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "e9681782-045f-4a35-8974-b9bc3baab3df": {
+            "id": "e9681782-045f-4a35-8974-b9bc3baab3df",
+            "timestamp": 1617707198335,
+            "object": "d8d09c71-9d99-4b37-be60-5569d83c4c79",
+            "ambition": "trial",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "c695427e-5b82-411c-9a9e-d3464e497960": {
+            "id": "c695427e-5b82-411c-9a9e-d3464e497960",
+            "timestamp": 1617707198335,
+            "object": "a0b4ea28-3935-4304-b5c0-70b650f66723",
+            "ambition": "trial",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "0868415b-17f5-40c7-bb08-daca5b5f2376": {
+            "id": "0868415b-17f5-40c7-bb08-daca5b5f2376",
+            "timestamp": 1617707198335,
+            "object": "55c416e7-77be-4108-bfbf-bb8e6d2ccf18",
+            "ambition": "assess",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "10757ca4-6d6d-4d09-9e1b-9b5c1eb24e3f": {
+            "id": "10757ca4-6d6d-4d09-9e1b-9b5c1eb24e3f",
+            "timestamp": "1617707198335",
+            "object": "f0e25026-aac3-4eb9-b7ac-8947528df0be",
+            "ambition": "hold",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "comment": "mainly C# usage",
+            "ratingType": "technologyAdoption"
+        },
+        "1c8d9aee-0a49-4e10-9368-93e379905b0d": {
+            "id": "1c8d9aee-0a49-4e10-9368-93e379905b0d",
+            "timestamp": 1617707198335,
+            "object": "b37cef35-99f1-4d85-ab8f-4861867e8f8b",
+            "ambition": "identified",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "e641d973-6a95-4d44-b906-f29fa92b8abd": {
+            "id": "e641d973-6a95-4d44-b906-f29fa92b8abd",
+            "timestamp": 1617707198335,
+            "object": "6e3a3f56-61d7-43ff-95be-e0ae43f86946",
+            "ambition": "hold",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "18f8805b-338b-494a-ac0a-fc1c55d71ab4": {
+            "id": "18f8805b-338b-494a-ac0a-fc1c55d71ab4",
+            "timestamp": "1617707198336",
+            "object": "2d70bd6b-cdf9-4065-88f6-5b517b25c8b8",
+            "ambition": "potentie",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "comment": "",
+            "ratingType": "technologyAdoption"
+        },
+        "35147101-d6b2-41ae-8e70-c0e65b51a650": {
+            "id": "35147101-d6b2-41ae-8e70-c0e65b51a650",
+            "timestamp": 1617707198336,
+            "object": "07838412-ada3-4794-8991-f67b7bb7b070",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "9695235f-0a9f-44cb-8cd4-990ffc687d38": {
+            "id": "9695235f-0a9f-44cb-8cd4-990ffc687d38",
+            "timestamp": 1617707198336,
+            "object": "b8806e3b-dd01-48e0-b773-f9b4a4d6f0dd",
+            "ambition": "trial",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "307e205e-ae84-4d34-82d8-79ab00602d14": {
+            "id": "307e205e-ae84-4d34-82d8-79ab00602d14",
+            "timestamp": 1617707198336,
+            "object": "adc3747e-7788-47fb-ad1c-152c0a0f83c9",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "e18c1f6c-ab29-4bd5-891d-181ee754cf6c": {
+            "id": "e18c1f6c-ab29-4bd5-891d-181ee754cf6c",
+            "timestamp": 1617707198336,
+            "object": "dd73abc9-aa6c-41af-b994-95de38c50021",
+            "ambition": "assess",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "2aea2f5f-cc91-4412-a419-a5a73b3cc6aa": {
+            "id": "2aea2f5f-cc91-4412-a419-a5a73b3cc6aa",
+            "timestamp": "1617708276540",
+            "object": "1dfcd5e4-d81d-4734-9c45-ae8137c19b8b",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "comment": "",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "7294c4cb-da85-4272-86ed-ec859a2a6270": {
+            "id": "7294c4cb-da85-4272-86ed-ec859a2a6270",
+            "timestamp": 1617708276542,
+            "object": "956eb3a0-7406-4f1c-acb9-1cec42ff3121",
+            "ambition": "assess",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "3a264eca-0e8e-42f1-87e5-5133e7eef148": {
+            "id": "3a264eca-0e8e-42f1-87e5-5133e7eef148",
+            "timestamp": 1617708276543,
+            "object": "22fec7d4-2b7a-4cae-bd51-f14a28e06606",
+            "ambition": "assess",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "7e75769e-57c4-48a5-ab0d-24066d21d205": {
+            "id": "7e75769e-57c4-48a5-ab0d-24066d21d205",
+            "timestamp": 1617708276543,
+            "object": "5e1e2516-fb0a-48cb-9e0d-3fe7bb6cf91d",
+            "ambition": "trial",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "3ff22d3a-160e-43e5-820c-40d7e82c38b5": {
+            "id": "3ff22d3a-160e-43e5-820c-40d7e82c38b5",
+            "timestamp": 1617708276543,
+            "object": "9485df92-a56f-486d-94be-eb19fc07daf1",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "d2f27561-449a-47b6-96bf-3c176521de14": {
+            "id": "d2f27561-449a-47b6-96bf-3c176521de14",
+            "timestamp": 1617708276543,
+            "object": "020128a9-5397-4bd4-b5d4-aeaabe09e199",
+            "ambition": "assess",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "eb82f804-19b8-4cc8-ad41-d1cba493284e": {
+            "id": "eb82f804-19b8-4cc8-ad41-d1cba493284e",
+            "timestamp": 1617708276544,
+            "object": "8baf555d-3d5d-406d-aeaa-b3a8d8780ce0",
+            "ambition": "potentie",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "d4b6c276-3ddf-4f7e-8382-6be894af38fe": {
+            "id": "d4b6c276-3ddf-4f7e-8382-6be894af38fe",
+            "timestamp": 1617708276544,
+            "object": "b7e5841b-c6b7-48f1-8252-ced1f189838e",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ambition": "adopt",
+            "ratingType": "technologyAdoption"
+        },
+        "5bcb0b3b-cd40-42b4-b502-d12e64fa3f83": {
+            "id": "5bcb0b3b-cd40-42b4-b502-d12e64fa3f83",
+            "timestamp": 1617708276544,
+            "object": "3d698db7-ec17-415c-9dae-df276500ac70",
+            "ambition": "identified",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "bf24eca9-4278-46cf-b765-8a6fce681c59": {
+            "id": "bf24eca9-4278-46cf-b765-8a6fce681c59",
+            "timestamp": 1617708276544,
+            "object": "83a9f0d6-848e-43ff-912b-7d894572fd71",
+            "ambition": "trial",
+            "experience": "medium",
+            "magnitude": "medium",
+            "scope": "AMIS",
+            "author": "Maxime",
+            "ratingType": "technologyAdoption"
+        },
+        "fe3b466b-faf8-4d55-a99b-b28604bd0370": {
+            "id": "fe3b466b-faf8-4d55-a99b-b28604bd0370",
+            "timestamp": 1618391106702,
+            "object": "6e3a3f56-61d7-43ff-95be-e0ae43f86946",
+            "skill": "1",
+            "ratingType": "technologyAdoption"
+        },
+        "7d320da9-8805-4a2d-9b06-9a88a75af47c": {
+            "id": "7d320da9-8805-4a2d-9b06-9a88a75af47c",
+            "timestamp": 1618391124713,
+            "object": "dcfb645f-947f-4036-b5a4-23cf6ca690b6",
+            "skill": "2",
+            "ratingType": "technologyAdoption"
+        },
+        "f83e70e1-8404-41e6-804b-1afd10301963": {
+            "id": "f83e70e1-8404-41e6-804b-1afd10301963",
+            "timestamp": 1618394467697,
+            "object": "6b72c74e-b270-498e-82d0-170e7a21d3e5",
+            "status": "idea",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
+        },
+        "a397de5f-3ace-418b-bdf6-b431b67f6a88": {
+            "id": "a397de5f-3ace-418b-bdf6-b431b67f6a88",
+            "timestamp": 1618394957232,
+            "object": "cf3e0d48-5ea0-4329-8276-92cdaff6dadd",
+            "status": "idea",
+            "remainingEffort": "medium",
+            "ratingType": "workitemStatus"
+        },
+        "9a7e603b-980e-471b-aa3e-9480600d1f57": {
+            "id": "9a7e603b-980e-471b-aa3e-9480600d1f57",
+            "timestamp": 1618395144356,
+            "object": "ae5e22e7-7890-49e0-894a-ab16038ad53d",
+            "status": "implement",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
+        },
+        "e264ba9a-73c5-4947-86e0-67c203087d96": {
+            "id": "e264ba9a-73c5-4947-86e0-67c203087d96",
+            "timestamp": 1618395362916,
+            "object": "a9f4615c-7afc-4e31-a2ad-8ab5b371c9d7",
+            "status": "idea",
+            "remainingEffort": "medium",
+            "ratingType": "workitemStatus"
+        },
+        "57955e5e-118c-471c-9fe4-47c8445bb6da": {
+            "id": "57955e5e-118c-471c-9fe4-47c8445bb6da",
+            "timestamp": 1618399767849,
+            "object": "ae5e22e7-7890-49e0-894a-ab16038ad53d",
+            "status": "done",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
+        },
+        "ad65a8f7-6e86-4ec2-830d-eda0b1afe7af": {
+            "id": "ad65a8f7-6e86-4ec2-830d-eda0b1afe7af",
+            "timestamp": 1618402914394,
+            "object": "e3ebcf9a-f54d-4e11-9ed9-99e313b7d579",
+            "status": "idea",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
+        },
+        "81d49277-044f-45ac-b7b0-fc2ee9cd230c": {
+            "id": "81d49277-044f-45ac-b7b0-fc2ee9cd230c",
+            "timestamp": 1618403694010,
+            "object": "202521e5-e1db-44e4-a066-421c47993c59",
+            "status": "idea",
+            "remainingEffort": "medium",
+            "ratingType": "workitemStatus"
+        },
+        "1a087ebe-222f-4936-a16b-640d3abec4ce": {
+            "id": "1a087ebe-222f-4936-a16b-640d3abec4ce",
+            "timestamp": 1618404396295,
+            "object": "c9d22ba0-cf91-4a01-a156-6fc3b0c55bb5",
+            "status": "idea",
+            "remainingEffort": "medium",
+            "ratingType": "workitemStatus"
+        },
+        "91e63cc8-3f59-4865-af49-1a4fb8f09613": {
+            "id": "91e63cc8-3f59-4865-af49-1a4fb8f09613",
+            "timestamp": 1618460175786,
+            "object": "34ae2a96-17de-4cc3-b065-7a075e5d5fac",
+            "status": "design",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
+        },
+        "325b9d80-f44d-4070-af6d-ef02a44e1cef": {
+            "id": "325b9d80-f44d-4070-af6d-ef02a44e1cef",
+            "timestamp": 1618460299839,
+            "object": "1cc6e081-8f0b-4ad8-ab07-75b262444090",
+            "status": "done",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
+        },
+        "ae38930a-91c0-42ff-bde9-3612ec409792": {
+            "id": "ae38930a-91c0-42ff-bde9-3612ec409792",
+            "timestamp": 1618460420363,
+            "object": "7aefc5e9-b21c-4dd5-aa00-d99dabb2efa1",
+            "status": "idea",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
+        },
+        "c0f31905-3e99-4f8f-9513-7242f427a8d8": {
+            "id": "c0f31905-3e99-4f8f-9513-7242f427a8d8",
+            "timestamp": 1618460590553,
+            "object": "18f7ebab-b739-49c4-9ad9-6abe89c9b8a3",
+            "status": "idea",
+            "remainingEffort": "medium",
+            "ratingType": "workitemStatus"
+        },
+        "d5a71b69-5d30-4faf-8fc5-f260143e972b": {
+            "id": "d5a71b69-5d30-4faf-8fc5-f260143e972b",
+            "timestamp": 1618460677848,
+            "object": "d5c58ecf-321e-468a-a281-8f1e390db7d8",
+            "status": "idea",
+            "remainingEffort": "medium",
+            "ratingType": "workitemStatus"
+        },
+        "0aaff6cc-e5b2-46d7-bd82-ee6f19873edd": {
+            "id": "0aaff6cc-e5b2-46d7-bd82-ee6f19873edd",
+            "timestamp": 1618460828481,
+            "object": "f2235f35-97ea-4561-9bd7-bc4f1dc7c5f9",
+            "status": "idea",
+            "remainingEffort": "-1",
+            "ratingType": "workitemStatus"
+        },
+        "e684ef44-c02e-4a2d-b9ff-94a3adc428cb": {
+            "id": "e684ef44-c02e-4a2d-b9ff-94a3adc428cb",
+            "timestamp": 1618460918886,
+            "object": "b5d64706-518b-464b-90b7-f5a32fe2d4e1",
+            "status": "idea",
+            "remainingEffort": "small",
+            "ratingType": "workitemStatus"
+        },
+        "f733e809-f764-4ee6-aa13-73c8d3aca82f": {
+            "id": "f733e809-f764-4ee6-aa13-73c8d3aca82f",
+            "timestamp": 1618461065975,
+            "object": "e102e11e-1bb2-486d-a343-db693510ce87",
+            "status": "idea",
+            "remainingEffort": "medium",
+            "ratingType": "workitemStatus"
+        },
+        "09c4a9e3-fc62-40d9-90d7-a20619a95a4b": {
+            "id": "09c4a9e3-fc62-40d9-90d7-a20619a95a4b",
+            "timestamp": 1618463774595,
+            "ratingType": "workitemStatus",
+            "object": "dbaa4400-7aad-4809-9394-534604900a35",
+            "status": "implement",
+            "remainingEffort": "small"
+        },
+        "9744aaf8-aae8-450f-a4e6-eb98b2b7b0b2": {
+            "id": "9744aaf8-aae8-450f-a4e6-eb98b2b7b0b2",
+            "timestamp": 1618484949930,
+            "ratingType": "workitemStatus",
+            "object": "d6e5065e-e9f0-4973-a917-4a730082b738",
+            "status": "design",
+            "remainingEffort": "medium"
+        },
+        "8447ce45-6ef9-4316-9628-0e6a48e963fc": {
+            "id": "8447ce45-6ef9-4316-9628-0e6a48e963fc",
+            "timestamp": 1618485205056,
+            "ratingType": "workitemStatus",
+            "object": "b8fc9777-61a2-4b48-8e27-fe479182489f",
+            "status": "idea",
+            "remainingEffort": "small"
+        }
+    }
+}

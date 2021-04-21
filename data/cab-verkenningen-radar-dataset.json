@@ -1,0 +1,1702 @@
+{
+    "model": {
+        "objectTypes": {
+            "verkenning": {
+                "name": "verkenning",
+                "label": "Verkenning",
+                "properties": {
+                    "label": {
+                        "label": "Label",
+                        "type": "string",
+                        "displayLabel": true
+                    },
+                    "description": {
+                        "label": "Beschrijving",
+                        "type": "text"
+                    },
+                    "doel": {
+                        "label": "Doel & Onderzoeksvragen",
+                        "type": "text"
+                    },
+                    "deliverables": {
+                        "label": "Op te leveren producten",
+                        "type": "text"
+                    },
+                    "contactPersoon": {
+                        "label": "Contactpersoon",
+                        "type": "string",
+                        "discrete": true
+                    },
+                    "betrokkenCollegas": {
+                        "label": "Betrokken collega's",
+                        "type": "string"
+                    },
+                    "betrokkenKlanten": {
+                        "label": "Betrokken Klanten",
+                        "type": "string"
+                    },
+                    "betrokkenLeveranciers": {
+                        "label": "Betrokken Leveranciers",
+                        "type": "string"
+                    },
+                    "omvang": {
+                        "label": "Omvang (doorlooptijd en te besteden mandagen)",
+                        "type": "string"
+                    },
+                    "homepage": {
+                        "label": "Referentie",
+                        "type": "url"
+                    },
+                    "image": {
+                        "label": "Plaatje",
+                        "type": "image"
+                    },
+                    "tags": {
+                        "label": "Tags",
+                        "type": "tags"
+                    },
+                    "soortVerkenning": {
+                        "label": "Soort verkenning",
+                        "type": "string",
+                        "allowableValues": [
+                            {
+                                "value": "rnd",
+                                "label": "R&D"
+                            },
+                            {
+                                "value": "beta",
+                                "label": "Beta/Technical Preview"
+                            },
+                            {
+                                "value": "stage",
+                                "label": "Stage van Student"
+                            },
+                            {
+                                "value": "propositie",
+                                "label": "Ontwikkeling Propositie/Dienst"
+                            },
+                            {
+                                "value": "promotie",
+                                "label": "Promotieonderzoek"
+                            }
+                        ],
+                        "defaultValue": "rnd"
+                    },
+                    "category": {
+                        "label": "Category",
+                        "type": "string",
+                        "allowableValues": [
+                            {
+                                "value": "data",
+                                "label": "Data Management & Analytics"
+                            },
+                            {
+                                "value": "integration",
+                                "label": "Integratie"
+                            },
+                            {
+                                "value": "security",
+                                "label": "Security"
+                            },
+                            {
+                                "value": "appdev",
+                                "label": "Application Development"
+                            },
+                            {
+                                "value": "infra",
+                                "label": "Infrastructure & Platform"
+                            },
+                            {
+                                "value": "ops",
+                                "label": "Operational Services"
+                            },
+                            {
+                                "value": "agile",
+                                "label": "Agile & Proces"
+                            },
+                            {
+                                "value": "other",
+                                "label": "Overige"
+                            }
+                        ],
+                        "defaultValue": "data"
+                    }
+                }
+            }
+        },
+        "ratingTypes": {
+            "verkenningVoortgang": {
+                "name": "verkenningVoortgang",
+                "label": "Verkenning Voortgang",
+                "objectType": "verkenning",
+                "properties": {
+                    "status": {
+                        "label": "Status",
+                        "description": "Voortgangsstatus van Verkenning",
+                        "defaultValue": "identified",
+                        "allowableValues": [
+                            {
+                                "value": "ambitie",
+                                "label": "Ambitie/Voornemen"
+                            },
+                            {
+                                "value": "uitvoering",
+                                "label": "In Uitvoering"
+                            },
+                            {
+                                "value": "pauze",
+                                "label": "Gepauzeerd"
+                            },
+                            {
+                                "value": "afgerond",
+                                "label": "Afgerond"
+                            }
+                        ]
+                    },
+                    "omvang": {
+                        "label": "Omvang",
+                        "description": "relatieve omvang van de verkenning",
+                        "defaultValue": "medium",
+                        "allowableValues": [
+                            {
+                                "value": "klein",
+                                "label": "Klein (uren of dagen)"
+                            },
+                            {
+                                "value": "medium",
+                                "label": "Medium (dagen of weken)"
+                            },
+                            {
+                                "value": "groot",
+                                "label": "Groot (maanden)"
+                            },
+                            {
+                                "value": "enorm",
+                                "label": "Enorm (vele maanden/jaren)"
+                            }
+                        ]
+                    },
+                    "uitkomst": {
+                        "label": "Uitkomsten & Aanknopingspunten",
+                        "description": "Waarde & kans op vervolg",
+                        "defaultValue": "medium",
+                        "allowableValues": [
+                            {
+                                "value": "onduidelijk",
+                                "label": "Nog onduidelijk"
+                            },
+                            {
+                                "value": "geen",
+                                "label": "Beperkt tot geen"
+                            },
+                            {
+                                "value": "enige",
+                                "label": "Enige waarde"
+                            },
+                            {
+                                "value": "flinke",
+                                "label": "Flinke waarde"
+                            },
+                            {
+                                "value": "wauw",
+                                "label": "Wauw!"
+                            }
+                        ]
+                    },
+                    "einddatum": {
+                        "label": "Einddatum",
+                        "type": "string"
+                    },
+                    "scope": {
+                        "label": "Scope",
+                        "description": "De scope waarbinnen het onderzoek plaatsvindt (afdeling, bedrijf, meerdere bedrijven in ecosysteem, over de grenzen van het ecosysteem",
+                        "defaultValue": "Conclusion",
+                        "discrete": true
+                    },
+                    "author": {
+                        "label": "Auteur",
+                        "defaultValue": "",
+                        "discrete": true
+                    },
+                    "timestamp": {
+                        "label": "Time of Evaluation",
+                        "description": "Tijdstip van bijwerken",
+                        "type": "time",
+                        "readOnly": true
+                    },
+                    "comment": {
+                        "label": "Toelichting",
+                        "description": "Aanvullende opmerkingen",
+                        "type": "text"
+                    }
+                }
+            }
+        }
+    },
+    "viewpoints": [
+        {
+            "name": "Conclusion Verkenningen Radar 2021",
+            "id": "cab-verkenningen-radar-2021",
+            "template": {
+                "svg_id": "radarSVGContainer",
+                "width": 1450,
+                "height": 1100,
+                "topLayer": "sectors",
+                "selectedRing": 1,
+                "selectedSector": 2,
+                "rotation": 0,
+                "maxRingRadius": 450,
+                "sectorBoundariesExtended": true,
+                "editMode": false,
+                "defaultFont": {
+                    "color": "black",
+                    "fontSize": "38px",
+                    "fontFamily": "Arial, Helvetica",
+                    "fontStyle": "italic",
+                    "fontWeight": "bold"
+                },
+                "title": {
+                    "text": "Verkenningen Radar - Voorjaar 2021",
+                    "x": -700,
+                    "y": -520,
+                    "font": {
+                        "fontSize": "34px",
+                        "fontFamily": "Courier"
+                    }
+                },
+                "colors": {
+                    "background": "#FFF",
+                    "grid": "#bbb",
+                    "inactive": "#ddd"
+                },
+                "ringsConfiguration": {
+                    "outsideRingsAllowed": true,
+                    "font": {
+                        "color": "purple",
+                        "fontSize": "24px",
+                        "fontFamily": "Arial, Helvetica",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal"
+                    },
+                    "stroke": {
+                        "strokeWidth": 2,
+                        "strokeColor": "gray",
+                        "strokeArray": "100 1"
+                    },
+                    "rings": [
+                        {
+                            "label": "Ambitie",
+                            "width": 0.13
+                        },
+                        {
+                            "label": "Pauze",
+                            "width": 0.17
+                        },
+                        {
+                            "label": "Uitvoering",
+                            "width": 0.15
+                        },
+                        {
+                            "label": "Afgerond",
+                            "width": 0.55
+                        }
+                    ]
+                },
+                "sectorsConfiguration": {
+                    "outsideSectorsAllowed": true,
+                    "font": {
+                        "color": "#000",
+                        "fontSize": "28px",
+                        "fontFamily": "Arial, Helvetica",
+                        "fontStyle": "normal",
+                        "fontWeight": "normal"
+                    },
+                    "stroke": {
+                        "strokeWidth": 2,
+                        "strokeColor": "gray",
+                        "strokeArray": "100 1"
+                    },
+                    "sectors": [
+                        {
+                            "label": "Data Management & Analytics",
+                            "angle": 0.14285714285714285,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "Integratie",
+                            "angle": 0.14285714285714285,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "Security",
+                            "angle": 0.14285714285714285,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "Application Development",
+                            "angle": 0.14285714285714285,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        },
+                        {
+                            "label": "Infrastructure & Platform",
+                            "angle": 0.11,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": "18",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#ffffff",
+                            "outerringBackgroundColor": "#ffffff",
+                            "opacity": "0.5",
+                            "opacityOutsideRings": "0.5",
+                            "visible": true
+                        },
+                        {
+                            "label": "Operational Services",
+                            "angle": 0.08,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": "18",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#ffffff",
+                            "outerringBackgroundColor": "#ffffff",
+                            "opacity": "0.5",
+                            "opacityOutsideRings": "0.5",
+                            "visible": true
+                        },
+                        {
+                            "label": "Agile, Proces & Project Mgt",
+                            "angle": 0.15,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": "18",
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": "1"
+                            },
+                            "backgroundImage": {
+                                "image": ""
+                            },
+                            "backgroundColor": "#ffffff",
+                            "outerringBackgroundColor": "#ffffff",
+                            "opacity": "0.5",
+                            "opacityOutsideRings": "0.5",
+                            "visible": true
+                        },
+                        {
+                            "label": "Overige",
+                            "angle": 0.07,
+                            "labelSettings": {
+                                "showCurved": true,
+                                "showStraight": false,
+                                "color": "#000000",
+                                "fontSize": 18,
+                                "fontFamily": "Helvetica"
+                            },
+                            "edge": {
+                                "color": "#000000",
+                                "width": 1
+                            },
+                            "backgroundImage": {},
+                            "backgroundColor": "#FFFFFF",
+                            "outerringBackgroundColor": "#FFFFFF"
+                        }
+                    ],
+                    "showRegularSectorLabels": false
+                },
+                "colorsConfiguration": {
+                    "label": "Waarde & Aanknopingspunten",
+                    "colors": [
+                        {
+                            "label": "Nog Onduidelijk",
+                            "color": "gray",
+                            "enabled": true
+                        },
+                        {
+                            "label": "Beperkt",
+                            "color": "#ffcccc",
+                            "enabled": true
+                        },
+                        {
+                            "label": "Enige",
+                            "color": "#00ffcc",
+                            "enabled": true
+                        },
+                        {
+                            "label": "Flinke",
+                            "color": "#99ff33",
+                            "enabled": true
+                        },
+                        {
+                            "label": "Wauw!",
+                            "color": "#ffcc00"
+                        }
+                    ]
+                },
+                "sizesConfiguration": {
+                    "label": "Omvang",
+                    "sizes": [
+                        {
+                            "label": "Klein (uren-dagen)",
+                            "size": 0.55,
+                            "enabled": true
+                        },
+                        {
+                            "label": "Medium (dagen - weken)",
+                            "size": 0.8,
+                            "enabled": true
+                        },
+                        {
+                            "label": "Groot (maanden)",
+                            "size": 1.05,
+                            "enabled": true
+                        },
+                        {
+                            "label": "Enorm groot (vele maanden/jaren)",
+                            "size": 1.3
+                        },
+                        {
+                            "label": "Regular",
+                            "size": 1.8,
+                            "enabled": false
+                        }
+                    ]
+                },
+                "shapesConfiguration": {
+                    "label": "Soort Verkenning",
+                    "shapes": [
+                        {
+                            "label": "Beta/Technical Preview",
+                            "shape": "square"
+                        },
+                        {
+                            "label": "R&D traject",
+                            "shape": "diamond"
+                        },
+                        {
+                            "label": "Stage",
+                            "shape": "rectangleHorizontal",
+                            "enabled": false
+                        },
+                        {
+                            "label": "Propositie-ontwikkeling",
+                            "shape": "circle",
+                            "enabled": false
+                        },
+                        {
+                            "label": "Promotieonderzoek",
+                            "shape": "star",
+                            "enabled": false
+                        },
+                        {
+                            "label": "Overig",
+                            "shape": "rectangleVertical",
+                            "enabled": false
+                        },
+                        {
+                            "label": "Commercial",
+                            "shape": "triangle",
+                            "enabled": false
+                        },
+                        {
+                            "label": "Label",
+                            "shape": "ring",
+                            "enabled": false
+                        },
+                        {
+                            "label": "Label",
+                            "shape": "plus",
+                            "enabled": false
+                        }
+                    ]
+                }
+            },
+            "ratingType": "verkenningVoortgang",
+            "propertyVisualMaps": {
+                "blip": {
+                    "label": "object.label",
+                    "image": "object.image"
+                },
+                "size": {
+                    "property": "omvang",
+                    "valueMap": {
+                        "klein": 0,
+                        "medium": 1,
+                        "groot": 2,
+                        "enorm": 3
+                    }
+                },
+                "sector": {
+                    "property": "object.category",
+                    "valueMap": {
+                        "data": 0,
+                        "integration": 1,
+                        "security": 2,
+                        "appdev": 3,
+                        "other": 7,
+                        "ops": 5,
+                        "agile": 6,
+                        "infra": 4
+                    }
+                },
+                "ring": {
+                    "property": "status",
+                    "valueMap": {
+                        "identified": -1,
+                        "ambitie": 0,
+                        "uitvoering": 2,
+                        "pauze": 1,
+                        "afgerond": 3
+                    }
+                },
+                "shape": {
+                    "property": "object.soortVerkenning",
+                    "valueMap": {
+                        "rnd": 1,
+                        "beta": 0,
+                        "stage": 2,
+                        "propositie": 3,
+                        "promotie": 4,
+                        "other": 5
+                    }
+                },
+                "color": {
+                    "property": "uitkomst",
+                    "valueMap": {
+                        "onduidelijk": 0,
+                        "geen": 1,
+                        "enige": 2,
+                        "flinke": 3,
+                        "wauw": 4
+                    }
+                }
+            },
+            "blipDisplaySettings": {
+                "showImages": false,
+                "showShapes": true,
+                "showLabels": true,
+                "applyShapes": true,
+                "applySizes": true,
+                "applyColors": true,
+                "tagFilter": []
+            },
+            "blips": [
+                {
+                    "id": "0",
+                    "rating": "9bf49bd7-0683-4f73-b6df-2972d957ab2d",
+                    "x": -155,
+                    "y": -388
+                },
+                {
+                    "id": "1",
+                    "rating": "100b7c55-d51d-4f4c-9e11-06aa0a8e8dce",
+                    "x": 137,
+                    "y": 246
+                },
+                {
+                    "id": "2",
+                    "rating": "333971e5-0300-4288-9b69-e3017a0fa307",
+                    "x": 209,
+                    "y": 182
+                },
+                {
+                    "id": "3",
+                    "rating": "a592dc2f-2c5a-4d78-b05a-76ca67ac2cf5",
+                    "x": 354,
+                    "y": -57
+                },
+                {
+                    "id": "5",
+                    "rating": "3dc36abe-acd3-4717-acc5-2778e0cc6e39",
+                    "x": 278,
+                    "y": -77
+                },
+                {
+                    "id": "6",
+                    "rating": "abe25e52-9d33-4aea-958d-6e5175775ebf",
+                    "x": -233,
+                    "y": -145
+                },
+                {
+                    "id": "7",
+                    "rating": "d0543f53-44bd-4660-b341-b0fb6debdea0",
+                    "x": 211,
+                    "y": -184
+                },
+                {
+                    "id": "8",
+                    "rating": "068f2636-a8df-48a1-9ab2-232b68a431be",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "9",
+                    "rating": "6b522ccf-4634-447b-8fdb-3739908b3f6e",
+                    "x": -417,
+                    "y": 29
+                },
+                {
+                    "id": "10",
+                    "rating": "9ae1bd20-815a-4217-82ea-839e75a5a5b7",
+                    "x": null,
+                    "y": null
+                },
+                {
+                    "id": "11",
+                    "rating": "09529f89-78cf-4d2b-842f-e69f74ce9bee",
+                    "x": -332,
+                    "y": -260
+                },
+                {
+                    "id": "12",
+                    "rating": "ed057170-e5cc-4091-b7a9-c209573b27d4",
+                    "x": -96,
+                    "y": 415
+                },
+                {
+                    "id": "13",
+                    "rating": "47adeb1b-9139-44ad-8bad-bd70adff5bfb",
+                    "x": -70,
+                    "y": 283
+                },
+                {
+                    "id": "14",
+                    "rating": "0265f7fa-ef7c-462e-a7f1-d655c5894dad",
+                    "x": -268,
+                    "y": -44
+                },
+                {
+                    "id": "15",
+                    "rating": "3e374b0d-61a1-4ae6-b381-f28ea8401729",
+                    "x": 130,
+                    "y": -384
+                },
+                {
+                    "id": "f20d2c53-ac5a-41ed-8624-056c0113f707",
+                    "rating": "1ac1e323-3e31-4596-80fe-a62ed23f3740",
+                    "x": -267,
+                    "y": 68
+                }
+            ]
+        }
+    ],
+    "templates": [],
+    "objects": {
+        "a29a0b4f-4e88-419f-bb73-63f469781458": {
+            "id": "a29a0b4f-4e88-419f-bb73-63f469781458",
+            "label": "PoC Rapid7 - vulnerability & security",
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Artien Bel",
+            "betrokkenCollegas": "Chris Gralike (AMIS), Artien Bel (CMC), CFIT (Christiaan Botman), First8, CAI??",
+            "betrokkenBedrijven": "CMC, AMIS, CFIT, First8, CAI",
+            "betrokkenKlanten": "",
+            "betrokkenLeveranciers": "Rapid7",
+            "omvang": "",
+            "homepage": "",
+            "image": "",
+            "startdatum": "",
+            "tags": [
+                "rapid7",
+                "vulnerability scan",
+                "seam",
+                "cyber security",
+                "exploits",
+                "certification",
+                "compliance"
+            ],
+            "soortVerkenning": "rnd",
+            "category": "security"
+        },
+        "40235d63-0315-47c1-8507-d5a2bb7c5150": {
+            "id": "40235d63-0315-47c1-8507-d5a2bb7c5150",
+            "label": "Betekenis en sturing van het begrip WAARDE in agile",
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Luuk Ketel",
+            "betrokkenCollegas": "",
+            "betrokkenBedrijven": "",
+            "betrokkenKlanten": "",
+            "betrokkenLeveranciers": "TU Delft",
+            "omvang": "1 jaar",
+            "homepage": "",
+            "image": "",
+            "startdatum": "1-1-2021",
+            "tags": [
+                "agile",
+                "waarde",
+                "kwd",
+                "sturing",
+                "sturing",
+                "begrip waarde",
+                "rini van solingen",
+                "rapid7",
+                "vulnerability scan",
+                "seam",
+                "cyber security",
+                "exploits",
+                "certification",
+                "compliance"
+            ],
+            "soortVerkenning": "promotie",
+            "category": "agile"
+        },
+        "0cdc45fd-6f08-470c-9a7c-da683643515c": {
+            "id": "0cdc45fd-6f08-470c-9a7c-da683643515c",
+            "label": "Influence of individual Steering Committee members on Enterprise System implementation",
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Luuk Ketel",
+            "betrokkenCollegas": "",
+            "betrokkenBedrijven": "KWD",
+            "betrokkenKlanten": "KWD klanten",
+            "betrokkenLeveranciers": "",
+            "omvang": "4 jaar",
+            "homepage": "",
+            "image": "",
+            "startdatum": "1-9-2019",
+            "tags": [
+                "stuurgroep",
+                "erp implementatie",
+                "sturing",
+                "invloed",
+                "agile",
+                "waarde",
+                "kwd",
+                "sturing",
+                "sturing",
+                "begrip waarde",
+                "rini van solingen",
+                "rapid7",
+                "vulnerability scan",
+                "seam",
+                "cyber security",
+                "exploits",
+                "certification",
+                "compliance"
+            ],
+            "soortVerkenning": "promotie",
+            "category": "agile"
+        },
+        "1538125c-b054-46a6-9490-7cb5c40045ec": {
+            "id": "1538125c-b054-46a6-9490-7cb5c40045ec",
+            "label": "Azure Purview verkenning",
+            "tags": [
+                "purview",
+                "data catalog",
+                "azure",
+                "microsoft",
+                "governance",
+                "meta data",
+                "hot item",
+                "amis",
+                "cfit",
+                "amis",
+                "stuurgroep",
+                "erp implementatie",
+                "sturing",
+                "invloed",
+                "agile",
+                "waarde",
+                "kwd",
+                "sturing",
+                "sturing",
+                "begrip waarde",
+                "rini van solingen",
+                "rapid7",
+                "vulnerability scan",
+                "seam",
+                "cyber security",
+                "exploits",
+                "certification",
+                "compliance"
+            ],
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Lucas Jellema",
+            "betrokkenCollegas": "Bart van Oort <oort@hotitem.nl>; Jorrit Nijssen <Jorrit.Nijssen@amis.nl>; Sam Vruggink <Sam.Vruggink@amis.nl>; Michiel van der Sluis <MvanderSluis@conclusion.nl>; Tony van der Prijt <prijt@hotitem.nl>; Marcel Stangenberger <Marcel.Stangenberger@cfit.nl>; Sagar Bhoendie <Sagar.Bhoendie@cfit.nl>; Onno Hartveldt <Onno.Hartveldt@amis.nl>; Norbert van de Ven <ven@hotitem.nl>; Lucas Jellema <Lucas.Jellema@amis.nl>",
+            "betrokkenBedrijven": "HotITem, AMIS, CFIT, VS",
+            "betrokkenKlanten": "(bij Nutreco wordt Purview toegepast; Nutreco is niet onderdeel van ons onderzoekstraject)",
+            "betrokkenLeveranciers": "Microsoft",
+            "omvang": "3 maanden",
+            "homepage": "",
+            "image": "",
+            "startdatum": "1-2-2021",
+            "soortVerkenning": "beta",
+            "category": "data"
+        },
+        "c3de9947-94ae-4837-80e9-9453b2e1b39e": {
+            "id": "c3de9947-94ae-4837-80e9-9453b2e1b39e",
+            "label": "Behavior Driven Development/Testen",
+            "tags": [
+                "bdd",
+                "testen",
+                "cucumber",
+                "gherkin",
+                "behavior driven testing",
+                "agile",
+                "specificaties",
+                "amis",
+                "agile",
+                "waarde",
+                "kwd",
+                "sturing",
+                "sturing",
+                "begrip waarde",
+                "rini van solingen",
+                "rapid7",
+                "vulnerability scan",
+                "seam",
+                "cyber security",
+                "exploits",
+                "certification",
+                "compliance"
+            ],
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Lucas Jellema",
+            "betrokkenCollegas": "Tiemen Scholten",
+            "betrokkenBedrijven": "AMIS",
+            "betrokkenKlanten": "",
+            "betrokkenLeveranciers": "",
+            "omvang": "6 maanden",
+            "homepage": "",
+            "image": "",
+            "startdatum": "",
+            "soortVerkenning": "stage",
+            "category": "appdev"
+        },
+        "c9b669e0-faba-433d-862b-4cd92846e490": {
+            "id": "c9b669e0-faba-433d-862b-4cd92846e490",
+            "label": "Snowflake (vs Azure Synapse)",
+            "tags": [
+                "azure",
+                "synapse",
+                "snowflake",
+                "cloud",
+                "analytics",
+                "data cloud",
+                "performance",
+                "data pipeline"
+            ],
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Rene Kuijper",
+            "betrokkenCollegas": "Rene Kuijper, Michiel Vuurboom, Lucas Jellema",
+            "betrokkenBedrijven": "HotITem, Furore, AMIS",
+            "betrokkenKlanten": "",
+            "betrokkenLeveranciers": "Snowflake",
+            "omvang": "3 maanden; 30 dagen?",
+            "homepage": "",
+            "image": "",
+            "startdatum": "1-4-2021",
+            "soortVerkenning": "rnd",
+            "category": "data"
+        },
+        "16e5f727-aba5-43ac-b9e6-58bb16796702": {
+            "id": "16e5f727-aba5-43ac-b9e6-58bb16796702",
+            "label": "Red Hat SSO / Keycloak icm Europese identiteitsmiddelen",
+            "tags": [
+                "redhat",
+                "first8",
+                "keycloak",
+                "digid",
+                "eherkenning",
+                "eidas",
+                "itsme",
+                "beid",
+                "openid",
+                "saml",
+                "oauth",
+                "azure",
+                "synapse",
+                "snowflake",
+                "cloud",
+                "analytics",
+                "data cloud",
+                "performance",
+                "data pipeline"
+            ],
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Arjan Lamers",
+            "betrokkenCollegas": "Bram Vonk (First8), Joep van Hulst (First8)",
+            "betrokkenBedrijven": "",
+            "betrokkenKlanten": "'CRV, JoinData, Open Healthhub",
+            "betrokkenLeveranciers": "Red Hat",
+            "omvang": "half jaar, stage traject",
+            "homepage": "",
+            "image": "",
+            "startdatum": "2-1-2021",
+            "soortVerkenning": "stage",
+            "category": "security"
+        },
+        "710041c8-f8ff-4972-90aa-8bbcb5f16d6e": {
+            "id": "710041c8-f8ff-4972-90aa-8bbcb5f16d6e",
+            "label": "Datawarehouse automation - TimeXtender",
+            "tags": [
+                "cas",
+                "afas",
+                "bi",
+                "data warehouse",
+                "etl",
+                "azure",
+                "saas",
+                "redhat",
+                "first8",
+                "keycloak",
+                "digid",
+                "eherkenning",
+                "eidas",
+                "itsme",
+                "beid",
+                "openid",
+                "saml",
+                "oauth",
+                "azure",
+                "synapse",
+                "snowflake",
+                "cloud",
+                "analytics",
+                "data cloud",
+                "performance",
+                "data pipeline"
+            ],
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Peter Schuurhuis",
+            "betrokkenCollegas": "Wouter van Gammeren,  Sandra Otse, Mark de Boer, Sebastiaan Leeuwenkamp",
+            "betrokkenBedrijven": "CAS",
+            "betrokkenKlanten": "Movares",
+            "betrokkenLeveranciers": "E-mergo",
+            "omvang": "6 maanden - 30 dagen",
+            "homepage": "",
+            "image": "",
+            "startdatum": "1-3-2021",
+            "soortVerkenning": "propositie",
+            "category": "data"
+        },
+        "b1d125a4-aabc-42ae-a86e-5aebda0d4360": {
+            "id": "b1d125a4-aabc-42ae-a86e-5aebda0d4360",
+            "label": "Upgrade naar laatste versie .Net",
+            "tags": [],
+            "description": "SoftwareUpgrade",
+            "doel": "Kijken of we problemen gaan krijgen bij upgraden naar laatse versie .Net",
+            "deliverables": "Wanneer er (grote) problemen zijn dan een plan voor hoe de upgrade te realiseren.",
+            "contactPersoon": "Robert Tjin Tjoen Lim",
+            "betrokkenCollegas": "",
+            "betrokkenBedrijven": "",
+            "betrokkenKlanten": "",
+            "betrokkenLeveranciers": "",
+            "omvang": "2 mandagen 1 week doorlooptijd",
+            "homepage": "",
+            "image": "",
+            "startdatum": "",
+            "soortVerkenning": "propositie",
+            "category": "overig"
+        },
+        "d3154687-0da3-44a1-a084-2de0349c3b03": {
+            "id": "d3154687-0da3-44a1-a084-2de0349c3b03",
+            "label": "Upgrade naar laatste versie .Net",
+            "tags": [
+                ".net",
+                "software upgrade",
+                "cas",
+                "afas",
+                "bi",
+                "data warehouse",
+                "etl",
+                "azure",
+                "saas",
+                "redhat",
+                "first8",
+                "keycloak",
+                "digid",
+                "eherkenning",
+                "eidas",
+                "itsme",
+                "beid",
+                "openid",
+                "saml",
+                "oauth",
+                "azure",
+                "synapse",
+                "snowflake",
+                "cloud",
+                "analytics",
+                "data cloud",
+                "performance",
+                "data pipeline"
+            ],
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Robert Tjin Tjoen Lim",
+            "betrokkenCollegas": "",
+            "betrokkenBedrijven": "",
+            "betrokkenKlanten": "",
+            "betrokkenLeveranciers": "",
+            "omvang": "2 mandagen 1 week doorlooptijd",
+            "homepage": "",
+            "image": "",
+            "startdatum": "",
+            "soortVerkenning": "rnd",
+            "category": "appdev"
+        },
+        "975fbade-4e79-4c8d-9677-cf7b86c73a56": {
+            "id": "975fbade-4e79-4c8d-9677-cf7b86c73a56",
+            "label": "BI",
+            "tags": [
+                "data warehouse",
+                ".net",
+                "software upgrade",
+                "cas",
+                "afas",
+                "bi",
+                "data warehouse",
+                "etl",
+                "azure",
+                "saas",
+                "redhat",
+                "first8",
+                "keycloak",
+                "digid",
+                "eherkenning",
+                "eidas",
+                "itsme",
+                "beid",
+                "openid",
+                "saml",
+                "oauth",
+                "azure",
+                "synapse",
+                "snowflake",
+                "cloud",
+                "analytics",
+                "data cloud",
+                "performance",
+                "data pipeline"
+            ],
+            "description": "",
+            "doel": "Kan het CVS ontsloten worden via BI",
+            "deliverables": "",
+            "contactPersoon": "Robert Tjin Tjoen Lim",
+            "betrokkenCollegas": "Bas Egging",
+            "betrokkenBedrijven": "",
+            "betrokkenKlanten": "",
+            "betrokkenLeveranciers": "",
+            "omvang": "5 mandagen doorlooptijd 2 weken",
+            "homepage": "",
+            "image": "",
+            "startdatum": "",
+            "soortVerkenning": "rnd",
+            "category": "data"
+        },
+        "3f1e7d0d-2ea4-4f52-bae9-aa921efd0d4a": {
+            "id": "3f1e7d0d-2ea4-4f52-bae9-aa921efd0d4a",
+            "label": "RedHat SSO/KeyCloak",
+            "tags": [
+                "sso",
+                "xforce",
+                "identity management",
+                "data warehouse",
+                ".net",
+                "software upgrade",
+                "cas",
+                "afas",
+                "bi",
+                "data warehouse",
+                "etl",
+                "azure",
+                "saas",
+                "redhat",
+                "first8",
+                "keycloak",
+                "digid",
+                "eherkenning",
+                "eidas",
+                "itsme",
+                "beid",
+                "openid",
+                "saml",
+                "oauth",
+                "azure",
+                "synapse",
+                "snowflake",
+                "cloud",
+                "analytics",
+                "data cloud",
+                "performance",
+                "data pipeline"
+            ],
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "",
+            "betrokkenCollegas": "",
+            "betrokkenBedrijven": "Xforce",
+            "betrokkenKlanten": "",
+            "betrokkenLeveranciers": "",
+            "omvang": "1 mandag",
+            "homepage": "",
+            "image": "",
+            "startdatum": "",
+            "soortVerkenning": "rnd",
+            "category": "security"
+        },
+        "497bdb55-0760-4b04-b640-1500a9ba1c31": {
+            "id": "497bdb55-0760-4b04-b640-1500a9ba1c31",
+            "label": "Dynatrace partnership",
+            "tags": [
+                "xforce",
+                "monitoring",
+                "apm",
+                "performance",
+                "containerization",
+                "cloud monitoring",
+                "AIOps",
+                "root cause analysis",
+                "sso",
+                "xforce",
+                "identity management",
+                "data warehouse",
+                ".net",
+                "software upgrade",
+                "cas",
+                "afas",
+                "bi",
+                "data warehouse",
+                "etl",
+                "azure",
+                "saas",
+                "redhat",
+                "first8",
+                "keycloak",
+                "digid",
+                "eherkenning",
+                "eidas",
+                "itsme",
+                "beid",
+                "openid",
+                "saml",
+                "oauth",
+                "azure",
+                "synapse",
+                "snowflake",
+                "cloud",
+                "analytics",
+                "data cloud",
+                "performance",
+                "data pipeline"
+            ],
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Jørgen van der Meulen",
+            "betrokkenCollegas": "Fred Lopulalan , Antoine Beerens beide monitoring consultants van Conclusion Xforce, mogelijke andere bedrijven/labels",
+            "betrokkenBedrijven": "Xforce, mogelijk andere bedrijven",
+            "betrokkenKlanten": "Unigarant",
+            "betrokkenLeveranciers": "Dynatrace",
+            "omvang": "half jaar, onbekend aantal mandagen",
+            "homepage": "",
+            "image": "",
+            "startdatum": "1-3-2021",
+            "soortVerkenning": "propositie",
+            "category": "ops"
+        },
+        "1d325469-af39-407f-8d99-5be16d32af52": {
+            "id": "1d325469-af39-407f-8d99-5be16d32af52",
+            "label": "Automating SAP HANA en S/4HANA",
+            "tags": [
+                "sap",
+                "s4/hana",
+                "automation",
+                "ansible",
+                "redhat",
+                "xforce",
+                "xforce",
+                "monitoring",
+                "apm",
+                "performance",
+                "containerization",
+                "cloud monitoring",
+                "AIOps",
+                "root cause analysis",
+                "sso",
+                "xforce",
+                "identity management",
+                "data warehouse",
+                ".net",
+                "software upgrade",
+                "cas",
+                "afas",
+                "bi",
+                "data warehouse",
+                "etl",
+                "azure",
+                "saas",
+                "redhat",
+                "first8",
+                "keycloak",
+                "digid",
+                "eherkenning",
+                "eidas",
+                "itsme",
+                "beid",
+                "openid",
+                "saml",
+                "oauth",
+                "azure",
+                "synapse",
+                "snowflake",
+                "cloud",
+                "analytics",
+                "data cloud",
+                "performance",
+                "data pipeline"
+            ],
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Jørgen van der Meulen",
+            "betrokkenCollegas": "Mark Luursema, Fred Lopulalan,",
+            "betrokkenBedrijven": "Xforce",
+            "betrokkenKlanten": "",
+            "betrokkenLeveranciers": "Red Hat",
+            "omvang": "",
+            "homepage": "",
+            "image": "",
+            "startdatum": "1-2-2021",
+            "soortVerkenning": "propositie",
+            "category": "ops"
+        },
+        "e25b6323-c998-4a27-9b65-e6e7eb5ecd2f": {
+            "id": "e25b6323-c998-4a27-9b65-e6e7eb5ecd2f",
+            "label": "Test automatisering ten behoeve van Mendix",
+            "tags": [
+                "mendix",
+                "testen",
+                "cypress",
+                "playwright",
+                "lowcode",
+                "ui",
+                "sap",
+                "s4/hana",
+                "automation",
+                "ansible",
+                "redhat",
+                "xforce",
+                "xforce",
+                "monitoring",
+                "apm",
+                "performance",
+                "containerization",
+                "cloud monitoring",
+                "AIOps",
+                "root cause analysis",
+                "sso",
+                "xforce",
+                "identity management",
+                "data warehouse",
+                ".net",
+                "software upgrade",
+                "cas",
+                "afas",
+                "bi",
+                "data warehouse",
+                "etl",
+                "azure",
+                "saas",
+                "redhat",
+                "first8",
+                "keycloak",
+                "digid",
+                "eherkenning",
+                "eidas",
+                "itsme",
+                "beid",
+                "openid",
+                "saml",
+                "oauth",
+                "azure",
+                "synapse",
+                "snowflake",
+                "cloud",
+                "analytics",
+                "data cloud",
+                "performance",
+                "data pipeline"
+            ],
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Anthony Dickinson",
+            "betrokkenCollegas": "Anthony Dickinson, Paul Schot, Nick Kluter - Mendix developers",
+            "betrokkenBedrijven": "Conclusion Low Code Company",
+            "betrokkenKlanten": "",
+            "betrokkenLeveranciers": "",
+            "omvang": "",
+            "homepage": "",
+            "image": "",
+            "startdatum": "1-12-2020",
+            "soortVerkenning": "rnd",
+            "category": "appdev"
+        },
+        "c49ae410-c8cb-4028-8120-91dccf320980": {
+            "id": "c49ae410-c8cb-4028-8120-91dccf320980",
+            "label": "GraphQL",
+            "tags": [
+                "VS",
+                "GraphQL",
+                "IBM API Connect",
+                "API",
+                "API Query Language",
+                "mendix",
+                "testen",
+                "cypress",
+                "playwright",
+                "lowcode",
+                "ui",
+                "sap",
+                "s4/hana",
+                "automation",
+                "ansible",
+                "redhat",
+                "xforce",
+                "xforce",
+                "monitoring",
+                "apm",
+                "performance",
+                "containerization",
+                "cloud monitoring",
+                "AIOps",
+                "root cause analysis",
+                "sso",
+                "xforce",
+                "identity management",
+                "data warehouse",
+                ".net",
+                "software upgrade",
+                "cas",
+                "afas",
+                "bi",
+                "data warehouse",
+                "etl",
+                "azure",
+                "saas",
+                "redhat",
+                "first8",
+                "keycloak",
+                "digid",
+                "eherkenning",
+                "eidas",
+                "itsme",
+                "beid",
+                "openid",
+                "saml",
+                "oauth",
+                "azure",
+                "synapse",
+                "snowflake",
+                "cloud",
+                "analytics",
+                "data cloud",
+                "performance",
+                "data pipeline"
+            ],
+            "description": "",
+            "doel": "",
+            "deliverables": "",
+            "contactPersoon": "Jos Smits",
+            "betrokkenCollegas": "",
+            "betrokkenBedrijven": "VS",
+            "betrokkenKlanten": "",
+            "betrokkenLeveranciers": "",
+            "omvang": "",
+            "homepage": "",
+            "image": "",
+            "startdatum": "",
+            "soortVerkenning": "rnd",
+            "category": "integration"
+        }
+    },
+    "ratings": {
+        "9bf49bd7-0683-4f73-b6df-2972d957ab2d": {
+            "id": "9bf49bd7-0683-4f73-b6df-2972d957ab2d",
+            "timestamp": "1617648026815",
+            "object": "a29a0b4f-4e88-419f-bb73-63f469781458",
+            "status": "ambitie",
+            "omvang": "medium",
+            "uitkomst": "onduidelijk",
+            "einddatum": "",
+            "scope": "ecosysteem",
+            "author": "Lucas Jellema",
+            "comment": "",
+            "experience": "enige"
+        },
+        "100b7c55-d51d-4f4c-9e11-06aa0a8e8dce": {
+            "id": "100b7c55-d51d-4f4c-9e11-06aa0a8e8dce",
+            "timestamp": "1617648645552",
+            "object": "40235d63-0315-47c1-8507-d5a2bb7c5150",
+            "status": "uitvoering",
+            "omvang": "groot",
+            "uitkomst": "enige",
+            "einddatum": "1-1-2023",
+            "scope": "KWD",
+            "author": "Luuk Ketel",
+            "comment": ""
+        },
+        "333971e5-0300-4288-9b69-e3017a0fa307": {
+            "id": "333971e5-0300-4288-9b69-e3017a0fa307",
+            "timestamp": "1617648982251",
+            "object": "0cdc45fd-6f08-470c-9a7c-da683643515c",
+            "status": "uitvoering",
+            "omvang": "enorm",
+            "uitkomst": "flinke",
+            "einddatum": "1-9-2023",
+            "scope": "KWD",
+            "author": "",
+            "comment": "",
+            "experience": "flinke"
+        },
+        "a592dc2f-2c5a-4d78-b05a-76ca67ac2cf5": {
+            "id": "a592dc2f-2c5a-4d78-b05a-76ca67ac2cf5",
+            "timestamp": "1617649930608",
+            "object": "1538125c-b054-46a6-9490-7cb5c40045ec",
+            "status": "pauze",
+            "omvang": "medium",
+            "uitkomst": "enige",
+            "einddatum": "",
+            "scope": "",
+            "author": "Lucas Jellema",
+            "comment": ""
+        },
+        "1ac1e323-3e31-4596-80fe-a62ed23f3740": {
+            "id": "1ac1e323-3e31-4596-80fe-a62ed23f3740",
+            "timestamp": "1617653624719",
+            "object": "c3de9947-94ae-4837-80e9-9453b2e1b39e",
+            "status": "uitvoering",
+            "omvang": "groot",
+            "uitkomst": "enige",
+            "einddatum": "1-6-2021",
+            "scope": "AMIS",
+            "author": "Lucas Jellema",
+            "comment": ""
+        },
+        "3dc36abe-acd3-4717-acc5-2778e0cc6e39": {
+            "id": "3dc36abe-acd3-4717-acc5-2778e0cc6e39",
+            "timestamp": "1617653795790",
+            "object": "c9b669e0-faba-433d-862b-4cd92846e490",
+            "status": "uitvoering",
+            "omvang": "medium",
+            "uitkomst": "flinke",
+            "einddatum": "",
+            "scope": "ecosysteem",
+            "author": "Lucas Jellema",
+            "comment": ""
+        },
+        "abe25e52-9d33-4aea-958d-6e5175775ebf": {
+            "id": "abe25e52-9d33-4aea-958d-6e5175775ebf",
+            "timestamp": "1617653952209",
+            "object": "16e5f727-aba5-43ac-b9e6-58bb16796702",
+            "status": "uitvoering",
+            "omvang": "groot",
+            "uitkomst": "onduidelijk",
+            "einddatum": "30-6-2021",
+            "scope": "First8",
+            "author": "",
+            "comment": ""
+        },
+        "d0543f53-44bd-4660-b341-b0fb6debdea0": {
+            "id": "d0543f53-44bd-4660-b341-b0fb6debdea0",
+            "timestamp": "1617654112329",
+            "object": "710041c8-f8ff-4972-90aa-8bbcb5f16d6e",
+            "status": "uitvoering",
+            "omvang": "medium",
+            "uitkomst": "enige",
+            "einddatum": "1-8-2021",
+            "scope": "CAS",
+            "author": "Peter Schuurhuis",
+            "comment": ""
+        },
+        "068f2636-a8df-48a1-9ab2-232b68a431be": {
+            "id": "068f2636-a8df-48a1-9ab2-232b68a431be",
+            "timestamp": "1617654301318",
+            "object": "b1d125a4-aabc-42ae-a86e-5aebda0d4360",
+            "status": "ambitie",
+            "omvang": "medium",
+            "uitkomst": "enige",
+            "einddatum": "",
+            "scope": "CVS",
+            "author": "Robert Tjin Tjoen Lim",
+            "comment": ""
+        },
+        "6b522ccf-4634-447b-8fdb-3739908b3f6e": {
+            "id": "6b522ccf-4634-447b-8fdb-3739908b3f6e",
+            "timestamp": "1617654698890",
+            "object": "d3154687-0da3-44a1-a084-2de0349c3b03",
+            "status": "ambitie",
+            "omvang": "klein",
+            "uitkomst": "enige",
+            "einddatum": "",
+            "scope": "",
+            "author": "Robert Tjin Tjoen Lim",
+            "comment": ""
+        },
+        "9ae1bd20-815a-4217-82ea-839e75a5a5b7": {
+            "id": "9ae1bd20-815a-4217-82ea-839e75a5a5b7",
+            "timestamp": "1617654809697",
+            "object": "975fbade-4e79-4c8d-9677-cf7b86c73a56",
+            "status": "afgerond",
+            "omvang": "medium",
+            "uitkomst": "enige",
+            "einddatum": "",
+            "scope": "CVS",
+            "author": "",
+            "comment": ""
+        },
+        "09529f89-78cf-4d2b-842f-e69f74ce9bee": {
+            "id": "09529f89-78cf-4d2b-842f-e69f74ce9bee",
+            "timestamp": "1617654950184",
+            "object": "3f1e7d0d-2ea4-4f52-bae9-aa921efd0d4a",
+            "status": "ambitie",
+            "omvang": "klein",
+            "uitkomst": "enige",
+            "einddatum": "",
+            "scope": "Xforce",
+            "author": "Jørgen van der Meulen",
+            "comment": ""
+        },
+        "ed057170-e5cc-4091-b7a9-c209573b27d4": {
+            "id": "ed057170-e5cc-4091-b7a9-c209573b27d4",
+            "timestamp": "1617655076779",
+            "object": "497bdb55-0760-4b04-b640-1500a9ba1c31",
+            "status": "ambitie",
+            "omvang": "groot",
+            "uitkomst": "flinke",
+            "einddatum": "31-8-2021",
+            "scope": "",
+            "author": "Jørgen van der Meulen",
+            "comment": ""
+        },
+        "47adeb1b-9139-44ad-8bad-bd70adff5bfb": {
+            "id": "47adeb1b-9139-44ad-8bad-bd70adff5bfb",
+            "timestamp": "1617655259037",
+            "object": "1d325469-af39-407f-8d99-5be16d32af52",
+            "status": "uitvoering",
+            "omvang": "medium",
+            "uitkomst": "enige",
+            "einddatum": "30-6-2021",
+            "scope": "",
+            "author": "Jørgen van der Meulen",
+            "comment": ""
+        },
+        "0265f7fa-ef7c-462e-a7f1-d655c5894dad": {
+            "id": "0265f7fa-ef7c-462e-a7f1-d655c5894dad",
+            "timestamp": "1617655427532",
+            "object": "e25b6323-c998-4a27-9b65-e6e7eb5ecd2f",
+            "status": "uitvoering",
+            "omvang": "medium",
+            "uitkomst": "enige",
+            "einddatum": "30-4-2021",
+            "scope": "",
+            "author": "",
+            "comment": ""
+        },
+        "3e374b0d-61a1-4ae6-b381-f28ea8401729": {
+            "id": "3e374b0d-61a1-4ae6-b381-f28ea8401729",
+            "timestamp": "1617655577655",
+            "object": "c49ae410-c8cb-4028-8120-91dccf320980",
+            "status": "ambitie",
+            "omvang": "medium",
+            "uitkomst": "enige",
+            "einddatum": "",
+            "scope": "",
+            "author": "Jos Smits",
+            "comment": ""
+        }
+    }
+}
