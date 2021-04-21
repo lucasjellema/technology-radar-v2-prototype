@@ -1,7 +1,7 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { launchBlipEditor } from './blipEditing.js'
 import { getViewpoint, getData, publishRefreshRadar, getDistinctTagValues } from './data.js'
-import { getLabelForAllowableValue, getRatingTypeProperties, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
+import { getLabelForAllowableValue, toggleShowHideElement, getRatingTypeProperties, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
 export { drawRadarBlips, prepareBlipDrawingContext }
 
 
@@ -142,6 +142,8 @@ const drawRadarBlips = function (viewpoint) {
     document.getElementById('showLabels').checked = currentViewpoint.blipDisplaySettings.showLabels
 
     document.getElementById('showShapes').checked = currentViewpoint.blipDisplaySettings.showShapes
+    document.getElementById('showRingMinusOne').checked = currentViewpoint.blipDisplaySettings.showRingMinusOne
+    document.getElementById('aggregationMode').checked = currentViewpoint.blipDisplaySettings.aggregationMode
     document.getElementById('sectors').checked = currentViewpoint.template.topLayer == "sectors"
     document.getElementById('rings').checked = currentViewpoint.template.topLayer == "rings"
     document.getElementById('blipScaleFactorSlider').value = currentViewpoint.blipDisplaySettings.blipScaleFactor ?? 1
@@ -191,9 +193,9 @@ const drawRadarBlips = function (viewpoint) {
     // go through blips and assign blips to segment
     filteredBlips.forEach((blip) => {
         const segment = findSegmentForRating(blip.rating, viewpoint, blipDrawingContext)
-//        if (segment.ring != -1) {
+        if (segment.ring >= 0  || currentViewpoint.blipDisplaySettings.showRingMinusOne!= false) {
             blipDrawingContext.segmentMatrix[segment.sector][segment.ring].blips.push(blip)
-  //      }
+        }
     })
 
     // compose new set of blips
@@ -215,7 +217,6 @@ const drawRadarBlips = function (viewpoint) {
                     for (let i = 0; i < Object.keys(blipsPerObject).length; i++) {
                         const objectId = Object.keys(blipsPerObject)[i]
                         if (blipsPerObject[objectId].length > 1) {
-                            console.log(`${blipsPerObject[objectId].length} blips in segment for ${blipsPerObject[objectId][0].rating.object.label}   object ${objectId}`)
                             const blip = {
                                 id: `${uuidv4()}`
                                 , rating: blipsPerObject[objectId][0].rating
@@ -372,20 +373,24 @@ const priorRingsWidthPercentageSum = (ringId, config) => config.ringsConfigurati
 
 const sectorRingToPosition = (sector, ring, config) => { // return randomized X,Y coordinates in segment corresponding to the sector and ring 
     try {
+        const segmentAnglePercentage = (0.1 + Math.random() * 0.8) 
         const phi = priorSectorsAnglePercentageSum(sector, config) +
-            (0.1 + Math.random() * 0.8) * config.sectorsConfiguration.sectors[sector].angle * sectorExpansionFactor()
+        segmentAnglePercentage * config.sectorsConfiguration.sectors[sector].angle * sectorExpansionFactor()
         // ring can be undefined (== the so called -1 ring, outside the real rings)
         let r
+        let segmentWidthPercentage
         if (ring != null && ring > -1) {
+            segmentWidthPercentage = (0.1 + Math.random() * 0.8)
             let rFactor = (1 - priorRingsWidthPercentageSum(ring, config) -
-                (0.1 + Math.random() * 0.8) * config.ringsConfiguration.rings[ring].width * ringExpansionFactor())  // 0.1 to not position the on the outer edge of the segment
+                segmentWidthPercentage * config.ringsConfiguration.rings[ring].width * ringExpansionFactor())  // 0.1 to not position the on the outer edge of the segment
             r = config.maxRingRadius * rFactor
         }
         else {
-            r = config.maxRingRadius * (1.01 + Math.random() * 0.33)  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
+            segmentWidthPercentage = (1.01 + Math.random() * 0.33)
+            r = config.maxRingRadius * segmentWidthPercentage  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
         }
         const cartesian =  cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
-        return {...{r:r, phi:phi}, ...cartesian}
+        return {...{r:r, phi:phi}, ...cartesian, ...{segmentAnglePercentage, segmentWidthPercentage}}
     } catch (e) {
         console.log(`radarblips,.sectorRingToPosition ${e} ${sector}${ring}`)
     }
@@ -537,8 +542,6 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     }
     let xy
 
-    // TODO if d.r and d.phi are != null AND d.r, d.phi maps to the sector and blipRing
-    //      then derive x,y from d.r and d.phi using sectorExpansionFactor and ringExpansionFactor 
     if (d.segmentWidthPercentage!= null && d.segmentAnglePercentage != null) {
          const anglePercentage = segment.startAngle + d.segmentAnglePercentage* segment.anglePercentage
          const widthPercentage = segment.startWidth + d.segmentWidthPercentage* segment.widthPercentage
@@ -556,7 +559,8 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
         xy = { x: d.x, y: d.y }
     } else {
         xy = sectorRingToPosition(blipSector, blipRing, viewpoint.template)
-
+        d.segmentAnglePercentage = xy.segmentAnglePercentage
+        d.segmentWidthPercentage = xy.segmentWidthPercentage
     }
 }
     let scaleFactor = blipSize * viewpoint.blipDisplaySettings.blipScaleFactor ?? 1
@@ -709,7 +713,7 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
 
 const handleBlipScaleFactorChange = (event) => {
     currentViewpoint.blipDisplaySettings.blipScaleFactor = event.target.value
-    console.log(`handle scale factor change ${currentViewpoint.blipDisplaySettings.blipScaleFactor}`)
+  //  console.log(`handle scale factor change ${currentViewpoint.blipDisplaySettings.blipScaleFactor}`)
     drawRadarBlips(currentViewpoint)
 }
 
@@ -728,6 +732,13 @@ const handleAggregationModeChange = (event) => {
     drawRadarBlips(currentViewpoint)
     publishRefreshRadar();
 }
+
+
+const handleShowRingMinusOneChange = (event) => {
+    currentViewpoint.blipDisplaySettings.showRingMinusOne = event.target.checked
+    publishRefreshRadar();
+}
+
 
 const handleShowShapesChange = (event) => {
     currentViewpoint.blipDisplaySettings.showShapes = event.target.checked
@@ -1104,6 +1115,8 @@ document.getElementById('blipScaleFactorSlider').addEventListener("change", hand
 document.getElementById('showLabels').addEventListener("change", handleShowLabelsChange);
 document.getElementById('showShapes').addEventListener("change", handleShowShapesChange);
 document.getElementById('aggregationMode').addEventListener("change", handleAggregationModeChange);
+document.getElementById('showRingMinusOne').addEventListener("change", handleShowRingMinusOneChange);
+document.getElementById('displaySettings').addEventListener("click", () => {toggleShowHideElement('displaySettingsPanel')});
 
 
 document.getElementById('addTagToFilter').addEventListener("click", handleTagFilterChange);

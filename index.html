@@ -117,37 +117,42 @@
         <div class="column2">
             <div id="displayStyle">
 
-                <h3>Display Settings</h3>
-                <div>
-                    <input type="checkbox" id="showImages" name="displayStyle" value="images" checked>
-                    <label for=" showImages">Show Images</label>
+                <h3><span id="displaySettings">Display Settings</span></h3>
+                <div id="displaySettingsPanel">
+                    <div>
+                        <input type="checkbox" id="showImages" name="displayStyle" value="images" checked>
+                        <label for=" showImages">Show Images</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="showShapes" name="displayStyle" value="shapes">
+                        <label for="showShapes">Show Shapes</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="showLabels" name="displayStyle" value="labels">
+                        <label for="showLabels">Show Labels</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="aggregationMode" name="displayStyle" value="aggregation">
+                        <label for="aggregationMode">Aggregation</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="showRingMinusOne" name="displayStyle" value="showRingMinusOne">
+                        <label for="showRingMinusOne">Show blips outside rings</label>
+                    </div>
+                    <div>
+                        <label for="blipScaleFactorSlider">Blip Scale Factor</label>
+                        <input id="blipScaleFactorSlider" type="range" min="0.1" max="5" step="0.1" value="1"
+                            style="width:80%"></input>
+                    </div>
+                    <br />
+                    <label for="layering">Select top layer</label>
+                    <div id="layering">
+                        <input type="radio" id="sectors" name="layering" value="sectors" checked>
+                        <label for=" sectors">Sectors</label>
+                        <input type="radio" id="rings" name="layering" value="rings">
+                        <label for="rings">Rings</label>
+                    </div>
                 </div>
-                <div>
-                    <input type="checkbox" id="showShapes" name="displayStyle" value="shapes">
-                    <label for="showShapes">Show Shapes</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="showLabels" name="displayStyle" value="labels">
-                    <label for="showLabels">Show Labels</label>
-                </div>
-                                <div>
-                    <input type="checkbox" id="aggregationMode" name="displayStyle" value="aggregation">
-                    <label for="aggregationMode">Aggregation</label>
-                </div>
-                <div>
-                    <label for="blipScaleFactorSlider">Blip Scale Factor</label>
-                    <input id="blipScaleFactorSlider" type="range" min="0.1" max="5" step="0.1" value="1"
-                        style="width:80%"></input>
-                </div>
-                <br />
-                <label for="layering">Select top layer</label>
-                <div id="layering">
-                    <input type="radio" id="sectors" name="layering" value="sectors" checked>
-                    <label for=" sectors">Sectors</label>
-                    <input type="radio" id="rings" name="layering" value="rings">
-                    <label for="rings">Rings</label>
-                </div>
-
                 <div id="filter">
                     <br />
                     <label for="tagFilter">Filter on Tags</label>
@@ -298,12 +303,12 @@
                     getViewpoint().template.sectorsConfiguration.sectors.forEach((sector, i) => sector.visible = (i == event.sector))
                 }
                 shuffleBlips()
-            } 
+            }
             if (event.type == "segmentDrilldown") {
                 // if currently only one segment is visible, the drilldown is actually a drill up and all sectors should be made visible
                 const numberOfVisibleSectors = getViewpoint().template.sectorsConfiguration.sectors.filter((sector) => sector.visible).length
                 const numberOfVisibleRings = getViewpoint().template.ringsConfiguration.rings.filter((ring) => ring.visible).length
-                if (numberOfVisibleSectors == 1 && numberOfVisibleRings==1) {
+                if (numberOfVisibleSectors == 1 && numberOfVisibleRings == 1) {
                     // drill up: set visible to true for all sectors ; then redraw radar and blips
                     getViewpoint().template.sectorsConfiguration.sectors.forEach((sector, i) => sector.visible = true)
                     getViewpoint().template.ringsConfiguration.rings.forEach((ring, i) => ring.visible = true)
@@ -313,7 +318,7 @@
                     getViewpoint().template.ringsConfiguration.rings.forEach((ring, i) => ring.visible = (i == event.segment.ring))
                 }
                 shuffleBlips()
-            } 
+            }
             if (event.type == "ringDrilldown") {
                 // if currently only one ring is visible, the drilldown is actually a drill up and all rings should be made visible
                 const numberOfVisibleRings = getViewpoint().template.ringsConfiguration.rings.filter((ring) => ring.visible).length
