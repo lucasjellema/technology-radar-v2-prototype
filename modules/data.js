@@ -9,12 +9,12 @@ import { initializeTree } from './tree.js'
 import { uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, getRatingTypeProperties, findDisplayProperty, getDateTimeString } from './utils.js'
 
 const datasetMap = {
-    emerging: "./modules/emerging-technologies-dataset.json"
-    , techradar: "./modules/technology-radar-dataset.json"
-    , cab: "./modules/cab-technology-radar-dataset.json"
-    , sample: "./modules/sampleData.json"
-    , verkenning: "./modules/cab-verkenningen-radar-dataset.json"
-    , amisdatamgt: "./modules/amis-data-management-technology-radar-dataset.json"
+    emerging: "./data/emerging-technologies-dataset.json"
+    , techradar: "./data/technology-radar-dataset.json"
+    , cab: "./data/cab-technology-radar-dataset.json"
+    , sample: "./data/sampleData.json"
+    , verkenning: "./data/cab-verkenningen-radar-dataset.json"
+    , amisdatamgt: "./data/amis-data-management-technology-radar-dataset.json"
 }
 
 

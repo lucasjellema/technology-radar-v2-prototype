@@ -193,7 +193,10 @@ const drawRadarBlips = function (viewpoint) {
     // go through blips and assign blips to segment
     filteredBlips.forEach((blip) => {
         const segment = findSegmentForRating(blip.rating, viewpoint, blipDrawingContext)
-        if (segment.ring >= 0  || currentViewpoint.blipDisplaySettings.showRingMinusOne!= false) {
+        if ( segment.sector!=null 
+             && 
+             (segment.ring >= 0  || (segment.ring == -1 && currentViewpoint.blipDisplaySettings.showRingMinusOne!= false))
+            ) {
             blipDrawingContext.segmentMatrix[segment.sector][segment.ring].blips.push(blip)
         }
     })
@@ -386,8 +389,8 @@ const sectorRingToPosition = (sector, ring, config) => { // return randomized X,
             r = config.maxRingRadius * rFactor
         }
         else {
-            segmentWidthPercentage = -(1.01 + Math.random() * 0.33)
-            r = config.maxRingRadius * segmentWidthPercentage  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
+            segmentWidthPercentage = -(1.01 + Math.random() * 0.39)
+            r = config.maxRingRadius * (- segmentWidthPercentage)  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
         }
         const cartesian =  cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
         return {...{r:r, phi:phi}, ...cartesian, ...{segmentAnglePercentage, segmentWidthPercentage}}
