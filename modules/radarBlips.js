@@ -142,7 +142,7 @@ const drawRadarBlips = function (viewpoint) {
     document.getElementById('showLabels').checked = currentViewpoint.blipDisplaySettings.showLabels
 
     document.getElementById('showShapes').checked = currentViewpoint.blipDisplaySettings.showShapes
-    document.getElementById('showRingMinusOne').checked = currentViewpoint.blipDisplaySettings.showRingMinusOne
+    document.getElementById('showRingMinusOne').checked = !(currentViewpoint.blipDisplaySettings.showRingMinusOne== false)
     document.getElementById('aggregationMode').checked = currentViewpoint.blipDisplaySettings.aggregationMode
     document.getElementById('sectors').checked = currentViewpoint.template.topLayer == "sectors"
     document.getElementById('rings').checked = currentViewpoint.template.topLayer == "rings"
@@ -386,7 +386,7 @@ const sectorRingToPosition = (sector, ring, config) => { // return randomized X,
             r = config.maxRingRadius * rFactor
         }
         else {
-            segmentWidthPercentage = (1.01 + Math.random() * 0.33)
+            segmentWidthPercentage = -(1.01 + Math.random() * 0.33)
             r = config.maxRingRadius * segmentWidthPercentage  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
         }
         const cartesian =  cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
