@@ -350,7 +350,7 @@ const launchBlipEditor = (blip, viewpoint, drawRadarBlips, editObject = true) =>
         (event) => {
             const filterTagValue = document.getElementById("blipTagSelector").value
             document.getElementById("blipTagSelector").value = ""
-            if (blip.rating.object.tags == null) { blip.rating.object.tags = [] }
+            if (blip.rating.object.tags == null || typeof(blip.rating.object.tags)== "string") { blip.rating.object.tags = [] }
             blip.rating.object.tags.push(filterTagValue)
             initializeTagsField(blip)
         })

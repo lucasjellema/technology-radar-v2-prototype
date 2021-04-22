@@ -1,8 +1,8 @@
 export { launchFileManager }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
-import { getViewpoint, getData, download, publishRefreshRadar, populateTemplateSelector, createObject, createRating } from './data.js';
+import { getViewpoint, getData, getState, download, publishRefreshRadar, populateTemplateSelector, createObject, createRating } from './data.js';
 import { launchShapeEditor } from './shapeEditing.js'
-import { getUniqueFieldValues, getListOfSupportedShapes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, toggleShowHideElement, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, uuidv4, populateDatalistFromValueSet } from './utils.js'
+import {  assignBlipsToSegments,findSectorForRating, getUniqueFieldValues, filterBlip, getListOfSupportedShapes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, toggleShowHideElement, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, uuidv4, populateDatalistFromValueSet } from './utils.js'
 import { createRadarFromCSV } from './csvWizard.js'
 
 const launchFileManager = (viewpoint, drawRadarBlips) => {
@@ -412,8 +412,8 @@ const processCSVRecords = (objects, extendAllowableValues, propertyValueMap, rad
     const objectType = getViewpoint().ratingType.objectType
     const targetRatingTypeName = getViewpoint().ratingType.name
     const ratingTypeProperties = getRatingTypeProperties(getViewpoint().ratingType, getData().model, true)
-    const objectPropertiesToMatchOn  = propertiesToMatchOn.filter((property) => property.startsWith("object."))
-    const ratingPropertiesToMatchOn  = propertiesToMatchOn.filter((property) => !property.startsWith("object."))
+    const objectPropertiesToMatchOn = propertiesToMatchOn.filter((property) => property.startsWith("object."))
+    const ratingPropertiesToMatchOn = propertiesToMatchOn.filter((property) => !property.startsWith("object."))
 
 
     let shouldCreateRating = false
@@ -443,22 +443,22 @@ const processCSVRecords = (objects, extendAllowableValues, propertyValueMap, rad
             console.log(`try to find matching object(s) using properties ${JSON.stringify(propertiesToMatchOn)}`)
             const propertyValuesToMatchOn = []
             for (let i = 0; i < objectPropertiesToMatchOn.length; i++) {
-//                if (propertiesToMatchOn[i].startsWith("object.")) {
-                    let incomingPropertyValue
-                    if (radarFromCSVMap.has(objectPropertiesToMatchOn[i])) {
-                        incomingPropertyValue = row[radarFromCSVMap.get(objectPropertiesToMatchOn[i])];
-                        // check if valueFromCSV occurs in csvFieldToRadarPropertyValueMapper = if so, the converted value should be used
-                        if (csvFieldToRadarPropertyValueMapper.hasOwnProperty(objectPropertiesToMatchOn[i])) {
-                            const convertedValue = csvFieldToRadarPropertyValueMapper[objectPropertiesToMatchOn[i]][incomingPropertyValue];
-                            if (convertedValue != null && convertedValue != "") {
-                                incomingPropertyValue = convertedValue;
-                            }
+                //                if (propertiesToMatchOn[i].startsWith("object.")) {
+                let incomingPropertyValue
+                if (radarFromCSVMap.has(objectPropertiesToMatchOn[i])) {
+                    incomingPropertyValue = row[radarFromCSVMap.get(objectPropertiesToMatchOn[i])];
+                    // check if valueFromCSV occurs in csvFieldToRadarPropertyValueMapper = if so, the converted value should be used
+                    if (csvFieldToRadarPropertyValueMapper.hasOwnProperty(objectPropertiesToMatchOn[i])) {
+                        const convertedValue = csvFieldToRadarPropertyValueMapper[objectPropertiesToMatchOn[i]][incomingPropertyValue];
+                        if (convertedValue != null && convertedValue != "") {
+                            incomingPropertyValue = convertedValue;
                         }
-                    } else {
-                        incomingPropertyValue = propertyValueMap[objectPropertiesToMatchOn[i]]
                     }
-                    propertyValuesToMatchOn.push(incomingPropertyValue)
-  //              }
+                } else {
+                    incomingPropertyValue = propertyValueMap[objectPropertiesToMatchOn[i]]
+                }
+                propertyValuesToMatchOn.push(incomingPropertyValue)
+                //              }
             }
             // iterate over all objects of the desired type
             // check each object against the propertiesToMatchOn - verify if they have the values in propertyValuesToMatchOn
@@ -507,22 +507,22 @@ const processCSVRecords = (objects, extendAllowableValues, propertyValueMap, rad
                     console.log(`try to find matching rating(s) using properties ${JSON.stringify(propertiesToMatchOn)}`)
                     const propertyValuesToMatchOn = []
                     for (let i = 0; i < ratingPropertiesToMatchOn.length; i++) {
-//                        if (!propertiesToMatchOn[i].startsWith("object.")) {
-                            let incomingPropertyValue
-                            if (radarFromCSVMap.has(ratingPropertiesToMatchOn[i])) {
-                                incomingPropertyValue = row[radarFromCSVMap.get(ratingPropertiesToMatchOn[i])];
-                                // check if valueFromCSV occurs in csvFieldToRadarPropertyValueMapper = if so, the converted value should be used
-                                if (csvFieldToRadarPropertyValueMapper.hasOwnProperty(ratingPropertiesToMatchOn[i])) {
-                                    const convertedValue = csvFieldToRadarPropertyValueMapper[ratingPropertiesToMatchOn[i]][incomingPropertyValue];
-                                    if (convertedValue != null && convertedValue != "") {
-                                        incomingPropertyValue = convertedValue;
-                                    }
+                        //                        if (!propertiesToMatchOn[i].startsWith("object.")) {
+                        let incomingPropertyValue
+                        if (radarFromCSVMap.has(ratingPropertiesToMatchOn[i])) {
+                            incomingPropertyValue = row[radarFromCSVMap.get(ratingPropertiesToMatchOn[i])];
+                            // check if valueFromCSV occurs in csvFieldToRadarPropertyValueMapper = if so, the converted value should be used
+                            if (csvFieldToRadarPropertyValueMapper.hasOwnProperty(ratingPropertiesToMatchOn[i])) {
+                                const convertedValue = csvFieldToRadarPropertyValueMapper[ratingPropertiesToMatchOn[i]][incomingPropertyValue];
+                                if (convertedValue != null && convertedValue != "") {
+                                    incomingPropertyValue = convertedValue;
                                 }
-                            } else {
-                                incomingPropertyValue = propertyValueMap[ratingPropertiesToMatchOn[i]]
                             }
-                            propertyValuesToMatchOn.push(incomingPropertyValue)
-                     //   }
+                        } else {
+                            incomingPropertyValue = propertyValueMap[ratingPropertiesToMatchOn[i]]
+                        }
+                        propertyValuesToMatchOn.push(incomingPropertyValue)
+                        //   }
                     }
                     // iterate over all ratings of the desired type and with a reference to the current object 
                     // check each object against the propertiesToMatchOn - verify if they have the values in propertyValuesToMatchOn
@@ -724,7 +724,7 @@ const exportCSV = () => {
     let html = ``
     html += `<h3>Export Radar Data in CSV File</h3>
     <br />
-    <label for="exportAllRatings">All Ratings for ${getViewpoint().ratingType.name}:
+    <label for="exportAllRatings">All Ratings of type ${getViewpoint().ratingType.name}:
      # ${Object.keys(getData().ratings).filter((key) => getData().ratings[key].ratingType == getViewpoint().ratingType.name || getData().ratings[key].ratingType.name == getViewpoint().ratingType.name).length}?</input>
     <input type="radio" id="exportAllRatings" value="exportAllRatings" name="exportOptions"></input>
 
@@ -742,7 +742,7 @@ const exportCSV = () => {
     `
     html += `<h3>Map Radar Properties to CSV Fields</h3>`
     html += `<table>
-    <tr><th>Include?</th><th>Radar Property</th><th>CSV Field</th></tr>`
+    <tr><th><span id="includeProperties" >Include?</span></th><th>Radar Property</th><th>CSV Field</th></tr>`
     const ratingTypeProperties = getRatingTypeProperties(getViewpoint().ratingType, getData().model, true)
     for (let i = 0; i < ratingTypeProperties.length; i++) {
         html += `
@@ -758,6 +758,14 @@ const exportCSV = () => {
     buttonBar.innerHTML = `
     <input type="button" id="exportCSVFileFromRadar" name="process" value="Export CSV File">
     `
+
+    document.getElementById(`includeProperties`).addEventListener("click", () => {
+        const newSetting = !(document.getElementById(`include0`).checked)
+        for (let i = 0; i < ratingTypeProperties.length; i++) {
+            document.getElementById(`include${i}`).checked = newSetting
+        }
+    })
+    // gather all property to field mappings
     document.getElementById("exportCSVFileFromRadar").addEventListener("click", () => {
         // gather all property to field mappings
         const exportableProperties = []
@@ -769,22 +777,49 @@ const exportCSV = () => {
                 })
             }
         }
+        const exportAllRatings = document.getElementById('exportAllRatings').checked
+        const exportAllBlippedRatings = document.getElementById('exportAllBlippedRatings').checked
+        const exportAllBlippedFilteredRatings = document.getElementById('exportAllBlippedFilteredRatings').checked
+        const exportAllVisibleRatings = document.getElementById('exportAllVisibleRatings').checked
 
-        // then start processing
-        // TODO: which type of processing (all, fuiltered,...)
-        console.log(`export ${JSON.stringify(exportableProperties)}`)
-        exportRadarDataToCSVFile(exportableProperties)
+        exportRadarDataToCSVFile(exportableProperties, exportAllRatings, exportAllBlippedRatings, exportAllBlippedFilteredRatings, exportAllVisibleRatings)
     })
 }
 
-const exportRadarDataToCSVFile = (exportableProperties) => {
+const exportRadarDataToCSVFile = (exportableProperties, exportAllRatings, exportAllBlippedRatings, exportAllBlippedFilteredRatings, exportAllVisibleRatings) => {
     let csv = ``
     for (let i = 0; i < exportableProperties.length; i++) {
         csv += (i > 0 ? ',' : '') + exportableProperties[i].csvField
     }
+
+    let ratingsToExport = []
+    if (exportAllRatings) {
+        for (let i = 0; i < Object.keys(getData().ratings).length; i++) {
+            const rating = getData().ratings[Object.keys(getData().ratings)[i]]
+            if (rating.ratingType == getViewpoint().ratingType.name || rating.ratingType.name == getViewpoint().ratingType.name) {
+                ratingsToExport.push(rating)
+            }
+        }
+    } else {
+        let eligibleRatings
+        if (exportAllBlippedRatings) {
+            eligibleRatings = getViewpoint().blips.map((blip) => blip.rating.id)
+        }
+        if (exportAllBlippedFilteredRatings) {
+            const filteredBlips = getViewpoint().blips.filter((blip) => filterBlip(blip, getViewpoint(), getData()))
+            eligibleRatings = filteredBlips.map((blip) => blip.rating.id)
+        }
+        if (exportAllVisibleRatings) {
+           
+            eligibleRatings = getState().visibleBlips.map((blip) => blip.rating.id)
+         }
+         const ratingsSet = new Set(eligibleRatings)
+         ratingsToExport = Array.from(ratingsSet).map((ratingId) => getData().ratings[ratingId])
+     
+    }
+
     csv += `\n`
-    for (let i = 0; i < Object.keys(getData().ratings).length; i++) {
-        const rating = getData().ratings[Object.keys(getData().ratings)[i]]
+    ratingsToExport.forEach((rating) => {
         let row = ``
         if (rating.ratingType == getViewpoint().ratingType.name || rating.ratingType.name == getViewpoint().ratingType.name) {
             for (let j = 0; j < exportableProperties.length; j++) {
@@ -792,7 +827,6 @@ const exportRadarDataToCSVFile = (exportableProperties) => {
             }
             csv += `${row}\n`
         }
-
-    }
+    })
     download(`radar-data.csv`, csv)
 }

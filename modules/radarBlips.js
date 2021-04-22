@@ -1,15 +1,15 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { launchBlipEditor } from './blipEditing.js'
-import { getViewpoint, getData, publishRefreshRadar, getDistinctTagValues } from './data.js'
-import { getLabelForAllowableValue, toggleShowHideElement, getRatingTypeProperties, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
-export { drawRadarBlips, prepareBlipDrawingContext }
+import { getViewpoint, getData, publishRefreshRadar, getDistinctTagValues, getState } from './data.js'
+import { filterBlip,assignBlipsToSegments,findSectorForRating, getLabelForAllowableValue, toggleShowHideElement, getRatingTypeProperties, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
+export { drawRadarBlips, prepareBlipDrawingContext, }
 
 
 const radarCanvasElementId = "radarCanvas"
 const blipsLayerElementId = "blipsLayer"
 let currentViewpoint
 
-const filterBlip = (blip, viewpoint) => {
+const filterBlipX = (blip, viewpoint) => {
     // console.log(`filter blip ${blip.rating.object.label} with tagfilter ${viewpoint.blipDisplaySettings.tagFilter}`)
     // determine all tags in the tag filter  - for now as individual strings, no + or - support TODO
     let blipOK = viewpoint.blipDisplaySettings.tagFilter?.length == 0 // no filter - then blip is ok 
@@ -111,29 +111,7 @@ const initializeTagsFilter = () => {
 
 }
 
-const findSegmentForRating = (rating, viewpoint, blipDrawingContext) => {
-    let blipSector = findSectorForRating(rating, viewpoint)
-    if (blipSector == null) {
-        if (blipDrawingContext.othersDimensionValue["sector"] != null) {
-            blipSector = blipDrawingContext.othersDimensionValue["sector"]
-        }
-        else {
-            //
-        }
-    }
-    const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
-    let blipRing = viewpoint.propertyVisualMaps.ring.valueMap[getNestedPropertyValueFromObject(rating, propertyMappedToRing)]
-    if (blipRing == null) {
-        if (blipDrawingContext.othersDimensionValue["ring"] != null) {
-            blipRing = blipDrawingContext.othersDimensionValue["ring"]
-        }
-        else {
-            blipRing = -1
-            // in case of rings we accept blips not associated with any "real ring" - directly or indirect through Others
-        }
-    }
-    return { sector: blipSector, ring: blipRing }
-}
+
 
 const drawRadarBlips = function (viewpoint) {
     currentViewpoint = viewpoint
@@ -188,18 +166,10 @@ const drawRadarBlips = function (viewpoint) {
     else {
         blipsLayer.selectAll("*").remove();
     }
-    const filteredBlips = viewpoint.blips.filter((blip) => filterBlip(blip, viewpoint))
+    const filteredBlips = viewpoint.blips.filter((blip) => filterBlip(blip, viewpoint, getData()))
 
     // go through blips and assign blips to segment
-    filteredBlips.forEach((blip) => {
-        const segment = findSegmentForRating(blip.rating, viewpoint, blipDrawingContext)
-        if (segment.sector != null
-            &&
-            (segment.ring >= 0 || (segment.ring == -1 && currentViewpoint.blipDisplaySettings.showRingMinusOne != false))
-        ) {
-            blipDrawingContext.segmentMatrix[segment.sector][segment.ring].blips.push(blip)
-        }
-    })
+    assignBlipsToSegments(filteredBlips, viewpoint, blipDrawingContext,getData())
 
     // compose new set of blips
     // eliminate [blips in] invisible segments 
@@ -246,7 +216,7 @@ const drawRadarBlips = function (viewpoint) {
     }
 
 
-
+    getState().visibleBlips = visibleBlips
     const blipElements = blipsLayer.selectAll(".blip")
         .data(visibleBlips)
         .enter()
@@ -411,25 +381,9 @@ const blipInSegment = (cartesian, viewpoint, segment) => {
     return isBlipInSegment
 }
 
-const findSectorForRating = (rating, viewpoint) => {
-    const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
-    let sectorProperty = getPropertyFromPropertyPath(propertyMappedToSector, viewpoint.ratingType, getData().model)
-    let sector
-    const propertyValue = getNestedPropertyValueFromObject(rating, propertyMappedToSector)
-    if (sectorProperty.type == "tags") {
-        for (let i = 0; i < propertyValue.length; i++) {
-            sector = viewpoint.propertyVisualMaps.sector.valueMap[propertyValue[i]]
-            if (sector != null) break // stop looking as soon as one of the tags has produced a sector. The order of tags can be important
-        }
-    } else {
-        sector = viewpoint.propertyVisualMaps.sector.valueMap[propertyValue]
-    }
-    return sector
-}
-
 const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
 
-    let blipSector = findSectorForRating(d.rating, viewpoint)
+    let blipSector = findSectorForRating(d.rating, viewpoint, getData())
     if (blipSector == null) {
         if (blipDrawingContext.othersDimensionValue["sector"] != null) {
             blipSector = blipDrawingContext.othersDimensionValue["sector"]
@@ -1046,6 +1000,7 @@ const menu = (x, y, d, blip, viewpoint) => {
 
 
 }
+
 
 function populateDatalistWithTags(includeDiscreteProperties = false) {
     const distinctValues = getDistinctTagValues(getViewpoint(), includeDiscreteProperties)

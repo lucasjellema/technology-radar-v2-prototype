@@ -5,6 +5,7 @@ export {
     , populateFontsList, populateDataTypesList, populateShapesList,populateColorsList,populateSizesList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
     , getPropertyValuesAndCounts, populateDatalistFromValueSet, getPropertyFromPropertyPath
     , findDisplayProperty, getListOfSupportedShapes, getListOfSupportedColors, getListOfSupportedSizes, getLabelForAllowableValue, getUniqueFieldValues
+    ,filterBlip, assignBlipsToSegments,findSectorForRating
 }
 
 
@@ -384,3 +385,120 @@ const capitalize = (s) => {
     if (typeof s !== 'string') return ''
     return s.charAt(0).toUpperCase() + s.slice(1)
 }
+
+
+const filterBlip = (blip, viewpoint, data) => {
+    // console.log(`filter blip ${blip.rating.object.label} with tagfilter ${viewpoint.blipDisplaySettings.tagFilter}`)
+    // determine all tags in the tag filter  - for now as individual strings, no + or - support TODO
+    let blipOK = viewpoint.blipDisplaySettings.tagFilter?.length == 0 // no filter - then blip is ok 
+    if (viewpoint.blipDisplaySettings.tagFilter?.length ?? 0 > 0) {
+
+        let ratingTypeProperties = getRatingTypeProperties(viewpoint.ratingType, data.model)
+
+        // populate list with all discrete properties plus properties of type tag
+        const discretePropertyPaths = ratingTypeProperties
+            .filter((property) => (property.property?.discrete || property.property?.allowableValues?.length > 0))
+            .map((property) => { return property.propertyPath })
+
+        //if all tags are minus filter, then are starting assumption is that the blip is ok
+        const minusFiltercount = viewpoint.blipDisplaySettings.tagFilter.reduce(
+            (sum, tagFilter) => sum + (tagFilter.type == 'minus' ? 1 : 0)
+            , 0)
+        blipOK = viewpoint.blipDisplaySettings.tagFilter?.length == minusFiltercount
+        try {
+            for (let i = 0; i < viewpoint.blipDisplaySettings.tagFilter.length; i++) {
+                const filter = viewpoint.blipDisplaySettings.tagFilter[i]
+                try {
+                    let blipHasFilter
+                    if (filter.tag.startsWith('"')) {
+                        const labelProperty = viewpoint.propertyVisualMaps.blip?.label
+                        const blipLabel = getNestedPropertyValueFromObject(blip.rating, labelProperty).toLowerCase()
+                        const filterTag = filter.tag.replace(/^"+|"+$/g, '').toLowerCase()
+
+                        blipHasFilter = blipLabel.includes(filterTag)
+                    } else {
+                        blipHasFilter = JSON.stringify(blip.rating.object.tags)?.toLowerCase()?.trim()?.indexOf(filter.tag) > -1
+
+                        // TODO derive discrete properties dynamically from data.model instead of hard coded
+
+                        //  const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
+                        for (let j = 0; !blipHasFilter && j < discretePropertyPaths.length; j++) {
+                            blipHasFilter = getNestedPropertyValueFromObject(blip.rating, discretePropertyPaths[j])?.toLowerCase().trim() == filter.tag
+                        }
+                    }
+
+
+                    // minus filter: if tag is in rating.object.tags then blip is not ok  
+                    if (blipHasFilter && filter.type == "minus") {
+                        blipOK = false; break;
+                    }
+
+                    // must filter: if the tag is not in rating.object.tags then the blip cannot be ok
+                    if (!blipHasFilter && filter.type == "must") {
+                        blipOK = false; break;
+                    }
+                    if (blipHasFilter && filter.type == "plus") {
+                        blipOK = true
+                    }
+
+                } catch (e) { console.log(`${e} exception filter for ${JSON.stringify(blip)}`) }
+            }
+        } catch (e) { console.log(`exception in filter blip ${JSON.stringify(e)} ${e}`) }
+    }
+
+    return blipOK
+}
+
+const findSegmentForRating = (rating, viewpoint, blipDrawingContext,data) => {
+    let blipSector = findSectorForRating(rating, viewpoint,data)
+    if (blipSector == null) {
+        if (blipDrawingContext.othersDimensionValue["sector"] != null) {
+            blipSector = blipDrawingContext.othersDimensionValue["sector"]
+        }
+        else {
+            //
+        }
+    }
+    const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
+    let blipRing = viewpoint.propertyVisualMaps.ring.valueMap[getNestedPropertyValueFromObject(rating, propertyMappedToRing)]
+    if (blipRing == null) {
+        if (blipDrawingContext.othersDimensionValue["ring"] != null) {
+            blipRing = blipDrawingContext.othersDimensionValue["ring"]
+        }
+        else {
+            blipRing = -1
+            // in case of rings we accept blips not associated with any "real ring" - directly or indirect through Others
+        }
+    }
+    return { sector: blipSector, ring: blipRing }
+}
+
+function assignBlipsToSegments(filteredBlips, viewpoint, blipDrawingContext,data) {
+    filteredBlips.forEach((blip) => {
+        const segment = findSegmentForRating(blip.rating, viewpoint, blipDrawingContext,data)
+        if (segment.sector != null
+            &&
+            (segment.ring >= 0 || (segment.ring == -1 && viewpoint.blipDisplaySettings.showRingMinusOne != false))) {
+            blipDrawingContext.segmentMatrix[segment.sector][segment.ring].blips.push(blip)
+        }
+    })
+}
+
+
+const findSectorForRating = (rating, viewpoint, data) => {
+    const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
+    let sectorProperty = getPropertyFromPropertyPath(propertyMappedToSector, viewpoint.ratingType, data.model)
+    let sector
+    const propertyValue = getNestedPropertyValueFromObject(rating, propertyMappedToSector)
+    if (sectorProperty.type == "tags") {
+        for (let i = 0; i < propertyValue.length; i++) {
+            sector = viewpoint.propertyVisualMaps.sector.valueMap[propertyValue[i]]
+            if (sector != null) break // stop looking as soon as one of the tags has produced a sector. The order of tags can be important
+        }
+    } else {
+        sector = viewpoint.propertyVisualMaps.sector.valueMap[propertyValue]
+    }
+    return sector
+}
+
+
