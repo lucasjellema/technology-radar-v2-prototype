@@ -1,7 +1,7 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { launchBlipEditor } from './blipEditing.js'
 import { getViewpoint, getData, publishRefreshRadar, getDistinctTagValues, getState } from './data.js'
-import { filterBlip,assignBlipsToSegments,findSectorForRating, getLabelForAllowableValue, toggleShowHideElement, getRatingTypeProperties, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
+import { undefinedToDefined, filterBlip,assignBlipsToSegments,findSectorForRating, getLabelForAllowableValue, toggleShowHideElement, getRatingTypeProperties, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
 export { drawRadarBlips, prepareBlipDrawingContext, }
 
 
@@ -662,7 +662,7 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
                 .attr('y', -15)
         }
         shape.attr("fill", blipColor);
-        shape.attr("opacity", "0.4");
+        shape.attr("opacity", undefinedToDefined(viewpoint.propertyVisualMaps.blip.opacity,0.4));
     }
 
     if (viewpoint.blipDisplaySettings.showImages && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image) != null) {

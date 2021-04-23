@@ -21,8 +21,11 @@ const launchBlipConfigurator = (viewpoint, drawRadarBlips) => {
     <input id="blipDefaultSize" type="text" value="${undefinedToDefined(viewpoint.propertyVisualMaps.blip?.defaultSize)}"></input>
     <label for="blipDefaultColor">Default Color</label>
     <input id="blipDefaultColor" type="color" value="${undefinedToDefined(viewpoint.propertyVisualMaps.blip?.defaultColor)}"></input>
-
-
+    <br />
+    <label for="blipOpacitySlider">Blip Opacity</label>
+    <p>
+    <span>0 - transparent</span><input id="blipOpacitySlider" type="range" min="0" max="1" step="0.05" value="${undefinedToDefined(viewpoint.propertyVisualMaps.blip?.opacity,0.4)}" style="width:30%"></input><span>1 - opaque</span>
+</p>
     <br/><br/><br/><br/>
 Font settings for Blip Label    
 Blip Edge (decoration)?
@@ -69,4 +72,5 @@ const saveBlipSettings = (viewpoint) => {
     viewpoint.propertyVisualMaps.blip.defaultShape = getElementValue("blipDefaultShape")
     viewpoint.propertyVisualMaps.blip.defaultColor = getElementValue("blipDefaultColor")
     viewpoint.propertyVisualMaps.blip.defaultSize = getElementValue("blipDefaultSize")
+    viewpoint.propertyVisualMaps.blip.opacity = getElementValue("blipOpacitySlider")
 }
