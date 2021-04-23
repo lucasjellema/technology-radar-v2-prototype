@@ -138,6 +138,7 @@ const drawRadarBlips = function (viewpoint) {
 
     initializeTagsFilter()
     const blipDrawingContext = prepareBlipDrawingContext()
+    getState().blipDrawingContext = blipDrawingContext
 
     // the blip.label property should be set in order to describe the label for the blips
     // this next section helps out when that property has not been set, by picking our own label property
