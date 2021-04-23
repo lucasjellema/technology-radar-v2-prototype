@@ -4,7 +4,6 @@ export {
     , populateTemplateSelector, createBlip, getObjectListOfOptions, getRatingListOfOptions, getRatingTypeForRatingTypeName
     , subscribeToRadarRefresh, getState, publishRefreshRadar, getDistinctTagValues
 }
-import { initializeTree } from './tree.js'
 
 import { uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, getRatingTypeProperties, findDisplayProperty, getDateTimeString } from './utils.js'
 
