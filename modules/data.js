@@ -16,6 +16,7 @@ const datasetMap = {
     , verkenning: "./data/cab-verkenningen-radar-dataset.json"
     , amisdatamgt: "./data/amis-data-management-technology-radar-dataset.json"
     , cabintegration :"./data/cab-integration-techradar.json"
+    , realintegration : "./data/real-techradar-integration.json"
 }
 
 
