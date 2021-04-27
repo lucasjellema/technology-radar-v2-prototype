@@ -2,7 +2,7 @@ export { launchRingConfigurator, reconfigureRingsFromPropertyPath }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { launchRingEditor } from './ringEditing.js'
-import { capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, toggleShowHideElement } from './utils.js'
 
 
 
@@ -58,7 +58,7 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
         html += `</td>
         <td>${valueCount} </td>
         <td><input id="showRing${i}" type="checkbox" ${ring?.visible == false ? "" : "checked"}></input></td> 
-        <td><input id="othersRing${i}" type="radio" name="others" value="${i}" ${ring?.others == true ? "checked":""}></input></td> 
+        <td><input id="othersRing${i}" type="radio" name="others" value="${i}" ${ring?.others == true ? "checked" : ""}></input></td> 
 
         <td><span id="deleteRing${i}" class="clickableProperty">Delete</span></td> 
         <td><span id="downRing${i}" class="clickableProperty">${i < viewpoint.template.ringsConfiguration.rings.length - 1 ? "v" : ""}</span>&nbsp;
@@ -70,18 +70,52 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
     html += `<input type="button" id="distributeEvenly"  value="Distribute Evenly"  style="padding:10px;margin:10px"/>`
     html += `<input type="button" id="distributeValueOccurrenceBased"  value="Distribute According to Value Occurrences"  style="padding:10px;margin:10px"/>`
 
-    contentContainer.innerHTML = `${html}</table>`
+
+
+    html += `<br/>
+    <a href="#" id="advancedRingPropsToggle" >Show Advanced Properties?</a>
+    <br />
+    <div id="ringAdvancedProps">
+    <h3>Default Font & Background Color & Edge Settings</h3>
+    <label for="defaultRingLabelFont">Font (Family)</label>
+    <input id="defaultRingLabelFont" list="fontsList"   value="${undefinedToDefined(viewpoint.template.ringsConfiguration?.labelSettings?.fontFamily)}"></input>
+    <label for="defaultRingLabelSize">Font Size</label>
+    <input id="defaultRingLabelSize" type="text" value="${undefinedToDefined(viewpoint.template.ringsConfiguration?.labelSettings?.fontSize)}"></input
+    <label for="defaultRingShowLabel" >Show Label?</label><input id="defaultRingShowLabel" type="checkbox"  ${viewpoint.template.ringsConfiguration?.labelSettings?.showLabel ? "checked" : ""}/>
+
+    <label for="defaultRingLabelColor">Label Color</label>
+    <input id="defaultRingLabelColor" type="color"  value="${viewpoint.template.ringsConfiguration?.labelSettings?.color}" >
+    <br/>
+    <label for="defaultRingColor">Ring Background Color</label>
+    <input id="defaultRingColor" type="color" value="${viewpoint.template.ringsConfiguration?.backgroundColor ?? '#FFFFFF'}"></input>
+    <br />
+    <label for="defaultRingOpacity">Opacity</label></td>
+    <input id="defaultRingOpacity" type="range" min="0" max="1" step="0.05" value="${viewpoint.template.ringsConfiguration?.opacity}" style="width:300px">    </input>
+    <label for="edge">Edge Settings</label></td>
+    <label for="defaultRingEdgeWidth">Width (<span id="defaultRingEdgeHeading">${undefinedToDefined(viewpoint.template.ringsConfiguration?.edge?.width)}</span>)</label>
+    <input id="defaultRingEdgeWidth" type="range" min="0" max="15" step="1" value="${viewpoint.template.ringsConfiguration?.edge?.width}" style="width:300px"></input>
+    <label for="defaultRingEdgeColor">Color</label><input id="defaultRingEdgeColor" type="color"  value="${viewpoint.template.ringsConfiguration?.edge?.color ?? "#FFFFFF"}" >
+    <label for="defaultRingEdgeStrokeArray">Stroke Array</label><input id="defaultRingEdgeStrokeArray" type="text" title="Stroke Array, A list of comma and/or white space separated <length>s and <percentage>s that specify the lengths of alternating dashes and gaps. For example:  3 1 (3 strokes, one gap) or 10, 1 (10 strokes, one gap)" value="${undefinedToDefined( viewpoint.template.ringsConfiguration?.edge?.strokeArray,'')}"></input>
+
+    </div>
+    <br/><br/> `
+
+    contentContainer.innerHTML = `${html}`
+
+    populateFontsList('fontsList')
+    showOrHideElement("ringAdvancedProps", false)
+    document.getElementById('advancedRingPropsToggle').addEventListener('click', () => { toggleShowHideElement('ringAdvancedProps') })
 
     // add event listeners
     document.getElementById(`supportOthers`).addEventListener("change", (e) => {
         const supportOthers = e.target.checked
         if (!supportOthers) {
-            viewpoint.template.ringsConfiguration.rings.forEach((ring) => ring.others = false)        
+            viewpoint.template.ringsConfiguration.rings.forEach((ring) => ring.others = false)
             for (let i = 0; i < viewpoint.template.ringsConfiguration.rings.length; i++) {
                 document.getElementById(`othersRing${i}`).checked = false
-            }    
-            } // 
-    
+            }
+        } // 
+
     })
 
     for (let i = 0; i < viewpoint.template.ringsConfiguration.rings.length; i++) {
@@ -152,20 +186,44 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
         const newRing = {
             label: "NEW RING",
             width: 0.05,
-            labelSettings: { showCurved: true, showStraight: false, color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
+            labelSettings: {  showStraight: true },
             backgroundImage: {},
-            backgroundColor: "#FFFFFF",
-            outerringBackgroundColor: "#FFFFFF"
         }
         viewpoint.template.ringsConfiguration.rings.push(newRing)
         launchRingConfigurator(viewpoint)
-
-        launchRingEditor(viewpoint.template.ringsConfiguration.rings.length - 1, viewpoint, drawRadarBlips)
-
     })
 
+    
+    const buttonBar = document.getElementById("modalMainButtonBar")
+    buttonBar.innerHTML = `<input id="saveRingSettings" type="button" value="Save Changes"></input>`
+    document.getElementById("saveRingSettings").addEventListener("click",
+        (event) => {
+            console.log(`save ring edits  `)
+            saveSettings(viewpoint)
+            publishRefreshRadar()
+            if (drawRadarBlips != null) drawRadarBlips(viewpoint)
+
+        })
 
 
+
+
+}
+
+const saveSettings = (viewpoint) => {
+    if (viewpoint.template.ringsConfiguration.labelSettings == null) { viewpoint.template.ringsConfiguration.labelSettings = {} }
+    viewpoint.template.ringsConfiguration.labelSettings.fontFamily = getElementValue("defaultRingLabelFont")
+    viewpoint.template.ringsConfiguration.labelSettings.fontSize = getElementValue("defaultRingLabelSize")
+    viewpoint.template.ringsConfiguration.labelSettings.color = getElementValue("defaultRingLabelColor")
+    viewpoint.template.ringsConfiguration.labelSettings.showLabel = document.getElementById("defaultRingShowLabel").checked
+
+    viewpoint.template.ringsConfiguration.backgroundColor = getElementValue("defaultRingColor")
+    viewpoint.template.ringsConfiguration.opacity = getElementValue("defaultRingOpacity")
+
+    if (viewpoint.template.ringsConfiguration.edge == null) { viewpoint.template.ringsConfiguration.edge = {} }
+    viewpoint.template.ringsConfiguration.edge.width = getElementValue("defaultRingEdgeWidth")
+    viewpoint.template.ringsConfiguration.edge.color = getElementValue("defaultRingEdgeColor")
+    viewpoint.template.ringsConfiguration.edge.strokeArray = getElementValue("defaultRingEdgeStrokeArray")
 
 }
 
@@ -252,7 +310,7 @@ const refreshRingConfiguration = (viewpoint) => {
 }
 
 const reconfigureRings = (propertyPath, viewpoint) => {
-    reconfigureRingsFromPropertyPath(propertyPath,viewpoint);
+    reconfigureRingsFromPropertyPath(propertyPath, viewpoint);
 
 
     launchRingConfigurator(viewpoint)
@@ -278,7 +336,7 @@ const getLabelForAllowableValue = (value, propertyPath, viewpoint) => {
 const hideMe = () => {
     showOrHideElement("modalMain", false); publishRefreshRadar()
 }
-function reconfigureRingsFromPropertyPath( propertyPath,viewpoint) {
+function reconfigureRingsFromPropertyPath(propertyPath, viewpoint) {
     const ringVisualMap = viewpoint.propertyVisualMaps["ring"];
     ringVisualMap["property"] = propertyPath;
 
@@ -292,12 +350,9 @@ function reconfigureRingsFromPropertyPath( propertyPath,viewpoint) {
         const allowableLabel = getLabelForAllowableValue(Object.keys(valueOccurrenceMap)[i], viewpoint.propertyVisualMaps["ring"].property, viewpoint);
         const newRing = {
             label: allowableLabel ?? capitalize(Object.keys(valueOccurrenceMap)[i]),
-            width: 1 / Object.keys(valueOccurrenceMap).length,
-            labelSettings: { showCurved: true, showStraight: false, color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
-            edge: { color: "#000000", width: 1 },
+            width: (1 / Object.keys(valueOccurrenceMap).length),
             backgroundImage: {},
-            backgroundColor: "#FFFFFF",
-            outerringBackgroundColor: "#FFFFFF"
+           
         };
 
         viewpoint.template.ringsConfiguration.rings.push(newRing);
@@ -327,7 +382,7 @@ function getValueOccurrenceMap(propertyPath, viewpoint, includeAllowableValues =
 
     }
     else {
-        valueOccurrenceMap = getPropertyValuesAndCounts(propertyPath, getData().ratings, focusRatingTypeName); 
+        valueOccurrenceMap = getPropertyValuesAndCounts(propertyPath, getData().ratings, focusRatingTypeName);
         if (includeAllowableValues) {
             for (let i = 0; i < ringProperty.allowableValues?.length; i++) {
                 valueOccurrenceMap[ringProperty.allowableValues[i].value] = valueOccurrenceMap[ringProperty.allowableValues[i].value] ?? 0;

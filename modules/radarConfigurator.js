@@ -7,6 +7,7 @@ import { launchRingConfigurator } from './ringConfigurator.js'
 import { launchDatamodelConfigurator } from './datamodelConfigurator.js'
 import { launchDataExplorer } from './dataExplorer.js'
 import { launchBlipConfigurator } from './blipConfigurator.js'
+import { launchAggregationConfigurator } from './aggregationConfigurator.js'
 import { launchShapeConfigurator } from './shapeConfigurator.js'
 import { launchColorConfigurator } from './colorConfigurator.js'
 import { launchSizeConfigurator } from './sizeConfigurator.js'
@@ -33,6 +34,8 @@ const launchMainEditor = (viewpoint, drawRadarBlips, tab) => {
         launchSizeConfigurator(viewpoint, drawRadarBlips)
     } else if (tab == "explorer") {
         launchDataExplorer(viewpoint, drawRadarBlips)
+    } else if (tab == "aggregation") {
+        launchAggregationConfigurator(viewpoint, drawRadarBlips)
     }
 
     else {
@@ -121,6 +124,7 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
             <span id="colorConfigurationTab" class="extra tagfilter">Colors</span>
             <span id="sizeConfigurationTab" class="extra tagfilter">Sizes</span>
             <span id="blipConfigurationTab" class="extra tagfilter">Blips</span>
+            <span id="aggregationConfigurationTab" class="extra tagfilter">Aggregation</span>
             <span id="radarManagementConfigurationTab" class="extra tagfilter" style="margin:40">Radars Management</span>
             <span id="fileConfigurationTab" class="extra tagfilter">File Manager</span>
             <span id="dataExplorerConfigurationTab" class="extra tagfilter">Data Explorer</span>
@@ -144,8 +148,10 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
         , () => { launchMainEditor(viewpoint, drawRadarBlips, "radar") })
     document.getElementById(`datamodelConfigurationTab`).addEventListener("click"
         , () => { launchDatamodelConfigurator(viewpoint, drawRadarBlips) })
-    document.getElementById(`blipConfigurationTab`).addEventListener("click"
+        document.getElementById(`blipConfigurationTab`).addEventListener("click"
         , () => { launchBlipConfigurator(viewpoint, drawRadarBlips) })
+        document.getElementById(`aggregationConfigurationTab`).addEventListener("click"
+        , () => { launchAggregationConfigurator(viewpoint, drawRadarBlips) })
 
     document.getElementById(`radarManagementConfigurationTab`).addEventListener("click"
         , () => { launchRadarsManagementConfigurator() })

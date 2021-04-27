@@ -2,7 +2,7 @@ export { launchSectorConfigurator, reconfigureSectorsFromPropertyPath }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { launchSectorEditor } from './sectorEditing.js'
-import { capitalize, getPropertyValuesAndCounts, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { capitalize, getPropertyValuesAndCounts, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, toggleShowHideElement } from './utils.js'
 
 
 
@@ -10,7 +10,7 @@ import { capitalize, getPropertyValuesAndCounts, getPropertyFromPropertyPath, po
 const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
     //const valueOccurrenceMap = getPropertyValuesAndCounts(sectorVisualMap["property"], getData().ratings) // TODO only ratings of proper rating type!!
-    const valueOccurrenceMap = (sectorVisualMap==null ||sectorVisualMap["property"]==null)?null:getValueOccurrenceMap(sectorVisualMap["property"], viewpoint, true);
+    const valueOccurrenceMap = (sectorVisualMap == null || sectorVisualMap["property"] == null) ? null : getValueOccurrenceMap(sectorVisualMap["property"], viewpoint, true);
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator - Sectors")
     document.getElementById("sectorsConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
@@ -58,7 +58,7 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
         html += `</td>
         <td>${valueCount} </td>
         <td><input id="showSector${i}" type="checkbox" ${sector?.visible == false ? "" : "checked"}></input></td> 
-        <td><input id="othersSector${i}" type="radio" name="others" value="${i}" ${sector?.others == true ? "checked":""}></input></td> 
+        <td><input id="othersSector${i}" type="radio" name="others" value="${i}" ${sector?.others == true ? "checked" : ""}></input></td> 
         <td><span id="deleteSector${i}" class="clickableProperty">Delete</span></td> 
         <td><span id="downSector${i}" class="clickableProperty">${i < viewpoint.template.sectorsConfiguration.sectors.length - 1 ? "v" : ""}</span>&nbsp;
         <span id="upSector${i}" class="clickableProperty">${i > 0 ? "^" : ""}</span></td> 
@@ -74,27 +74,55 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     <br />
     <div id="sectorAdvancedProps">
     <label for="totalAngle">Total % of full circle available for all sectors combined</label>
-    <input id="totalAngle" type="text" value="${ undefinedToDefined(viewpoint.template.sectorsConfiguration.totalAngle,1)}"></input>
+    <input id="totalAngle" type="text" value="${undefinedToDefined(viewpoint.template.sectorsConfiguration.totalAngle, 1)}"></input>
     <label for="initialAngle">Initial or Tilt angle</label>
-    <input id="initialAngle" type="text" value="${ undefinedToDefined(viewpoint.template.sectorsConfiguration.initialAngle,0)}"></input> 
-    <p>Default Font & background color & edge Settings</p>
+    <input id="initialAngle" type="text" value="${undefinedToDefined(viewpoint.template.sectorsConfiguration.initialAngle, 0)}"></input> 
+    <h3>Default Font & Background Color & Edge Settings</h3>
+    <label for="defaultSectorLabelFont">Font (Family)</label>
+    <input id="defaultSectorLabelFont" list="fontsList"   value="${undefinedToDefined(viewpoint.template.sectorsConfiguration?.labelSettings?.fontFamily)}"></input>
+    <label for="defaultSectorLabelSize">Font Size</label>
+    <input id="defaultSectorLabelSize" type="text" value="${undefinedToDefined(viewpoint.template.sectorsConfiguration?.labelSettings?.fontSize)}"></input
+    <label for="defaultSectorShowCurved" >Curved Label?</label><input id="defaultSectorShowCurved" type="checkbox" ${viewpoint.template.sectorsConfiguration?.labelSettings?.showCurved ? "checked" : ""}/>
+    <label for="defaultSectorShowStraight" >Straight Label?</label><input id="defaultSectorShowStraight" type="checkbox"  ${viewpoint.template.sectorsConfiguration?.labelSettings?.showStraight ? "checked" : ""}/>
+
+    <br />
+    <label for="defaultSectorLabelColor">Color</label>
+    <input id="defaultSectorLabelColor" type="color"  value="${viewpoint.template.sectorsConfiguration?.labelSettings?.color}" >
+    <br/>
+    <label for="defaultSectorColorInside">Color (inside rings)</label>
+    <input id="defaultSectorColorInside" type="color" value="${viewpoint.template.sectorsConfiguration?.backgroundColor ?? '#FFFFFF'}"></input>
+    <label for="defaultSectorColorOutside">Color (outside rings)</label></td><td>
+    <input id="defaultSectorColorOutside" type="color" value="${viewpoint.template.sectorsConfiguration?.outerringBackgroundColor ?? "#FFFFFF"}"></input>
+    <br />
+    <label for="defaultSectorOpacity">Opacity</label></td>
+    <td><label for="defaultSectorOpacityInside">Opacity (inside rings)</label>
+    <input id="defaultSectorOpacityInside" type="range" min="0" max="1" step="0.05" value="${viewpoint.template.sectorsConfiguration?.opacity}" style="width:300px">    </input>
+    <br />
+    <label for="sectorOpacityOutside">Opacity (outside rings)</label>
+    <input id="defaultSectorOpacityOutside" type="range" min="0" max="1" step="0.05" value="${viewpoint.template.sectorsConfiguration?.opacityOutsideRings}" style="width:300px">    </input>
+    <label for="edge">Edge Settings</label></td>
+    <label for="defaultSectorEdgeWidth">Width (<span id="defaultSectorEdgeHeading">${undefinedToDefined(viewpoint.template.sectorsConfiguration?.edge?.width)}</span>)</label>
+    <input id="defaultSectorEdgeWidth" type="range" min="0" max="15" step="1" value="${viewpoint.template.sectorsConfiguration?.edge?.width}" style="width:300px"></input>
+    <label for="defaultSectorEdgeColor">Color</label><input id="defaultSectorEdgeColor" type="color"  value="${viewpoint.template.sectorsConfiguration?.edge?.color ?? "#FFFFFF"}" >
+    <label for="defaultSectorEdgeStrokeArray">Stroke Array</label><input id="defaultSectorEdgeStrokeArray" type="text" title="Stroke Array, A list of comma and/or white space separated <length>s and <percentage>s that specify the lengths of alternating dashes and gaps. For example:  3 1 (3 strokes, one gap) or 10, 1 (10 strokes, one gap)" value="${undefinedToDefined( viewpoint.template.sectorsConfiguration?.edge?.strokeArray,'')}"></input>
+
     </div>
     <br/><br/> `
 
     contentContainer.innerHTML = `${html}`
     showOrHideElement("sectorAdvancedProps", false)
-    document.getElementById('advancedSectorPropsToggle').addEventListener('click', () => { showOrHideElement('sectorAdvancedProps', true) })
+    document.getElementById('advancedSectorPropsToggle').addEventListener('click', () => { toggleShowHideElement('sectorAdvancedProps') })
 
     // add event listeners
     document.getElementById(`supportOthers`).addEventListener("change", (e) => {
         const supportOthers = e.target.checked
         if (!supportOthers) {
-            viewpoint.template.sectorsConfiguration.sectors.forEach((sector) => sector.others = false)        
+            viewpoint.template.sectorsConfiguration.sectors.forEach((sector) => sector.others = false)
             for (let i = 0; i < viewpoint.template.sectorsConfiguration.sectors.length; i++) {
                 document.getElementById(`othersSector${i}`).checked = false
-            }    
-            } // 
-    
+            }
+        } // 
+
     })
     for (let i = 0; i < viewpoint.template.sectorsConfiguration.sectors.length; i++) {
         document.getElementById(`othersSector${i}`).addEventListener("change", (e) => {
@@ -142,6 +170,7 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
         })
     }
     populateSelect("mappedPropertySelector", candidateMappedProperties, sectorVisualMap["property"])   // data is array objects with two properties : label and value
+    populateFontsList('fontsList')
     document.getElementById(`mappedPropertySelector`).addEventListener("change", (e) => {
         reconfigureSectors(e.target.value, viewpoint)
     })
@@ -163,10 +192,8 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
         const newSector = {
             label: "NEW SECTOR",
             angle: 0.05,
-            labelSettings: { showCurved: true, showStraight: false, color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
+            labelSettings: { },
             backgroundImage: {},
-            backgroundColor: "#FFFFFF",
-            outerringBackgroundColor: "#FFFFFF"
         }
         viewpoint.template.sectorsConfiguration.sectors.push(newSector)
         launchSectorConfigurator(viewpoint)
@@ -180,16 +207,33 @@ const launchSectorConfigurator = (viewpoint, drawRadarBlips) => {
     document.getElementById("saveSectorSettings").addEventListener("click",
         (event) => {
             console.log(`save sector edits  `)
-            saveSettings( viewpoint)
+            saveSettings(viewpoint)
             publishRefreshRadar()
             if (drawRadarBlips != null) drawRadarBlips(viewpoint)
 
         })
 }
 
-const saveSettings = ( viewpoint) => {
+const saveSettings = (viewpoint) => {
     viewpoint.template.sectorsConfiguration.totalAngle = getElementValue("totalAngle")
     viewpoint.template.sectorsConfiguration.initialAngle = getElementValue("initialAngle")
+    if (viewpoint.template.sectorsConfiguration.labelSettings == null) { viewpoint.template.sectorsConfiguration.labelSettings = {} }
+    viewpoint.template.sectorsConfiguration.labelSettings.fontFamily = getElementValue("defaultSectorLabelFont")
+    viewpoint.template.sectorsConfiguration.labelSettings.fontSize = getElementValue("defaultSectorLabelSize")
+    viewpoint.template.sectorsConfiguration.labelSettings.color = getElementValue("defaultSectorLabelColor")
+    viewpoint.template.sectorsConfiguration.labelSettings.showStraight = document.getElementById("defaultSectorShowStraight").checked
+    viewpoint.template.sectorsConfiguration.labelSettings.showCurved = document.getElementById("defaultSectorShowCurved").checked
+
+    viewpoint.template.sectorsConfiguration.backgroundColor = getElementValue("defaultSectorColorInside")
+    viewpoint.template.sectorsConfiguration.outerringBackgroundColor = getElementValue("defaultSectorColorOutside")
+    viewpoint.template.sectorsConfiguration.opacity = getElementValue("defaultSectorOpacityInside")
+    viewpoint.template.sectorsConfiguration.opacityOutsideRings = getElementValue("defaultSectorOpacityOutside")
+
+    if (viewpoint.template.sectorsConfiguration.edge == null) { viewpoint.template.sectorsConfiguration.edge = {} }
+    viewpoint.template.sectorsConfiguration.edge.width = getElementValue("defaultSectorEdgeWidth")
+    viewpoint.template.sectorsConfiguration.edge.color = getElementValue("defaultSectorEdgeColor")
+    viewpoint.template.sectorsConfiguration.edge.strokeArray = getElementValue("defaultSectorEdgeStrokeArray")
+
 
 }
 
@@ -276,7 +320,7 @@ const refreshSectorConfiguration = (viewpoint) => {
 }
 
 const reconfigureSectors = (propertyPath, viewpoint) => {
-    reconfigureSectorsFromPropertyPath( propertyPath,viewpoint);
+    reconfigureSectorsFromPropertyPath(propertyPath, viewpoint);
 
 
     launchSectorConfigurator(viewpoint)
@@ -302,7 +346,7 @@ const getLabelForAllowableValue = (value, propertyPath, viewpoint) => {
 const hideMe = () => {
     showOrHideElement("modalMain", false); publishRefreshRadar()
 }
-function reconfigureSectorsFromPropertyPath( propertyPath,viewpoint) {
+function reconfigureSectorsFromPropertyPath(propertyPath, viewpoint) {
     const sectorVisualMap = viewpoint.propertyVisualMaps["sector"];
     sectorVisualMap["property"] = propertyPath;
 
@@ -317,11 +361,10 @@ function reconfigureSectorsFromPropertyPath( propertyPath,viewpoint) {
         const newSector = {
             label: allowableLabel ?? capitalize(Object.keys(valueOccurrenceMap)[i]),
             angle: 1 / Object.keys(valueOccurrenceMap).length,
-            labelSettings: { showCurved: true, showStraight: false, color: "#000000", fontSize: 18, fontFamily: "Helvetica" },
-            edge: { color: "#000000", width: 1 },
+            labelSettings: {},
+            edge: { },
             backgroundImage: {},
-            backgroundColor: "#FFFFFF",
-            outerringBackgroundColor: "#FFFFFF"
+
         };
 
         viewpoint.template.sectorsConfiguration.sectors.push(newSector);
@@ -340,12 +383,13 @@ function getValueOccurrenceMap(propertyPath, viewpoint, includeAllowableValues =
         for (let i = 0; i < Object.keys(getData().ratings).length; i++) {
             const rating = getData().ratings[Object.keys(getData().ratings)[i]]
             if (rating.ratingType == focusRatingTypeName) {
-            const tags = getNestedPropertyValueFromObject(getData().ratings[Object.keys(getData().ratings)[i]], propertyPath)
-            tags.forEach((tag) => {
-                const currentCount = valueOccurrenceMap[tag] ?? 0
-                valueOccurrenceMap[tag] = currentCount + 1
-            })
-                }        }
+                const tags = getNestedPropertyValueFromObject(getData().ratings[Object.keys(getData().ratings)[i]], propertyPath)
+                tags.forEach((tag) => {
+                    const currentCount = valueOccurrenceMap[tag] ?? 0
+                    valueOccurrenceMap[tag] = currentCount + 1
+                })
+            }
+        }
     }
     else {
         valueOccurrenceMap = getPropertyValuesAndCounts(propertyPath, getData().ratings, focusRatingTypeName)

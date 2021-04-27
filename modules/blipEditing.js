@@ -250,7 +250,7 @@ const launchBlipEditor = (blip, viewpoint, drawRadarBlips, editObject = true) =>
 <div id="tagControls">
 </div>
 
-<div id="blipEditorButtonBar" style="position: absolute; bottom: 25;right: 100;">
+<div id="blipEditorButtonBar" style="position: absolute; bottom: 25px;right: 100px;">
     <input id="saveBlipEdits" type="button" value="Save Changes"></input>
 </div>`
     form.innerHTML = html

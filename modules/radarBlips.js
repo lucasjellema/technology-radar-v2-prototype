@@ -1,10 +1,10 @@
 import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
 import { launchBlipEditor } from './blipEditing.js'
 import { getViewpoint, getData, publishRefreshRadar, getDistinctTagValues, getState } from './data.js'
-import { undefinedToDefined, filterBlip,assignBlipsToSegments,findSectorForRating, getLabelForAllowableValue, toggleShowHideElement, getRatingTypeProperties, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
+import { supportedShapes, undefinedToDefined, filterBlip, assignBlipsToSegments, findSectorForRating, getLabelForAllowableValue, toggleShowHideElement, getRatingTypeProperties, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
 export { drawRadarBlips, prepareBlipDrawingContext, }
 
-
+const shapeDefinitionsFile = "shape-definitions.svg"
 const radarCanvasElementId = "radarCanvas"
 const blipsLayerElementId = "blipsLayer"
 let currentViewpoint
@@ -170,7 +170,7 @@ const drawRadarBlips = function (viewpoint) {
     const filteredBlips = viewpoint.blips.filter((blip) => filterBlip(blip, viewpoint, getData()))
 
     // go through blips and assign blips to segment
-    assignBlipsToSegments(filteredBlips, viewpoint, blipDrawingContext,getData())
+    assignBlipsToSegments(filteredBlips, viewpoint, blipDrawingContext, getData())
 
     // compose new set of blips
     // eliminate [blips in] invisible segments 
@@ -181,32 +181,54 @@ const drawRadarBlips = function (viewpoint) {
             if (segment.visible) {
 
                 if (currentViewpoint.blipDisplaySettings.aggregationMode == true) {
-                    const blipsPerObject = {}
+                    let propertyToGroupBy = currentViewpoint.propertyVisualMaps?.aggregation?.groupByProperty ?? "object.id"
+                    const blipsPerGroup = {}
                     segment.blips.forEach((blip) => {
-                        if (!blipsPerObject.hasOwnProperty(blip.rating.object.id)) { blipsPerObject[blip.rating.object.id] = [] }
-                        blipsPerObject[blip.rating.object.id].push(blip)
+                        const valueGroupByProperty = getNestedPropertyValueFromObject(blip.rating, propertyToGroupBy)
+                        if (!blipsPerGroup.hasOwnProperty(valueGroupByProperty)) { blipsPerGroup[valueGroupByProperty] = [] }
+                        blipsPerGroup[valueGroupByProperty].push(blip)
                     })
-                    // blipsPerObject has zero, one or more properties for each of the objects for which blips are in this segment
+                    // blipsPerGroup has zero, one or more properties for each of the objects for which blips are in this segment
                     // if the number of objects > 1 - aggregation time!
-                    for (let i = 0; i < Object.keys(blipsPerObject).length; i++) {
-                        const objectId = Object.keys(blipsPerObject)[i]
-                        if (blipsPerObject[objectId].length > 1) {
+
+
+                    // TODO AGGREGATION hardcoded property names
+
+                    // const aggregatedValues = [{ name: "label", propertyPath: "scope" }
+                    //     , { name: "authors", propertyPath: "author" }
+                    //     , { name: "scopes", propertyPath: "scope" }
+                    // ]
+                    for (let i = 0; i < Object.keys(blipsPerGroup).length; i++) {
+                        const groupValue = Object.keys(blipsPerGroup)[i]
+                        if (blipsPerGroup[groupValue].length > 1) {
                             const blip = {
                                 id: `${uuidv4()}`
-                                , rating: blipsPerObject[objectId][0].rating
+                                , rating: blipsPerGroup[groupValue][0].rating
                                 , artificial: true
-                                // TODO AGGREGATION hardcoded property names
                                 , aggregation: {
-                                    count: blipsPerObject[objectId].length
-                                    , label: blipsPerObject[objectId].reduce((label, b, index) => { return label + ((index == 0) ? "" : ",") + b.rating.scope }, "")
-                                    , authors: blipsPerObject[objectId].reduce((authors, b, index) => { return authors + ((index == 0) ? "" : ",") + b.rating.author }, "")
+                                    count: blipsPerGroup[groupValue].length
+                                    , groupValue: groupValue
+                                    , hoverValue:
+                                        blipsPerGroup[groupValue].reduce((result, b, index) => {
+                                            return result + ((index == 0) ? "" : ",")
+                                                + getNestedPropertyValueFromObject(b.rating, viewpoint.propertyVisualMaps?.aggregation?.hoverProperty)
+                                        }, "")
                                 }
                             }
+                            for (let a = 0; a < viewpoint.propertyVisualMaps.aggregation?.collectProperties?.length; a++) {
+                                blip.aggregation[viewpoint.propertyVisualMaps.aggregation.collectProperties[a]] =
+                                    blipsPerGroup[groupValue].reduce((result, b, index) => {
+                                        return result + ((index == 0) ? "" : ",")
+                                            + getNestedPropertyValueFromObject(b.rating, viewpoint.propertyVisualMaps.aggregation.collectProperties[a])
+                                    }, "")
+
+                            }
+
                             visibleBlips.push(blip)
                         }
                         else {
 
-                            visibleBlips = visibleBlips.concat(blipsPerObject[objectId])
+                            visibleBlips = visibleBlips.concat(blipsPerGroup[groupValue])
                         }
                     }
                 } else {
@@ -292,7 +314,7 @@ const prepareBlipDrawingContext = () => {
 
         }
         // add ring -1 (the outer zone)
-        segmentMatrix[s][-1] = {...segmentMatrix[s][0]}
+        segmentMatrix[s][-1] = { ...segmentMatrix[s][0] }
         segmentMatrix[s][-1].blips = []
         segmentMatrix[s][-1].startR = 3000
         segmentMatrix[s][-1].endR = segmentMatrix[s][0].startR
@@ -361,7 +383,7 @@ const sectorRingToPosition = (sector, ring, config) => { // return randomized X,
             r = config.maxRingRadius * rFactor
         }
         else {
-            segmentWidthPercentage = - ( Math.random() * 0.39)
+            segmentWidthPercentage = - (Math.random() * 0.39)
             r = config.maxRingRadius * (1 - segmentWidthPercentage)  // 0.33 range of how far outer ring blips can stray NOTE depends on sector angle - for the sectors between 0.4 and 0.6 and 0.9 and 0.1 there is more leeway  
         }
         const cartesian = cartesianFromPolar({ r: r, phi: 2 * (1 - phi) * Math.PI })
@@ -399,7 +421,7 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
 
     const propertyMappedToRing = viewpoint.propertyVisualMaps.ring.property
     let blipRing = viewpoint.propertyVisualMaps.ring.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToRing)]
-    if (blipRing == null) {
+    if (blipRing == null || blipRing === undefined) {
         if (blipDrawingContext.othersDimensionValue["ring"] != null) {
             blipRing = blipDrawingContext.othersDimensionValue["ring"]
         }
@@ -417,21 +439,21 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     try {
 
         const propertyMappedToShape = viewpoint.propertyVisualMaps.shape?.property
-        if (propertyMappedToShape!=null) {
-        let blipShapeId = viewpoint.propertyVisualMaps.shape.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToShape)]
-        if (blipShapeId == null) {
-            if (blipDrawingContext.othersDimensionValue["shape"] != null) {
-                blipShapeId = blipDrawingContext.othersDimensionValue["shape"]
+        if (propertyMappedToShape != null) {
+            let blipShapeId = viewpoint.propertyVisualMaps.shape.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToShape)]
+            if (blipShapeId == null) {
+                if (blipDrawingContext.othersDimensionValue["shape"] != null) {
+                    blipShapeId = blipDrawingContext.othersDimensionValue["shape"]
+                }
+                else {
+                    return
+                }
             }
-            else {
+            if (viewpoint.template.shapesConfiguration.shapes[blipShapeId]?.visible == false) {
                 return
             }
-        }
-        if (viewpoint.template.shapesConfiguration.shapes[blipShapeId]?.visible == false) {
-            return
-        }
-        blipShape = viewpoint.template.shapesConfiguration.shapes[blipShapeId].shape
-    } else {blipShape = "circle"}
+            blipShape = viewpoint.template.shapesConfiguration.shapes[blipShapeId].shape
+        } else { blipShape = "circle" }
     } catch (e) {
         blipShape = "circle"
         console.log(`draw radar blip fall back to circle because of ${e}`)
@@ -454,16 +476,16 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
             if (viewpoint.template.colorsConfiguration.colors[blipColorId]?.visible == false) {
                 return
             }
-        
 
-        blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
+
+            blipColor = viewpoint.template.colorsConfiguration.colors[blipColorId].color
         } else {
             blipColor = "blue"
 
         }
         //TODO AGGREGATION hard coded aggregated color
         if (d.artificial == true && viewpoint.blipDisplaySettings.aggregationMode) {
-            blipColor = "#800040"  // color to indicate aggregation
+            blipColor = undefinedToDefined(viewpoint.propertyVisualMaps.aggregation?.color, "#800040")  // color to indicate aggregation
 
         }
     } catch (e) {
@@ -475,24 +497,24 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     try {
 
         const propertyMappedToSize = viewpoint.propertyVisualMaps.size?.property
-        if (propertyMappedToSize!=null) {
-        let blipSizeId = viewpoint.propertyVisualMaps.size.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSize)]
-        if (blipSizeId == null) {
-            if (blipDrawingContext.othersDimensionValue["size"] != null) {
-                blipSizeId = blipDrawingContext.othersDimensionValue["size"]
+        if (propertyMappedToSize != null) {
+            let blipSizeId = viewpoint.propertyVisualMaps.size.valueMap[getNestedPropertyValueFromObject(d.rating, propertyMappedToSize)]
+            if (blipSizeId == null) {
+                if (blipDrawingContext.othersDimensionValue["size"] != null) {
+                    blipSizeId = blipDrawingContext.othersDimensionValue["size"]
+                }
+                else {
+                    return
+                }
             }
-            else {
+            if (viewpoint.template.sizesConfiguration.sizes[blipSizeId]?.visible == false) {
                 return
             }
-        }
-        if (viewpoint.template.sizesConfiguration.sizes[blipSizeId]?.visible == false) {
-            return
-        }
 
-        blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
-    } else {
-        blipSize = 1
-    }
+            blipSize = viewpoint.template.sizesConfiguration.sizes[blipSizeId].size
+        } else {
+            blipSize = 1
+        }
     } catch (e) {
         blipSize = 1
 
@@ -516,8 +538,8 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     if (d.segmentWidthPercentage != null && d.segmentAnglePercentage != null) {
         const anglePercentage = segment.startAngle + d.segmentAnglePercentage * segment.anglePercentage
         let widthPercentage = segment.startWidth + d.segmentWidthPercentage * segment.widthPercentage
-        if (blipRing == -1 ) { 
-            widthPercentage = -1 * Math.abs(d.segmentWidthPercentage )
+        if (blipRing == -1) {
+            widthPercentage = -1 * Math.abs(d.segmentWidthPercentage)
             widthPercentage = Math.max(-0.5, widthPercentage) // TODO this should not be necessary, but widthPercentage is getting too big
         }
         const phi = 2 * (1 - anglePercentage) * Math.PI
@@ -537,8 +559,8 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
             d.segmentWidthPercentage = xy.segmentWidthPercentage
         }
     }
-    let scaleFactor = blipSize * viewpoint.blipDisplaySettings.blipScaleFactor ?? 1
-    if (d.artificial == true) { scaleFactor = scaleFactor * (1 + (d.aggregation.count - 1) / 3) }
+    let aggregationScaleFactor = (d.artificial == true)?(1 + (d.aggregation.count - 1) / 4):1
+    let scaleFactor = aggregationScaleFactor * ( blipSize * viewpoint.blipDisplaySettings.blipScaleFactor ?? 1)
     blip.attr("transform", `translate(${xy.x},${xy.y}) scale(${scaleFactor})`)
         .attr("id", `blip-${d.id}`)
     if (!viewpoint.blipDisplaySettings.showLabels
@@ -558,7 +580,7 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
                             content = `${content}<img src="${getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image)}" width="100px"></img>`
                         }
                         if (d.artificial == true) {
-                            content += ` by ${d.aggregation.label}`
+                            content += ` by ${d.aggregation.hoverValue}`
                         }
 
                         return `${content}</div>`
@@ -586,9 +608,9 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     if (viewpoint.blipDisplaySettings.showLabels || (viewpoint.blipDisplaySettings.showImages && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image) == null)) {
         let label = getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.label).trim()
 
-        if (d.artificial == true) {
-            label += ` (# ${d.aggregation.count})`
-        }
+        // if (d.artificial == true) {
+        //     label += ` (# ${d.aggregation.count})`
+        // }
         // TODO find smarter ways than breaking on spaces to distribute label over multiple lines
         let line = label
         let line0
@@ -596,73 +618,89 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
             line = label.trim().substring(label.trim().indexOf(" "))
             line0 = label.split(" ")[0]
         }
+
+        const fontFamily = viewpoint.propertyVisualMaps.blip?.labelSettings?.fontFamily ?? "Arial, Helvetica"
+        let fontSize = viewpoint.propertyVisualMaps.blip?.labelSettings?.fontSize
+        if (fontSize == null || fontSize.length == 0) fontSize = "14"
+        const fontColor = viewpoint.propertyVisualMaps.blip?.labelSettings?.fontColor ?? "#000000"
+        const lineHeight = parseInt(fontSize ?? 14)
+
         if (label.length > 11 && line != line0) { // if long label, show first part above second part of label
             blip.append("text")
                 .text(line0)
                 .attr("x", 0) // if on left side, then move to the left, if on the right side then move to the right
-                .attr("y", -45) // if on upper side, then move up, if on the down side then move down
+                .attr("y", -16 - 2 * lineHeight) // if on upper side, then move up, if on the down side then move down
                 .attr("text-anchor", "middle")
                 .attr("alignment-baseline", "before-edge")
-                .style("fill", "#000")
-                .style("font-family", "Arial, Helvetica")
+                .style("fill", fontColor)
+                .style("font-family", fontFamily)
                 .style("font-stretch", "extra-condensed")
-                .style("font-size", "14px")
+                .style("font-size", fontSize/aggregationScaleFactor)
         }
         blip.append("text")
             .text(line)
             .attr("x", 0) // if on left side, then move to the left, if on the right side then move to the right
-            .attr("y", -30) // if on upper side, then move up, if on the down side then move down
+            .attr("y", -16 - lineHeight) // if on upper side, then move up, if on the down side then move down
             .attr("text-anchor", "middle")
             .attr("alignment-baseline", "before-edge")
-            .style("fill", "#000")
-            .style("font-family", "Arial, Helvetica")
+            .style("fill", fontColor)
+            .style("font-family", fontFamily)
             .style("font-stretch", "extra-condensed")
-            .style("font-size", function (d) { return label.length > 2 ? `${14}px` : "17px"; })
+            .style("font-size", fontSize/aggregationScaleFactor)
+            
     }
 
     if (viewpoint.blipDisplaySettings.showShapes) {
         let shape
+        let supportedShape = supportedShapes[blipShape]
+        if (supportedShape.externalShape == true) {
+            shape = blip.append("use")
+                .attr('xlink:href', `${supportedShape.externalFile}#${supportedShape.symbolId}`)
+                .attr('transform', `translate(${-1.5 * supportedShape.viewBoxSize}, ${-0.5 * supportedShape.viewBoxSize})  scale(${supportedShape.scaleFactor * 1 / supportedShape.viewBoxSize}) `);
+        } else {
+            if (blipShape == "circle") {
+                shape = blip.append("circle")
+                    .attr("r", 15)
+            }
+            if (blipShape == "diamond") {
+                const diamond = d3.symbol().type(d3.symbolDiamond).size(800);
+                shape = blip.append('path').attr("d", diamond)
+            }
+            if (blipShape == "square") {
+                const square = d3.symbol().type(d3.symbolSquare).size(800);
+                shape = blip.append('path').attr("d", square)
+            }
 
-        if (blipShape == "circle") {
-            shape = blip.append("circle")
-                .attr("r", 15)
+            if (blipShape == "star") {
+                const star = d3.symbol().type(d3.symbolStar).size(720);
+                shape = blip.append('path').attr("d", star)
+            }
+            if (blipShape == "plus") {
+                const plus = d3.symbol().type(d3.symbolCross).size(720);
+                shape = blip.append('path').attr("d", plus)
+            }
+            if (blipShape == "triangle") {
+                const triangle = d3.symbol().type(d3.symbolTriangle).size(720);
+                shape = blip.append('path').attr("d", triangle)
+            }
+            if (blipShape == "rectangleHorizontal") {
+                shape = blip.append('rect').attr('width', 38)
+                    .attr('height', 10)
+                    .attr('x', -20)
+                    .attr('y', -4)
+            }
+            if (blipShape == "rectangleVertical") {
+                shape = blip.append('rect')
+                    .attr('width', 10)
+                    .attr('height', 38)
+                    .attr('x', -5)
+                    .attr('y', -15)
+            }
         }
-        if (blipShape == "diamond") {
-            const diamond = d3.symbol().type(d3.symbolDiamond).size(800);
-            shape = blip.append('path').attr("d", diamond)
+        if (shape != null) {
+            shape.attr("fill", blipColor);
+            shape.attr("opacity", undefinedToDefined(viewpoint.propertyVisualMaps.blip.opacity, 0.4));
         }
-        if (blipShape == "square") {
-            const square = d3.symbol().type(d3.symbolSquare).size(800);
-            shape = blip.append('path').attr("d", square)
-        }
-
-        if (blipShape == "star") {
-            const star = d3.symbol().type(d3.symbolStar).size(720);
-            shape = blip.append('path').attr("d", star)
-        }
-        if (blipShape == "plus") {
-            const plus = d3.symbol().type(d3.symbolCross).size(720);
-            shape = blip.append('path').attr("d", plus)
-        }
-        if (blipShape == "triangle") {
-            const triangle = d3.symbol().type(d3.symbolTriangle).size(720);
-            shape = blip.append('path').attr("d", triangle)
-        }
-        if (blipShape == "rectangleHorizontal") {
-            shape = blip.append('rect').attr('width', 38)
-                .attr('height', 10)
-                .attr('x', -20)
-                .attr('y', -4)
-        }
-        if (blipShape == "rectangleVertical") {
-            shape = blip.append('rect')
-                .attr('width', 10)
-                .attr('height', 38)
-                .attr('x', -5)
-                .attr('y', -15)
-        }
-        shape.attr("fill", blipColor);
-        shape.attr("opacity", undefinedToDefined(viewpoint.propertyVisualMaps.blip.opacity,0.4));
     }
 
     if (viewpoint.blipDisplaySettings.showImages && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image) != null) {
@@ -683,6 +721,27 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
             .style("stroke", "red") // TODO: use the blip color
             .style("stroke-width", "0px") // TODO: when a color is derived properly, set a border width
     }
+    if (d.artificial == true) {
+        const highlight = blip.append("g")
+        .attr("transform", "translate(10,10)")
+
+        // add a red circle with in white the number of aggregated blips
+        highlight.append("circle")
+            .attr("r", 7)
+            .attr("style", "fill:red")
+
+            highlight.append("text")
+            .text(d.aggregation.count)
+            .attr("x", 0)
+            .attr("y", -6)
+            .attr("text-anchor", "middle")
+            .attr("alignment-baseline", "before-edge")
+            .style("fill", "white")
+            .style("font-stretch", "extra-condensed")
+            .style("font-size", 10)
+            .style("font-weight", "bold")
+    }
+
 }
 
 const handleBlipScaleFactorChange = (event) => {
@@ -840,51 +899,57 @@ const menu = (x, y, d, blip, viewpoint) => {
             const shapeToDraw = config.shapesConfiguration.shapes[i].shape
             const label = config.shapesConfiguration.shapes[i].label
 
-            // for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
-            //     const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
-            //     const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
-            //     const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
             const shapeEntry = shapesBox.append('g')
                 .attr("transform", `translate(0, ${30 + i * entryHeight})`)
             let shape
+            let supportedShape = supportedShapes[shapeToDraw]
+            if (supportedShape.externalShape == true) {
+                shape = shapeEntry.append("use")
+                    .attr('xlink:href', `${supportedShape.externalFile}#${supportedShape.symbolId}`)
+                    //                    .attr('transform', ' translate(-17,-15) scale(0.02)');
+                    .attr('transform', `translate(${-1.5 * supportedShape.viewBoxSize}, ${-0.5 * supportedShape.viewBoxSize})  scale(${supportedShape.scaleFactor * 1 / supportedShape.viewBoxSize}) `);
 
-            if (shapeToDraw == "circle") {
-                shape = shapeEntry.append("circle")
-                    .attr("r", circleRadius)
-            }
-            if (shapeToDraw == "diamond") {
-                const diamond = d3.symbol().type(d3.symbolDiamond).size(420);
-                shape = shapeEntry.append('path').attr("d", diamond)
-            }
-            if (shapeToDraw == "square") {
-                const square = d3.symbol().type(d3.symbolSquare).size(420);
-                shape = shapeEntry.append('path').attr("d", square)
-            }
-            if (shapeToDraw == "star") {
-                const star = d3.symbol().type(d3.symbolStar).size(420);
-                shape = shapeEntry.append('path').attr("d", star)
-            }
-            if (shapeToDraw == "plus") {
-                const plus = d3.symbol().type(d3.symbolCross).size(420);
-                shape = shapeEntry.append('path').attr("d", plus)
-            }
-            if (shapeToDraw == "triangle") {
-                const triangle = d3.symbol().type(d3.symbolTriangle).size(420);
-                shape = shapeEntry.append('path').attr("d", triangle)
-            }
-            if (shapeToDraw == "rectangleHorizontal") {
-                shape = shapeEntry.append('rect').attr('width', 38)
-                    .attr('height', 10)
-                    .attr('x', -20)
-                    .attr('y', -4)
-            }
 
-            if (shapeToDraw == "rectangleVertical") {
-                shape = shapeEntry.append('rect')
-                    .attr('width', 10)
-                    .attr('height', 38)
-                    .attr('x', -5)
-                    .attr('y', -15)
+            } else {
+
+                if (shapeToDraw == "circle") {
+                    shape = shapeEntry.append("circle")
+                        .attr("r", circleRadius)
+                }
+                if (shapeToDraw == "diamond") {
+                    const diamond = d3.symbol().type(d3.symbolDiamond).size(420);
+                    shape = shapeEntry.append('path').attr("d", diamond)
+                }
+                if (shapeToDraw == "square") {
+                    const square = d3.symbol().type(d3.symbolSquare).size(420);
+                    shape = shapeEntry.append('path').attr("d", square)
+                }
+                if (shapeToDraw == "star") {
+                    const star = d3.symbol().type(d3.symbolStar).size(420);
+                    shape = shapeEntry.append('path').attr("d", star)
+                }
+                if (shapeToDraw == "plus") {
+                    const plus = d3.symbol().type(d3.symbolCross).size(420);
+                    shape = shapeEntry.append('path').attr("d", plus)
+                }
+                if (shapeToDraw == "triangle") {
+                    const triangle = d3.symbol().type(d3.symbolTriangle).size(420);
+                    shape = shapeEntry.append('path').attr("d", triangle)
+                }
+                if (shapeToDraw == "rectangleHorizontal") {
+                    shape = shapeEntry.append('rect').attr('width', 38)
+                        .attr('height', 10)
+                        .attr('x', -20)
+                        .attr('y', -4)
+                }
+
+                if (shapeToDraw == "rectangleVertical") {
+                    shape = shapeEntry.append('rect')
+                        .attr('width', 10)
+                        .attr('height', 38)
+                        .attr('x', -5)
+                        .attr('y', -15)
+                }
             }
             if (shape != null) {
                 shape
@@ -1135,6 +1200,8 @@ function blipWindow(blip, viewpoint) {
 
         .attr("width", 800)
         .attr("height", 600)
+        .attr("style", "background-color:#fff4b8; padding:6px; opacity:0.9")
+
 
     const body = foreignObject
         .append("xhtml:body")
@@ -1177,28 +1244,33 @@ function blipWindow(blip, viewpoint) {
 
 
 
-        for (let propertyName in ratingType.properties) {
-            const property = ratingType.properties[propertyName]
-            let value = blip.rating[propertyName]
-            if (property.type == "time") {
-                // rewrite value to nice date time format
-                const date = new Date(value)
-                value = date.toDateString()
-            }
-            if (property.allowableValues != null && property.allowableValues.length > 0) {
-                value = getLabelForAllowableValue(value, property.allowableValues)
-            }
 
-            // TODO AGGREGATION hard coded property name
-            if (blip.artificial == true && propertyName == "scope") {
-                addProperty(property.label, blip.aggregation.label, ratingDiv)
-            } else if (blip.artificial == true && propertyName == "author") {
-                addProperty(property.label, blip.aggregation.authors, ratingDiv)
-            } else {
+        if (blip.artificial) {
+
+            for (let i = 0; i < viewpoint.propertyVisualMaps.aggregation?.collectProperties.length; i++) {
+                const property = viewpoint.propertyVisualMaps.aggregation?.collectProperties[i]
+                if (property != "-1") {
+                    const value = blip.aggregation[property]
+
+                    addProperty(property, value, ratingDiv)
+                }
+            }
+        } else {
+            for (let propertyName in ratingType.properties) {
+                const property = ratingType.properties[propertyName]
+                let value = blip.rating[propertyName]
+                if (property.type == "time") {
+                    // rewrite value to nice date time format
+                    const date = new Date(value)
+                    value = date.toDateString()
+                }
+                if (property.allowableValues != null && property.allowableValues.length > 0) {
+                    value = getLabelForAllowableValue(value, property.allowableValues)
+                }
                 addProperty(property.label, value, ratingDiv)
             }
-
         }
+
 
 
 

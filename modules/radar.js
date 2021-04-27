@@ -1,9 +1,10 @@
 import { cartesianFromPolar, polarFromCartesian } from './drawingUtilities.js'
 import { getState, getConfiguration, getViewpoint } from './data.js'
+import { supportedShapes,undefinedToDefined } from './utils.js'
 export { drawRadar, subscribeToRadarEvents, publishRadarEvent }
 
 const color_white = "#FFF"
-
+let firstTime = true
 const subscribers = []
 const subscribeToRadarEvents = (subscriber) => { subscribers.push(subscriber) }
 const publishRadarEvent = (event) => { subscribers.forEach((subscriber) => { subscriber(event) }) }
@@ -16,7 +17,7 @@ const styleText = (textElement, configNode, config, alternativeFontSource = null
     ]
     fontStyleElements.forEach((fontStyleElement) => {
         try {
-            let styleProperty = (configNode?.[fontStyleElement.property] ?? configNode?.font?.[fontStyleElement.property] ?? alternativeFontSource?.font?.[fontStyleElement.property]) ?? config.defaultFont[fontStyleElement.property]
+            let styleProperty = (configNode?.[fontStyleElement.property] ?? configNode?.font?.[fontStyleElement.property] ?? alternativeFontSource?.[fontStyleElement.property]) ?? config.defaultFont[fontStyleElement.property]
             textElement
                 .style(fontStyleElement.style
                     , styleProperty
@@ -92,10 +93,14 @@ function drawRadar(viewpoint, elementDecorator = null) {
 }
 
 function initializeRadar(config) {
+    if (firstTime){
+        firstTime=false
+    document.getElementById('aggregationModeToggle').addEventListener("dblclick", () => {publishRadarEvent({ type: "mainRadarConfigurator", tab: "aggregation" })});
+    }
     const svg = d3.select(`svg#${config.svg_id}`)
         .style("background-color", config.colors.background)
-        .attr("width", config.width)
-        .attr("height", config.height)
+        .attr("width", config.width + 150 )
+        .attr("height", config.height+150) // TODO allow adjustment of position and size?? (+150 to provide some wiggling room at the south side of the radar)
     if (svg.node().firstChild) {
         svg.node().removeChild(svg.node().firstChild)
     }
@@ -132,12 +137,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
             e.preventDefault();
         })
 
-    // sectorCanvas.append("line") //horizontal sector boundary
-    //     .attr("x1", 0).attr("y1", 0)
-    //     .attr("x2", config.sectorBoundariesExtended ? 2000 : config.maxRingRadius)
-    //     .attr("y2", 0)
-    //     .style("stroke", config.colors.grid)
-    //     .style("stroke-width", 1);
+
     const initialAngle = parseFloat(config.sectorsConfiguration.initialAngle ?? 0)
     const sectorExpansionFctr = sectorExpansionFactor(config)
     for (let layer = 0; layer < 2; layer++) { // TODO if not edit mode then only one layer
@@ -153,17 +153,8 @@ const drawSectors = function (radar, config, elementDecorator = null) {
             let endAngle = (0.5 - 2 * currentAnglePercentage) * Math.PI
             currentAnglePercentage += sectorAnglePercentage
 
-
-            // .startAngle(((0.5 - 2 *  sectorExpansionFactor(config)) * Math.PI))
-            // .endAngle(( 0.5 - 2 * initialAngle) * Math.PI)  
-
             if (layer == 0) {
-                // using angle and maxring radius, determine x and y for endpoint of line, then draw line
-                // sectorCanvas.append("line")
-                //     .attr("x1", 0).attr("y1", 0)
-                //     .attr("x2", sectorEndpoint.x).attr("y2", - sectorEndpoint.y)
-                //     .style("stroke", config.colors.grid)
-                //     .style("stroke-width", 4);
+
 
                 const sectorArc = d3.arc()
                     .outerRadius(config.maxRingRadius)
@@ -174,15 +165,16 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                 sectorCanvas.append("path")
                     .attr("id", `piePiece${i}`)
                     .attr("d", sectorArc)
-                    .style("fill", sector.backgroundColor ?? color_white)
-                    .attr("opacity", sector.opacity != null ? sector.opacity : 0.6)
+                    .style("fill", sector.backgroundColor ?? (config.sectorsConfiguration.backgroundColor ?? color_white))
+                    .attr("opacity", sector.opacity != null ? sector.opacity : (config.sectorsConfiguration.opacity ?? 0.6))
                     // define borders of sectors
                     .style("stroke", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "red"
-                        : sector?.edge?.color ?? config.sectorsConfiguration?.stroke?.strokeColor ?? "#000")
+                        : sector?.edge?.color ?? config.sectorsConfiguration?.edge?.color ?? "#000")
                     .style("stroke-width", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? 8
-                        : sector?.edge?.width ?? config.sectorsConfiguration?.stroke?.strokeWidth ?? 3
+                        : sector?.edge?.width ?? config.sectorsConfiguration?.edge?.width ?? 3
                     )
-                    .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "" : config.sectorsConfiguration?.stroke?.strokeArray ?? "#000")
+                    .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "" 
+                    : sector?.edge?.strokeArray ?? config.sectorsConfiguration?.edge?.strokeArray)
                     .on('click', () => { const sector = i; publishRadarEvent({ type: "sectorClick", sector: i }) })
                     .on('dblclick', () => { const sector = i; publishRadarEvent({ type: "sectorDblClick", sector: i }) })
 
@@ -202,11 +194,19 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                 sectorCanvas.append("path")
                     .attr("id", `outerring${i}`)
                     .attr("d", outerringArc)
-                    .style("fill", sector?.outerringBackgroundColor ?? "white")
+                    .style("fill", sector?.outerringBackgroundColor ?? (config.sectorsConfiguration.outerringBackgroundColor ?? color_white))
+                    // define borders of sectors
+                    .style("stroke", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "red"
+                        : sector?.edge?.color ?? config.sectorsConfiguration?.edge?.color ?? "#000")
+                    .style("stroke-width", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? 8
+                        : sector?.edge?.width ?? config.sectorsConfiguration?.edge?.width ?? 3
+                    )
+                    .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "" 
+                    : sector?.edge?.strokeArray ?? config.sectorsConfiguration?.edge?.strokeArray)
+                    .attr("opacity", sector.opacityOutsideRings ?? (config.sectorsConfiguration.opacityOutsideRings ?? 1))
+                    .on('dblclick', () => { publishRadarEvent({ type: "sectorDblClick", sector: i }) })
 
-                    .on('dblclick', () => { const sector = i; publishRadarEvent({ type: "sectorDblClick", sector: i }) })
-
-                if (sector?.labelSettings?.showCurved ?? (config?.sectorsConfiguration?.showEdgeSectorLabels)) {
+                if (sector?.labelSettings?.showCurved ?? (config.sectorsConfiguration?.labelSettings?.showCurved ?? true)) {
                     // print sector label along the edge of the arc
                     displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sectorCanvas, i, sector, config, elementDecorator)
                 }
@@ -223,7 +223,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                         .attr("class", "draggable")
 
                 }
-                if (sector?.labelSettings?.showStraight ?? (config?.sectorsConfiguration?.showRegularSectorLabels)) {
+                if (sector?.labelSettings?.showStraight ?? (config.sectorsConfiguration?.labelSettings?.showStraight ?? true)) {
                     // print horizontal sector label in the sector
                     const labelCoordinates = cartesianFromPolar({ phi: 2 * (1 - (currentAnglePercentage - 0.05)) * Math.PI, r: config.maxRingRadius * 1.2 })
                     const sectorLabel = sectorCanvas.append("text")
@@ -237,7 +237,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                         .on('dblclick', () => { console(`sector drilldown`); publishRadarEvent({ type: "sectorDrilldown", sector: i }) }) // facilitate drilldown on sector
                         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, sector.label, `sectorLabel${i}`])
 
-                    styleText(sectorLabel, sector.labelSettings, config, config.sectorsConfiguration)
+                    styleText(sectorLabel, sector.labelSettings, config, config.sectorsConfiguration.labelSettings)
                 }
 
 
@@ -286,12 +286,17 @@ const drawRings = function (radar, config) {
         ringCanvas.append("path")
             .attr("id", `ring${i}`)
             .attr("d", ringArc)
-            .style("fill", ring.backgroundColor != null ? ring.backgroundColor : color_white)
-            .attr("opacity", ring.opacity != null ? ring.opacity : 0.6)
+            .style("fill", ring.backgroundColor ?? (config.ringsConfiguration.backgroundColor ?? color_white))
+            .attr("opacity", ring.opacity != null ? ring.opacity : (config.ringsConfiguration.opacity ?? 0.6))
             // define borders of rings
-            .style("stroke", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "red" : config.ringsConfiguration?.stroke?.strokeColor ?? "#000")
-            .style("stroke-width", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? 6 : config.ringsConfiguration?.stroke?.strokeWidth ?? 2)
-            .style("stroke-dasharray", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "" : config.ringsConfiguration?.stroke?.strokeArray ?? "9 1")
+            .style("stroke", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "red"
+                : ring?.edge?.color ?? config.ringsConfiguration?.edge?.color ?? "#000")
+            .style("stroke-width", ("rings" == config.topLayer && getState().selectedSector == i && getState().editMode) ? 8
+                : ring?.edge?.width ?? config.ringsConfiguration?.edge?.width ?? 3)
+
+            .style("stroke-dasharray", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "" 
+            : ring?.edge?.strokeArray ?? config.ringsConfiguration?.edge?.strokeArray)
+            //config.ringsConfiguration?.stroke?.strokeArray ?? "9 1")
             .on('click', () => { const ring = i; publishRadarEvent({ type: "ringClick", ring: i }) })
             .on('dblclick', () => { console.log(`dbl click on ring`); const sectorring = i; publishRadarEvent({ type: "ringDblClick", ring: i }) })
             .on('contextmenu', (e) => {
@@ -335,6 +340,8 @@ const drawRingLabels = function (radar, config, elementDecorator) {
     for (let i = 0; i < config.ringsConfiguration.rings.length; i++) {
         let ring = config.ringsConfiguration.rings[i]
         if (ring?.visible == false) continue;
+        if (ring?.showStraight ?? config.ringsConfiguration?.showLabel == false) continue;
+
         let currentRadius = currentRadiusPercentage * config.maxRingRadius
         const ringlabel = radar.append("text")
             .attr("id", `ringLabel${i}`)
@@ -350,7 +357,7 @@ const drawRingLabels = function (radar, config, elementDecorator) {
         })
 
             .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, ring.label, `ringLabel${i}`]);
-        styleText(ringlabel, ring.labelSettings, config, config.ringsConfiguration)
+        styleText(ringlabel, ring.labelSettings, config, config.ringsConfiguration.labelSettings)
 
         currentRadiusPercentage = currentRadiusPercentage - ring.width * ringExpansionFactor(config)
     }
@@ -393,7 +400,7 @@ function displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sector
         .attr("id", `sectorLabel${sectorIndex}`)
         .attr("dy", 10)
         .attr("dx", 45)
-    styleText(sectorLabel, sector.labelSettings, config, config.sectorsConfiguration)
+    styleText(sectorLabel, sector.labelSettings, config, config.sectorsConfiguration.labelSettings)
 
     sectorLabel.append("textPath")
 
@@ -543,12 +550,6 @@ const initializeShapesLegend = (viewpoint) => {
         const shapeToDraw = config.shapesConfiguration.shapes[i].shape
         const label = config.shapesConfiguration.shapes[i].label
 
-        // for (let i = 0; i < Object.keys(viewpoint.propertyVisualMaps.shape.valueMap).length; i++) {
-        //     const key = Object.keys(viewpoint.propertyVisualMaps.shape.valueMap)[i]
-        //     const vm = viewpoint.propertyVisualMaps.shape.valueMap[key]
-        //     const shapeToDraw = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].shape
-        //     const label = config.shapesConfiguration.shapes[viewpoint.propertyVisualMaps.shape.valueMap[key]].label
-
         shapesBox.append("text")
             .attr("id", `shapeLabel${i}`)
             .text(label)
@@ -577,6 +578,15 @@ const initializeShapesLegend = (viewpoint) => {
         // .attr("fill", "black")
 
         let shape
+        let supportedShape = supportedShapes[shapeToDraw]
+        if (supportedShape.externalShape == true) {
+            shape = shapeEntry.append("use")
+                .attr('xlink:href', `${supportedShape.externalFile}#${supportedShape.symbolId}`)
+                .attr('transform',`translate(${-supportedShape.viewBoxSize}, ${-supportedShape.viewBoxSize})  scale(${0.18})`)
+                     //supportedShape.scaleFactor * 1/supportedShape.viewBoxSize}) `);
+
+
+        } else {
 
         if (shapeToDraw == "circle") {
             shape = shapeEntry.append("circle")
@@ -617,6 +627,7 @@ const initializeShapesLegend = (viewpoint) => {
                 .attr('y', -15)
 
         }
+    }
         if (shape == null) {
             console.log(`handled exception in shapes legend - shape ${shapeToDraw} cannot be drawn`)
             continue
@@ -717,7 +728,7 @@ const initializeColorsLegend = (viewpoint) => {
         displayedColorsCounter++
     }
     if (viewpoint.blipDisplaySettings.aggregationMode == true) {
-        const colorToShow = "#800040"
+        const colorToShow = undefinedToDefined(viewpoint.propertyVisualMaps?.aggregation?.color,"#800040")
         const label = "Aggregated"
         const colorEntry = colorsBox.append('g')
             .attr("transform", `translate(${circleIndent + 20}, ${30 + (numberOfVisibleColors) * 45})`)

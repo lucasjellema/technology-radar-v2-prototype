@@ -100,6 +100,8 @@ const launchRingEditor = (ringToEdit, viewpoint, drawRadarBlips) => {
 
     html += `<tr><td><label for="edge">Edge Settings</label></td>
      <td><label for="ringEdgeWidth">Width (<span id="ringEdgeHeading">${undefinedToDefined(ring.edge?.width)}</span>)</label><input id="ringEdgeWidth" type="range" min="0" max="15" step="1" value="${ring.edge?.width}"></input>
+     <label for="ringEdgeStrokeArray">Stroke Array</label><input id="ringEdgeStrokeArray" type="text" title="Stroke Array, A list of comma and/or white space separated <length>s and <percentage>s that specify the lengths of alternating dashes and gaps. For example:  3 1 (3 strokes, one gap) or 10, 1 (10 strokes, one gap)" value="${undefinedToDefined( ring.edge?.strokeArray,'')}"></input>
+     
      </td>
      <td ><label for="ringEdgeColor">Color</label><input id="ringEdgeColor" type="color"  value="${ring?.edge?.color ?? "#FFFFFF"}" >
      </td>
@@ -184,6 +186,8 @@ const saveRing = (ringToEdit, ring, viewpoint) => {
     ring.edge = ring.edge ?? {}
     ring.edge.color = getElementValue("ringEdgeColor")
     ring.edge.width = getElementValue("ringEdgeWidth")
+    ring.edge.strokeArray = getElementValue("ringEdgeStrokeArray")
+
 
     ring.labelSettings = ring.labelSettings ?? {}
     ring.labelSettings.fontFamily = getElementValue("ringLabelFont")

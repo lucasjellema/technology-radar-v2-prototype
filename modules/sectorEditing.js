@@ -108,6 +108,7 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
 
     html += `<tr><td><label for="edge">Edge Settings</label></td>
      <td><label for="sectorEdgeWidth">Width (<span id="sectorEdgeHeading">${undefinedToDefined(sector.edge?.width)}</span>)</label><input id="sectorEdgeWidth" type="range" min="0" max="15" step="1" value="${sector.edge?.width}"></input>
+     <label for="sectorEdgeStrokeArray">Stroke Array</label><input id="sectorEdgeStrokeArray" type="text" title="Stroke Array, A list of comma and/or white space separated <length>s and <percentage>s that specify the lengths of alternating dashes and gaps. For example:  3 1 (3 strokes, one gap) or 10, 1 (10 strokes, one gap)" value="${undefinedToDefined( sector.edge?.strokeArray,'')}"></input>
      </td>
      <td ><label for="sectorEdgeColor">Color</label><input id="sectorEdgeColor" type="color"  value="${sector?.edge?.color ?? "#FFFFFF"}" >
      </td>
@@ -196,6 +197,9 @@ const saveSector = (sectorToEdit, sector, viewpoint) => {
     sector.edge = sector.edge ?? {}
     sector.edge.color = getElementValue("sectorEdgeColor")
     sector.edge.width = getElementValue("sectorEdgeWidth")
+    sector.edge.strokeArray = getElementValue("sectorEdgeStrokeArray")
+
+    
 
     sector.labelSettings = sector.labelSettings ?? {}
     sector.labelSettings.fontFamily = getElementValue("sectorLabelFont")
