@@ -1,7 +1,7 @@
 export { launchMainEditor }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
-import { capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, toggleShowHideElement } from './utils.js'
 import { launchSectorConfigurator } from './sectorConfigurator.js'
 import { launchRingConfigurator } from './ringConfigurator.js'
 import { launchDatamodelConfigurator } from './datamodelConfigurator.js'
@@ -46,6 +46,9 @@ const launchMainEditor = (viewpoint, drawRadarBlips, tab) => {
         let html = `
         <label for="radarTitle">Radar Title</label>
         <input id="radarTitle" type="text" value="${viewpoint.template.title.text}" size="60"></input>
+        <br/><br/>
+         <label for="radarDescription">Radar Description</label>
+        <textarea id="radarDescription" cols="100" rows="5" value="${undefinedToDefined(viewpoint.template?.description,"")}" size="60"></textarea>
         <br/><br/><br/><br/>
         `
 
@@ -86,8 +89,7 @@ const launchMainEditor = (viewpoint, drawRadarBlips, tab) => {
 
         const toggle = document.getElementById("advancedToggleRadar")
         toggle.addEventListener("click", () => {
-            console.log(`sjow advanced`)
-            showOrHideElement('advancedradarPropertiesRadar', true)
+            toggleShowHideElement('advancedradarPropertiesRadar')
         })
         populateFontsList('fontsList')
 
@@ -163,6 +165,7 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
 
 const saveRadarSettings = (viewpoint) => {
     viewpoint.template.title.text = getElementValue("radarTitle")
+    viewpoint.template.description = getElementValue("radarDescription")
     viewpoint.template.title.fontFamily = getElementValue("radarLabelFont")
     viewpoint.template.title.fontSize = getElementValue("radarLabelSize")
     viewpoint.template.title.color = getElementValue("radarLabelColor")

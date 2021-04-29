@@ -46,7 +46,7 @@ const launchDatamodelConfigurator = (viewpoint, drawRadarBlips) => {
 
     html += `<h3>Rating Properties for ${ratingType.label}</h3>`
     html += `<input type="button" id="addRatingPropertyButton"  value="Add Rating Property"  style="padding:6px;margin:10px"/>`
-    html += `<table><tr><th>Property</th><th>Label</th><th>Type</th><th>Discrete?</th><th>Allowable Values?</th><th>Delete?</th></tr>`
+    html += `<table><tr><th>Property</th><th>Label</th><th>Type</th><th>Context?</th><th>Discrete?</th><th>Allowable Values?</th><th>Delete?</th></tr>`
     for (let i = 0; i < blipProperties.length; i++) {
         const blipProperty = blipProperties[i]
         if (blipProperty.propertyScope == "rating") {
@@ -54,6 +54,7 @@ const launchDatamodelConfigurator = (viewpoint, drawRadarBlips) => {
                     <td><span id="editProperty${i}" class="clickableProperty">${blipProperty.propertyName}</span></td>
                     <td><span id="editProperty${i}b" class="clickableProperty">${blipProperty.property.label}</span></td>
                     <td>${blipProperty.property.type}</td>
+                    <td>${(blipProperty.property?.context == true) ? "Y" : ""}</td>
                     <td>${(blipProperty.property?.discrete == true) ? "Y" : ""}</td>
                     <td>${(blipProperty.property?.allowableValues != null) ? "Y" : ""}</td>
                     <td><span id="deleteProperty${i}" class="clickableProperty">Delete</span></td>     

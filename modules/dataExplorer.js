@@ -1,7 +1,7 @@
 export { launchDataExplorer }
 import { getLabelForAllowableValue, findDisplayProperty, capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 import { getViewpoint, getData, download, publishRefreshRadar, populateTemplateSelector, createObject, createRating } from './data.js';
-import {launchBlipEditor} from './blipEditing.js'
+import { launchBlipEditor } from './blipEditing.js'
 
 const launchDataExplorer = () => {
 
@@ -40,6 +40,10 @@ const launchDataExplorer = () => {
             }
             else if (data.type == "rating") {
                 ratingViewer(data.id, display)
+
+            }
+            else if (data.type == "viewpoint") {
+                viewpointViewer(data.id, display)
 
             }
             else {
@@ -95,6 +99,9 @@ const objectViewer = (objectId, displayContainer) => {
         const property = objectType.properties[propertyName]
         html = writeProperty(object, propertyName, property, html);
     }
+    html += `<br /> <br /> <input type="button" id="editObject"  value="Edit Object" style="padding:6px;margin:10px" />
+    <input type="button" id="deleteObject"  value="Delete Object" style="padding:6px;margin:10px" />`
+
     displayContainer.innerHTML = html
 }
 
@@ -109,14 +116,27 @@ const ratingViewer = (ratingId, displayContainer) => {
         html = writeProperty(rating, property.propertyPath, property.property, html);
     }
 
-    html += `<br /> <br /> <input type="button" id="editRating"  value="Edit Rating"  />`
+    html += `<br /> <br /> <input type="button" id="editRating"  value="Edit Rating" style="padding:6px;margin:10px" />
+    <input type="button" id="deleteRating"  value="Delete Rating" style="padding:6px;margin:10px" />`
 
 
     displayContainer.innerHTML = html
-    document.getElementById('editRating').addEventListener("click", () =>{
-        launchBlipEditor({rating: rating}, getData().viewpoints[0])
+    document.getElementById('editRating').addEventListener("click", () => {
+        launchBlipEditor({ rating: rating }, getData().viewpoints[0])
 
     })
+}
+
+const viewpointViewer = (viewpointId, displayContainer) => {
+    let html = ``
+    const data = getData()
+    const viewpoint = data.viewpoints[viewpointId]
+     html += `<b>Name</b> ${viewpoint.name}<br/>`
+
+    html += `<br /> <br /> 
+        <input type="button" id="deleteViewpoint"  value="Delete Viewpoint" style="padding:6px;margin:10px" />`
+
+    displayContainer.innerHTML = html
 }
 
 const mapRadarDataToTreeModel = (radarData) => {
@@ -156,10 +176,14 @@ const mapRadarDataToTreeModel = (radarData) => {
     addRatings(data, radarData);
     if (radarData.viewpoints != null && radarData.viewpoints.length > 0) {
         data.viewpoints = { label: "Viewpoints", children: {} }
-        let i = 0
-        radarData.viewpoints.forEach((viewpoint) => {
-            data.viewpoints.children[viewpoint.name] =
-                { label: viewpoint.name, selectable: true, id: `viewpoint${i++}`, children: { blips: { label: `${viewpoint.blips.length} blips`, selectable: true } } }
+
+        radarData.viewpoints.forEach((viewpoint, i) => {
+            const label = `${i + 1}.${viewpoint.name}`
+            data.viewpoints.children[label] =
+            {
+                label: label, selectable: true, id: i, type: "viewpoint"
+                , children: { blips: { label: `${viewpoint.blips.length} blips`, selectable: true } }
+            }
         })
     }
 
@@ -283,12 +307,15 @@ function addRatings(data, radarData) {
         for (let i = 0; i < Object.keys(radarData.model.ratingTypes).length; i++) {
             const ratingType = radarData.model.ratingTypes[Object.keys(radarData.model.ratingTypes)[i]];
             const displayPropertyPath = findDisplayProperty(ratingType.properties).name;
+            const contextPropertyKeys = Object.keys(ratingType.properties).filter((key) => ratingType.properties[key].context == true);
             const objectDisplayPropertyPath = findDisplayProperty(ratingType.objectType.properties).name;
             if (ratingSets[ratingType.name].size > -1) {
                 data.ratings.children[ratingType.name] = { label: ratingType.label, selectable: true, id: `ratings${ratingType.name}`, children: {} };
                 // TODO: HOW TO COMPOSE DISPLAY LABEL FOR RATING?
                 ratingSets[ratingType.name].forEach((rating) => {
-                    const ratingLabel = getNestedPropertyValueFromObject(rating, displayPropertyPath)
+                    // use context properties to derive 
+
+                    const ratingLabel = contextPropertyKeys.reduce((label, propertyKey, i) => { return label + (i > 0 ? " " : "") + rating[propertyKey] }, "")
                         + " for " + getNestedPropertyValueFromObject(rating.object, objectDisplayPropertyPath);
                     data.ratings.children[ratingType.name].children[ratingLabel] = { label: ratingLabel, id: rating.id, type: "rating" };
                 });
@@ -339,7 +366,7 @@ function addObjectTypes(radarData, data) {
                     const property = objectType.properties[Object.keys(objectType.properties)[j]];
                     objectTypeNode.children.properties.children[Object.keys(objectType.properties)[j]] =
                     {
-                        label: property.label==null?property.name:property.label, propertyPath: `object.${Object.keys(objectType.properties)[j]}`,
+                        label: property.label == null ? property.name : property.label, propertyPath: `object.${Object.keys(objectType.properties)[j]}`,
                         objectType: objectType.name, type: "objectType",
                         data: property
                     };
