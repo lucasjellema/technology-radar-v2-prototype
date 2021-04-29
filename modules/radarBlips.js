@@ -4,72 +4,9 @@ import { getViewpoint, getData, publishRefreshRadar, getDistinctTagValues, getSt
 import { supportedShapes, undefinedToDefined, filterBlip, assignBlipsToSegments, findSectorForRating, getLabelForAllowableValue, toggleShowHideElement, getRatingTypeProperties, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
 export { drawRadarBlips, prepareBlipDrawingContext, }
 
-const shapeDefinitionsFile = "shape-definitions.svg"
 const radarCanvasElementId = "radarCanvas"
 const blipsLayerElementId = "blipsLayer"
 let currentViewpoint
-
-const filterBlipX = (blip, viewpoint) => {
-    // console.log(`filter blip ${blip.rating.object.label} with tagfilter ${viewpoint.blipDisplaySettings.tagFilter}`)
-    // determine all tags in the tag filter  - for now as individual strings, no + or - support TODO
-    let blipOK = viewpoint.blipDisplaySettings.tagFilter?.length == 0 // no filter - then blip is ok 
-    if (viewpoint.blipDisplaySettings.tagFilter?.length ?? 0 > 0) {
-
-        let ratingTypeProperties = getRatingTypeProperties(viewpoint.ratingType, getData().model)
-
-        // populate list with all discrete properties plus properties of type tag
-        const discretePropertyPaths = ratingTypeProperties
-            .filter((property) => (property.property?.discrete || property.property?.allowableValues?.length > 0))
-            .map((property) => { return property.propertyPath })
-
-        //if all tags are minus filter, then are starting assumption is that the blip is ok
-        const minusFiltercount = viewpoint.blipDisplaySettings.tagFilter.reduce(
-            (sum, tagFilter) => sum + (tagFilter.type == 'minus' ? 1 : 0)
-            , 0)
-        blipOK = viewpoint.blipDisplaySettings.tagFilter?.length == minusFiltercount
-        try {
-            for (let i = 0; i < viewpoint.blipDisplaySettings.tagFilter.length; i++) {
-                const filter = viewpoint.blipDisplaySettings.tagFilter[i]
-                try {
-                    let blipHasFilter
-                    if (filter.tag.startsWith('"')) {
-                        const labelProperty = viewpoint.propertyVisualMaps.blip?.label
-                        const blipLabel = getNestedPropertyValueFromObject(blip.rating, labelProperty).toLowerCase()
-                        const filterTag = filter.tag.replace(/^"+|"+$/g, '').toLowerCase()
-
-                        blipHasFilter = blipLabel.includes(filterTag)
-                    } else {
-                        blipHasFilter = JSON.stringify(blip.rating.object.tags)?.toLowerCase()?.trim()?.indexOf(filter.tag) > -1
-
-                        // TODO derive discrete properties dynamically from data.model instead of hard coded
-
-                        //  const discretePropertyPaths = ["object.category", "object.offering", "object.vendor", "scope", "ambition", "author"]
-                        for (let j = 0; !blipHasFilter && j < discretePropertyPaths.length; j++) {
-                            blipHasFilter = getNestedPropertyValueFromObject(blip.rating, discretePropertyPaths[j])?.toLowerCase().trim() == filter.tag
-                        }
-                    }
-
-
-                    // minus filter: if tag is in rating.object.tags then blip is not ok  
-                    if (blipHasFilter && filter.type == "minus") {
-                        blipOK = false; break;
-                    }
-
-                    // must filter: if the tag is not in rating.object.tags then the blip cannot be ok
-                    if (!blipHasFilter && filter.type == "must") {
-                        blipOK = false; break;
-                    }
-                    if (blipHasFilter && filter.type == "plus") {
-                        blipOK = true
-                    }
-
-                } catch (e) { console.log(`${e} exception filter for ${JSON.stringify(blip)}`) }
-            }
-        } catch (e) { console.log(`exception in filter blip ${JSON.stringify(e)} ${e}`) }
-    }
-
-    return blipOK
-}
 
 const initializeTagsFilter = () => {
     const filteringTagsContainer = document.getElementById('filteringTagsContainer')
@@ -114,6 +51,8 @@ const initializeTagsFilter = () => {
 
 
 const drawRadarBlips = function (viewpoint) {
+    if (viewpoint==null|| viewpoint["deleted"]==true) return
+
     currentViewpoint = viewpoint
     document.getElementById('showImages').checked = currentViewpoint.blipDisplaySettings.showImages
 
@@ -1023,6 +962,7 @@ const menu = (x, y, d, blip, viewpoint) => {
         .on("click", () => {
             const newBlip = JSON.parse(JSON.stringify(d))
             viewpoint.blips.push(newBlip)
+            newBlip.rating = d.rating
             newBlip.x = newBlip.x != null ? newBlip.x + 15 : null
             newBlip.y = newBlip.y != null ? newBlip.y + 15 : null
             newBlip.id = uuidv4()
@@ -1056,6 +996,7 @@ const menu = (x, y, d, blip, viewpoint) => {
         .on("click", () => {
             const blipIndex = viewpoint.blips.indexOf(d)
             // create tag filters from tags on d
+            // TODO perhaps include discrete properties? (except current sector and ring)
             const tags = d.rating.object.tags
             if (tags != null && tags.length != null) {
                 tags.forEach((tag) => viewpoint.blipDisplaySettings.tagFilter.push({ type: "plus", tag: tag }))

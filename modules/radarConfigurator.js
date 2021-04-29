@@ -1,6 +1,6 @@
 export { launchMainEditor }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
-import { getViewpoint, getData, publishRefreshRadar } from './data.js';
+import { getViewpoint, getRatingListOfOptions,getData, publishRefreshRadar } from './data.js';
 import { capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, toggleShowHideElement } from './utils.js'
 import { launchSectorConfigurator } from './sectorConfigurator.js'
 import { launchRingConfigurator } from './ringConfigurator.js'
@@ -46,10 +46,16 @@ const launchMainEditor = (viewpoint, drawRadarBlips, tab) => {
         let html = `
         <label for="radarTitle">Radar Title</label>
         <input id="radarTitle" type="text" value="${viewpoint.template.title.text}" size="60"></input>
+        <br/>
+        <label for="radarRatingType">Rating Type </label><span id="radarRatingType">   ${undefinedToDefined(viewpoint.ratingType.name)}</span>
+        <br/>
+        <label for="radarTimestamp">Timestamp</label>
+        <input id="radarTimestamp" type="date"  ></input>
         <br/><br/>
          <label for="radarDescription">Radar Description</label>
         <textarea id="radarDescription" cols="100" rows="5" value="${undefinedToDefined(viewpoint.template?.description,"")}" size="60"></textarea>
-        <br/><br/><br/><br/>
+        
+        <br/><br/><br/>
         `
 
         html += `<a href="#" id="advancedToggleRadar" >Show Advanced Properties?</a>
@@ -87,12 +93,15 @@ const launchMainEditor = (viewpoint, drawRadarBlips, tab) => {
         showOrHideElement(`backgroundImageRadar`, !(typeof viewpoint.template.backgroundImage?.image == 'undefined' || viewpoint.template?.backgroundImage?.image == null || viewpoint.template?.backgroundImage?.image.length < 5))
         showOrHideElement('advancedradarPropertiesRadar', false)
 
+        document.getElementById("radarTimestamp").valueAsNumber = viewpoint.timestamp
+
+
         const toggle = document.getElementById("advancedToggleRadar")
         toggle.addEventListener("click", () => {
             toggleShowHideElement('advancedradarPropertiesRadar')
         })
         populateFontsList('fontsList')
-
+             
         initializeImagePaster((imageURL) => {
             document.getElementById("backgroundImageURLRadar").value = imageURL
             document.getElementById(`backgroundImageRadar`).src = imageURL
@@ -169,6 +178,7 @@ const saveRadarSettings = (viewpoint) => {
     viewpoint.template.title.fontFamily = getElementValue("radarLabelFont")
     viewpoint.template.title.fontSize = getElementValue("radarLabelSize")
     viewpoint.template.title.color = getElementValue("radarLabelColor")
+    viewpoint.timestamp = document.getElementById("radarTimestamp").valueAsNumber
     if (viewpoint.template.backgroundImage == null) viewpoint.template.backgroundImage = {}
     viewpoint.template.backgroundImage.image = getElementValue("backgroundImageURLRadar")
     viewpoint.template.backgroundImage.scaleFactor = getElementValue("backgroundImageScaleFactorRadar")

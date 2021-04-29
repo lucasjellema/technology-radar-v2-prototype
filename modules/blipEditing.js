@@ -79,7 +79,7 @@ const launchNewBlipWizard = (viewpoint, drawRadarBlips, segment = null) => {
 </div>
 <h4>Current Rating Context (based on session default settings): 
 ${currentContext.reduce((sum, contextEntry, index) => { return sum + (index == 0 ? "" : ",") + contextEntry.property + "=" + contextEntry.value }, "")}</h4>
-<div id="newblipEditorButtonBar" style="position: absolute; bottom: 25;right: 100;">
+<div id="newblipEditorButtonBar" style="position: absolute; bottom: 25px;right: 100px;">
 
 
 <input id="goEditNewBlip" type="button" value="Create and Edit new Blip"></input>

@@ -103,6 +103,37 @@ const objectViewer = (objectId, displayContainer) => {
     <input type="button" id="deleteObject"  value="Delete Object" style="padding:6px;margin:10px" />`
 
     displayContainer.innerHTML = html
+
+    document.getElementById("deleteObject").addEventListener("click", () => {
+        deleteObject(objectId)
+        launchDataExplorer() // TODO finer grained refresh
+    })
+}
+
+const deleteObject = (objectId) => {
+    // find all ratings that refer to this objectId and delete those blips
+    Object.keys(getData().ratings).forEach((ratingId) => {
+            if (getData().ratings[ratingId].object.id == objectId) {
+                deleteRating(ratingId)
+            }
+        })
+    // remove the object itself
+    delete getData().objects[objectId]
+}
+
+
+const deleteRating = (ratingId) => {
+        // find all blips that refer to this rating and delete those blips
+        getData().viewpoints.forEach((viewpoint) => {
+            viewpoint.blips.forEach((blip, i) => {
+                if (blip.rating.id == ratingId) {
+                    viewpoint.blips.splice(i, 1)
+                }
+            })
+        })
+        // remove the rating itself
+        delete getData().ratings[ratingId]
+
 }
 
 const ratingViewer = (ratingId, displayContainer) => {
@@ -123,7 +154,11 @@ const ratingViewer = (ratingId, displayContainer) => {
     displayContainer.innerHTML = html
     document.getElementById('editRating').addEventListener("click", () => {
         launchBlipEditor({ rating: rating }, getData().viewpoints[0])
+    })
 
+    document.getElementById("deleteRating").addEventListener("click", () => {
+        deleteRating(ratingId)
+        launchDataExplorer() // TODO finer grained refresh
     })
 }
 
@@ -131,12 +166,23 @@ const viewpointViewer = (viewpointId, displayContainer) => {
     let html = ``
     const data = getData()
     const viewpoint = data.viewpoints[viewpointId]
-     html += `<b>Name</b> ${viewpoint.name}<br/>`
+    html += `<b>Name</b> ${viewpoint.template.title.text}<br/>`
+    html += `<b>Rating Type</b> ${undefinedToDefined(viewpoint.ratingType.name)}<br/>`
+
+    html += `<b>Timestamp</b> ${undefinedToDefined( new Date(viewpoint.timestamp).toDateString(),"")}<br/>`
+    html += `<b>Description</b> ${undefinedToDefined( viewpoint.template.description,"")}<br/>`
 
     html += `<br /> <br /> 
         <input type="button" id="deleteViewpoint"  value="Delete Viewpoint" style="padding:6px;margin:10px" />`
 
     displayContainer.innerHTML = html
+
+    document.getElementById("deleteViewpoint").addEventListener("click", () => {
+        viewpoint["deleted"]=true
+        data.viewpoints.splice(viewpointId, 1)
+        launchDataExplorer() // TODO finer grained refresh
+        publishRefreshRadar()
+    })
 }
 
 const mapRadarDataToTreeModel = (radarData) => {
