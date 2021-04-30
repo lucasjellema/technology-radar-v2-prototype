@@ -4,6 +4,7 @@ import { getViewpoint, getData, getState, download, publishRefreshRadar, populat
 import { launchShapeEditor } from './shapeEditing.js'
 import {  assignBlipsToSegments,findSectorForRating, getUniqueFieldValues, filterBlip, getListOfSupportedShapes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, toggleShowHideElement, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, uuidv4, populateDatalistFromValueSet } from './utils.js'
 import { createRadarFromCSV } from './csvWizard.js'
+import { calculateDerivedProperties } from './derivedProperties.js';
 
 const launchFileManager = (viewpoint, drawRadarBlips) => {
     showOrHideElement("modalMain", true)
@@ -203,6 +204,7 @@ const handleUploadedFiles = (contents) => {
     }
 
     populateTemplateSelector()
+    calculateDerivedProperties()
 
 }
 
@@ -563,50 +565,12 @@ const processCSVRecords = (objects, extendAllowableValues, propertyValueMap, rad
                 radarRatings.forEach((rating) => {
                     updateObjectWithPropertyValues(ratingTypeProperties, propertyValueMap, radarFromCSVMap, row, csvFieldToRadarPropertyValueMapper, rating, distinctValueCollectorForObjects, "rating")
                 })
-                // for (let i = 0; i < ratingTypeProperties.length; i++) {
-                //     const prop = ratingTypeProperties[i]
-                //     if (prop.propertyScope == "rating") {
-                //         const propertyName = prop.propertyName
-                //         if (radarFromCSVMap.has(prop.propertyPath)) {
-                //             let valueFromCSV = row[radarFromCSVMap.get(prop.propertyPath)]
 
-                //             // check if valueFromCSV occurs in csvFieldToRadarPropertyValueMapper = if so, the converted value should be used
-                //             if (csvFieldToRadarPropertyValueMapper.hasOwnProperty(prop.propertyPath)) {
-                //                 const convertedValue = csvFieldToRadarPropertyValueMapper[prop.propertyPath][valueFromCSV]
-                //                 if (convertedValue != null && convertedValue != "") {
-                //                     console.log(`converted ${valueFromCSV} to ${convertedValue}`)
-                //                     valueFromCSV = convertedValue
-                //                 }
-                //             }
-
-
-                //             rating[propertyName] = valueFromCSV
-                //             if (prop.property.allowableValues != null) {
-                //                 if (distinctValueCollectorForRatings[propertyName] == null) distinctValueCollectorForRatings[propertyName] = new Set()
-                //                 distinctValueCollectorForRatings[propertyName].add(valueFromCSV)
-                //             }
-                //         } else {
-                //             rating[propertyName] = propertyValueMap[prop.propertyPath]
-                //         }
-                //     }
-                // }
-
-                // for (let i = 0; i < Object.keys(csvToRadarMap).length; i++) {
-                //     const csvField = Object.keys(csvToRadarMap)[i]
-                //     if (!csvToRadarMap[csvField].startsWith("object.")) {
-                //         const propertyName = csvToRadarMap[csvField]
-                //         rating[csvToRadarMap[csvField]] = row[csvField]
-                //         if (getViewpoint().ratingType.properties[propertyName]?.allowableValues != null) {
-                //             if (distinctValueCollectorForRatings[propertyName] == null) distinctValueCollectorForRatings[propertyName] = new Set()
-                //             distinctValueCollectorForRatings[propertyName].add(row[csvField])
-                //         }
-
-                //     }
-                // }
 
             })
         }
     })
+    calculateDerivedProperties()
 
     if (extendAllowableValues) {
         for (let i = 0; i < Object.keys(distinctValueCollectorForObjects).length; i++) {

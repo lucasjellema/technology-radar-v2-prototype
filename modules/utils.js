@@ -5,7 +5,7 @@ export {
     , populateFontsList, populateDataTypesList, populateShapesList,populateColorsList,populateSizesList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
     , getPropertyValuesAndCounts, populateDatalistFromValueSet, getPropertyFromPropertyPath
     , findDisplayProperty, getListOfSupportedShapes, getListOfSupportedColors, getListOfSupportedSizes, getLabelForAllowableValue, getUniqueFieldValues
-    ,filterBlip, assignBlipsToSegments,findSectorForRating, supportedShapes
+    ,filterBlip, assignBlipsToSegments,findSectorForRating, supportedShapes, populateDerivationFunctionList
 }
 
 
@@ -252,6 +252,29 @@ const populateFontsList = (fontsListElementId) => {
     populateDatalistFromValueSet(fontsListElementId, fontsList)
 }
 
+
+const populateDerivationFunctionList = (derivationFunctionListElementId) => {
+    const functionsList = []
+    functionsList.push(`Years Ago from Time`)
+    functionsList.push(`Months Ago from Time`)
+    functionsList.push(`Days Ago from Time`)
+    functionsList.push(`Year from Time`)
+    functionsList.push(`Quarter + Year from Time`)
+    functionsList.push(`Month + Year from Time`)
+    functionsList.push(`Name of Month from Time`)
+    functionsList.push(`Week Number + Year from Time`)
+    functionsList.push(`Name of Weekday from Time`)
+    functionsList.push(`Day of Month from Time`)
+    functionsList.push(`Part of Day from Time`)
+    functionsList.push(`Hour from Time`)
+    functionsList.push(`Value Map (convert base property value)`)
+    functionsList.push(`Range Map (map property value to predefined range)`)
+    functionsList.push(`JavaScript Expression`)
+    
+    
+    populateDatalistFromValueSet(derivationFunctionListElementId, functionsList)
+    
+}
 
 const populateColorsList = (colorsListElementId) => {
 

@@ -122,6 +122,20 @@
                         "discrete": false,
                         "context": false,
                         "displayLabel": false
+                    },
+                    "NEW_PROPERTY": {
+                        "name": "NEW_PROPERTY",
+                        "label": "New Property",
+                        "description": "",
+                        "type": "string",
+                        "defaultValue": "",
+                        "discrete": false,
+                        "derived": true,
+                        "baseProperty": "object.homepage",
+                        "derivationFunction": "",
+                        "derivationFunctionConfiguration": "",
+                        "context": false,
+                        "displayLabel": false
                     }
                 }
             }
@@ -245,6 +259,62 @@
                         "description": "Additional remark regarding this rating",
                         "type": "text",
                         "name": "comment"
+                    },
+                    "RATING_MONTH": {
+                        "name": "RATING_MONTH",
+                        "label": "Month of Rating",
+                        "description": "",
+                        "type": "string",
+                        "defaultValue": "",
+                        "discrete": false,
+                        "derived": true,
+                        "baseProperty": "timestamp",
+                        "derivationFunction": "Month + Year from Time",
+                        "derivationFunctionConfiguration": "",
+                        "context": false,
+                        "displayLabel": false
+                    },
+                    "DAYS_AGO": {
+                        "name": "DAYS_AGO",
+                        "label": "Days Ago",
+                        "description": "",
+                        "type": "number",
+                        "defaultValue": "",
+                        "discrete": false,
+                        "derived": true,
+                        "baseProperty": "timestamp",
+                        "derivationFunction": "Days Ago from Time",
+                        "derivationFunctionConfiguration": "",
+                        "context": false,
+                        "displayLabel": false
+                    },
+                    "SPECIAL_AMBITION": {
+                        "name": "SPECIAL_AMBITION",
+                        "label": "Special Ambition",
+                        "description": "",
+                        "type": "string",
+                        "defaultValue": "",
+                        "discrete": true,
+                        "derived": true,
+                        "baseProperty": "ambition",
+                        "derivationFunction": "Value Map (convert base property value)",
+                        "derivationFunctionConfiguration": "[adopt,production],[donot,deprecated],[*,*]",
+                        "context": false,
+                        "displayLabel": false
+                    },
+                    "freshness": {
+                        "name": "freshness",
+                        "label": "Freshness",
+                        "description": "",
+                        "type": "string",
+                        "defaultValue": "",
+                        "discrete": true,
+                        "derived": true,
+                        "baseProperty": "DAYS_AGO",
+                        "derivationFunction": "Range Map (map property value to predefined range)",
+                        "derivationFunctionConfiguration": "[*,5,fresh],[5,20,recent],[20,*,fairly new],[*,*,other]",
+                        "context": false,
+                        "displayLabel": false
                     }
                 }
             }

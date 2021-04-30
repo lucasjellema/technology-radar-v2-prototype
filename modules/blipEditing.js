@@ -283,21 +283,22 @@ const launchBlipEditor = (blip, viewpoint, drawRadarBlips, editObject = true) =>
 
         const inputElementId = `blip${blipProperty.propertyPath}`
         let inputElement
+        let disabled = blipProperty.property?.derived==true ? " disabled ":""
         if (blipProperty.property.allowableValues != null && blipProperty.property.allowableValues.length > 0) // select
-            inputElement = `<select id="${inputElementId}" ></select>`
+            inputElement = `<select id="${inputElementId}" ${disabled}></select>`
         else if (blipProperty.property.discrete != null && blipProperty.property.discrete) {
             createAndPopulateDataListFromBlipProperties(`${inputElementId}List`, `${blipProperty.propertyPath}`, viewpoint.blips)
-            inputElement = `<input id="${inputElementId}" list="${inputElementId}List" value="${value}"></input>`
+            inputElement = `<input id="${inputElementId}" list="${inputElementId}List" value="${value}" ${disabled}></input>`
         }
         else if (blipProperty.property.type == "text") {
-            inputElement = `<textarea id="${inputElementId}" rows="2" columns="75" value="${value}"></textarea>`
+            inputElement = `<textarea id="${inputElementId}" rows="2" columns="75" value="${value}" ${disabled}></textarea>`
         }
         else if (blipProperty.property.type == "time") {
-            inputElement = `<input id="${inputElementId}" type="date" ></input>`
+            inputElement = `<input id="${inputElementId}" type="date"  ${disabled}></input>`
         }
 
         else {
-            inputElement = `<input id="${inputElementId}" type="text" value="${value}"></input>`
+            inputElement = `<input id="${inputElementId}" type="text" value="${value}"  ${disabled}></input>`
         }
         if (blipProperty.property.type == "image") {
             inputElement = `${inputElement}<img id="${inputElementId}Image" style="padding:6px" src="${value}" width="70px"></img>

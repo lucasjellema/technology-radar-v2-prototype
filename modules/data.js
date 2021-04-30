@@ -5,6 +5,7 @@ export {
     , subscribeToRadarRefresh, getState, publishRefreshRadar, getDistinctTagValues
 }
 
+import { calculateDerivedProperties } from './derivedProperties.js'
 import { uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, getRatingTypeProperties, findDisplayProperty, getDateTimeString } from './utils.js'
 
 const datasetMap = {
@@ -439,6 +440,7 @@ const initializeDatasetFromURL = async () => {
     data = await loaddataset(source)
     // add uuid to objects and ratings - just to be sure
     data.viewpoints.forEach((viewpoint) => addUUIDtoBlips(viewpoint.blips))
+    calculateDerivedProperties()
     publishRefreshRadar()
 }
 
@@ -549,7 +551,7 @@ const loadDataFromLocalStore = () => {
     // for every viewpoint in the index, load document
     //    data = JSON.parse(localStorage[radarIndex.templates[0].title])
     data = JSON.parse(localStorage[RADAR_INDEX_KEY])
-
+calculateDerivedProperties()
     publishRefreshRadar()
 }
 
@@ -573,7 +575,7 @@ const getRatingTypeForRatingTypeName = (ratingTypeOrName) => {
 const getObjectListOfOptions = (objectType = null) => {
     // create [{}] for object labels and id values data is array objects with two properties : label and value
     // note: only objects of the type that is used by the rating type 
-    const objectsListofOptions = []
+    let objectsListofOptions = []
     let objectDisplayLabelProperty = "label" // TODO get display property for object type
     objectDisplayLabelProperty = findDisplayProperty(objectType.properties).name
     for (let i = 0; i < Object.keys(getData().objects).length; i++) {
@@ -584,6 +586,8 @@ const getObjectListOfOptions = (objectType = null) => {
             objectsListofOptions.push({ label: object[objectDisplayLabelProperty], value: object.id })
         }
     }
+
+    objectsListofOptions = [...new Set(objectsListofOptions)] // to remove duplicates
     objectsListofOptions.sort((a, b) => a.label.toLowerCase() < b.label.toLowerCase() ? -1 : 1)
 
     return objectsListofOptions
@@ -670,6 +674,7 @@ async function handleUploadedFiles() {
         // TODO serialize data
         const deserializedData = deserialize(uploadedData)
         data = deserializedData
+        calculateDerivedProperties()
 
         publishRefreshRadar()
 

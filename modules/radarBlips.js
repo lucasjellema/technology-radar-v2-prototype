@@ -1156,6 +1156,7 @@ function blipWindow(blip, viewpoint) {
         for (let propertyName in ratingType.objectType.properties) {
             const property = ratingType.objectType.properties[propertyName]
             let value = blip.rating.object[propertyName]
+            if (value==null) continue;
             if (property.allowableValues != null && property.allowableValues.length > 0) {
                 value = getLabelForAllowableValue(value, property.allowableValues)
             }
@@ -1175,7 +1176,7 @@ function blipWindow(blip, viewpoint) {
 
             else {
 
-                addProperty(property.label, value, body)
+                addProperty(property.label, property.type=="number"? value.toString() :value, body)
             }
         }
 
@@ -1208,7 +1209,7 @@ function blipWindow(blip, viewpoint) {
                 if (property.allowableValues != null && property.allowableValues.length > 0) {
                     value = getLabelForAllowableValue(value, property.allowableValues)
                 }
-                addProperty(property.label, value, ratingDiv)
+                addProperty(property.label,  property.type=="number"? value.toString() :value, ratingDiv)
             }
         }
 
