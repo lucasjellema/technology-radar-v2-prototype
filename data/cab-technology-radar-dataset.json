@@ -193,6 +193,34 @@
                         "description": "Additional remark regarding this rating",
                         "type": "text",
                         "name": "comment"
+                    },
+                    "RATING_MONTH": {
+                        "name": "RATING_MONTH",
+                        "label": "Month of Rating",
+                        "description": "",
+                        "type": "string",
+                        "defaultValue": "",
+                        "discrete": false,
+                        "derived": true,
+                        "baseProperty": "timestamp",
+                        "derivationFunction": "Month + Year from Time",
+                        "derivationFunctionConfiguration": "",
+                        "context": false,
+                        "displayLabel": false
+                    },
+                    "DAYS_AGO": {
+                        "name": "DAYS_AGO",
+                        "label": "Days Ago",
+                        "description": "",
+                        "type": "number",
+                        "defaultValue": "",
+                        "discrete": false,
+                        "derived": true,
+                        "baseProperty": "timestamp",
+                        "derivationFunction": "Days Ago from Time",
+                        "derivationFunctionConfiguration": "",
+                        "context": false,
+                        "displayLabel": false
                     }
                 }
             }
