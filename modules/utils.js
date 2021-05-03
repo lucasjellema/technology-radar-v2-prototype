@@ -1,11 +1,12 @@
 export {
     isOperationBlackedOut, uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject
-    , getRatingTypeProperties, getElementValue, showOrHideElement,toggleShowHideElement, getDateTimeString
+    , getRatingTypeProperties, getElementValue, showOrHideElement, toggleShowHideElement, getDateTimeString
     , populateSelect, getAllKeysMappedToValue, createAndPopulateDataListFromBlipProperties
-    , populateFontsList, populateDataTypesList, populateShapesList,populateColorsList,populateSizesList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
+    , populateFontsList, populateDataTypesList, populateShapesList, populateColorsList, populateSizesList, setTextOnElement, initializeImagePaster, undefinedToDefined, capitalize
     , getPropertyValuesAndCounts, populateDatalistFromValueSet, getPropertyFromPropertyPath
     , findDisplayProperty, getListOfSupportedShapes, getListOfSupportedColors, getListOfSupportedSizes, getLabelForAllowableValue, getUniqueFieldValues
-    ,filterBlip, assignBlipsToSegments,findSectorForRating, supportedShapes, populateDerivationFunctionList
+    , filterBlip, assignBlipsToSegments, findSectorForRating, supportedShapes, populateConversionFunctionSelect, populateDerivationFunctionList
+    , unselectAllTabs 
 }
 
 
@@ -38,7 +39,7 @@ const getPropertyValuesAndCounts = (propertyPath, ratings, ratingTypeName = null
     const valueOccurenceMap = {}
     for (let i = 0; i < Object.keys(ratings).length; i++) {
         const rating = ratings[Object.keys(ratings)[i]]
-        if (ratingTypeName == null || rating.ratingType == ratingTypeName || rating.ratingType?.name == ratingTypeName ) {
+        if (ratingTypeName == null || rating.ratingType == ratingTypeName || rating.ratingType?.name == ratingTypeName) {
             const value = getNestedPropertyValueFromObject(rating, propertyPath)
             const currentCount = valueOccurenceMap[value] ?? 0
             valueOccurenceMap[value] = currentCount + 1
@@ -58,14 +59,14 @@ const uuidv4 = () => {
 const getNestedPropertyValueFromObject = (object, propertyPath) => {
     let value = null
     try {
-    const propertyPathSegments = propertyPath.split('.')
-    value = object
-    for (let i = 0; i < propertyPathSegments.length; i++) {
-        if (value == null) break
-        value = value[propertyPathSegments[i]]
-    }
-    if (typeof value == 'undefined') value = null
-} catch (e) {console.error(`handled exception in getNestedPropertyValueFromObject ${e} for ${propertyPath}`)}
+        const propertyPathSegments = propertyPath.split('.')
+        value = object
+        for (let i = 0; i < propertyPathSegments.length; i++) {
+            if (value == null) break
+            value = value[propertyPathSegments[i]]
+        }
+        if (typeof value == 'undefined') value = null
+    } catch (e) { console.error(`handled exception in getNestedPropertyValueFromObject ${e} for ${propertyPath}`) }
     return value
 }
 
@@ -159,8 +160,8 @@ const findDisplayProperty = (properties) => {
 const getAllKeysMappedToValue = (object, value) => {
     let result = []
     try {
-    result = Object.keys(object).filter(key => object[key] === value);
-    } catch (e) {console.log(`getAllKeysMappedToValue - handled exception ${e} `)}
+        result = Object.keys(object).filter(key => object[key] === value);
+    } catch (e) { console.log(`getAllKeysMappedToValue - handled exception ${e} `) }
     return result
 }
 
@@ -170,7 +171,7 @@ const showOrHideElement = (elementId, show) => {
 }
 const toggleShowHideElement = (elementId) => {
     var x = document.getElementById(elementId);
-    x.style.display = (x.style.display=="none") ? "block" : "none"
+    x.style.display = (x.style.display == "none") ? "block" : "none"
 }
 
 const getDateTimeString = (timestampInMS) => {
@@ -228,6 +229,14 @@ const populateDataTypesList = (datatypesListElementId, value = "string") => {
     populateSelect(datatypesListElementId, datatypesList, value)
 }
 
+
+const populateConversionFunctionSelect = (conversionFunctionSelectElementId, value = "") => {
+    const datatypesList = []
+    datatypesList.push({ label: `Date or Time from ISO date format (YYYY-MM-DD[THH:MI:SS])`, value: `timeFromISO` })
+
+    populateSelect(conversionFunctionSelectElementId, datatypesList, value)
+}
+
 const populateFontsList = (fontsListElementId) => {
     const fontsList = []
     fontsList.push(`Georgia, serif`)
@@ -270,16 +279,30 @@ const populateDerivationFunctionList = (derivationFunctionListElementId) => {
     functionsList.push(`Value Map (convert base property value)`)
     functionsList.push(`Range Map (map property value to predefined range)`)
     functionsList.push(`JavaScript Expression`)
-    
-    
+
+
     populateDatalistFromValueSet(derivationFunctionListElementId, functionsList)
-    
+
 }
 
 const populateColorsList = (colorsListElementId) => {
 
     populateDatalistFromValueSet(colorsListElementId, getListOfSupportedColors())
 }
+
+const removeClassFromElementChildren = (elementId, classname) => {
+    var children = document.getElementById(elementId).children;
+    for (var i = 0; i < children.length; i++) {
+        var child = children[i];
+        child.classList.remove(classname);
+    }
+}
+
+const unselectAllTabs = () => {
+    removeClassFromElementChildren('modalMainTabs', 'selectedTab')
+    removeClassFromElementChildren('modalMainTabs', 'warning') //TODO remove this line as soon as warning is nowhere used anymore
+}
+
 
 const getListOfSupportedColors = () => {
     const colorsList = []
@@ -296,8 +319,8 @@ const getListOfSupportedColors = () => {
     colorsList.push(`#d9d9d9`) // light grey
     colorsList.push(`#666666`) // dark grey
     colorsList.push(`#992600`) // dark red
-    
-    
+
+
     return colorsList
 }
 
@@ -309,14 +332,14 @@ const populateSizesList = (sizesListElementId) => {
 
 const getListOfSupportedSizes = () => {
     const sizesList = []
-    sizesList.push(1) 
-    sizesList.push(0.8) 
-    sizesList.push(1.2) 
-    sizesList.push(0.5) 
-    sizesList.push(1.8) 
-    sizesList.push(2) 
-    sizesList.push(2.5) 
-    sizesList.push(0.2) 
+    sizesList.push(1)
+    sizesList.push(0.8)
+    sizesList.push(1.2)
+    sizesList.push(0.5)
+    sizesList.push(1.8)
+    sizesList.push(2)
+    sizesList.push(2.5)
+    sizesList.push(0.2)
 
     return sizesList
 }
@@ -341,21 +364,21 @@ const supportedShapes = {
     rectangleHorizontal: {},
     rectangleVertical: {},
     star: {},
-    leftArrow: {externalShape:true, symbolId:"icon-arrow-thick-left", externalFile:"shape-definitions.svg", scaleFactor:1, viewBoxSize:20}   , 
-    downArrow: {externalShape:true, symbolId:"icon-arrow-thick-down", externalFile:"shape-definitions.svg", scaleFactor:1, viewBoxSize:20}    ,
-    upArrow: {externalShape:true, symbolId:"icon-arrow-thick-up", externalFile:"shape-definitions.svg", scaleFactor:1, viewBoxSize:20}    ,
-    rightArrow: {externalShape:true, symbolId:"icon-arrow-thick-right", externalFile:"shape-definitions.svg", scaleFactor:1, viewBoxSize:20}, 
-    rightCheveron: {externalShape:true, symbolId:"icon-cheveron-right", externalFile:"shape-definitions.svg", scaleFactor:1, viewBoxSize:20}, 
-    leftCheveron: {externalShape:true, symbolId:"icon-cheveron-left", externalFile:"shape-definitions.svg", scaleFactor:1, viewBoxSize:20}, 
-    upCheveron: {externalShape:true, symbolId:"icon-cheveron-up", externalFile:"shape-definitions.svg", scaleFactor:1, viewBoxSize:20}, 
-    downCheveron: {externalShape:true, symbolId:"icon-cheveron-down", externalFile:"shape-definitions.svg", scaleFactor:1, viewBoxSize:20}, 
-    happySmiley: {externalShape:true, symbolId:"icon-mood-happy-outline", externalFile:"shape-definitions.svg", scaleFactor:0.7, viewBoxSize:20}, 
-    neutralSmiley: {externalShape:true, symbolId:"icon-mood-neutral-outline", externalFile:"shape-definitions.svg", scaleFactor:0.7, viewBoxSize:20}, 
-    sadSmiley: {externalShape:true, symbolId:"icon-mood-sad-outline", externalFile:"shape-definitions.svg", scaleFactor:0.7, viewBoxSize:20}, 
-    location: {externalShape:true, symbolId:"icon-location", externalFile:"shape-definitions.svg", scaleFactor:0.8, viewBoxSize:20}, 
-    cloud: {externalShape:true, symbolId:"icon-cloud", externalFile:"shape-definitions.svg", scaleFactor:0.7, viewBoxSize:20}, 
-    ring: {externalShape:true, symbolId:"icon-radio-unchecked", externalFile:"shape-definitions.svg", scaleFactor:0.55, viewBoxSize:20}, 
-    
+    leftArrow: { externalShape: true, symbolId: "icon-arrow-thick-left", externalFile: "shape-definitions.svg", scaleFactor: 1, viewBoxSize: 20 },
+    downArrow: { externalShape: true, symbolId: "icon-arrow-thick-down", externalFile: "shape-definitions.svg", scaleFactor: 1, viewBoxSize: 20 },
+    upArrow: { externalShape: true, symbolId: "icon-arrow-thick-up", externalFile: "shape-definitions.svg", scaleFactor: 1, viewBoxSize: 20 },
+    rightArrow: { externalShape: true, symbolId: "icon-arrow-thick-right", externalFile: "shape-definitions.svg", scaleFactor: 1, viewBoxSize: 20 },
+    rightCheveron: { externalShape: true, symbolId: "icon-cheveron-right", externalFile: "shape-definitions.svg", scaleFactor: 1, viewBoxSize: 20 },
+    leftCheveron: { externalShape: true, symbolId: "icon-cheveron-left", externalFile: "shape-definitions.svg", scaleFactor: 1, viewBoxSize: 20 },
+    upCheveron: { externalShape: true, symbolId: "icon-cheveron-up", externalFile: "shape-definitions.svg", scaleFactor: 1, viewBoxSize: 20 },
+    downCheveron: { externalShape: true, symbolId: "icon-cheveron-down", externalFile: "shape-definitions.svg", scaleFactor: 1, viewBoxSize: 20 },
+    happySmiley: { externalShape: true, symbolId: "icon-mood-happy-outline", externalFile: "shape-definitions.svg", scaleFactor: 0.7, viewBoxSize: 20 },
+    neutralSmiley: { externalShape: true, symbolId: "icon-mood-neutral-outline", externalFile: "shape-definitions.svg", scaleFactor: 0.7, viewBoxSize: 20 },
+    sadSmiley: { externalShape: true, symbolId: "icon-mood-sad-outline", externalFile: "shape-definitions.svg", scaleFactor: 0.7, viewBoxSize: 20 },
+    location: { externalShape: true, symbolId: "icon-location", externalFile: "shape-definitions.svg", scaleFactor: 0.8, viewBoxSize: 20 },
+    cloud: { externalShape: true, symbolId: "icon-cloud", externalFile: "shape-definitions.svg", scaleFactor: 0.7, viewBoxSize: 20 },
+    ring: { externalShape: true, symbolId: "icon-radio-unchecked", externalFile: "shape-definitions.svg", scaleFactor: 0.55, viewBoxSize: 20 },
+
 }
 
 const undefinedToDefined = (value, definedValue = "") => {
@@ -488,8 +511,8 @@ const filterBlip = (blip, viewpoint, data) => {
     return blipOK
 }
 
-const findSegmentForRating = (rating, viewpoint, blipDrawingContext,data) => {
-    let blipSector = findSectorForRating(rating, viewpoint,data)
+const findSegmentForRating = (rating, viewpoint, blipDrawingContext, data) => {
+    let blipSector = findSectorForRating(rating, viewpoint, data)
     if (blipSector == null) {
         if (blipDrawingContext.othersDimensionValue["sector"] != null) {
             blipSector = blipDrawingContext.othersDimensionValue["sector"]
@@ -512,9 +535,9 @@ const findSegmentForRating = (rating, viewpoint, blipDrawingContext,data) => {
     return { sector: blipSector, ring: blipRing }
 }
 
-function assignBlipsToSegments(filteredBlips, viewpoint, blipDrawingContext,data) {
+function assignBlipsToSegments(filteredBlips, viewpoint, blipDrawingContext, data) {
     filteredBlips.forEach((blip) => {
-        const segment = findSegmentForRating(blip.rating, viewpoint, blipDrawingContext,data)
+        const segment = findSegmentForRating(blip.rating, viewpoint, blipDrawingContext, data)
         if (segment.sector != null
             &&
             (segment.ring >= 0 || (segment.ring == -1 && viewpoint.blipDisplaySettings.showRingMinusOne != false))) {

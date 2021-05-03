@@ -2,7 +2,7 @@ export { launchColorConfigurator, reconfigureColorsFromPropertyPath }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { launchColorEditor } from './colorEditing.js'
-import { getListOfSupportedColors, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { unselectAllTabs, getListOfSupportedColors, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 
 
 
@@ -14,7 +14,8 @@ const launchColorConfigurator = (viewpoint, drawRadarBlips) => {
     const valueOccurrenceMap = (colorVisualMap == null || colorVisualMap["property"] == null) ? null : getValueOccurrenceMap(colorVisualMap["property"], viewpoint, true);
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator - Colors")
-    document.getElementById("colorConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
+    unselectAllTabs()
+    document.getElementById("colorConfigurationTab").classList.add("selectedTab") 
     const contentContainer = document.getElementById("modalMainContentContainer")
 
     let ratingType = viewpoint.ratingType

@@ -2,13 +2,14 @@
 export { launchAggregationConfigurator }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getRatingTypeForRatingTypeName, getViewpoint, getData, publishRefreshRadar } from './data.js';
-import { capitalize, getPropertyFromPropertyPath, populateFontsList, populateShapesList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { unselectAllTabs, capitalize, getPropertyFromPropertyPath, populateFontsList, populateShapesList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 
 
 const launchAggregationConfigurator = (viewpoint, drawRadarBlips) => {
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator - Aggregation Configuration")
-    document.getElementById("aggregationConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
+    unselectAllTabs()
+    document.getElementById("aggregationConfigurationTab").classList.add("selectedTab") 
     const contentContainer = document.getElementById("modalMainContentContainer")
     contentContainer.innerHTML = ''
     let html = `

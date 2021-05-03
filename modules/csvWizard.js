@@ -1,19 +1,20 @@
 export { createRadarFromCSV }
 import { getViewpoint, getData, getState, download, publishRefreshRadar, populateTemplateSelector, createObject, createRating } from './data.js';
-import { getUniqueFieldValues, getListOfSupportedShapes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, toggleShowHideElement, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, uuidv4, populateDatalistFromValueSet } from './utils.js'
+import {  unselectAllTabs,populateDataTypesList,populateConversionFunctionSelect,getUniqueFieldValues, getListOfSupportedShapes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, toggleShowHideElement, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, uuidv4, populateDatalistFromValueSet } from './utils.js'
 import { starterTemplate } from './radarsManagement.js'
 import { reconfigureSectorsFromPropertyPath } from './sectorConfigurator.js'
 import { reconfigureRingsFromPropertyPath } from './ringConfigurator.js'
 import { reconfigureShapesFromPropertyPath } from './shapeConfigurator.js'
 import { reconfigureColorsFromPropertyPath } from './colorConfigurator.js'
 import { reconfigureSizesFromPropertyPath } from './sizeConfigurator.js'
-
+import { publishRadarEvent } from './radar.js';
 
 const createRadarFromCSV = (contents) => {
     const objects = d3.csvParse(contents)
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "CSV to Radar Wizard")
-    document.getElementById("fileConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
+    unselectAllTabs()
+    document.getElementById("fileConfigurationTab").classList.add("selectedTab") // define a class SELECTEDTAB 
     const contentContainer = document.getElementById("modalMainContentContainer")
     let html = ``
     html += `<h3>Create New Radar</h3>`
@@ -37,6 +38,8 @@ const createRadarFromCSV = (contents) => {
 
     html += `<table><tr><th>CSV Field</th><th>Values from CSV</th><th>Name for Radar Property</th>
     <th>Include?</th>
+    <th>Type</th>
+    <th>Conversion</th>
     <th>Object or Rating?</th>
     <th>Display?</th>
     <th>Discrete?</th>
@@ -60,6 +63,8 @@ const createRadarFromCSV = (contents) => {
     <td><span id="values${i}" title="${values}">${uniqueValues.size} different values from CSV</span></td>
     <td><input id="radarProperty${i}" value="${objects.columns[i]}" ></input></td>
     <td><input type="checkbox" id="include${i}" checked></input></td>
+    <td><select id="type${i}" ></select></td>
+    <td><select id="conversionFunction${i}" ></select></td>
     <td><input type="radio" id="object${i}" name="objectOrRating${i}" value="object" checked>  Object?</input>
     <input type="radio" id="rating${i}" name="objectOrRating${i}" value="rating">  Rating?</input>
      </td>
@@ -92,6 +97,8 @@ const createRadarFromCSV = (contents) => {
                 document.getElementById(`${visualDimensions[visualDimensionCounter++]}${i}`).checked = true
             }
         }
+        populateDataTypesList(`type${i}`, "string")
+        populateConversionFunctionSelect(`conversionFunction${i}`, "string")
     }
 
 
@@ -115,6 +122,8 @@ const createRadarFromCSV = (contents) => {
                 const newProperty = {
                     csvField: objects.columns[i]
                     , name: getElementValue(`radarProperty${i}`)
+                    , type: getElementValue(`type${i}`)
+                    , conversionFunction: getElementValue(`conversionFunction${i}`)
                 }
                 if (document.getElementById(`discrete${i}`).checked) {
                     newProperty.uniqueValues = uniqueValues
@@ -213,6 +222,7 @@ const generateRadarFromCSV = (objects, newRadar) => {
 
     // NOT NECESSARY?  publishRadarEvent({ type: "shuffleBlips" })
     publishRefreshRadar()
+    publishRadarEvent({ type: "mainRadarConfigurator", tab: "datamodel" })
 
 }
 
@@ -236,7 +246,12 @@ function generateObjectsAndRatings(objects, objectType, newRadar, ratingType) {
             timestamp: Date.now()
         };
         for (let i = 0; i < newRadar.objectTypeProperties.length; i++) {
-            object[newRadar.objectTypeProperties[i]["name"]] = row[newRadar.objectTypeProperties[i].csvField];
+            let value = row[newRadar.objectTypeProperties[i].csvField]
+            if (newRadar.objectTypeProperties[i].conversionFunction!=null && newRadar.objectTypeProperties[i].conversionFunction!="-1") {
+                value = convertValue(value, newRadar.ratingTypeProperties[i].conversionFunction) 
+            }
+
+            object[newRadar.objectTypeProperties[i]["name"]] = value;
         }
 
         getData().objects[object.id] = object;
@@ -249,7 +264,12 @@ function generateObjectsAndRatings(objects, objectType, newRadar, ratingType) {
             object: object
         };
         for (let i = 0; i < newRadar.ratingTypeProperties.length; i++) {
-            rating[newRadar.ratingTypeProperties[i]["name"]] = row[newRadar.ratingTypeProperties[i].csvField];
+            let value = row[newRadar.ratingTypeProperties[i].csvField]
+            
+            if (newRadar.ratingTypeProperties[i].conversionFunction!=null && newRadar.ratingTypeProperties[i].conversionFunction!="-1") {
+                value = convertValue(value, newRadar.ratingTypeProperties[i].conversionFunction) 
+            }
+            rating[newRadar.ratingTypeProperties[i]["name"]] = value;
         }
 
         getData().ratings[rating.id] = rating;
@@ -257,6 +277,14 @@ function generateObjectsAndRatings(objects, objectType, newRadar, ratingType) {
 
     });
     return newlyCreatedRatings
+}
+
+function convertValue(value, conversionFunction) {
+    let result = value
+    if (conversionFunction=="timeFromISO") {
+        result = new Date(value).getTime();
+    }
+    return result
 }
 
 function createObjectType(newRadar) {
@@ -268,7 +296,7 @@ function createObjectType(newRadar) {
     // create objectType properties 
     for (let i = 0; i < newRadar.objectTypeProperties.length; i++) {
         const newPropertyType = newRadar.objectTypeProperties[i]
-        const newProperty = { name: newPropertyType.name, label: newPropertyType.name, "type": "string" }
+        const newProperty = { name: newPropertyType.name, label: newPropertyType.name, "type": newPropertyType.type??"string" }
         if (newPropertyType.discrete) {
             newProperty.discrete = true
         }
@@ -322,7 +350,7 @@ function createRatingType(newRadar, objectType) {
     // create objectType properties 
     for (let i = 0; i < newRadar.ratingTypeProperties.length; i++) {
         const newPropertyType = newRadar.ratingTypeProperties[i]
-        const newProperty = { name: newPropertyType.name, label: newPropertyType.name, "type": "string" }
+        const newProperty = { name: newPropertyType.name, label: newPropertyType.name, "type": newPropertyType.type??"string" }
         if (newPropertyType.discrete) {
             newProperty.discrete = true
         }

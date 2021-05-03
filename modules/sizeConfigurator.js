@@ -2,7 +2,7 @@ export { launchSizeConfigurator, reconfigureSizesFromPropertyPath }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { launchSizeEditor } from './sizeEditing.js'
-import { getListOfSupportedSizes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { unselectAllTabs,getListOfSupportedSizes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 
 
 
@@ -14,7 +14,8 @@ const launchSizeConfigurator = (viewpoint, drawRadarBlips) => {
     const valueOccurrenceMap = (sizeVisualMap == null || sizeVisualMap["property"] == null) ? null : getValueOccurrenceMap(sizeVisualMap["property"], viewpoint, true);
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator - Sizes")
-    document.getElementById("sizeConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
+    unselectAllTabs()
+    document.getElementById("sizeConfigurationTab").classList.add("selectedTab")
     const contentContainer = document.getElementById("modalMainContentContainer")
 
     let ratingType = viewpoint.ratingType

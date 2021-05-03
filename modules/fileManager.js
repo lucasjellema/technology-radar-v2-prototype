@@ -2,14 +2,18 @@ export { launchFileManager }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, getState, download, publishRefreshRadar, populateTemplateSelector, createObject, createRating } from './data.js';
 import { launchShapeEditor } from './shapeEditing.js'
-import {  assignBlipsToSegments,findSectorForRating, getUniqueFieldValues, filterBlip, getListOfSupportedShapes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, toggleShowHideElement, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, uuidv4, populateDatalistFromValueSet } from './utils.js'
+import { unselectAllTabs , assignBlipsToSegments,findSectorForRating, getUniqueFieldValues, filterBlip, getListOfSupportedShapes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, toggleShowHideElement, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, uuidv4, populateDatalistFromValueSet } from './utils.js'
 import { createRadarFromCSV } from './csvWizard.js'
 import { calculateDerivedProperties } from './derivedProperties.js';
+
 
 const launchFileManager = (viewpoint, drawRadarBlips) => {
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "File Management")
-    document.getElementById("fileConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
+    
+    unselectAllTabs()
+    document.getElementById("fileConfigurationTab").classList.add("selectedTab") 
+
     const contentContainer = document.getElementById("modalMainContentContainer")
     let html = ``
     html += `<input type="button" id="uploadFile" name="upload" value="Upload Radar File"></input>
@@ -647,6 +651,7 @@ function updateObjectWithPropertyValues(ratingTypeProperties, propertyValueMap, 
             }
         }
     }
+    object["dateUpdated"] = Date.now()
 }
 
 function identifyAndAddNewProperties(radarFromCSVMap) {

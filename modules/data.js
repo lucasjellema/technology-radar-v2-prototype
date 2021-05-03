@@ -24,7 +24,9 @@ function addValuesForProperty(propertyPath, blips, distinctValues) {
     const listOfDistinctPropertyValues = new Set()
     for (let i = 0; i < blips.length; i++) {
         const blip = blips[i]
-        listOfDistinctPropertyValues.add(getNestedPropertyValueFromObject(blip.rating, propertyPath)?.toLowerCase().trim())
+        let value = getNestedPropertyValueFromObject(blip.rating, propertyPath)
+        if (typeof(value)=="string") { value = value.toLowerCase().trim()}
+        listOfDistinctPropertyValues.add(value)
     }
     distinctValues = new Set([...distinctValues, ...listOfDistinctPropertyValues])
     return distinctValues
@@ -451,6 +453,7 @@ const createObject = (objectTypeName) => {
     let object = {
         id: uuidv4(),
         timestamp: Date.now(),
+        dateCreated: Date.now(),
         objectType: getData().model.objectTypes[objectTypeName]
     }
     let properties = getData().model.objectTypes[objectTypeName].properties
@@ -468,6 +471,7 @@ const createRating = (ratingTypeName, object) => {
     let rating = {
         id: uuidv4(),
         timestamp: Date.now(),
+        dateCreated: Date.now(),
         ratingType: getData().model.ratingTypes[ratingTypeName],
         pending: true
         , object: object

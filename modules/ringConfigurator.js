@@ -2,7 +2,7 @@ export { launchRingConfigurator, reconfigureRingsFromPropertyPath }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { launchRingEditor } from './ringEditing.js'
-import { capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, toggleShowHideElement } from './utils.js'
+import { unselectAllTabs,capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, toggleShowHideElement } from './utils.js'
 
 
 
@@ -14,7 +14,8 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
     const valueOccurrenceMap = (ringVisualMap == null || ringVisualMap["property"] == null) ? null : getValueOccurrenceMap(ringVisualMap["property"], viewpoint, true);
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator - Rings")
-    document.getElementById("ringsConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
+    unselectAllTabs()
+    document.getElementById("ringsConfigurationTab").classList.add("selectedTab")
     const contentContainer = document.getElementById("modalMainContentContainer")
 
     let ratingType = viewpoint.ratingType

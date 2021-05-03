@@ -207,24 +207,20 @@
             background-color: #2196F3;
         }
 
-        /* Blue */
         .warning {
             background-color: #ff9800;
             font-size: x-large;
         }
 
-        /* Orange */
         .minus {
             background-color: #f44336;
         }
 
-        /* Red */
         .other {
             background-color: #e7e7e7;
             color: black;
         }
 
-        /* Gray */
 
         /* Dropup Button */
         .dropbtn {}
@@ -288,6 +284,14 @@ td.propertyLabel {
   text-align: right;
   padding: 8px;
 }
+
+/* MENU */
+
+.selectedTab {
+    background-color: #ff9800;
+    font-size: x-large;
+}
+
 
 /* TREE */
 

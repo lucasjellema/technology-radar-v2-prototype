@@ -46,6 +46,13 @@ const getWeekday = (timems) => {
     const date = new Date(timems)
     return weekdays[date.getDay()]
 }
+
+const monthnames =["January","February","March","April","May","June","July","August","September","October","November","December"]
+const getMonthName = (timems) => {
+    const date = new Date(timems)
+    return monthnames[date.getMonth()]
+}
+
 const getMonthsAgo = (timems) => {
     const date = new Date(timems)
     const now = Date().now
@@ -137,6 +144,8 @@ derivationFunctions['Month + Year from Time'] = getMonthPlusYear
 derivationFunctions['Quarter + Year from Time'] = getQuarterPlusYear
 derivationFunctions['Year from Time'] = getYear
 derivationFunctions[`Name of Weekday from Time`] = getWeekday
+derivationFunctions[`Name of Month from Time`] = getMonthName
+
 
 
 //derivationFunctions['']= 
@@ -148,6 +157,7 @@ derivationFunctions['Range Map (map property value to predefined range)'] = getR
 
 
 function calculateDerivedPropertiesForEntityType(entityType, objectOrRating) {
+    if (typeof(entityType?.properties) ==="undefined") return
     const derivedProperties = Object.keys(entityType.properties)
         .filter((key) => entityType.properties[key].derived == true)
         .map((key) => entityType.properties[key]);

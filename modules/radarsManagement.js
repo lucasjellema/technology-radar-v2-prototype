@@ -1,13 +1,14 @@
 export { launchRadarsManagementConfigurator , starterTemplate}
 import { getViewpoint, getData, getState, publishRefreshRadar } from './data.js';
-import { uuidv4, capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { unselectAllTabs,uuidv4, capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 import { publishRadarEvent } from './radar.js';
 
 
 const launchRadarsManagementConfigurator = () => {
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Management of Radars")
-    document.getElementById("radarManagementConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
+    unselectAllTabs()
+    document.getElementById("radarManagementConfigurationTab").classList.add("selectedTab") 
     const contentContainer = document.getElementById("modalMainContentContainer")
     contentContainer.innerHTML = ''
     let html = ``
@@ -120,7 +121,7 @@ const createNewRadar = () => {
                     "description": {
                         "label": "Description",
                         "type": "text",
-                        "name": description
+                        "name": "-"
                     }
                 }
                 , timestamp: Date.now()

@@ -142,7 +142,7 @@ const renderTabs = (tab, viewpoint, drawRadarBlips) => {
 `
     tabContainer.innerHTML = html
     const selectedTab = document.getElementById(`${tab ?? "radar"}ConfigurationTab`)
-    if (selectedTab != null) selectedTab.classList.add("warning")
+    if (selectedTab != null) selectedTab.classList.add("selectedTab")
 
     // add tab event listeners
     document.getElementById(`sectorsConfigurationTab`).addEventListener("click"

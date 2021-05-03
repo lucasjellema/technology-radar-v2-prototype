@@ -2,12 +2,13 @@
 export { launchBlipConfigurator }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getRatingTypeForRatingTypeName,getViewpoint, getData, publishRefreshRadar } from './data.js';
-import {  capitalize, getPropertyFromPropertyPath, populateFontsList, populateShapesList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import {  unselectAllTabs, capitalize, getPropertyFromPropertyPath, populateFontsList, populateShapesList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 
 const launchBlipConfigurator = (viewpoint, drawRadarBlips) => {
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator - Blip Configuration")
-    document.getElementById("blipConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
+    unselectAllTabs()
+    document.getElementById("blipConfigurationTab").classList.add("selectedTab") 
     const contentContainer = document.getElementById("modalMainContentContainer")
     contentContainer.innerHTML = ''
     let html = `

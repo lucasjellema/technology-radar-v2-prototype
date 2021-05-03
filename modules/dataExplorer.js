@@ -1,5 +1,5 @@
 export { launchDataExplorer }
-import { getLabelForAllowableValue, findDisplayProperty, capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { unselectAllTabs,getLabelForAllowableValue, findDisplayProperty, capitalize, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 import { getViewpoint, getData, download, publishRefreshRadar, populateTemplateSelector, createObject, createRating } from './data.js';
 import { launchBlipEditor } from './blipEditing.js'
 
@@ -7,7 +7,10 @@ const launchDataExplorer = () => {
 
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Data Explorer")
-    document.getElementById("dataExplorerConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
+    unselectAllTabs()
+  
+
+    document.getElementById("dataExplorerConfigurationTab").classList.add("selectedTab") 
 
     const contentContainer = document.getElementById("modalMainContentContainer")
     let html = ``

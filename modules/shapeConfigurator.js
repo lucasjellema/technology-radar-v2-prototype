@@ -2,7 +2,7 @@ export { launchShapeConfigurator, reconfigureShapesFromPropertyPath }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar } from './data.js';
 import { launchShapeEditor } from './shapeEditing.js'
-import { getListOfSupportedShapes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import {unselectAllTabs, getListOfSupportedShapes, capitalize, getPropertyFromPropertyPath, getPropertyValuesAndCounts, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 
 
 
@@ -14,7 +14,8 @@ const launchShapeConfigurator = (viewpoint, drawRadarBlips) => {
     const valueOccurrenceMap = (shapeVisualMap == null || shapeVisualMap["property"] == null) ? null : getValueOccurrenceMap(shapeVisualMap["property"], viewpoint, true);
     showOrHideElement("modalMain", true)
     setTextOnElement("modalMainTitle", "Radar Configurator - Shapes")
-    document.getElementById("shapeConfigurationTab").classList.add("warning") // define a class SELECTEDTAB 
+    unselectAllTabs()
+    document.getElementById("shapeConfigurationTab").classList.add("selectedTab")
     const contentContainer = document.getElementById("modalMainContentContainer")
 
     let ratingType = viewpoint.ratingType

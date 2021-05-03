@@ -401,7 +401,8 @@ const saveBlipEdit = (editObject) => {
             setNestedPropertyValueOnObject(blip.rating, blipProperty.propertyPath, value)
         }
     }
-
+    blip.rating["dateUpdated"] = Date.now() // TODO only update dateUpdated if any rating properties were updated
+    blip.rating.object["dateUpdated"] = Date.now() // TODO only update dateUpdated if any object properties were updated
     //if blip.pending - this means a new blip is added, one with perhaps a new object and or a new rating
     if (blip.pending) {
         delete blip.pending
@@ -496,6 +497,7 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
             propertyValueDerivedFromRing = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring) // "find value mapped to the ring value of dropRing" 
             }
             setNestedPropertyValueOnObject(blip.rating, propertyMappedToRing, propertyValueDerivedFromRing)
+            blip.rating["dateUpdated"] = Date.now() // TODO only update dateUpdated if a different sector or ring was assigned
         } catch (e) {// blip not found ; for artificial blips, that is not a problem
         }
     }
