@@ -492,7 +492,8 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
 
             let propertyValueDerivedFromRing
             if (dropSegment.ring==-1) {
-                propertyValueDerivedFromRing=null
+                // try to find a value mapped to ring -1
+                propertyValueDerivedFromRing=getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring)
             } else {
             propertyValueDerivedFromRing = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring) // "find value mapped to the ring value of dropRing" 
             }

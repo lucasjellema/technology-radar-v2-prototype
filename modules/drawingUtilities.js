@@ -29,7 +29,8 @@ export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian, addTooltip
    
     let dropSector
     let segmentAnglePercentage // where in the segment in terms of % of the total angle are these coordinates located
-    let angleSum = viewpoint.template.sectorsConfiguration.initialAngle??0
+    let angleSum = viewpoint.template.sectorsConfiguration.initialAngle ?? 0
+    if (typeof(angleSum)=="string") {angleSum = parseFloat(angleSum)}
     // iterate over sectors until sum of sector angles > anglePercentage    ; the last sector is the dropzone 
     for (let i = 0; i < viewpoint.template.sectorsConfiguration.sectors.length; i++) {
         const currentSectorAngle = ((viewpoint.template.sectorsConfiguration.sectors[i]?.visible != false) ?  viewpoint.template.sectorsConfiguration.sectors[i].angle:0)

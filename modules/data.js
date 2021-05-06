@@ -20,6 +20,7 @@ const datasetMap = {
     , cabops :"./data/operational-services-xforce-futurefacts-vs-cfit-furore-hotitem-zuyd-cai-cmc-amis-cas-radar-data.json"
     , cabint :"./data/vs-amis-cai-cab-integration-techradar.json"
     , realint :"./data/real-integration-radar-sysco-link-opitz-amis.json"
+    , cabemerging: "./data/cab-emerging-technologies-radar.json"
 }
 
 
