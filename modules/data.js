@@ -18,7 +18,7 @@ const datasetMap = {
     , cabintegration :"./data/cab-integration-techradar.json"
     , realintegration : "./data/real-techradar-integration.json"
     , cabops :"./data/operational-services-xforce-futurefacts-vs-cfit-furore-hotitem-zuyd-cai-cmc-amis-cas-radar-data.json"
-    , capint :"./data/vs-amis-cai-cab-integration-techradar.json"
+    , cabint :"./data/vs-amis-cai-cab-integration-techradar.json"
 }
 
 
