@@ -6,7 +6,7 @@ export {
     , getPropertyValuesAndCounts, populateDatalistFromValueSet, getPropertyFromPropertyPath
     , findDisplayProperty, getListOfSupportedShapes, getListOfSupportedColors, getListOfSupportedSizes, getLabelForAllowableValue, getUniqueFieldValues
     , filterBlip, assignBlipsToSegments, findSectorForRating, supportedShapes, populateConversionFunctionSelect, populateDerivationFunctionList
-    , unselectAllTabs 
+    , unselectAllTabs , ifElementHasValueThenSetProperty
 }
 
 
@@ -58,6 +58,8 @@ const uuidv4 = () => {
 // also see: https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arrays-by-string-path
 const getNestedPropertyValueFromObject = (object, propertyPath) => {
     let value = null
+    if (propertyPath==null) {}
+    else {
     try {
         const propertyPathSegments = propertyPath.split('.')
         value = object
@@ -67,6 +69,7 @@ const getNestedPropertyValueFromObject = (object, propertyPath) => {
         }
         if (typeof value == 'undefined') value = null
     } catch (e) { console.error(`handled exception in getNestedPropertyValueFromObject ${e} for ${propertyPath}`) }
+}
     return value
 }
 
@@ -564,3 +567,10 @@ const findSectorForRating = (rating, viewpoint, data) => {
 }
 
 
+const ifElementHasValueThenSetProperty = (elementId, object, property) => {
+    const value = getElementValue(elementId)
+    if (value != null &&
+        (typeof (value) != "string") || (value.length > 0)) {
+        object[property] = value
+    }
+}

@@ -1,7 +1,7 @@
 export { launchRingEditor }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
-import { getViewpoint, getData, publishRefreshRadar , getDistinctTagValues} from './data.js';
-import { populateFontsList, populateDatalistFromValueSet, getPropertyFromPropertyPath, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { getViewpoint, getData, publishRefreshRadar, getDistinctTagValues } from './data.js';
+import { ifElementHasValueThenSetProperty, populateFontsList, populateDatalistFromValueSet, getPropertyFromPropertyPath, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 
 
 
@@ -60,7 +60,7 @@ const launchRingEditor = (ringToEdit, viewpoint, drawRadarBlips) => {
     <td>
     <label for="straightRingLabel" >Show Label?</label><input id="straightRingLabel" type="checkbox"  ${ring?.labelSettings?.showStraight ? "checked" : ""}/></td>
     </tr>`
-    html += `<tr><td rowspan="1"><label for="ringDescription">Description</label></td><td><textarea id="ringDescription" value="${undefinedToDefined(ring.description,'')}" rows="3" cols="50"></textarea></td></tr>`
+    html += `<tr><td rowspan="1"><label for="ringDescription">Description</label></td><td><textarea id="ringDescription" value="${undefinedToDefined(ring.description, '')}" rows="3" cols="50"></textarea></td></tr>`
 
     html += `<tr><td><label for="showRing">Visible?</label></td><td><input id="showRing" type="checkbox" ${ring?.visible == false ? "" : "checked"}></input></td></tr>`
     html += `</table><br/><a href="#" id="advancedToggle" >Show Advanced Properties?</a>
@@ -102,7 +102,7 @@ const launchRingEditor = (ringToEdit, viewpoint, drawRadarBlips) => {
 
     html += `<tr><td><label for="edge">Edge Settings</label></td>
      <td><label for="ringEdgeWidth">Width (<span id="ringEdgeHeading">${undefinedToDefined(ring.edge?.width)}</span>)</label><input id="ringEdgeWidth" type="range" min="0" max="15" step="1" value="${ring.edge?.width}"></input>
-     <label for="ringEdgeStrokeArray">Stroke Array</label><input id="ringEdgeStrokeArray" type="text" title="Stroke Array, A list of comma and/or white space separated <length>s and <percentage>s that specify the lengths of alternating dashes and gaps. For example:  3 1 (3 strokes, one gap) or 10, 1 (10 strokes, one gap)" value="${undefinedToDefined( ring.edge?.strokeArray,'')}"></input>
+     <label for="ringEdgeStrokeArray">Stroke Array</label><input id="ringEdgeStrokeArray" type="text" title="Stroke Array, A list of comma and/or white space separated <length>s and <percentage>s that specify the lengths of alternating dashes and gaps. For example:  3 1 (3 strokes, one gap) or 10, 1 (10 strokes, one gap)" value="${undefinedToDefined(ring.edge?.strokeArray, '')}"></input>
      
      </td>
      <td ><label for="ringEdgeColor">Color</label><input id="ringEdgeColor" type="color"  value="${ring?.edge?.color ?? "#FFFFFF"}" >
@@ -138,7 +138,7 @@ const launchRingEditor = (ringToEdit, viewpoint, drawRadarBlips) => {
     document.getElementById("addMappedPropertyValue").addEventListener("click",
         (event) => {
             const propertyValue = document.getElementById("ringPropertyValue").value
-            document.getElementById("ringPropertyValue").value =""
+            document.getElementById("ringPropertyValue").value = ""
             mappedRingPropertyValues.push(propertyValue)
             renderMappedPropertiesEditor(document.getElementById("mappedPropertiesContainer"), mappedRingPropertyValues)
         })
@@ -166,19 +166,23 @@ const launchRingEditor = (ringToEdit, viewpoint, drawRadarBlips) => {
     document.getElementById("launchMainEditor").addEventListener("click", () => {
         hideMe()
 
-        publishRadarEvent({ type: "mainRadarConfigurator", tab:"ring" })
+        publishRadarEvent({ type: "mainRadarConfigurator", tab: "ring" })
     })
 
 }
+
+
+
 const saveRing = (ringToEdit, ring, viewpoint) => {
     console.log(`save changes to ring`)
     const ringVisualMap = viewpoint.propertyVisualMaps["ring"]
-    ring.backgroundColor = getElementValue("ringColorInside")
+    ifElementHasValueThenSetProperty("ringColorInside", ring, "backgroundColor")
+    
     ring.label = getElementValue("ringLabel")
     ring.description = getElementValue("ringDescription")
-    
+
     ring.width = getElementValue("ringWidthPercentage") / 100
-    if (!ring.hasOwnProperty("backgroundImage")) ring.backgroundImage={}
+    if (!ring.hasOwnProperty("backgroundImage")) ring.backgroundImage = {}
     ring.backgroundImage.image = getElementValue("backgroundImageURL")
     ring.backgroundImage.scaleFactor = getElementValue("backgroundImageScaleFactor")
     if (ring.backgroundImage.scaleFactor == null || ring.backgroundImage.scaleFactor.length == 0) {
@@ -186,17 +190,18 @@ const saveRing = (ringToEdit, ring, viewpoint) => {
     }
 
 
-    ring.opacity = getElementValue("ringOpacityInside")
+    
+    ifElementHasValueThenSetProperty("ringOpacityInside", ring, "opacity")
     ring.edge = ring.edge ?? {}
-    ring.edge.color = getElementValue("ringEdgeColor")
-    ring.edge.width = getElementValue("ringEdgeWidth")
-    ring.edge.strokeArray = getElementValue("ringEdgeStrokeArray")
-
+    ifElementHasValueThenSetProperty("ringEdgeColor", ring.edge, "color")
+    ifElementHasValueThenSetProperty("ringEdgeWidth", ring.edge, "width")
+    ifElementHasValueThenSetProperty("ringEdgeStrokeArray", ring.edge, "strokeArray")
 
     ring.labelSettings = ring.labelSettings ?? {}
-    ring.labelSettings.fontFamily = getElementValue("ringLabelFont")
-    ring.labelSettings.color = getElementValue("ringLabelColor")
-    ring.labelSettings.fontSize = getElementValue("ringLabelSize")
+    ifElementHasValueThenSetProperty("ringLabelFont", ring.labelSettings, "fontFamily")
+    ifElementHasValueThenSetProperty("ringLabelColor", ring.labelSettings, "color")
+    ifElementHasValueThenSetProperty("ringLabelSize", ring.labelSettings, "fontSize")
+    
     ring.labelSettings.showStraight = document.getElementById("straightRingLabel").checked
     ring.visible = document.getElementById("showRing").checked
 

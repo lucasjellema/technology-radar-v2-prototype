@@ -1,7 +1,7 @@
 export { launchSectorEditor }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
 import { getViewpoint, getData, publishRefreshRadar , getDistinctTagValues} from './data.js';
-import { populateFontsList, populateDatalistFromValueSet, getPropertyFromPropertyPath, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
+import { ifElementHasValueThenSetProperty,  populateFontsList, populateDatalistFromValueSet, getPropertyFromPropertyPath, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement } from './utils.js'
 
 
 
@@ -181,8 +181,10 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
 const saveSector = (sectorToEdit, sector, viewpoint) => {
     console.log(`save changes to sector`)
     const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
-    sector.backgroundColor = getElementValue("sectorColorInside")
-    sector.outerringBackgroundColor = getElementValue("sectorColorOutside")
+    ifElementHasValueThenSetProperty("sectorColorInside", sector, "backgroundColor")
+    ifElementHasValueThenSetProperty("sectorColorOutside", sector, "outerringBackgroundColor")
+
+    
     sector.label = getElementValue("sectorLabel")
     sector.description = getElementValue("sectorDescription")
     sector.angle = getElementValue("sectorAnglePercentage") / 100
@@ -193,22 +195,21 @@ const saveSector = (sectorToEdit, sector, viewpoint) => {
     }
 
 
-    sector.opacity = getElementValue("sectorOpacityInside")
-    sector.opacityOutsideRings = getElementValue("sectorOpacityOutside")
-
+    ifElementHasValueThenSetProperty("sectorOpacityInside", sector, "opacity")
+    ifElementHasValueThenSetProperty("sectorOpacityOutside", sector, "opacityOutsideRings")
 
 
     sector.edge = sector.edge ?? {}
-    sector.edge.color = getElementValue("sectorEdgeColor")
-    sector.edge.width = getElementValue("sectorEdgeWidth")
-    sector.edge.strokeArray = getElementValue("sectorEdgeStrokeArray")
-
-    
+    ifElementHasValueThenSetProperty("sectorEdgeColor", sector.edge, "color")
+    ifElementHasValueThenSetProperty("sectorEdgeWidth", sector.edge, "width")
+    ifElementHasValueThenSetProperty("sectorEdgeStrokeArray", sector.edge, "strokeArray")
 
     sector.labelSettings = sector.labelSettings ?? {}
-    sector.labelSettings.fontFamily = getElementValue("sectorLabelFont")
-    sector.labelSettings.color = getElementValue("sectorLabelColor")
-    sector.labelSettings.fontSize = getElementValue("sectorLabelSize")
+    ifElementHasValueThenSetProperty("sectorLabelFont", sector.labelSettings, "fontFamily")
+    ifElementHasValueThenSetProperty("sectorLabelColor",sector.labelSettings, "color")
+    ifElementHasValueThenSetProperty("sectorLabelSize", sector.labelSettings, "fontSize")
+
+
     sector.labelSettings.showCurved = document.getElementById("curvedSectorLabel").checked // checkbox?
     sector.labelSettings.showStraight = document.getElementById("straightSectorLabel").checked // checkbox?
     sector.visible = document.getElementById("showSector").checked

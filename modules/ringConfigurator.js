@@ -97,7 +97,11 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
     <input id="defaultRingEdgeWidth" type="range" min="0" max="15" step="1" value="${viewpoint.template.ringsConfiguration?.edge?.width}" style="width:300px"></input>
     <label for="defaultRingEdgeColor">Color</label><input id="defaultRingEdgeColor" type="color"  value="${viewpoint.template.ringsConfiguration?.edge?.color ?? "#FFFFFF"}" >
     <label for="defaultRingEdgeStrokeArray">Stroke Array</label><input id="defaultRingEdgeStrokeArray" type="text" title="Stroke Array, A list of comma and/or white space separated <length>s and <percentage>s that specify the lengths of alternating dashes and gaps. For example:  3 1 (3 strokes, one gap) or 10, 1 (10 strokes, one gap)" value="${undefinedToDefined( viewpoint.template.ringsConfiguration?.edge?.strokeArray,'')}"></input>
-
+    <br />
+    <br />
+    <input id="removeLayoutSettingsFromRings" type="button" value="Remove UI settings from individual rings" 
+    title="Make all rings inherit UI and layout settings defined here - remove all specific settings at individual ring level"></input>
+    
     </div>
     <br/><br/> `
 
@@ -193,7 +197,9 @@ const launchRingConfigurator = (viewpoint, drawRadarBlips) => {
         viewpoint.template.ringsConfiguration.rings.push(newRing)
         launchRingConfigurator(viewpoint)
     })
-
+    document.getElementById("removeLayoutSettingsFromRings").addEventListener("click", () => {
+        removeLayoutSettingsFromAllRings(viewpoint)
+    })
     
     const buttonBar = document.getElementById("modalMainButtonBar")
     buttonBar.innerHTML = `<input id="saveRingSettings" type="button" value="Save Changes"></input>`
@@ -227,6 +233,18 @@ const saveSettings = (viewpoint) => {
     viewpoint.template.ringsConfiguration.edge.strokeArray = getElementValue("defaultRingEdgeStrokeArray")
 
 }
+
+const removeLayoutSettingsFromAllRings = (viewpoint) => {
+    console.log(`remve settingsfrom all rings`)
+    viewpoint.template.ringsConfiguration.rings.forEach((ring) => {
+        // reset layout settings for sectors
+        delete ring.backgroundColor
+        delete ring.opacity
+        ring.edge =  {}
+        ring.labelSettings = {}
+    })
+}
+
 
 const backRing = (ringToMoveBack, viewpoint) => {
     const ringToMove = viewpoint.template.ringsConfiguration.rings[ringToMoveBack]

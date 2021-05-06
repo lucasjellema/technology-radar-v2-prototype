@@ -1,5 +1,5 @@
 export {
-    initializeViewpointFromURL, download, initializeFiltersTagsFromURL, getDefaultSettingsBlip, createRating, createObject
+    initializeViewpointFromURL, download, downloadRadarData, initializeFiltersTagsFromURL, getDefaultSettingsBlip, createRating, createObject
     , setDefaultSettingsBlip, shuffleBlips, getConfiguration, getViewpoint, getData, getObjectById
     , populateTemplateSelector, createBlip, getObjectListOfOptions, getRatingListOfOptions, getRatingTypeForRatingTypeName
     , subscribeToRadarRefresh, getState, publishRefreshRadar, getDistinctTagValues
@@ -25,7 +25,7 @@ function addValuesForProperty(propertyPath, blips, distinctValues) {
     for (let i = 0; i < blips.length; i++) {
         const blip = blips[i]
         let value = getNestedPropertyValueFromObject(blip.rating, propertyPath)
-        if (typeof(value)=="string") { value = value.toLowerCase().trim()}
+        if (typeof(value)=="string") value = value.toLowerCase().trim()
         listOfDistinctPropertyValues.add(value)
     }
     distinctValues = new Set([...distinctValues, ...listOfDistinctPropertyValues])
@@ -623,8 +623,8 @@ function download(filename, text) {
     document.body.removeChild(element);
 }
 
-const downloadRadarData = function () {
-    download(`radar-data.json`, JSON.stringify(serialize(data)))
+const downloadRadarData = function ( filename="radar-data.json", dataSet=data) {
+    download(filename, JSON.stringify(serialize(dataSet)))
 }
 
 
@@ -879,7 +879,7 @@ const populateTemplateSelector = () => {
 
 document.getElementById('save').addEventListener("click", saveDataToLocalStorage);
 document.getElementById('load').addEventListener("click", loadDataFromLocalStore);
-document.getElementById('download').addEventListener("click", downloadRadarData);
+document.getElementById('download').addEventListener("click", (e) => { downloadRadarData()});
 document.getElementById('uploadRadarDatafile').addEventListener("click", uploadRadarData);
 document.getElementById('newTemplate').addEventListener("click", createNewTemplate);
 document.getElementById('cloneTemplate').addEventListener("click", cloneTemplate);

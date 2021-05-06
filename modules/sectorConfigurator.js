@@ -1,13 +1,13 @@
 export { launchSectorConfigurator, reconfigureSectorsFromPropertyPath }
 import { drawRadar, subscribeToRadarEvents, publishRadarEvent } from './radar.js';
-import { getViewpoint, getData, publishRefreshRadar,getState } from './data.js';
+import { getViewpoint, getData, publishRefreshRadar, getState } from './data.js';
 import { launchSectorEditor } from './sectorEditing.js'
-import { unselectAllTabs,capitalize, getPropertyValuesAndCounts, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, toggleShowHideElement } from './utils.js'
+import { unselectAllTabs, capitalize, getPropertyValuesAndCounts, getPropertyFromPropertyPath, populateFontsList, createAndPopulateDataListFromBlipProperties, undefinedToDefined, getAllKeysMappedToValue, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, initializeImagePaster, populateSelect, getElementValue, setTextOnElement, getRatingTypeProperties, showOrHideElement, toggleShowHideElement } from './utils.js'
 
 
 
 
-const launchSectorConfigurator = (viewpoint=getState().currentViewpoint, drawRadarBlips=null) => {
+const launchSectorConfigurator = (viewpoint = getState().currentViewpoint, drawRadarBlips = null) => {
     const sectorVisualMap = viewpoint.propertyVisualMaps["sector"]
     //const valueOccurrenceMap = getPropertyValuesAndCounts(sectorVisualMap["property"], getData().ratings) // TODO only ratings of proper rating type!!
     const valueOccurrenceMap = (sectorVisualMap == null || sectorVisualMap["property"] == null) ? null : getValueOccurrenceMap(sectorVisualMap["property"], viewpoint, true);
@@ -105,8 +105,11 @@ const launchSectorConfigurator = (viewpoint=getState().currentViewpoint, drawRad
     <label for="defaultSectorEdgeWidth">Width (<span id="defaultSectorEdgeHeading">${undefinedToDefined(viewpoint.template.sectorsConfiguration?.edge?.width)}</span>)</label>
     <input id="defaultSectorEdgeWidth" type="range" min="0" max="15" step="1" value="${viewpoint.template.sectorsConfiguration?.edge?.width}" style="width:300px"></input>
     <label for="defaultSectorEdgeColor">Color</label><input id="defaultSectorEdgeColor" type="color"  value="${viewpoint.template.sectorsConfiguration?.edge?.color ?? "#FFFFFF"}" >
-    <label for="defaultSectorEdgeStrokeArray">Stroke Array</label><input id="defaultSectorEdgeStrokeArray" type="text" title="Stroke Array, A list of comma and/or white space separated <length>s and <percentage>s that specify the lengths of alternating dashes and gaps. For example:  3 1 (3 strokes, one gap) or 10, 1 (10 strokes, one gap)" value="${undefinedToDefined( viewpoint.template.sectorsConfiguration?.edge?.strokeArray,'')}"></input>
-
+    <label for="defaultSectorEdgeStrokeArray">Stroke Array</label><input id="defaultSectorEdgeStrokeArray" type="text" title="Stroke Array, A list of comma and/or white space separated <length>s and <percentage>s that specify the lengths of alternating dashes and gaps. For example:  3 1 (3 strokes, one gap) or 10, 1 (10 strokes, one gap)" value="${undefinedToDefined(viewpoint.template.sectorsConfiguration?.edge?.strokeArray, '')}"></input>
+    <br />
+    <br />
+    <input id="removeLayoutSettingsFromSectors" type="button" value="Remove UI settings from individual sectors" 
+    title="Make all sectors inherit UI and layout settings defined here - remove all specific settings at individual sector level"></input>
     </div>
     <br/><br/> `
 
@@ -193,7 +196,7 @@ const launchSectorConfigurator = (viewpoint=getState().currentViewpoint, drawRad
         const newSector = {
             label: "NEW SECTOR",
             angle: 0.05,
-            labelSettings: { },
+            labelSettings: {},
             backgroundImage: {},
         }
         viewpoint.template.sectorsConfiguration.sectors.push(newSector)
@@ -201,6 +204,10 @@ const launchSectorConfigurator = (viewpoint=getState().currentViewpoint, drawRad
 
         launchSectorEditor(viewpoint.template.sectorsConfiguration.sectors.length - 1, viewpoint, drawRadarBlips)
 
+    })
+
+    document.getElementById("removeLayoutSettingsFromSectors").addEventListener("click", () => {
+        removeLayoutSettingsFromAllSectors(viewpoint)
     })
 
     const buttonBar = document.getElementById("modalMainButtonBar")
@@ -236,6 +243,19 @@ const saveSettings = (viewpoint) => {
     viewpoint.template.sectorsConfiguration.edge.strokeArray = getElementValue("defaultSectorEdgeStrokeArray")
 
 
+}
+
+const removeLayoutSettingsFromAllSectors = (viewpoint) => {
+    console.log(`remve settingsfrom all sectors`)
+    viewpoint.template.sectorsConfiguration.sectors.forEach((sector) => {
+        // reset layout settings for sectors
+        delete sector.backgroundColor
+        delete sector.outerringBackgroundColor
+        delete sector.opacity
+        delete sector.opacityOutsideRings
+        sector.edge =  {}
+        sector.labelSettings =  {}
+    })
 }
 
 const backSector = (sectorToMoveBack, viewpoint) => {
@@ -363,7 +383,7 @@ function reconfigureSectorsFromPropertyPath(propertyPath, viewpoint) {
             label: allowableLabel ?? capitalize(Object.keys(valueOccurrenceMap)[i]),
             angle: 1 / Object.keys(valueOccurrenceMap).length,
             labelSettings: {},
-            edge: { },
+            edge: {},
             backgroundImage: {},
 
         };
