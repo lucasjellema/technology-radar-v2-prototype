@@ -1,6 +1,6 @@
-import { cartesianFromPolar, polarFromCartesian } from './drawingUtilities.js'
+import { cartesianFromPolar, polarFromCartesian, addTooltip, removeTooltip } from './drawingUtilities.js'
 import { getState, getConfiguration, getViewpoint } from './data.js'
-import { supportedShapes,undefinedToDefined } from './utils.js'
+import { supportedShapes, undefinedToDefined } from './utils.js'
 export { drawRadar, subscribeToRadarEvents, publishRadarEvent }
 
 const color_white = "#FFF"
@@ -93,14 +93,14 @@ function drawRadar(viewpoint, elementDecorator = null) {
 }
 
 function initializeRadar(config) {
-    if (firstTime){
-        firstTime=false
-    document.getElementById('aggregationModeToggle').addEventListener("dblclick", () => {publishRadarEvent({ type: "mainRadarConfigurator", tab: "aggregation" })});
+    if (firstTime) {
+        firstTime = false
+        document.getElementById('aggregationModeToggle').addEventListener("dblclick", () => { publishRadarEvent({ type: "mainRadarConfigurator", tab: "aggregation" }) });
     }
     const svg = d3.select(`svg#${config.svg_id}`)
         .style("background-color", config.colors.background)
-        .attr("width", config.width + 150 )
-        .attr("height", config.height+150) // TODO allow adjustment of position and size?? (+150 to provide some wiggling room at the south side of the radar)
+        .attr("width", config.width + 150)
+        .attr("height", config.height + 150) // TODO allow adjustment of position and size?? (+150 to provide some wiggling room at the south side of the radar)
     if (svg.node().firstChild) {
         svg.node().removeChild(svg.node().firstChild)
     }
@@ -173,8 +173,8 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                     .style("stroke-width", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? 8
                         : sector?.edge?.width ?? config.sectorsConfiguration?.edge?.width ?? 3
                     )
-                    .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "" 
-                    : sector?.edge?.strokeArray ?? config.sectorsConfiguration?.edge?.strokeArray)
+                    .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? ""
+                        : sector?.edge?.strokeArray ?? config.sectorsConfiguration?.edge?.strokeArray)
                     .on('click', () => { const sector = i; publishRadarEvent({ type: "sectorClick", sector: i }) })
                     .on('dblclick', () => { const sector = i; publishRadarEvent({ type: "sectorDblClick", sector: i }) })
 
@@ -201,8 +201,8 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                     .style("stroke-width", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? 8
                         : sector?.edge?.width ?? config.sectorsConfiguration?.edge?.width ?? 3
                     )
-                    .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? "" 
-                    : sector?.edge?.strokeArray ?? config.sectorsConfiguration?.edge?.strokeArray)
+                    .style("stroke-dasharray", ("sectors" == config.topLayer && getState().selectedSector == i && getState().editMode) ? ""
+                        : sector?.edge?.strokeArray ?? config.sectorsConfiguration?.edge?.strokeArray)
                     .attr("opacity", sector.opacityOutsideRings ?? (config.sectorsConfiguration.opacityOutsideRings ?? 1))
                     .on('dblclick', () => { publishRadarEvent({ type: "sectorDblClick", sector: i }) })
 
@@ -238,6 +238,20 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, sector.label, `sectorLabel${i}`])
 
                     styleText(sectorLabel, sector.labelSettings, config, config.sectorsConfiguration.labelSettings)
+                    
+                    if (sector.description != null && sector.description.length > 0) {
+                        sectorLabel.on("mouseover", (e, d) => {
+                            addTooltip(
+                                (d) => {
+                                    return `<div>     
+                            <i>${sector.description}</i>
+                          </div>`}
+                                , d, e.pageX, e.pageY);
+                        })
+                            .on("mouseout", () => {
+                                removeTooltip();
+                            })
+                    }
                 }
 
 
@@ -294,8 +308,8 @@ const drawRings = function (radar, config) {
             .style("stroke-width", ("rings" == config.topLayer && getState().selectedSector == i && getState().editMode) ? 8
                 : ring?.edge?.width ?? config.ringsConfiguration?.edge?.width ?? 3)
 
-            .style("stroke-dasharray", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? "" 
-            : ring?.edge?.strokeArray ?? config.ringsConfiguration?.edge?.strokeArray)
+            .style("stroke-dasharray", ("rings" == config.topLayer && getState().selectedRing == i && getState().editMode) ? ""
+                : ring?.edge?.strokeArray ?? config.ringsConfiguration?.edge?.strokeArray)
             //config.ringsConfiguration?.stroke?.strokeArray ?? "9 1")
             .on('click', () => { const ring = i; publishRadarEvent({ type: "ringClick", ring: i }) })
             .on('dblclick', () => { console.log(`dbl click on ring`); const sectorring = i; publishRadarEvent({ type: "ringDblClick", ring: i }) })
@@ -351,14 +365,29 @@ const drawRingLabels = function (radar, config, elementDecorator) {
             .attr("text-anchor", "middle")
             .style("user-select", "none")
             .attr("class", getState().editMode ? "draggable" : "")
-            .on('dblclick', () => { console.log(`dbl click on ring`); 
-            handleDrillDown ("ring", i)
+            .on('dblclick', () => {
+                console.log(`dbl click on ring`);
+                handleDrillDown("ring", i)
                 //publishRadarEvent({ type: "ringDrilldown", ring: i }) 
-        })
+            })
 
             .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, ring.label, `ringLabel${i}`]);
-        styleText(ringlabel, ring.labelSettings, config, config.ringsConfiguration.labelSettings)
 
+            styleText(ringlabel, ring.labelSettings, config, config.ringsConfiguration.labelSettings)
+
+        if (ring.description != null && ring.description.length > 0) {
+            ringlabel.on("mouseover", (e, d) => {
+                addTooltip(
+                    (d) => {
+                        return `<div>     
+                <i>${ring.description}</i>
+              </div>`}
+                    , d, e.pageX, e.pageY);
+            })
+                .on("mouseout", () => {
+                    removeTooltip();
+                })
+        }
         currentRadiusPercentage = currentRadiusPercentage - ring.width * ringExpansionFactor(config)
     }
 }
@@ -403,21 +432,27 @@ function displaySectorLabel(currentAnglePercentage, startAngle, endAngle, sector
     styleText(sectorLabel, sector.labelSettings, config, config.sectorsConfiguration.labelSettings)
 
     sectorLabel.append("textPath")
-
         .attr("startOffset", "40%")
         .style("text-anchor", "middle")
         .attr("xlink:href", `#pieText${sectorIndex}`)
         .text(`${sector.label}`)
-        .on('dblclick', () => { 
-            handleDrillDown ("sector", sectorIndex)
-
-            //publishRadarEvent({ type: "sectorDrilldown", sector: sectorIndex }) 
-        }) // facilitate drilldown on sector
-        
-
-
+        .on('dblclick', () => {
+            handleDrillDown("sector", sectorIndex)
+        }) // facilitate drilldown on sector        
         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, sector.label, `sectorLabel${sectorIndex}`]);
-
+    if (sector.description != null && sector.description.length > 0) {
+        sectorLabel.on("mouseover", (e, d) => {
+            addTooltip(
+                (d) => {
+                    return `<div>     
+            <i>${sector.description}</i>
+          </div>`}
+                , d, e.pageX, e.pageY);
+        })
+            .on("mouseout", () => {
+                removeTooltip();
+            })
+    }
 }
 
 const initializeSizesLegend = (viewpoint) => {
@@ -475,7 +510,7 @@ const initializeSizesLegend = (viewpoint) => {
                     d3.event.preventDefault();
                 }
                 e.stopPropagation()
-                handleDrillDown ("size", i)
+                handleDrillDown("size", i)
             })
 
         sizesBox.append("text")
@@ -494,7 +529,7 @@ const initializeSizesLegend = (viewpoint) => {
                     d3.event.preventDefault();
                 }
                 e.stopPropagation()
-                handleDrillDown ("size", i)
+                handleDrillDown("size", i)
 
             })
 
@@ -566,7 +601,7 @@ const initializeShapesLegend = (viewpoint) => {
                     d3.event.preventDefault();
                 }
                 e.stopPropagation()
-                handleDrillDown ("shape", i)
+                handleDrillDown("shape", i)
             })
 
 
@@ -582,52 +617,52 @@ const initializeShapesLegend = (viewpoint) => {
         if (supportedShape.externalShape == true) {
             shape = shapeEntry.append("use")
                 .attr('xlink:href', `${supportedShape.externalFile}#${supportedShape.symbolId}`)
-                .attr('transform',`translate(${-supportedShape.viewBoxSize}, ${-supportedShape.viewBoxSize})  scale(${0.18})`)
-                     //supportedShape.scaleFactor * 1/supportedShape.viewBoxSize}) `);
+                .attr('transform', `translate(${-supportedShape.viewBoxSize}, ${-supportedShape.viewBoxSize})  scale(${0.18})`)
+            //supportedShape.scaleFactor * 1/supportedShape.viewBoxSize}) `);
 
 
         } else {
 
-        if (shapeToDraw == "circle") {
-            shape = shapeEntry.append("circle")
-                .attr("r", 12)
-        }
-        if (shapeToDraw == "diamond") {
-            const diamond = d3.symbol().type(d3.symbolDiamond).size(500);
-            shape = shapeEntry.append('path').attr("d", diamond)
-        }
-        if (shapeToDraw == "square") {
-            const square = d3.symbol().type(d3.symbolSquare).size(500);
-            shape = shapeEntry.append('path').attr("d", square)
-        }
-        if (shapeToDraw == "star") {
-            const star = d3.symbol().type(d3.symbolStar).size(420);
-            shape = shapeEntry.append('path').attr("d", star)
-        }
-        if (shapeToDraw == "plus") {
-            const plus = d3.symbol().type(d3.symbolCross).size(420);
-            shape = shapeEntry.append('path').attr("d", plus)
-        }
-        if (shapeToDraw == "triangle") {
-            const triangle = d3.symbol().type(d3.symbolTriangle).size(420);
-            shape = shapeEntry.append('path').attr("d", triangle)
-        }
+            if (shapeToDraw == "circle") {
+                shape = shapeEntry.append("circle")
+                    .attr("r", 12)
+            }
+            if (shapeToDraw == "diamond") {
+                const diamond = d3.symbol().type(d3.symbolDiamond).size(500);
+                shape = shapeEntry.append('path').attr("d", diamond)
+            }
+            if (shapeToDraw == "square") {
+                const square = d3.symbol().type(d3.symbolSquare).size(500);
+                shape = shapeEntry.append('path').attr("d", square)
+            }
+            if (shapeToDraw == "star") {
+                const star = d3.symbol().type(d3.symbolStar).size(420);
+                shape = shapeEntry.append('path').attr("d", star)
+            }
+            if (shapeToDraw == "plus") {
+                const plus = d3.symbol().type(d3.symbolCross).size(420);
+                shape = shapeEntry.append('path').attr("d", plus)
+            }
+            if (shapeToDraw == "triangle") {
+                const triangle = d3.symbol().type(d3.symbolTriangle).size(420);
+                shape = shapeEntry.append('path').attr("d", triangle)
+            }
 
-        if (shapeToDraw == "rectangleHorizontal") {
-            shape = shapeEntry.append('rect').attr('width', 38)
-                .attr('height', 10)
-                .attr('x', -20)
-                .attr('y', -4)
-        }
-        if (shapeToDraw == "rectangleVertical") {
-            shape = shapeEntry.append('rect')
-                .attr('width', 10)
-                .attr('height', 38)
-                .attr('x', -5)
-                .attr('y', -15)
+            if (shapeToDraw == "rectangleHorizontal") {
+                shape = shapeEntry.append('rect').attr('width', 38)
+                    .attr('height', 10)
+                    .attr('x', -20)
+                    .attr('y', -4)
+            }
+            if (shapeToDraw == "rectangleVertical") {
+                shape = shapeEntry.append('rect')
+                    .attr('width', 10)
+                    .attr('height', 38)
+                    .attr('x', -5)
+                    .attr('y', -15)
 
+            }
         }
-    }
         if (shape == null) {
             console.log(`handled exception in shapes legend - shape ${shapeToDraw} cannot be drawn`)
             continue
@@ -641,8 +676,8 @@ const initializeShapesLegend = (viewpoint) => {
                     d3.event.preventDefault();
                 }
                 e.stopPropagation()
-                handleDrillDown ("shape", i)
-//                publishRadarEvent({ type: "visualDimensionDrilldown", visualDimension :"shape", visualDimensionValue: i })  
+                handleDrillDown("shape", i)
+                //                publishRadarEvent({ type: "visualDimensionDrilldown", visualDimension :"shape", visualDimensionValue: i })  
             })
 
         displayedShapesCounter++
@@ -704,7 +739,7 @@ const initializeColorsLegend = (viewpoint) => {
                     d3.event.preventDefault();
                 }
                 e.stopPropagation()
-                handleDrillDown ("color", i)
+                handleDrillDown("color", i)
             })
 
         colorsBox.append("text")
@@ -723,12 +758,12 @@ const initializeColorsLegend = (viewpoint) => {
                     d3.event.preventDefault();
                 }
                 e.stopPropagation()
-                handleDrillDown ("color", i)
+                handleDrillDown("color", i)
             })
         displayedColorsCounter++
     }
     if (viewpoint.blipDisplaySettings.aggregationMode == true) {
-        const colorToShow = undefinedToDefined(viewpoint.propertyVisualMaps?.aggregation?.color,"#800040")
+        const colorToShow = undefinedToDefined(viewpoint.propertyVisualMaps?.aggregation?.color, "#800040")
         const label = "Aggregated"
         const colorEntry = colorsBox.append('g')
             .attr("transform", `translate(${circleIndent + 20}, ${30 + (numberOfVisibleColors) * 45})`)
@@ -900,8 +935,8 @@ const sectorAndRingMenu = (x, y, sector, ring, config) => {
         .on("click", (e) => {
             console.log(`Drill down on segment`)
             d3.select('.radar-context-menu').remove();
-            handleSegmentDrilldown( getSegment(x, y, config))
- //           publishRadarEvent({ type: "segmentDrilldown", segment: getSegment(x, y, config) })
+            handleSegmentDrilldown(getSegment(x, y, config))
+            //           publishRadarEvent({ type: "segmentDrilldown", segment: getSegment(x, y, config) })
         })
     // menuOptions.append("text")
     //     .text(`Shuffle Blips`)
@@ -937,7 +972,7 @@ const sectorAndRingMenu = (x, y, sector, ring, config) => {
 const getSegment = (x, y, config = getViewpoint().template) => {
     const polar = polarFromCartesian({ x: x - config.width / 2, y: y - config.height / 2 })
     if (polar.phi < 0) { polar.phi += 2 * Math.PI }
-    const blipDrawingContext = getState().blipDrawingContext 
+    const blipDrawingContext = getState().blipDrawingContext
     // find segment for polar coordinates; note: if polar.phi < 0, then add 2*Math.PI??
     let clickSector = -1
     let clickRing = -1
@@ -963,31 +998,31 @@ const getSegment = (x, y, config = getViewpoint().template) => {
 }
 
 const handleDrillDown = (visualDimension, selectedVisualDimensionValue) => {
-        // if currently only one element is visible, the drilldown is actually a drill up and all shapes should be made visible
-        const numberOfVisibleValues = getViewpoint().template[`${visualDimension}sConfiguration`][`${visualDimension}s`].filter((visualDimensionValue) => visualDimensionValue.visible).length
-        if (numberOfVisibleValues == 1) {
-            // drill up: set visible to true for all values ; then redraw radar and blips
-            getViewpoint().template[`${visualDimension}sConfiguration`][`${visualDimension}s`].forEach((visualDimensionValue) => visualDimensionValue.visible = true)
-        } else {
-            // drill down: set visible to false for all values except the selectedVisualDimensionValue ; then redraw radar and blips
-            getViewpoint().template[`${visualDimension}sConfiguration`][`${visualDimension}s`].forEach((visualDimensionValue,i) =>  visualDimensionValue.visible = (i == selectedVisualDimensionValue))
-        }
-        publishRadarEvent({ type: "shuffleBlips" })
-    
+    // if currently only one element is visible, the drilldown is actually a drill up and all shapes should be made visible
+    const numberOfVisibleValues = getViewpoint().template[`${visualDimension}sConfiguration`][`${visualDimension}s`].filter((visualDimensionValue) => visualDimensionValue.visible).length
+    if (numberOfVisibleValues == 1) {
+        // drill up: set visible to true for all values ; then redraw radar and blips
+        getViewpoint().template[`${visualDimension}sConfiguration`][`${visualDimension}s`].forEach((visualDimensionValue) => visualDimensionValue.visible = true)
+    } else {
+        // drill down: set visible to false for all values except the selectedVisualDimensionValue ; then redraw radar and blips
+        getViewpoint().template[`${visualDimension}sConfiguration`][`${visualDimension}s`].forEach((visualDimensionValue, i) => visualDimensionValue.visible = (i == selectedVisualDimensionValue))
+    }
+    publishRadarEvent({ type: "shuffleBlips" })
+
 }
 
 const handleSegmentDrilldown = (segment) => {
-                    // if currently only one segment is visible, the drilldown is actually a drill up and all sectors should be made visible
-                    const numberOfVisibleSectors = getViewpoint().template.sectorsConfiguration.sectors.filter((sector) => sector.visible).length
-                    const numberOfVisibleRings = getViewpoint().template.ringsConfiguration.rings.filter((ring) => ring.visible).length
-                    if (numberOfVisibleSectors == 1 && numberOfVisibleRings == 1) {
-                        // drill up: set visible to true for all sectors ; then redraw radar and blips
-                        getViewpoint().template.sectorsConfiguration.sectors.forEach((sector, i) => sector.visible = true)
-                        getViewpoint().template.ringsConfiguration.rings.forEach((ring, i) => ring.visible = true)
-                    } else {
-                        // set visible to false for all sectors except for sector event.sector; then redraw radar and blips
-                        getViewpoint().template.sectorsConfiguration.sectors.forEach((sector, i) => sector.visible = (i == segment.sector))
-                        getViewpoint().template.ringsConfiguration.rings.forEach((ring, i) => ring.visible = (i == segment.ring))
-                    }
-                    publishRadarEvent({ type: "shuffleBlips" })
+    // if currently only one segment is visible, the drilldown is actually a drill up and all sectors should be made visible
+    const numberOfVisibleSectors = getViewpoint().template.sectorsConfiguration.sectors.filter((sector) => sector.visible).length
+    const numberOfVisibleRings = getViewpoint().template.ringsConfiguration.rings.filter((ring) => ring.visible).length
+    if (numberOfVisibleSectors == 1 && numberOfVisibleRings == 1) {
+        // drill up: set visible to true for all sectors ; then redraw radar and blips
+        getViewpoint().template.sectorsConfiguration.sectors.forEach((sector, i) => sector.visible = true)
+        getViewpoint().template.ringsConfiguration.rings.forEach((ring, i) => ring.visible = true)
+    } else {
+        // set visible to false for all sectors except for sector event.sector; then redraw radar and blips
+        getViewpoint().template.sectorsConfiguration.sectors.forEach((sector, i) => sector.visible = (i == segment.sector))
+        getViewpoint().template.ringsConfiguration.rings.forEach((ring, i) => ring.visible = (i == segment.ring))
+    }
+    publishRadarEvent({ type: "shuffleBlips" })
 }

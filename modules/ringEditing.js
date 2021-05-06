@@ -60,6 +60,8 @@ const launchRingEditor = (ringToEdit, viewpoint, drawRadarBlips) => {
     <td>
     <label for="straightRingLabel" >Show Label?</label><input id="straightRingLabel" type="checkbox"  ${ring?.labelSettings?.showStraight ? "checked" : ""}/></td>
     </tr>`
+    html += `<tr><td rowspan="1"><label for="ringDescription">Description</label></td><td><textarea id="ringDescription" value="${undefinedToDefined(ring.description,'')}" rows="3" cols="50"></textarea></td></tr>`
+
     html += `<tr><td><label for="showRing">Visible?</label></td><td><input id="showRing" type="checkbox" ${ring?.visible == false ? "" : "checked"}></input></td></tr>`
     html += `</table><br/><a href="#" id="advancedToggle" >Show Advanced Properties?</a>
     <table id="advancedRingProperties"><tr>`
@@ -173,6 +175,8 @@ const saveRing = (ringToEdit, ring, viewpoint) => {
     const ringVisualMap = viewpoint.propertyVisualMaps["ring"]
     ring.backgroundColor = getElementValue("ringColorInside")
     ring.label = getElementValue("ringLabel")
+    ring.description = getElementValue("ringDescription")
+    
     ring.width = getElementValue("ringWidthPercentage") / 100
     if (!ring.hasOwnProperty("backgroundImage")) ring.backgroundImage={}
     ring.backgroundImage.image = getElementValue("backgroundImageURL")

@@ -1,4 +1,4 @@
-export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian}
+export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian, addTooltip, removeTooltip}
 
   const cartesianFromPolar = function(polar) {
     return {
@@ -77,3 +77,33 @@ export {cartesianFromPolar , polarFromCartesian,segmentFromCartesian}
    // console.log(`drop blip  ring ${dropRing} ${viewpoint.template.ringsConfiguration.rings[dropRing]?.label}`)
     return {sector: dropSector, ring: dropRing, segmentAnglePercentage: segmentAnglePercentage, segmentWidthPercentage:segmentWidthPercentage}
 }
+
+// Add the tooltip element to the radar
+const tooltipElementId = "tooltip"
+const tooltip = document.querySelector(`#${tooltipElementId}`);
+if (!tooltip) {
+    const tooltipDiv = document.createElement("div");
+    tooltipDiv.classList.add("tooltip"); // refers to div.tooltip CSS style definition
+    tooltipDiv.style.opacity = "0";
+    tooltipDiv.id = tooltipElementId;
+    document.body.appendChild(tooltipDiv);
+}
+const div = d3.select(`#${tooltipElementId}`);
+
+const addTooltip = (hoverTooltip, d, x, y) => { // hoverToolTip is a function that returns the HTML to be displayed in the tooltip
+  div
+      .transition()
+      .duration(200)
+      .style("opacity", 0.8);
+  div
+      .html(hoverTooltip(d))
+      .style("left", `${x + 5}px`)
+      .style("top", `${y - 28}px`);
+};
+
+const removeTooltip = () => {
+  div
+      .transition()
+      .duration(200)
+      .style("opacity", 0);
+};

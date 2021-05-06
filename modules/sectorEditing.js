@@ -60,6 +60,9 @@ const launchSectorEditor = (sectorToEdit, viewpoint, drawRadarBlips) => {
     <td><label for="curvedSectorLabel" >Curved Label?</label><input id="curvedSectorLabel" type="checkbox" ${sector?.labelSettings?.showCurved ? "checked" : ""}/>
     <label for="straightSectorLabel" >Straight Label?</label><input id="straightSectorLabel" type="checkbox"  ${sector?.labelSettings?.showStraight ? "checked" : ""}/></td>
     </tr>`
+    html += `<tr><td rowspan="1"><label for="sectorDescription">Description</label></td><td><textarea id="sectorDescription" value="${undefinedToDefined(sector.description,'')}" rows="3" cols="50"></textarea></td>
+    
+    </tr>`
     html += `<tr><td><label for="showSector">Visible?</label></td><td><input id="showSector" type="checkbox" ${sector?.visible == false ? "" : "checked"}></input></td></tr>`
     html += `</table><br/><a href="#" id="advancedToggle" >Show Advanced Properties?</a>
     <table id="advancedSectorProperties"><tr>`
@@ -181,6 +184,7 @@ const saveSector = (sectorToEdit, sector, viewpoint) => {
     sector.backgroundColor = getElementValue("sectorColorInside")
     sector.outerringBackgroundColor = getElementValue("sectorColorOutside")
     sector.label = getElementValue("sectorLabel")
+    sector.description = getElementValue("sectorDescription")
     sector.angle = getElementValue("sectorAnglePercentage") / 100
     sector.backgroundImage.image = getElementValue("backgroundImageURL")
     sector.backgroundImage.scaleFactor = getElementValue("backgroundImageScaleFactor")

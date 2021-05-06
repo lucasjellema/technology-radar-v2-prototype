@@ -1,4 +1,4 @@
-import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian } from './drawingUtilities.js'
+import { cartesianFromPolar, polarFromCartesian, segmentFromCartesian, addTooltip, removeTooltip  } from './drawingUtilities.js'
 import { launchBlipEditor } from './blipEditing.js'
 import { getViewpoint, getData, publishRefreshRadar, getDistinctTagValues, getState } from './data.js'
 import { supportedShapes, undefinedToDefined, filterBlip, assignBlipsToSegments, findSectorForRating, getLabelForAllowableValue, toggleShowHideElement, getRatingTypeProperties, getPropertyFromPropertyPath, getNestedPropertyValueFromObject, uuidv4, setNestedPropertyValueOnObject } from './utils.js'
@@ -422,7 +422,7 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
             blipColor = "blue"
 
         }
-        //TODO AGGREGATION hard coded aggregated color
+        
         if (d.artificial == true && viewpoint.blipDisplaySettings.aggregationMode) {
             blipColor = undefinedToDefined(viewpoint.propertyVisualMaps.aggregation?.color, "#800040")  // color to indicate aggregation
 
@@ -509,7 +509,6 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     ) { // any content for the tooltip
         blip
             .on("mouseover", (e, d) => {
-
                 addTooltip(
                     (d) => {
                         let content = `<div>     
@@ -642,9 +641,10 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
         }
     }
 
-    if (viewpoint.blipDisplaySettings.showImages && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image) != null) {
+    if (viewpoint.blipDisplaySettings.showImages 
+        && getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps?.blip?.image) != null) {
         let image = blip.append('image')
-            .attr('xlink:href', getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps.blip.image))
+            .attr('xlink:href', getNestedPropertyValueFromObject(d.rating, viewpoint.propertyVisualMaps?.blip?.image))
             .attr('width', 80)
             .attr('height', 40)
             .attr("x", "-40") // if on left side, then move to the left, if on the right side then move to the right
@@ -1051,7 +1051,7 @@ function decorateContextMenuEntry(menuEntry, dimension, value, blip, viewpoint, 
             removeTooltip();
         })
 }
-
+/*
 // Add the tooltip element to the radar
 const tooltipElementId = "blip-tooltip"
 const tooltip = document.querySelector(`#${tooltipElementId}`);
@@ -1082,7 +1082,7 @@ const removeTooltip = () => {
         .style("opacity", 0);
 };
 
-
+*/
 
 
 
