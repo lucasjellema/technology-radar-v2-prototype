@@ -60,7 +60,7 @@ const launchRingEditor = (ringToEdit, viewpoint, drawRadarBlips) => {
     <td>
     <label for="straightRingLabel" >Show Label?</label><input id="straightRingLabel" type="checkbox"  ${ring?.labelSettings?.showStraight ? "checked" : ""}/></td>
     </tr>`
-    html += `<tr><td rowspan="1"><label for="ringDescription">Description</label></td><td><textarea id="ringDescription" value="${undefinedToDefined(ring.description, '')}" rows="3" cols="50"></textarea></td></tr>`
+    html += `<tr><td rowspan="1"><label for="ringDescription">Description</label></td><td><textarea id="ringDescription" rows="3" cols="50">${undefinedToDefined(ring.description, '')}</textarea></td></tr>`
 
     html += `<tr><td><label for="showRing">Visible?</label></td><td><input id="showRing" type="checkbox" ${ring?.visible == false ? "" : "checked"}></input></td></tr>`
     html += `</table><br/><a href="#" id="advancedToggle" >Show Advanced Properties?</a>
