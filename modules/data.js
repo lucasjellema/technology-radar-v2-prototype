@@ -398,6 +398,8 @@ const initializeViewpointFromURL = () => {
     }
 }
 
+// url can pass tags to filter blips
+// example:  &tags=vs,"azure*
 const initializeFiltersTagsFromURL = () => {
     const params = new URLSearchParams(window.location.search)
     const tagParam = params.get('tags')
@@ -446,11 +448,16 @@ const initializeDatasetFromURL = async () => {
     data = await loaddataset(source)
     // add uuid to objects and ratings - just to be sure
     data.viewpoints.forEach((viewpoint) => addUUIDtoBlips(viewpoint.blips))
+
+    initializeViewpointFromURL()
+    initializeFiltersTagsFromURL()
+    
     calculateDerivedProperties()
     publishRefreshRadar()
 }
 
 initializeDatasetFromURL()
+
 //let radarIndex = { templates: [{ title: encodeURI(config.title.text), description: "", lastupdate: "20210310T192400" }], objects: [] }
 
 const createObject = (objectTypeName) => {
