@@ -481,6 +481,7 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
             blip.y = blipDragEvent.newY
             blip.segmentAnglePercentage = dropSegment.segmentAnglePercentage
             blip.segmentWidthPercentage = dropSegment.segmentWidthPercentage
+            blip.locked = true
 
             const propertyMappedToSector = viewpoint.propertyVisualMaps.sector.property
             const propertyValueDerivedFromSector = getKeyForValue(viewpoint.propertyVisualMaps.sector.valueMap, dropSegment.sector) // "find category value mapped to the sector value of dropSector" 
@@ -495,7 +496,7 @@ const handleBlipDrag = function (blipDragEvent, viewpoint) {
                 // try to find a value mapped to ring -1
                 propertyValueDerivedFromRing=getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring)
             } else {
-            propertyValueDerivedFromRing = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring) // "find value mapped to the ring value of dropRing" 
+               propertyValueDerivedFromRing = getKeyForValue(viewpoint.propertyVisualMaps.ring.valueMap, dropSegment.ring) // "find value mapped to the ring value of dropRing" 
             }
             setNestedPropertyValueOnObject(blip.rating, propertyMappedToRing, propertyValueDerivedFromRing)
             blip.rating["dateUpdated"] = Date.now() // TODO only update dateUpdated if a different sector or ring was assigned

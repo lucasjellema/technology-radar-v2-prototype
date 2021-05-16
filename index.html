@@ -245,7 +245,7 @@
         <option value="X"></option>
     </datalist>
     <script type="module">
-        import { drawRadar, subscribeToRadarEvents } from './modules/radar.js';
+        import { drawRadar, subscribeToRadarEvents , shuffleRadar} from './modules/radar.js';
         import { drawRadarBlips } from './modules/radarBlips.js';
         import { initializeViewpointFromURL, publishRefreshRadar, initializeFiltersTagsFromURL, getDefaultSettingsBlip, setDefaultSettingsBlip, shuffleBlips, getConfiguration, getViewpoint, getState, subscribeToRadarRefresh } from './modules/data.js';
         import { makeDraggable } from './modules/blipDrag.js'
@@ -285,7 +285,7 @@
             }
 
             if (event.type == "shuffleBlips") {
-                shuffleBlips()
+                shuffleRadar()
             }
             if (event.type == "sectorDblClick") {
                 launchSectorEditor(event.sector, getViewpoint(), drawRadarBlips)

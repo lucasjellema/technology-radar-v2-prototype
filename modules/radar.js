@@ -1,7 +1,8 @@
 import { cartesianFromPolar, polarFromCartesian, addTooltip, removeTooltip } from './drawingUtilities.js'
-import { getState, getConfiguration, getViewpoint } from './data.js'
+import { publishRefreshRadar, getState, getConfiguration, getViewpoint } from './data.js'
 import { supportedShapes, undefinedToDefined } from './utils.js'
-export { drawRadar, subscribeToRadarEvents, publishRadarEvent }
+import { segmentShuffle } from './blipShuffle.js'
+export { drawRadar, subscribeToRadarEvents, publishRadarEvent, shuffleRadar }
 
 const color_white = "#FFF"
 let firstTime = true
@@ -24,6 +25,16 @@ const styleText = (textElement, configNode, config, alternativeFontSource = null
                 )
         } catch (e) { console.log(`Exception in styleText for ${JSON.stringify(fontStyleElement)} applied to ${JSON.stringify(textElement)}`) }
     })
+}
+
+const shuffleRadar = () => {
+    for (let i = 0; i < getConfiguration().sectorsConfiguration.sectors.length; i++) {
+        for (let j = 0; j < getConfiguration().ringsConfiguration.rings.length; j++) {
+            if (getConfiguration().sectorsConfiguration.sectors[i].visible == true && getConfiguration().ringsConfiguration.rings[j].visible == true) {
+                segmentShuffle({ sector: i, ring: j })
+            }
+        }
+    }
 }
 
 function drawRadar(viewpoint, elementDecorator = null) {
@@ -238,7 +249,7 @@ const drawSectors = function (radar, config, elementDecorator = null) {
                         .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, sector.label, `sectorLabel${i}`])
 
                     styleText(sectorLabel, sector.labelSettings, config, config.sectorsConfiguration.labelSettings)
-                    
+
                     if (sector.description != null && sector.description.length > 0) {
                         sectorLabel.on("mouseover", (e, d) => {
                             addTooltip(
@@ -373,7 +384,7 @@ const drawRingLabels = function (radar, config, elementDecorator) {
 
             .call(elementDecorator ? elementDecorator : () => { }, [`svg#${config.svg_id}`, ring.label, `ringLabel${i}`]);
 
-            styleText(ringlabel, ring.labelSettings, config, config.ringsConfiguration.labelSettings)
+        styleText(ringlabel, ring.labelSettings, config, config.ringsConfiguration.labelSettings)
 
         if (ring.description != null && ring.description.length > 0) {
             ringlabel.on("mouseover", (e, d) => {
@@ -889,8 +900,8 @@ const sectorAndRingMenu = (x, y, sector, ring, config) => {
         .attr('transform', `translate(${x},${y + 30})`)
 
 
-    const width = 170
-    const height = 130
+    const width = 190
+    const height = 150
     contextMenu.append('rect')
         .attr('width', width)
         .attr('height', height)
@@ -914,7 +925,7 @@ const sectorAndRingMenu = (x, y, sector, ring, config) => {
         .attr("transform", `translate(${initialColumnIndent}, ${20})`)
 
     menuOptions.append("text")
-        .text(`Create Blip`)
+        .text(`Create Blip in Segment`)
         .style("fill", "blue")
         .style("font-family", "Arial, Helvetica")
         .style("font-size", "15px")
@@ -938,6 +949,48 @@ const sectorAndRingMenu = (x, y, sector, ring, config) => {
             handleSegmentDrilldown(getSegment(x, y, config))
             //           publishRadarEvent({ type: "segmentDrilldown", segment: getSegment(x, y, config) })
         })
+    menuOptions.append("text")
+        .text(`Shuffle Segment`)
+        .attr("transform", `translate(0, ${50})`)
+        .style("fill", "blue")
+        .style("font-family", "Arial, Helvetica")
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
+        .on("click", (e) => {
+            console.log(`Shuffle segment`)
+            d3.select('.radar-context-menu').remove();
+            segmentShuffle(getSegment(x, y, config))
+        })
+
+    menuOptions.append("text")
+        .text(`Unlock Segment`)
+        .attr("transform", `translate(0, ${75})`)
+        .style("fill", "blue")
+        .style("font-family", "Arial, Helvetica")
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
+        .on("click", (e) => {
+            d3.select('.radar-context-menu').remove();
+            // unlock all blips in the segment getSegment(x, y, config)
+            const segment = getSegment(x, y, config)
+            const segmentContext = getState().blipDrawingContext.segmentMatrix[segment.sector][segment.ring]
+            segmentContext.blips.forEach((blip) => { delete blip.locked })
+        })
+    menuOptions.append("text")
+        .text(`Lock Segment`)
+        .attr("transform", `translate(0, ${100})`)
+        .style("fill", "blue")
+        .style("font-family", "Arial, Helvetica")
+        .style("font-size", "15px")
+        .style("font-weight", "bold")
+        .on("click", (e) => {
+            d3.select('.radar-context-menu').remove();
+            // lock all blips in the segment getSegment(x, y, config)
+            const segment = getSegment(x, y, config)
+            const segmentContext = getState().blipDrawingContext.segmentMatrix[segment.sector][segment.ring]
+            segmentContext.blips.forEach((blip) => { blip.locked = true })
+        })
+
     // menuOptions.append("text")
     //     .text(`Shuffle Blips`)
     //     .attr("transform", `translate(0, ${50})`)
@@ -1007,7 +1060,8 @@ const handleDrillDown = (visualDimension, selectedVisualDimensionValue) => {
         // drill down: set visible to false for all values except the selectedVisualDimensionValue ; then redraw radar and blips
         getViewpoint().template[`${visualDimension}sConfiguration`][`${visualDimension}s`].forEach((visualDimensionValue, i) => visualDimensionValue.visible = (i == selectedVisualDimensionValue))
     }
-    publishRadarEvent({ type: "shuffleBlips" })
+    //  publishRadarEvent({ type: "shuffleBlips" })
+    publishRefreshRadar()
 
 }
 
@@ -1024,5 +1078,6 @@ const handleSegmentDrilldown = (segment) => {
         getViewpoint().template.sectorsConfiguration.sectors.forEach((sector, i) => sector.visible = (i == segment.sector))
         getViewpoint().template.ringsConfiguration.rings.forEach((ring, i) => ring.visible = (i == segment.ring))
     }
-    publishRadarEvent({ type: "shuffleBlips" })
+    //    publishRadarEvent({ type: "shuffleBlips" })
+    publishRefreshRadar()
 }

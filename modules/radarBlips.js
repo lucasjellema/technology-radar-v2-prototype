@@ -183,8 +183,7 @@ const drawRadarBlips = function (viewpoint) {
         .data(visibleBlips)
         .enter()
         .append("g")
-        .attr("class", "blip")
-        .attr("class", "draggable-group")
+        .attr("class", "blip draggable-group")
         // .on("dblclick", function (d) { showModal(d); })
 
         .on('contextmenu', (e, d) => {
@@ -484,7 +483,8 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
         const phi = 2 * (1 - anglePercentage) * Math.PI
         const r = (1 - widthPercentage) * viewpoint.template.maxRingRadius
         xy = cartesianFromPolar({ r: r, phi: phi })
-
+        d.r = r
+        d.phi = phi
 
 
     } else {
@@ -502,6 +502,12 @@ const drawRadarBlip = (blip, d, viewpoint, blipDrawingContext) => {
     let scaleFactor = aggregationScaleFactor * ( blipSize * viewpoint.blipDisplaySettings.blipScaleFactor ?? 1)
     blip.attr("transform", `translate(${xy.x},${xy.y}) scale(${scaleFactor})`)
         .attr("id", `blip-${d.id}`)
+
+    d.x = xy.x
+    d.y = xy.y
+    d.scaleFactor = scaleFactor
+
+       
     if (!viewpoint.blipDisplaySettings.showLabels
         || (!viewpoint.blipDisplaySettings.showImages && d.rating.object.image
             || d.artificial == true
@@ -1003,6 +1009,21 @@ const menu = (x, y, d, blip, viewpoint) => {
             }
             drawRadarBlips(viewpoint)
         })
+
+        
+    iconsBox.append("text")
+    .text(d.locked== true? "Unlock Blip":"Lock Blip")
+    .attr("x", 0)
+    .style("fill", "#000")
+    .style("font-family", "Arial, Helvetica")
+    .style("font-size", "12px")
+    .style("font-weight", "bold")
+    .attr("transform", `translate(0, ${20 + 3 * menuItemHeight})`)
+    .attr("class", "clickableProperty")
+    .on("click", () => {
+        d.locked = (d.locked==true)?false:true
+        d3.select('.context-menu').remove();
+    })
 
 
 
