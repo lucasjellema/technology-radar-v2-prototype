@@ -130,13 +130,6 @@ const drawRadarBlips = function (viewpoint) {
                     // blipsPerGroup has zero, one or more properties for each of the objects for which blips are in this segment
                     // if the number of objects > 1 - aggregation time!
 
-
-                    // TODO AGGREGATION hardcoded property names
-
-                    // const aggregatedValues = [{ name: "label", propertyPath: "scope" }
-                    //     , { name: "authors", propertyPath: "author" }
-                    //     , { name: "scopes", propertyPath: "scope" }
-                    // ]
                     for (let i = 0; i < Object.keys(blipsPerGroup).length; i++) {
                         const groupValue = Object.keys(blipsPerGroup)[i]
                         if (blipsPerGroup[groupValue].length > 1) {
@@ -164,6 +157,7 @@ const drawRadarBlips = function (viewpoint) {
                             }
 
                             visibleBlips.push(blip)
+                            segment.blips.push(blip) // to make artificial blip eligible for shuffling
                         }
                         else {
 
