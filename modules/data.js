@@ -9,17 +9,18 @@ import { calculateDerivedProperties } from './derivedProperties.js'
 import { uuidv4, getNestedPropertyValueFromObject, setNestedPropertyValueOnObject, getRatingTypeProperties, findDisplayProperty, getDateTimeString } from './utils.js'
 
 const datasetMap = {
-    emerging: "./data/emerging-technologies-dataset.json"
+    emerging2024: "./data/cab-emerging-2024.json"
+    , emerging: "./data/emerging-technologies-dataset.json"
     , techradar: "./data/technology-radar-dataset.json"
     , cab: "./data/cab-technology-radar-dataset.json"
     , sample: "./data/sampleData.json"
     , verkenning: "./data/cab-verkenningen-radar-dataset.json"
     , amisdatamgt: "./data/amis-data-management-technology-radar-dataset.json"
-    , cabintegration :"./data/cab-integration-techradar.json"
-    , realintegration : "./data/real-techradar-integration.json"
-    , cabops :"./data/operational-services-xforce-futurefacts-vs-cfit-furore-hotitem-zuyd-cai-cmc-amis-cas-radar-data.json"
-    , cabint :"./data/vs-amis-cai-cab-integration-techradar.json"
-    , realint :"./data/real-integration-radar-sps-sysco-link-opitz-amis.json"
+    , cabintegration: "./data/cab-integration-techradar.json"
+    , realintegration: "./data/real-techradar-integration.json"
+    , cabops: "./data/operational-services-xforce-futurefacts-vs-cfit-furore-hotitem-zuyd-cai-cmc-amis-cas-radar-data.json"
+    , cabint: "./data/vs-amis-cai-cab-integration-techradar.json"
+    , realint: "./data/real-integration-radar-sps-sysco-link-opitz-amis.json"
     , cabemerging: "./data/cab-emerging-technologies-radar.json"
 }
 
@@ -29,7 +30,7 @@ function addValuesForProperty(propertyPath, blips, distinctValues) {
     for (let i = 0; i < blips.length; i++) {
         const blip = blips[i]
         let value = getNestedPropertyValueFromObject(blip.rating, propertyPath)
-        if (typeof(value)=="string") value = value.toLowerCase().trim()
+        if (typeof (value) == "string") value = value.toLowerCase().trim()
         listOfDistinctPropertyValues.add(value)
     }
     distinctValues = new Set([...distinctValues, ...listOfDistinctPropertyValues])
@@ -451,7 +452,7 @@ const initializeDatasetFromURL = async () => {
 
     initializeViewpointFromURL()
     initializeFiltersTagsFromURL()
-    
+
     calculateDerivedProperties()
     publishRefreshRadar()
 }
@@ -566,7 +567,7 @@ const loadDataFromLocalStore = () => {
     // for every viewpoint in the index, load document
     //    data = JSON.parse(localStorage[radarIndex.templates[0].title])
     data = JSON.parse(localStorage[RADAR_INDEX_KEY])
-calculateDerivedProperties()
+    calculateDerivedProperties()
     publishRefreshRadar()
 }
 
@@ -634,7 +635,7 @@ function download(filename, text) {
     document.body.removeChild(element);
 }
 
-const downloadRadarData = function ( filename="radar-data.json", dataSet=data) {
+const downloadRadarData = function (filename = "radar-data.json", dataSet = data) {
     download(filename, JSON.stringify(serialize(dataSet)))
 }
 
@@ -890,7 +891,7 @@ const populateTemplateSelector = () => {
 
 document.getElementById('save').addEventListener("click", saveDataToLocalStorage);
 document.getElementById('load').addEventListener("click", loadDataFromLocalStore);
-document.getElementById('download').addEventListener("click", (e) => { downloadRadarData()});
+document.getElementById('download').addEventListener("click", (e) => { downloadRadarData() });
 document.getElementById('uploadRadarDatafile').addEventListener("click", uploadRadarData);
 document.getElementById('newTemplate').addEventListener("click", createNewTemplate);
 document.getElementById('cloneTemplate').addEventListener("click", cloneTemplate);
