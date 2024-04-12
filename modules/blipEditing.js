@@ -291,7 +291,7 @@ const launchBlipEditor = (blip, viewpoint, drawRadarBlips, editObject = true) =>
             inputElement = `<input id="${inputElementId}" list="${inputElementId}List" value="${value}" ${disabled}></input>`
         }
         else if (blipProperty.property.type == "text") {
-            inputElement = `<textarea id="${inputElementId}" rows="2" columns="75" value="${value}" ${disabled}></textarea>`
+            inputElement = `<textarea id="${inputElementId}" rows="4" columns="120" ${disabled}>${value}</textarea>`
         }
         else if (blipProperty.property.type == "time") {
             inputElement = `<input id="${inputElementId}" type="date"  ${disabled}></input>`
